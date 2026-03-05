@@ -1,8 +1,10 @@
 import { useActionState } from "react";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -14,45 +16,56 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Link, useNavigate } from "react-router";
 
 type LoginState = {
   email: string;
   password: string;
+  email_error: string;
+  password_error: string;
 } | null;
 
-function loginAction(_state: LoginState, formData: FormData): LoginState {
-  const error = { email: "", password: "" };
-
-  const email = formData.get("email")?.toString() ?? "";
-  const password = formData.get("password")?.toString() ?? "";
-
-  // Email validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    error.email = "Please enter a valid email address";
-  }
-
-  // Password validation
-  const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
-  if (password.length < 8) {
-    error.password = "Password must be at least 8 characters";
-  } else if (!specialCharRegex.test(password)) {
-    error.password = "Password must include a special character";
-  }
-
-  if (error.email || error.password) {
-    return error;
-  }
-
-  return null;
-}
-
 const LoginPage = () => {
+  const navigate=useNavigate()
   const [state, formAction, isPending] = useActionState<LoginState, FormData>(
     loginAction,
     null,
   );
 
+  function loginAction(_state: LoginState, formData: FormData): LoginState {
+    const error = {
+      email_error: "",
+      password_error: "",
+      email: "",
+      password: "",
+    };
+    const email = formData.get("email")?.toString() ?? "";
+    const password = formData.get("password")?.toString() ?? "";
+    error.email = email;
+    error.password = password;
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      error.email_error = "Please enter a valid email address";
+    }
+    // Password validation
+    const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+    if (password.length < 8) {
+      error.password_error = "Password must be at least 8 characters";
+    } else if (!specialCharRegex.test(password)) {
+      error.password_error = "Password must include a special character";
+    }
+    if (error.email_error || error.password_error) {
+      return error;
+    }
+    if (!error.email_error && !error.password_error) {
+      // API Call To Get To Token
+      alert("Login success!");
+      localStorage.setItem("token", "1234567890");
+      navigate('/')
+    }
+    return null;
+  }
   return (
     <div className="flex items-center justify-center h-screen w-full">
       <Card className="w-full sm:max-w-md">
@@ -60,7 +73,6 @@ const LoginPage = () => {
           <CardHeader>
             <CardTitle className="text-center text-2xl">Login</CardTitle>
           </CardHeader>
-
           <CardContent>
             <FieldGroup>
               <Field>
@@ -70,10 +82,10 @@ const LoginPage = () => {
                   name="email"
                   type="email"
                   placeholder="Enter your email"
+                  defaultValue={state?.email}
                 />
-                <FieldError>{state?.email}</FieldError>
+                <FieldError>{state?.email_error}</FieldError>
               </Field>
-
               <Field>
                 <FieldLabel htmlFor="password">Password</FieldLabel>
                 <Input
@@ -81,12 +93,12 @@ const LoginPage = () => {
                   name="password"
                   type="password"
                   placeholder="Enter your password"
+                  defaultValue={state?.password}
                 />
-                <FieldError>{state?.password}</FieldError>
+                <FieldError>{state?.password_error}</FieldError>
               </Field>
             </FieldGroup>
           </CardContent>
-
           <CardFooter className="mt-10">
             <Field orientation="horizontal">
               <Button type="reset" variant="outline">
@@ -97,7 +109,18 @@ const LoginPage = () => {
               </Button>
             </Field>
           </CardFooter>
+          <CardFooter>
+            <CardDescription className="mt-4">
+              Haven't Register yet!{" "}
+              <Link to={"/signup"} className="underline text-blue-600">
+                Sign Up
+              </Link>
+            </CardDescription>
+          </CardFooter>
         </form>
+        <Link to="/" className="ml-auto pr-4 text-sm text-blue-600 underline">
+          Forget Password
+        </Link>
       </Card>
     </div>
   );
