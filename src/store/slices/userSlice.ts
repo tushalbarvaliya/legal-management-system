@@ -48,9 +48,21 @@ const userSlice = createSlice({
       state.role = "Client";
       state.token = null;
     },
+    updateUser: (
+      state,
+      action: PayloadAction<{
+        firstName: string;
+        lastName: string;
+        email: string;
+      }>,
+    ) => {
+      state.firstName = action.payload.firstName;
+      state.lastName = action.payload.lastName;
+      state.email = action.payload.email;
+    },
   },
 });
 
-export const { setUser, setToken,removeUser } = userSlice.actions;
+export const { setUser, setToken, removeUser,updateUser } = userSlice.actions;
 
 export default userSlice.reducer;
