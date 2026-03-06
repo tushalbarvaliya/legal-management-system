@@ -4,6 +4,7 @@ import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PersistGate } from "redux-persist/integration/react";
+import { Provider } from "react-redux";
 
 import "./index.css";
 
@@ -12,15 +13,15 @@ import LoginPage from "./pages/LoginPage.tsx";
 import SignUpPage from "./pages/SignUpPage.tsx";
 import LogOutPage from "./pages/LogOutPage.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
-import App from "./App.tsx";
-import { Provider } from "react-redux";
+import HomePage from "./pages/HomePage.tsx";
+
 
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <HomePage />,
   },
   {
     path: "/login",
