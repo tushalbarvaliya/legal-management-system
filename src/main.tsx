@@ -15,13 +15,46 @@ import LogOutPage from "./pages/LogOutPage.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 import HomePage from "./pages/HomePage.tsx";
 
-
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <HomePage />,
+    children: [
+      {
+        path: "profile",
+        element: <ProfilePage></ProfilePage>,
+      },
+      {
+        path: "ticket",
+        element: <ProfilePage></ProfilePage>,
+      },
+      {
+        path: "task",
+        element: <ProfilePage></ProfilePage>,
+      },
+      {
+        path: "docs",
+        element: <ProfilePage></ProfilePage>,
+      },
+      {
+        path: "cases",
+        element: <ProfilePage></ProfilePage>,
+      },
+      {
+        path: "client",
+        element: <ProfilePage></ProfilePage>,
+      },
+      {
+        path: "privacy-policy",
+        element: <ProfilePage></ProfilePage>,
+      },
+      {
+        path: "terms-and-conditions",
+        element: <ProfilePage></ProfilePage>,
+      },
+    ],
   },
   {
     path: "/login",
@@ -34,10 +67,6 @@ const router = createBrowserRouter([
   {
     path: "/logout",
     element: <LogOutPage></LogOutPage>,
-  },
-  {
-    path: "/profile",
-    element: <ProfilePage></ProfilePage>,
   },
 ]);
 
