@@ -1,4 +1,4 @@
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,8 +17,9 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "react-router";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setToken, setUser } from "@/store/slices/userSlice";
+import type { RootState } from "@/store/store";
 
 type SignUpState = {
   firstName_error: string;
@@ -35,12 +36,20 @@ type SignUpState = {
 
 const SignUpPage = () => {
   const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.user);
+
   const [state, formAction, isPending] = useActionState<SignUpState, FormData>(
     signUpAction,
     null,
   );
   const navigate = useNavigate();
 
+  // Protect route
+  useEffect(() => {
+    if (user.token) {
+      navigate("/");
+    }
+  }, [user.token, navigate]);
   function signUpAction(_state: SignUpState, formData: FormData) {
     // Error object
     const error = {

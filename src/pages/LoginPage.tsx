@@ -1,4 +1,6 @@
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import { Link, useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,9 +18,9 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Link, useNavigate } from "react-router";
-import { useDispatch } from "react-redux";
+
 import { setToken, setUser } from "@/store/slices/userSlice";
+import type { RootState } from "@/store/store";
 
 type LoginState = {
   email: string;
@@ -29,11 +31,19 @@ type LoginState = {
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const user = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
   const [state, formAction, isPending] = useActionState<LoginState, FormData>(
     loginAction,
     null,
   );
+
+  // Protect route
+  useEffect(() => {
+    if (user.token) {
+      navigate("/");
+    }
+  }, [user.token, navigate]);
 
   function loginAction(_state: LoginState, formData: FormData): LoginState {
     const error = {
