@@ -1,4 +1,5 @@
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -38,6 +39,8 @@ type SignUpState = {
 const SignUpPage = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [state, formAction, isPending] = useActionState<SignUpState, FormData>(
     signUpAction,
@@ -170,26 +173,50 @@ const SignUpPage = () => {
 
               <Field>
                 <FieldLabel htmlFor="password">Password</FieldLabel>
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  defaultValue={state?.password}
-                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    defaultValue={state?.password}
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
                 <FieldError>{state?.password_error}</FieldError>
               </Field>
               <Field>
                 <FieldLabel htmlFor="confirm-password">
                   Confirm Password
                 </FieldLabel>
-                <Input
-                  id="confirm-password"
-                  name="confirm-password"
-                  type="password"
-                  placeholder="Enter your password"
-                  defaultValue={state?.confirmPassword}
-                />
+                <div className="relative">
+                  <Input
+                    id="confirm-password"
+                    name="confirm-password"
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    defaultValue={state?.confirmPassword}
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword((prev) => !prev)}
+                    className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground"
+                    aria-label={
+                      showConfirmPassword ? "Hide confirm password" : "Show confirm password"
+                    }
+                  >
+                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
                 <FieldError>{state?.confirmPassword_error}</FieldError>
               </Field>
             </FieldGroup>

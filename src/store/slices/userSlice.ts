@@ -5,7 +5,7 @@ interface UserState {
   firstName: string;
   lastName: string;
   password: string;
-  role: "Client" | "Lawyer" | "Admin";
+  role: "Client" | "Lawyer" | "Admin" | "Staff";
   token: null | string;
 }
 
@@ -14,7 +14,7 @@ const initialState: UserState = {
   firstName: "",
   lastName: "",
   password: "",
-  role: "Client",
+  role: "Staff",
   token: null,
 };
 
@@ -36,6 +36,7 @@ const userSlice = createSlice({
       state.lastName = action.payload.lastName;
       state.password = action.payload.password;
       state.token = "1234567890";
+      state.role = initialState.role;
     },
     setToken: (state, action: PayloadAction<{ token: string }>) => {
       state.token = action.payload.token;
@@ -45,8 +46,8 @@ const userSlice = createSlice({
       state.firstName = "";
       state.lastName = "";
       state.password = "";
-      state.role = "Client";
       state.token = null;
+      state.role = "Client";
     },
     updateUser: (
       state,
@@ -63,6 +64,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { setUser, setToken, removeUser,updateUser } = userSlice.actions;
+export const { setUser, setToken, removeUser, updateUser } = userSlice.actions;
 
 export default userSlice.reducer;
