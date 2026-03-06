@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { setToken, setUser } from "@/store/slices/userSlice";
 
 type LoginState = {
   email: string;
@@ -26,7 +28,8 @@ type LoginState = {
 } | null;
 
 const LoginPage = () => {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [state, formAction, isPending] = useActionState<LoginState, FormData>(
     loginAction,
     null,
@@ -59,10 +62,18 @@ const LoginPage = () => {
       return error;
     }
     if (!error.email_error && !error.password_error) {
-      // API Call To Get To Token
+      // API Call To Get To Token and user Data
+      dispatch(
+        setUser({
+          email: email,
+          firstName: "John",
+          lastName: "Doe",
+          password: password,
+        }),
+      );
+      dispatch(setToken({ token: "1234567890" }));
       alert("Login success!");
-      localStorage.setItem("token", "1234567890");
-      navigate('/')
+      navigate("/");
     }
     return null;
   }
