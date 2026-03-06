@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { setToken, setUser } from "@/store/slices/userSlice";
 
 type SignUpState = {
   firstName_error: string;
@@ -32,6 +34,7 @@ type SignUpState = {
 } | null;
 
 const SignUpPage = () => {
+  const dispatch = useDispatch();
   const [state, formAction, isPending] = useActionState<SignUpState, FormData>(
     signUpAction,
     null,
@@ -96,18 +99,16 @@ const SignUpPage = () => {
     ) {
       return error;
     } else {
-      // API Call and Set user as Client
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          email: error.email,
-          firstName: error.firstName,
-          lastName: error.lastName,
-          password: error.password,
-          role: "Client",
+      // API Call and POst user as Client
+      dispatch(
+        setUser({
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+          password: password,
         }),
       );
-      localStorage.setItem("token", "1234567890");
+      dispatch(setToken({ token: "1234567890" }));
       alert("sign up success");
       navigate("/");
     }
