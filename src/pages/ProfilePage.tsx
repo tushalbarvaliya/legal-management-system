@@ -73,7 +73,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-50 px-4">
+    <div className="mt-10 flex justify-center items-center bg-gray-50 px-4">
       <div className="w-full max-w-xl bg-white shadow-md rounded-xl p-8">
         <h1 className="text-2xl font-bold text-center mb-6">Profile</h1>
 
