@@ -1,8 +1,18 @@
+import { removeUser } from "@/store/slices/userSlice";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
 
 const LogOutPage = () => {
-  return (
-    <div>LogOutPage</div>
-  )
-}
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-export default LogOutPage
+  useEffect(() => {
+    dispatch(removeUser());
+    navigate("/login");
+  }, [dispatch, navigate]);
+
+  return null;
+};
+
+export default LogOutPage;
