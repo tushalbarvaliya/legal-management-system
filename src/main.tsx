@@ -7,12 +7,13 @@ import { PersistGate } from "redux-persist/integration/react";
 
 import "./index.css";
 
-import { persistor } from "./store/store.tsx";
+import { persistor, store } from "./store/store.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import SignUpPage from "./pages/SignUpPage.tsx";
 import LogOutPage from "./pages/LogOutPage.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 import App from "./App.tsx";
+import { Provider } from "react-redux";
 
 const queryClient = new QueryClient();
 
@@ -41,10 +42,12 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <PersistGate loading={null} persistor={persistor}>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-      </QueryClientProvider>
-    </PersistGate>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </PersistGate>
+    </Provider>
   </StrictMode>,
 );
