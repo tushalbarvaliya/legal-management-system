@@ -20,6 +20,7 @@ import { Link, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setToken, setUser } from "@/store/slices/userSlice";
 import type { RootState } from "@/store/store";
+import { emailRegex, specialCharRegex } from "@/const/const";
 
 type SignUpState = {
   firstName_error: string;
@@ -84,11 +85,9 @@ const SignUpPage = () => {
     if (!lastName.trim()) {
       error.lastName_error = "Enter valid Input.";
     }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       error.email_error = "Please enter a valid email address";
     }
-    const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
     if (password.length < 8) {
       error.password_error = "Password must be at least 8 characters";
     } else if (!specialCharRegex.test(password)) {

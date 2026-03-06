@@ -60,19 +60,15 @@ const ProfilePage = () => {
     if (!form.email.includes("@")) {
       newErrors.email = "Invalid email";
     }
-
+    
     setErrors(newErrors);
-
     return !newErrors.firstName && !newErrors.lastName && !newErrors.email;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!validate()) return;
-
     dispatch(updateUser(form));
-
     setIsEdit(false);
   };
 

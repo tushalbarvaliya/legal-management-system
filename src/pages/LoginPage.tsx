@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 
 import { setToken, setUser } from "@/store/slices/userSlice";
 import type { RootState } from "@/store/store";
+import { emailRegex, specialCharRegex } from "@/const/const";
 
 type LoginState = {
   email: string;
@@ -57,12 +58,10 @@ const LoginPage = () => {
     error.email = email;
     error.password = password;
     // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       error.email_error = "Please enter a valid email address";
     }
     // Password validation
-    const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
     if (password.length < 8) {
       error.password_error = "Password must be at least 8 characters";
     } else if (!specialCharRegex.test(password)) {
