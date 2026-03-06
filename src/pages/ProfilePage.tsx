@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   Dialog,
@@ -19,7 +19,15 @@ import Portal from "@/components/Protal";
 import { useNavigate } from "react-router";
 
 const ProfilePage = () => {
+  // protecting route logic
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
+  useEffect(() => {
+    if (token == null) {
+      navigate("/login");
+    }
+  }, [token, navigate]);
+  
   const [profileOpen, setProfileOpen] = useState(true);
   const [isEdit, setIsEdit] = useState(false);
   const toggleProfile = () => {
