@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,13 +19,11 @@ const ProfilePage = () => {
   const [form, setForm] = useState({
     firstName: user.firstName,
     lastName: user.lastName,
-    email: user.email,
   });
 
   const [errors, setErrors] = useState({
     firstName: "",
     lastName: "",
-    email: "",
   });
 
   // Protect route
@@ -36,17 +34,17 @@ const ProfilePage = () => {
   }, [user.token, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
   };
 
-  const validate = () => {
+  const validate = useCallback(() => {
     const newErrors = {
       firstName: "",
       lastName: "",
-      email: "",
     };
 
     if (!form.firstName.trim()) {
@@ -57,18 +55,31 @@ const ProfilePage = () => {
       newErrors.lastName = "Last name is required";
     }
 
-    if (!form.email.includes("@")) {
-      newErrors.email = "Invalid email";
-    }
-    
     setErrors(newErrors);
-    return !newErrors.firstName && !newErrors.lastName && !newErrors.email;
-  };
+    return !newErrors.firstName && !newErrors.lastName;
+  }, [form.firstName, form.lastName]);
+
+  useEffect(() => {
+    if (!isEdit) return;
+
+    const timer = setTimeout(() => {
+      validate();
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [isEdit, validate]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    dispatch(updateUser(form));
+
+    dispatch(
+      updateUser({
+        firstName: form.firstName,
+        lastName: form.lastName,
+        email: user.email,
+      }),
+    );
     setIsEdit(false);
   };
 
@@ -130,21 +141,7 @@ const ProfilePage = () => {
           {/* Email */}
           <div className="mb-4">
             <label className="font-medium">Email</label>
-
-            {!isEdit ? (
-              <p>{user.email}</p>
-            ) : (
-              <>
-                <Input
-                  name="email"
-                  value={form.email}
-                  onChange={handleChange}
-                />
-                {errors.email && (
-                  <p className="text-red-500 text-sm">{errors.email}</p>
-                )}
-              </>
-            )}
+            <p>{user.email}</p>
           </div>
 
           {/* Role */}
@@ -159,13 +156,18 @@ const ProfilePage = () => {
               <>
                 <Button
                   type="button"
-                  variant="outline"
-                  onClick={() => navigate(-1)}
+                  onClick={() => {
+                    setForm({
+                      firstName: user.firstName,
+                      lastName: user.lastName,
+                    });
+                    setErrors({
+                      firstName: "",
+                      lastName: "",
+                    });
+                    setIsEdit(true);
+                  }}
                 >
-                  Close
-                </Button>
-
-                <Button type="button" onClick={() => setIsEdit(true)}>
                   Edit
                 </Button>
               </>
