@@ -1,11 +1,3 @@
-import Cases from "@/components/svg/Cases";
-import Client from "@/components/svg/Client";
-import Docs from "@/components/svg/Docs";
-import Invoice from "@/components/svg/Invoice";
-import Sessions from "@/components/svg/Sessions";
-import Task from "@/components/svg/Task";
-import { Ticket } from "lucide-react";
-
 export const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,}$/;
 export const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/;
@@ -16,7 +8,7 @@ export const PhoneNumberRegex = /^\+91\d{10}$/;
 export const homeMenuItems = [
   {
     name: "Ticket",
-    icon: Ticket,
+    icon: "",
     path: "/ticket",
     roles: ["Client", "Staff", "Lawyer"],
     cardTitle: "Ticket App",
@@ -25,7 +17,7 @@ export const homeMenuItems = [
   },
   {
     name: "Task",
-    icon: Task,
+    icon: "Task",
     path: "/task",
     roles: ["Staff", "Lawyer"],
     cardTitle: "Task App",
@@ -33,7 +25,7 @@ export const homeMenuItems = [
   },
   {
     name: "Docs",
-    icon: Docs,
+    icon: "Docs",
     path: "/docs",
     roles: ["Staff", "Lawyer"],
     cardTitle: "Docs App",
@@ -42,7 +34,7 @@ export const homeMenuItems = [
   },
   {
     name: "Cases",
-    icon: Cases,
+    icon: "Cases",
     path: "/cases",
     roles: ["Staff", "Lawyer"],
     cardTitle: "Cases App",
@@ -51,7 +43,7 @@ export const homeMenuItems = [
   },
   {
     name: "Client",
-    icon: Client,
+    icon: "Client",
     path: "/client",
     roles: ["Staff", "Lawyer"],
     cardTitle: "Client App",
@@ -59,7 +51,7 @@ export const homeMenuItems = [
   },
   {
     name: "Invoice",
-    icon: Invoice,
+    icon: "Invoice",
     path: "/invoice",
     roles: ["Lawyer"],
     cardTitle: "Invoice App",
@@ -67,7 +59,7 @@ export const homeMenuItems = [
   },
   {
     name: "Sessions",
-    icon: Sessions,
+    icon: "Sessions",
     path: "/sessions",
     roles: ["Lawyer"],
     cardTitle: "Sessions App",
