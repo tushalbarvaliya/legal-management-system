@@ -1,161 +1,179 @@
-import { useActionState, useEffect, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
-import { Eye, EyeOff } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-
-import { setToken, setUser } from "@/store/slices/userSlice";
-import type { RootState } from "@/store/store";
-import { emailRegex, specialCharRegex } from "@/const/const";
-
-type LoginState = {
-  email: string;
-  password: string;
-  email_error: string;
-  password_error: string;
-} | null;
+import { useDebounce } from "@/hooks/useDebounce";
+import type { LoginFormState } from "@/types/formType";
+import { LoginValidation } from "@/utils/formValidation";
+import { useMutation } from "@tanstack/react-query";
+import { login } from "@/api/authAPI";
+import { setToken } from "@/store/slices/authSlice";
+import { useDispatch } from "react-redux";
 
 const LoginPage = () => {
+  const [passwordShow, setPasswordShow] = useState(false);
   const navigate = useNavigate();
-  const user = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
-  const [showPassword, setShowPassword] = useState(false);
-  const [state, formAction, isPending] = useActionState<LoginState, FormData>(
-    loginAction,
-    null,
+  const [formError, setFormError] = useState("");
+  const [formState, setFormState] = useState<LoginFormState>({
+    email: "",
+    password: "",
+  });
+  const debouncedFormState = useDebounce(formState, 500);
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: login,
+    onSuccess: (data) => {
+      dispatch(setToken(data));
+      navigate("/");
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+  const validateForm = useCallback(
+    (data: LoginFormState) => LoginValidation(data),
+    [],
   );
 
-  // Protect route
-  useEffect(() => {
-    if (user.token) {
-      navigate("/");
-    }
-  }, [user.token, navigate]);
+  const errors = useMemo(() => {
+    return validateForm(debouncedFormState);
+  }, [debouncedFormState, validateForm]);
 
-  function loginAction(_state: LoginState, formData: FormData): LoginState {
-    const error = {
-      email_error: "",
-      password_error: "",
-      email: "",
-      password: "",
-    };
-    const email = formData.get("email")?.toString() ?? "";
-    const password = formData.get("password")?.toString() ?? "";
-    error.email = email;
-    error.password = password;
-    // Email validation
-    if (!emailRegex.test(email)) {
-      error.email_error = "Please enter a valid email address";
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormState((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (
+      !formState.email.trim() ||
+      !formState.password.trim() ||
+      errors.email ||
+      errors.password
+    ) {
+      setFormError("SomeThing Is not Right Please Try Again.");
+      return;
+    } else {
+      mutate({ email: formState.email, password: formState.password });
     }
-    // Password validation
-    if (password.length < 8) {
-      error.password_error = "Password must be at least 8 characters";
-    } else if (!specialCharRegex.test(password)) {
-      error.password_error = "Password must include a special character";
-    }
-    if (error.email_error || error.password_error) {
-      return error;
-    }
-    if (!error.email_error && !error.password_error) {
-      // API Call To Get To Token and user Data
-      dispatch(
-        setUser({
-          email: email,
-          firstName: "John",
-          lastName: "Doe",
-          password: password,
-        }),
-      );
-      dispatch(setToken({ token: "1234567890" }));
-      alert("Login success!");
-      navigate("/");
-    }
-    return null;
-  }
+  };
+
   return (
-    <div className="flex items-center justify-center h-screen w-full">
-      <Card className="w-full sm:max-w-md">
-        <form action={formAction}>
-          <CardHeader>
-            <CardTitle className="text-center text-2xl">Login</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  defaultValue={state?.email}
+    <main className="flex min-h-screen items-center justify-center p-4 sm:p-6">
+      <section className="w-full max-w-md rounded-xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
+        <header className="mb-6 flex flex-col gap-3 text-center">
+          <div className="mx-auto grid h-12 w-12 items-center rounded-xl border border-zinc-300 bg-zinc-900 text-lg font-semibold text-zinc-100">
+            AD
+          </div>
+
+          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
+            Sign in
+          </h1>
+
+          <p className="text-sm text-zinc-500">
+            Enter your credentials to continue.
+          </p>
+        </header>
+
+        <form
+          id="loginForm"
+          noValidate
+          className="space-y-5"
+          onSubmit={handleSubmit}
+        >
+          {/* Email */}
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="email"
+              className="text-sm font-medium text-zinc-800"
+            >
+              Email
+            </label>
+
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="you@example.com"
+              autoComplete="off"
+              value={formState.email}
+              onChange={handleChange}
+              className="block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
+            />
+
+            <p className="min-h-5 text-xs text-red-600">{errors.email}</p>
+          </div>
+
+          {/* Password */}
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="password"
+              className="text-sm font-medium text-zinc-800"
+            >
+              Password
+            </label>
+
+            <div className="relative">
+              <input
+                id="password"
+                name="password"
+                type={passwordShow ? "text" : "password"}
+                autoComplete="off"
+                placeholder="Enter your password"
+                value={formState.password}
+                onChange={handleChange}
+                className="block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 pr-10 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
+              />
+
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 grid w-10 place-items-center text-zinc-500 hover:text-zinc-700"
+                onClick={() => setPasswordShow((prev) => !prev)}
+              >
+                <img
+                  src={passwordShow ? "/closeEye.svg" : "/openEye.svg"}
+                  alt="button"
+                  className="scale-70 opacity-50"
                 />
-                <FieldError>{state?.email_error}</FieldError>
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="password">Password</FieldLabel>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    defaultValue={state?.password}
-                    className="pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground"
-                    aria-label={showPassword ? "Hide password" : "Show password"}
-                  >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
-                </div>
-                <FieldError>{state?.password_error}</FieldError>
-              </Field>
-            </FieldGroup>
-          </CardContent>
-          <CardFooter className="mt-10">
-            <Field orientation="horizontal">
-              <Button type="reset" variant="outline">
-                Reset
-              </Button>
-              <Button type="submit" disabled={isPending}>
-                {isPending ? "Submitting..." : "Submit"}
-              </Button>
-            </Field>
-          </CardFooter>
-          <CardFooter>
-            <CardDescription className="mt-4">
-              Haven't Register yet!{" "}
-              <Link to={"/signup"} className="underline text-blue-600">
-                Sign Up
+              </button>
+            </div>
+
+            <p className="min-h-5 text-xs text-red-600">{errors.password}</p>
+
+            <div className="flex justify-end">
+              <Link
+                to="#"
+                className="text-xs font-medium text-zinc-600 hover:text-zinc-900 hover:underline"
+              >
+                Forgot password?
               </Link>
-            </CardDescription>
-          </CardFooter>
+            </div>
+          </div>
+          <p className="min-h-5 text-xs text-red-600">{formError}</p>
+          {/* Submit */}
+          <button
+            type="submit"
+            className="inline-flex w-full items-center justify-center rounded-md bg-zinc-900 px-4 py-2.5 text-sm font-medium text-zinc-50 hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300"
+            disabled={isPending}
+          >
+            {isPending ? "Logging.." : "Login"}
+          </button>
+
+          <p className="text-center text-sm text-zinc-600">
+            Don't have an account?{" "}
+            <Link
+              to="/signup"
+              className="font-medium text-zinc-900 hover:underline"
+            >
+              Sign up
+            </Link>
+          </p>
         </form>
-        <Link to="/" className="ml-auto pr-4 text-sm text-blue-600 underline">
-          Forget Password
-        </Link>
-      </Card>
-    </div>
+      </section>
+    </main>
   );
 };
 

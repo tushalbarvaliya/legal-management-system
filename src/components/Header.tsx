@@ -1,107 +1,89 @@
 import { Link } from "react-router";
-import { Menu } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 
 const navItems = [
   {
     label: "Privacy Policy",
     to: "/privacy-policy",
-    variant: "secondary" as const,
+    variant: "outline" as const,
   },
   {
     label: "Terms & Conditions",
     to: "/terms-and-conditions",
-    variant: "secondary" as const,
+    variant: "default" as const,
   },
   {
     label: "Profile",
     to: "/profile",
     variant: "default" as const,
   },
-  {
-    label: "Logout",
-    to: "/logout",
-    variant: "destructive" as const,
-  },
 ];
 
 const Header = () => {
   return (
-    <header className="border-b bg-background px-4 py-3">
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-3">
-        {/* Logo with  */}
-        <Link to="/" className="group flex items-center gap-3">
-          <img
-            src="/lawyer_logo.jpg"
-            alt="logo"
-            className="h-10 w-10 rounded-md object-cover transition-transform duration-300 group-hover:scale-105 md:h-12 md:w-12"
-          />
-
-          <div>
-            <h1 className="text-lg font-semibold text-foreground md:text-xl">
-              Lawyer
-            </h1>
-            <p className="text-sm text-muted-foreground">Your Dream Company</p>
-          </div>
-        </Link>
-
-        {/* Menu for Tablet and Laptop screen */}
-        <nav className="hidden items-center gap-1 md:flex md:flex-wrap md:justify-end lg:gap-2">
-          {navItems.map((item) => (
-            <Link key={item.to} to={item.to}>
-              <Button
-                variant={item.variant}
-                className="h-8 px-3 text-xs transition-all duration-300 hover:scale-105 hover:shadow-md lg:h-9 lg:px-4 lg:text-sm"
-              >
-                {item.label}
-              </Button>
-            </Link>
-          ))}
-        </nav>
-
-        {/* Menu for smaller devices.*/}
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              className="md:hidden"
-              aria-label="Open navigation menu"
+    <>
+      <header className="sticky top-0 z-30 border-b border-zinc-200 bg-white/90 backdrop-blur">
+        <div className="mx-auto flex max-w-375 items-center justify-between px-3 py-3 sm:px-4 lg:px-5">
+          <div className="flex items-center gap-2">
+            <button
+              id="sidebarDrawerButton"
+              className="inline-flex items-center justify-center rounded-lg border border-zinc-200 p-2 text-zinc-700 transition duration-200 hover:bg-zinc-100 lg:hidden"
+              aria-label="Open workspace menu"
             >
-              <Menu />
-            </Button>
-          </DialogTrigger>
+              <svg
+                className="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 5h18M3 12h18M3 19h12"
+                />
+              </svg>
+            </button>
+            <Link
+              to="/"
+              className="group inline-flex items-center gap-3 transition-transform duration-300 hover:scale-[1.02]"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-900 text-sm font-bold text-white shadow-soft">
+                AD
+              </div>
+              <span className="text-lg font-semibold tracking-tight text-zinc-900">
+                Arcade Demo
+              </span>
+            </Link>
+          </div>
 
-          <DialogContent
-            showCloseButton
-            className="!top-0 !right-0 !left-auto !h-dvh !w-[85vw] !max-w-xs !translate-x-0 !translate-y-0 content-start rounded-none border-l border-r-0 p-4 duration-300 ease-out data-[state=open]:slide-in-from-right data-[state=closed]:slide-out-to-right sm:!max-w-xs"
-          >
-            <DialogTitle>Menu</DialogTitle>
-            <nav className="mt-2 flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <nav className="hidden items-center gap-2 lg:flex">
               {navItems.map((item) => (
-                <DialogClose key={item.to} asChild>
-                  <Link to={item.to} className="w-full">
-                    <Button
-                      variant={item.variant}
-                      className="h-auto w-full whitespace-normal px-3 py-2 text-left leading-tight"
-                    >
-                      {item.label}
-                    </Button>
-                  </Link>
-                </DialogClose>
+                <Link
+                  to={item.to}
+                  className="rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition duration-200 hover:-translate-y-0.5 hover:bg-zinc-50 hover:text-zinc-900"
+                >
+                  {item.label}
+                </Link>
               ))}
+              <Link
+                to="/logout"
+                className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white transition duration-200 hover:scale-[1.02] hover:bg-zinc-800"
+              >
+                Logout
+              </Link>
             </nav>
-          </DialogContent>
-        </Dialog>
-      </div>
-    </header>
+          </div>
+
+          <button
+            id="menuButton"
+            className="inline-flex items-center justify-center rounded-lg border border-zinc-200 p-2 text-zinc-700 transition duration-200 hover:bg-zinc-100 lg:hidden"
+          >
+            <img src="/menuIcon.svg" alt="menu" className="h-5 w-5" />
+          </button>
+        </div>
+      </header>
+    </>
   );
 };
 
