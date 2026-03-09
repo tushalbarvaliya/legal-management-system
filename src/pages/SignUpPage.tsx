@@ -89,7 +89,7 @@ const SignUpPage = () => {
   };
   return (
     <main className="flex min-h-screen items-center justify-center p-4 sm:p-6">
-      <section className="w-full max-w-3xl rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
+      <section className="w-full max-w-xl rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
         <header className="mb-6 space-y-3 text-center">
           <div className="mx-auto inline-flex">
             <div className="group grid h-14 w-14 place-items-center rounded-xl border border-zinc-300 bg-zinc-900 text-xl font-semibold text-zinc-100 transition duration-200 hover:scale-105 hover:bg-zinc-800">

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router";
 
 const navItems = [
@@ -19,30 +20,13 @@ const navItems = [
 ];
 
 const Header = () => {
+  const [menubarOpen, setMenubarOpen] = useState(false);
+
   return (
     <>
-      <header className="sticky top-0 z-30 border-b border-zinc-200 bg-white/90 backdrop-blur">
+      <header className="sticky top-0 z-30 border-b border-zinc-200 bg-white/90 backdrop-blur overflow-hidden">
         <div className="mx-auto flex max-w-375 items-center justify-between px-3 py-3 sm:px-4 lg:px-5">
           <div className="flex items-center gap-2">
-            <button
-              id="sidebarDrawerButton"
-              className="inline-flex items-center justify-center rounded-lg border border-zinc-200 p-2 text-zinc-700 transition duration-200 hover:bg-zinc-100 lg:hidden"
-              aria-label="Open workspace menu"
-            >
-              <svg
-                className="h-5 w-5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 5h18M3 12h18M3 19h12"
-                />
-              </svg>
-            </button>
             <Link
               to="/"
               className="group inline-flex items-center gap-3 transition-transform duration-300 hover:scale-[1.02]"
@@ -56,6 +40,7 @@ const Header = () => {
             </Link>
           </div>
 
+          {/* this section is for links */}
           <div className="flex items-center gap-2">
             <nav className="hidden items-center gap-2 lg:flex">
               {navItems.map((item) => (
@@ -78,11 +63,110 @@ const Header = () => {
           <button
             id="menuButton"
             className="inline-flex items-center justify-center rounded-lg border border-zinc-200 p-2 text-zinc-700 transition duration-200 hover:bg-zinc-100 lg:hidden"
+            onClick={() => {
+              setMenubarOpen((prev) => !prev);
+            }}
           >
             <img src="/menuIcon.svg" alt="menu" className="h-5 w-5" />
           </button>
         </div>
       </header>
+      <div
+        id="drawerOverlay"
+        className={` fixed inset-0 z-40 bg-black/30 ${menubarOpen ? "" : "opacity-0 pointer-events-none"} shadow-[inset_0_0_80px_rgba(0,0,0,0.25)] transition-opacity duration-300 lg:hidden h-screen w-screen`}
+        onClick={() => {
+          setMenubarOpen((prev) => !prev);
+        }}
+      ></div>
+
+      <aside
+        className={`fixed right-0 top-0 z-50 h-fit w-72 ${menubarOpen ? "" : "translate-x-full"} border-l border-zinc-200 bg-white p-5 shadow-2xl transition-transform duration-300 lg:hidden overflow-scroll`}
+      >
+        <div className="mb-6 flex items-center justify-between ">
+          <h2 className="text-base font-semibold text-zinc-900">Workspace</h2>
+          <button
+            className="rounded-lg border border-zinc-200 p-2 text-zinc-700 transition duration-200 hover:bg-zinc-100"
+            onClick={() => {
+              setMenubarOpen((prev) => !prev);
+            }}
+          >
+            <img src="/x.svg" alt="x logo" className="h-5 w-5" />
+          </button>
+        </div>
+
+        <nav className="space-y-2">
+          <Link
+            to="#"
+            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100 hover:text-zinc-900"
+          >
+            <img src="/task.svg" alt="x logo" className="h-5 w-5" />
+            <span>Tickets</span>
+          </Link>
+          <Link
+            to="#"
+            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100 hover:text-zinc-900"
+          >
+            <img src="/cases.svg" alt="x logo" className="h-5 w-5" />
+            <span>Cases</span>
+          </Link>
+          <Link
+            to="#"
+            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100 hover:text-zinc-900"
+          >
+            <img src="/docs.svg" alt="x logo" className="h-5 w-5" />
+            <span>Docs</span>
+          </Link>
+          <Link
+            to="#"
+            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100 hover:text-zinc-900"
+          >
+            <img src="/session.svg" alt="x logo" className="h-5 w-5" />
+            <span>Sessions</span>
+          </Link>
+          <Link
+            to="taskPage.html"
+            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100 hover:text-zinc-900"
+          >
+            <img src="/tasks.svg" alt="x logo" className="h-5 w-5" />
+            <span>Tasks</span>
+          </Link>
+          <Link
+            to="#"
+            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100 hover:text-zinc-900"
+          >
+            <img src="/staff.svg" alt="x logo" className="h-5 w-5" />
+            <span>Staff</span>
+          </Link>
+        </nav>
+
+        <hr className="my-4 border-zinc-200" />
+        <nav className="space-y-2">
+          <Link
+            to="privacyPolicyPage.html"
+            className="block rounded-lg border border-zinc-200 bg-zinc-100 px-3 py-2 text-sm font-semibold text-zinc-900 transition duration-200 hover:bg-zinc-200"
+          >
+            Privacy Policy
+          </Link>
+          <Link
+            to="termsAndConditionsPage.html"
+            className="block rounded-lg border border-zinc-200 px-3 py-2 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-50"
+          >
+            Terms and Conditions
+          </Link>
+          <Link
+            to="profilePage.html"
+            className="block rounded-lg border border-zinc-200 px-3 py-2 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-50"
+          >
+            Profile
+          </Link>
+          <Link
+            to="/logout"
+            className="block rounded-lg bg-zinc-900 px-4 py-2 text-sm  font-semibold text-white transition duration-200 hover:scale-[1.02] hover:bg-zinc-800"
+          >
+            Logout
+          </Link>
+        </nav>
+      </aside>
     </>
   );
 };
