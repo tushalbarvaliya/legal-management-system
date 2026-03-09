@@ -6,8 +6,12 @@ import Sessions from "@/components/svg/Sessions";
 import Task from "@/components/svg/Task";
 import { Ticket } from "lucide-react";
 
-export const emailRegex = /^[^\s@]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/;
-export const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+export const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,}$/;
+export const passwordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/;
+export const pinCodeRegex = /^[1-9][0-9]{5}$/;
+export const PhoneNumberRegex = /^\+91\d{10}$/;
+
 
 export const homeMenuItems = [
   {
