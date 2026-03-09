@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import { useNavigate } from "react-router";
@@ -33,12 +32,30 @@ const ProfilePage = () => {
     }
   }, [user.token, navigate]);
 
+  const startEdit = () => {
+    setForm({
+      firstName: user.firstName,
+      lastName: user.lastName,
+    });
+    setErrors({
+      firstName: "",
+      lastName: "",
+    });
+    setIsEdit(true);
+  };
+
+  const handleEditClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    startEdit();
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setForm({
-      ...form,
+    setForm((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
   };
 
   const validate = useCallback(() => {
@@ -84,7 +101,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="mt-10 flex justify-center items-center bg-gray-50 px-4">
+    <div className="mt-10 flex justify-center items-center bg-transparent px-4 ">
       <div className="w-full max-w-xl bg-white shadow-md rounded-xl p-8">
         <h1 className="text-2xl font-bold text-center mb-6">Profile</h1>
 
@@ -153,26 +170,20 @@ const ProfilePage = () => {
           {/* Buttons */}
           <div className="flex justify-end gap-3">
             {!isEdit ? (
-              <>
-                <Button
-                  type="button"
-                  onClick={() => {
-                    setForm({
-                      firstName: user.firstName,
-                      lastName: user.lastName,
-                    });
-                    setErrors({
-                      firstName: "",
-                      lastName: "",
-                    });
-                    setIsEdit(true);
-                  }}
-                >
-                  Edit
-                </Button>
-              </>
+              <button
+                type="button"
+                onClick={handleEditClick}
+                className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/90"
+              >
+                Edit
+              </button>
             ) : (
-              <Button type="submit">Save</Button>
+              <button
+                type="submit"
+                className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/90"
+              >
+                Save
+              </button>
             )}
           </div>
         </form>
