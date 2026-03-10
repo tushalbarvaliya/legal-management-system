@@ -76,10 +76,10 @@ const LoginPageForm = () => {
                   value: 3,
                   message: "User name length should be greater than 3 ",
                 },
-                // pattern: {
-                //   value: userNameRegex,
-                //   message: "User Name Must Have digit and Char",
-                // },
+                pattern: {
+                  value: userNameRegex,
+                  message: "User Name Must Have digit and Char",
+                },
                 required: true,
               })}
             />
@@ -106,11 +106,11 @@ const LoginPageForm = () => {
                 className="block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 pr-10 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
                 {...register("password", {
                   required: true,
-                  // pattern: {
-                  //   value: passwordRegex,
-                  //   message:
-                  //     "Password must be at least 8 characters and include uppercase, lowercase, number, and special character.",
-                  // },
+                  pattern: {
+                    value: passwordRegex,
+                    message:
+                      "Password must be at least 8 characters and include uppercase, lowercase, number, and special character.",
+                  },
                 })}
               />
 
