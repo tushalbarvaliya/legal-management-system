@@ -9,7 +9,6 @@ import { Provider } from "react-redux";
 import "./index.css";
 
 import { persistor, store } from "./store/store.tsx";
-import LoginPage from "./pages/LoginPage.tsx";
 import SignUpPage from "./pages/SignUpPage.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 import HomePage from "./pages/HomePage.tsx";
@@ -69,7 +68,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/login",
-        element: <LoginPage />,
+        element: <LoginPageForm />,
       },
       {
         path: "/signUp",

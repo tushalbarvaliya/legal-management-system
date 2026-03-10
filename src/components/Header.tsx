@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 
 const navItems = [
   {
@@ -19,8 +19,20 @@ const navItems = [
   },
 ];
 
+const menuList = [
+  { title: "Dash Board", src: "/dashboard.svg", to: "/", alt: "home" },
+  { title: "Tickets", src: "/task.svg", to: "/task", alt: "task" },
+  { title: "Cases", src: "/cases.svg", to: "/cases", alt: "cases" },
+  { title: "Docs", src: "/docs.svg", to: "/docs", alt: "docs" },
+  { title: "Sessions", src: "/session.svg", to: "/session", alt: "session" },
+  { title: "Tasks", src: "/tasks.svg", to: "/tasks", alt: "tasks" },
+  { title: "Staff", src: "/staff.svg", to: "/staff", alt: "staff" },
+  { title: "Invoice", src: "/invoice.svg", to: "/invoice", alt: "invoice" },
+];
+
 const Header = () => {
   const [menubarOpen, setMenubarOpen] = useState(false);
+  const pathname = useLocation().pathname;
 
   return (
     <>
@@ -46,7 +58,7 @@ const Header = () => {
               {navItems.map((item) => (
                 <Link
                   to={item.to}
-                  className="rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition duration-200 hover:-translate-y-0.5 hover:bg-zinc-50 hover:text-zinc-900"
+                  className={`rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition duration-200 hover:-translate-y-0.5 hover:bg-zinc-50 hover:text-zinc-900 ${pathname === item.to ? "bg-zinc-200" : ""}`}
                 >
                   {item.label}
                 </Link>
@@ -95,70 +107,27 @@ const Header = () => {
         </div>
 
         <nav className="space-y-2">
-          <Link
-            to="#"
-            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100 hover:text-zinc-900"
-          >
-            <img src="/task.svg" alt="x logo" className="h-5 w-5" />
-            <span>Tickets</span>
-          </Link>
-          <Link
-            to="#"
-            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100 hover:text-zinc-900"
-          >
-            <img src="/cases.svg" alt="x logo" className="h-5 w-5" />
-            <span>Cases</span>
-          </Link>
-          <Link
-            to="#"
-            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100 hover:text-zinc-900"
-          >
-            <img src="/docs.svg" alt="x logo" className="h-5 w-5" />
-            <span>Docs</span>
-          </Link>
-          <Link
-            to="#"
-            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100 hover:text-zinc-900"
-          >
-            <img src="/session.svg" alt="x logo" className="h-5 w-5" />
-            <span>Sessions</span>
-          </Link>
-          <Link
-            to="taskPage.html"
-            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100 hover:text-zinc-900"
-          >
-            <img src="/tasks.svg" alt="x logo" className="h-5 w-5" />
-            <span>Tasks</span>
-          </Link>
-          <Link
-            to="#"
-            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100 hover:text-zinc-900"
-          >
-            <img src="/staff.svg" alt="x logo" className="h-5 w-5" />
-            <span>Staff</span>
-          </Link>
+          {menuList.map((item) => (
+            <Link
+              to={item.to}
+              className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100 hover:text-zinc-900 ${item.to === pathname ? "bg-zinc-200" : ""}`}
+            >
+              <img src={item.src} alt={item.alt} className="h-5 w-5" />
+              <span>{item.title}</span>
+            </Link>
+          ))}
         </nav>
 
         <hr className="my-4 border-zinc-200" />
         <nav className="space-y-2">
-          <Link
-            to="privacyPolicyPage.html"
-            className="block rounded-lg border border-zinc-200 bg-zinc-100 px-3 py-2 text-sm font-semibold text-zinc-900 transition duration-200 hover:bg-zinc-200"
-          >
-            Privacy Policy
-          </Link>
-          <Link
-            to="termsAndConditionsPage.html"
-            className="block rounded-lg border border-zinc-200 px-3 py-2 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-50"
-          >
-            Terms and Conditions
-          </Link>
-          <Link
-            to="profilePage.html"
-            className="block rounded-lg border border-zinc-200 px-3 py-2 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-50"
-          >
-            Profile
-          </Link>
+          {navItems.map((item) => (
+            <Link
+              to={item.to}
+              className={`block rounded-lg border border-zinc-200 bg-zinc-100 px-3 py-2 text-sm font-semibold text-zinc-900 transition duration-200 hover:bg-zinc-200 ${pathname === item.to ? "bg-zinc-200" : ""}`}
+            >
+              {item.label}
+            </Link>
+          ))}
           <Link
             to="/logout"
             className="block rounded-lg bg-zinc-900 px-4 py-2 text-sm  font-semibold text-white transition duration-200 hover:scale-[1.02] hover:bg-zinc-800"
