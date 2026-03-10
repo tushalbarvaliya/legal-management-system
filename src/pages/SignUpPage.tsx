@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 import type { SignUpFormState } from "@/types/formType";
 import { useForm } from "react-hook-form";
@@ -7,12 +7,17 @@ import {
   passwordRegex,
   PhoneNumberRegex,
   pinCodeRegex,
+  userNameRegex,
 } from "@/utils/constant";
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { signUp } from "@/api/authAPI";
 
 const SignUpPage = () => {
+  const [formError, setFormError] = useState("");
   const [passwordShow, setPasswordShow] = useState(false);
   const [confirmPasswordShow, setConfirmPasswordShow] = useState(false);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -22,7 +27,19 @@ const SignUpPage = () => {
     mode: "onChange",
     delayError: 500,
   });
-  const onSubmit = (data: SignUpFormState) => console.log(data);
+
+  const { mutate } = useMutation({
+    mutationFn: signUp,
+    onSuccess: () => {
+      navigate("/login");
+    },
+    onError: (error) => {
+      setFormError(`Something is not right Error : ${error}`);
+    },
+  });
+  const onSubmit = (data: SignUpFormState) => {
+    mutate(data);
+  };
 
   return (
     <main className="flex min-h-screen items-center justify-center p-4 sm:p-6">
@@ -45,6 +62,35 @@ const SignUpPage = () => {
 
         <form id="signupForm" noValidate onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="sm:col-span-2">
+              <label
+                htmlFor="userName"
+                className="text-sm font-medium text-zinc-800"
+              >
+                User Name
+              </label>
+              <input
+                id="userName"
+                type="text"
+                autoComplete="off"
+                placeholder={"john"}
+                className="field block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
+                {...register("userName", {
+                  minLength: {
+                    value: 3,
+                    message: "User name length should be greater than 3 ",
+                  },
+                  pattern: {
+                    value: userNameRegex,
+                    message: "User Name Must Have digit and Char",
+                  },
+                  required: true,
+                })}
+              />
+              <p id="firstNameError" className="min-h-5 text-xs text-red-600">
+                {errors.userName?.message}
+              </p>
+            </div>
             <div>
               <label
                 htmlFor="firstName"
@@ -63,6 +109,7 @@ const SignUpPage = () => {
                     value: 3,
                     message: "First name length should be greater than 3 ",
                   },
+                  required: true,
                 })}
               />
               <p id="firstNameError" className="min-h-5 text-xs text-red-600">
@@ -87,6 +134,7 @@ const SignUpPage = () => {
                     value: 3,
                     message: "Last name length should be greater than 3 ",
                   },
+                  required: true,
                 })}
               />
               <p id="firstNameError" className="min-h-5 text-xs text-red-600">
@@ -163,7 +211,7 @@ const SignUpPage = () => {
             </div>
             <div className="flex flex-col gap-2">
               <label
-                htmlFor="confirmPassword"
+                htmlFor="_confirmPassword"
                 className="text-sm font-medium text-zinc-800"
               >
                 Confirm Password
@@ -171,12 +219,12 @@ const SignUpPage = () => {
 
               <div className="relative">
                 <input
-                  id="confirmPassword"
+                  id="_confirmPassword"
                   type={confirmPasswordShow ? "text" : "password"}
                   autoComplete="off"
                   placeholder="Enter your password"
                   className="block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 pr-10 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                  {...register("confirmPassword", {
+                  {...register("_confirmPassword", {
                     required: true,
                     pattern: {
                       value: passwordRegex,
@@ -199,7 +247,7 @@ const SignUpPage = () => {
                 </button>
               </div>
               <p className="min-h-5 text-xs text-red-600">
-                {errors.confirmPassword?.message}
+                {errors._confirmPassword?.message}
               </p>
             </div>
 
@@ -225,6 +273,7 @@ const SignUpPage = () => {
                     value: 20,
                     message: "Address must be less than 20 char",
                   },
+                  required: true,
                 })}
               />
               <p id="firstNameError" className="min-h-5 text-xs text-red-600">
@@ -253,6 +302,7 @@ const SignUpPage = () => {
                     value: 6,
                     message: "pin must be length of 6 digit",
                   },
+                  required: true,
                 })}
               />
               <p id="firstNameError" className="min-h-5 text-xs text-red-600">
@@ -264,20 +314,20 @@ const SignUpPage = () => {
                 htmlFor="phoneNumber"
                 className="text-sm font-medium text-zinc-800"
               >
-                Pin Code
+                Phone Number
               </label>
               <input
                 id="phoneNumber"
                 type="text"
                 autoComplete="off"
-                placeholder={"+911234567890"}
+                placeholder={"1234567890"}
                 className="field block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
                 {...register("phoneNumber", {
                   pattern: {
                     value: PhoneNumberRegex,
-                    message:
-                      "Phone Number Must be in this format +91xxxxxxxxx.",
+                    message: "Phone Number Must be in this format xxxxxxxxx.",
                   },
+                  required: true,
                 })}
               />
               <p id="firstNameError" className="min-h-5 text-xs text-red-600">
@@ -302,6 +352,7 @@ const SignUpPage = () => {
                     value: 3,
                     message: "State name length should be greater than 3 ",
                   },
+                  required: true,
                 })}
               />
               <p className="min-h-5 text-xs text-red-600">
@@ -326,6 +377,7 @@ const SignUpPage = () => {
                     value: 3,
                     message: "City name length should be greater than 3 ",
                   },
+                  required: true,
                 })}
               />
               <p id="firstNameError" className="min-h-5 text-xs text-red-600">
@@ -333,7 +385,7 @@ const SignUpPage = () => {
               </p>
             </div>
           </div>
-          <p className="min-h-5 text-xs text-red-600">{}</p>
+          <p className="min-h-5 text-xs text-red-600">{formError}</p>
 
           <button
             type="submit"

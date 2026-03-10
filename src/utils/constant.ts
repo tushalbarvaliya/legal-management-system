@@ -2,8 +2,8 @@ export const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+\.[A-Za-z]{2,}$/;
 export const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/;
 export const pinCodeRegex = /^[1-9][0-9]{5}$/;
-export const PhoneNumberRegex = /^\+91\d{10}$/;
-
+export const PhoneNumberRegex = /^\d{10}$/;
+export const userNameRegex = /^(?=.*\d)[A-Za-z\d!@#$%^&*]{3,}$/;
 
 export const homeMenuItems = [
   {

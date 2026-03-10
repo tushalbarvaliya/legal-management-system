@@ -1,11 +1,18 @@
+import { login } from "@/api/authAPI";
+import { setToken } from "@/store/slices/authSlice";
 import type { LoginFormState } from "@/types/formType";
-import { emailRegex, passwordRegex } from "@/utils/constant";
+import { passwordRegex, userNameRegex } from "@/utils/constant";
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router";
 
 const LoginPageForm = () => {
   const [passwordShow, setPasswordShow] = useState(false);
+  const [formError, setFormError] = useState("");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
@@ -15,7 +22,22 @@ const LoginPageForm = () => {
     delayError: 500,
   });
 
-  const onSubmit = (data: LoginFormState) => console.log(data);
+  const { mutate } = useMutation({
+    mutationFn: login,
+    onSuccess: (data) => {
+      console.log(data);
+      
+      const token = { token: data.access_token };
+      dispatch(setToken(token));
+      navigate("/");
+    },
+    onError: (error) => {
+      setFormError(`Something is not right Error : ${error}`);
+    },
+  });
+  const onSubmit = (data: LoginFormState) => {
+    mutate(data);
+  };
   return (
     <main className="flex min-h-screen  justify-center p-4 sm:p-6">
       <section className="w-full max-w-md rounded-xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
@@ -36,31 +58,33 @@ const LoginPageForm = () => {
 
         {/* main form */}
         <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
-          {/* Email */}
-          <div className="flex flex-col gap-2">
+          <div className="sm:col-span-2">
             <label
-              htmlFor="email"
+              htmlFor="userName"
               className="text-sm font-medium text-zinc-800"
             >
-              Email
+              User Name
             </label>
             <input
-              id="email"
-              type="email"
-              placeholder="you@example.com"
+              id="userName"
+              type="text"
               autoComplete="off"
-              className="block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-              {...register("email", {
-                required: true,
-                pattern: {
-                  value: emailRegex,
-                  message: "Please Enter Email with one Domain.",
+              placeholder={"john"}
+              className="field block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
+              {...register("userName", {
+                minLength: {
+                  value: 3,
+                  message: "User name length should be greater than 3 ",
                 },
+                pattern: {
+                  value: userNameRegex,
+                  message: "User Name Must Have digit and Char",
+                },
+                required: true,
               })}
             />
-
-            <p className="min-h-5 text-xs text-red-600">
-              {errors.email?.message}
+            <p id="firstNameError" className="min-h-5 text-xs text-red-600">
+              {errors.userName?.message}
             </p>
           </div>
 
@@ -82,11 +106,11 @@ const LoginPageForm = () => {
                 className="block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 pr-10 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
                 {...register("password", {
                   required: true,
-                  pattern: {
-                    value: passwordRegex,
-                    message:
-                      "Password must be at least 8 characters and include uppercase, lowercase, number, and special character.",
-                  },
+                  // pattern: {
+                  //   value: passwordRegex,
+                  //   message:
+                  //     "Password must be at least 8 characters and include uppercase, lowercase, number, and special character.",
+                  // },
                 })}
               />
 
@@ -106,17 +130,17 @@ const LoginPageForm = () => {
             <p className="min-h-5 text-xs text-red-600">
               {errors.password?.message}
             </p>
-            </div>
+          </div>
 
-            <div className="flex justify-end">
-              <Link
-                to="#"
-                className="text-xs font-medium text-zinc-600 hover:text-zinc-900 hover:underline"
-              >
-                Forgot password?
-              </Link>
-            </div>
-          <p className="min-h-5 text-xs text-red-600">{}</p>
+          <div className="flex justify-end">
+            <Link
+              to="#"
+              className="text-xs font-medium text-zinc-600 hover:text-zinc-900 hover:underline"
+            >
+              Forgot password?
+            </Link>
+          </div>
+          <p className="min-h-5 text-xs text-red-600">{formError}</p>
           {/* Submit */}
           <button
             type="submit"
