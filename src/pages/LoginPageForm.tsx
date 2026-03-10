@@ -76,10 +76,10 @@ const LoginPageForm = () => {
                   value: 3,
                   message: "User name length should be greater than 3 ",
                 },
-                pattern: {
-                  value: userNameRegex,
-                  message: "User Name Must Have digit and Char",
-                },
+                // pattern: {
+                //   value: userNameRegex,
+                //   message: "User Name Must Have digit and Char",
+                // },
                 required: true,
               })}
             />

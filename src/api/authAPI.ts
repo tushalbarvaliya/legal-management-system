@@ -20,6 +20,7 @@ export const login = async ({ userName, password }: LoginFormState) => {
 };
 
 export const signUp = async ({
+  userName,
   firstName,
   lastName,
   email,
@@ -33,7 +34,7 @@ export const signUp = async ({
 }: SignUpFormState) => {
   const useAddress = address + city + state + pinCode;
   const data: SignUpdata = {
-    name: firstName,
+    name: userName,
     first_name: firstName,
     last_name: lastName,
     email: email,
