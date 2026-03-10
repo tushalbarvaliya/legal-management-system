@@ -1,15 +1,13 @@
 import { useState } from "react";
 
 type PasswordInput = {
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  value: string;
+  value?: string;
   error: string;
   label: string;
   title: string;
 };
 
 const PasswordInput = ({
-  handleChange,
   value,
   error,
   label,
@@ -30,7 +28,6 @@ const PasswordInput = ({
           autoComplete="off"
           placeholder="Create a password"
           className="field block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 pr-10 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-          onChange={handleChange}
           value={value}
           required
         />
