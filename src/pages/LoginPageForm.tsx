@@ -106,6 +106,7 @@ const LoginPageForm = () => {
             <p className="min-h-5 text-xs text-red-600">
               {errors.password?.message}
             </p>
+            </div>
 
             <div className="flex justify-end">
               <Link
@@ -115,7 +116,6 @@ const LoginPageForm = () => {
                 Forgot password?
               </Link>
             </div>
-          </div>
           <p className="min-h-5 text-xs text-red-600">{}</p>
           {/* Submit */}
           <button
