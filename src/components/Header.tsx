@@ -1,34 +1,6 @@
+import { menuList, navItems } from "@/utils/constant";
 import { useState } from "react";
 import { Link, useLocation } from "react-router";
-
-const navItems = [
-  {
-    label: "Privacy Policy",
-    to: "/privacy-policy",
-    variant: "outline" as const,
-  },
-  {
-    label: "Terms & Conditions",
-    to: "/terms-and-conditions",
-    variant: "default" as const,
-  },
-  {
-    label: "Profile",
-    to: "/profile",
-    variant: "default" as const,
-  },
-];
-
-const menuList = [
-  { title: "Dash Board", src: "/dashboard.svg", to: "/", alt: "home" },
-  { title: "Tickets", src: "/task.svg", to: "/task", alt: "task" },
-  { title: "Cases", src: "/cases.svg", to: "/cases", alt: "cases" },
-  { title: "Docs", src: "/docs.svg", to: "/docs", alt: "docs" },
-  { title: "Sessions", src: "/session.svg", to: "/session", alt: "session" },
-  { title: "Tasks", src: "/tasks.svg", to: "/tasks", alt: "tasks" },
-  { title: "Staff", src: "/staff.svg", to: "/staff", alt: "staff" },
-  { title: "Invoice", src: "/invoice.svg", to: "/invoice", alt: "invoice" },
-];
 
 const Header = () => {
   const [menubarOpen, setMenubarOpen] = useState(false);
@@ -36,7 +8,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-30 border-b border-zinc-200 bg-white/90 backdrop-blur overflow-hidden">
+      <header className="sticky top-0 z-30 border-b border-zinc-200 bg-white/90 backdrop-blur  shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
         <div className="mx-auto flex max-w-375 items-center justify-between px-3 py-3 sm:px-4 lg:px-5">
           <div className="flex items-center gap-2">
             <Link
@@ -58,6 +30,7 @@ const Header = () => {
               {navItems.map((item) => (
                 <Link
                   to={item.to}
+                  key={item.to}
                   className={`rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition duration-200 hover:-translate-y-0.5 hover:bg-zinc-50 hover:text-zinc-900 ${pathname === item.to ? "bg-zinc-200" : ""}`}
                 >
                   {item.label}
@@ -110,6 +83,7 @@ const Header = () => {
           {menuList.map((item) => (
             <Link
               to={item.to}
+              key={item.to}
               className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100 hover:text-zinc-900 ${item.to === pathname ? "bg-zinc-200" : ""}`}
             >
               <img src={item.src} alt={item.alt} className="h-5 w-5" />
@@ -123,6 +97,7 @@ const Header = () => {
           {navItems.map((item) => (
             <Link
               to={item.to}
+              key={item.to}
               className={`block rounded-lg border border-zinc-200 bg-zinc-100 px-3 py-2 text-sm font-semibold text-zinc-900 transition duration-200 hover:bg-zinc-200 ${pathname === item.to ? "bg-zinc-200" : ""}`}
             >
               {item.label}

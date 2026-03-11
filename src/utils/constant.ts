@@ -5,65 +5,31 @@ export const pinCodeRegex = /^[1-9][0-9]{5}$/;
 export const PhoneNumberRegex = /^\d{10}$/;
 export const userNameRegex = /^(?=.*\d)[A-Za-z\d!@#$%^&*]{3,}$/;
 
-export const homeMenuItems = [
+export const menuList = [
+  { title: "Dash Board", src: "/dashboard.svg", to: "/", alt: "home" },
+  { title: "Tickets", src: "/task.svg", to: "/task", alt: "task" },
+  { title: "Cases", src: "/cases.svg", to: "/cases", alt: "cases" },
+  { title: "Docs", src: "/docs.svg", to: "/docs", alt: "docs" },
+  { title: "Sessions", src: "/session.svg", to: "/session", alt: "session" },
+  { title: "Tasks", src: "/tasks.svg", to: "/tasks", alt: "tasks" },
+  { title: "Staff", src: "/staff.svg", to: "/staff", alt: "staff" },
+  { title: "Invoice", src: "/invoice.svg", to: "/invoice", alt: "invoice" },
+];
+
+export const navItems = [
   {
-    name: "Ticket",
-    icon: "",
-    path: "/ticket",
-    roles: ["Client", "Staff", "Lawyer"],
-    cardTitle: "Ticket App",
-    cardParagraph:
-      "Have Any issue then ask ous directly.Raise the ticker and ask your Problems.",
+    label: "Privacy Policy",
+    to: "/privacy-policy",
+    variant: "outline" as const,
   },
   {
-    name: "Task",
-    icon: "Task",
-    path: "/task",
-    roles: ["Staff", "Lawyer"],
-    cardTitle: "Task App",
-    cardParagraph: "See your daily task and improve your productivity.",
+    label: "Terms & Conditions",
+    to: "/terms-and-conditions",
+    variant: "default" as const,
   },
   {
-    name: "Docs",
-    icon: "Docs",
-    path: "/docs",
-    roles: ["Staff", "Lawyer"],
-    cardTitle: "Docs App",
-    cardParagraph:
-      "Have Any issue then ask ous directly.Raise the ticker and ask your Problems.",
-  },
-  {
-    name: "Cases",
-    icon: "Cases",
-    path: "/cases",
-    roles: ["Staff", "Lawyer"],
-    cardTitle: "Cases App",
-    cardParagraph:
-      "Can't Manage your cases? Come here where managing your cases is very easy.",
-  },
-  {
-    name: "Client",
-    icon: "Client",
-    path: "/client",
-    roles: ["Staff", "Lawyer"],
-    cardTitle: "Client App",
-    cardParagraph: "Managing Client is Now easy with Client App.",
-  },
-  {
-    name: "Invoice",
-    icon: "Invoice",
-    path: "/invoice",
-    roles: ["Lawyer"],
-    cardTitle: "Invoice App",
-    cardParagraph: "Make Invoice In One Click with Invoice App.",
-  },
-  {
-    name: "Sessions",
-    icon: "Sessions",
-    path: "/sessions",
-    roles: ["Lawyer"],
-    cardTitle: "Sessions App",
-    cardParagraph:
-      "Now don't have to remember court date.Manager right here with Session app.",
+    label: "Profile",
+    to: "/profile",
+    variant: "default" as const,
   },
 ];
