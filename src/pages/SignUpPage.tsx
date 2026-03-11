@@ -7,7 +7,7 @@ import {
   emailRegex,
   nameRegex,
   passwordRegex,
-  PhoneNumberRegex,
+  phoneNumberRegex,
   pinCodeRegex,
   userNameRegex,
 } from "@/utils/constant";
@@ -346,7 +346,7 @@ const SignUpPage = () => {
                 className="field block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
                 {...register("phoneNumber", {
                   pattern: {
-                    value: PhoneNumberRegex,
+                    value: phoneNumberRegex,
                     message: "Phone number must contain exactly 10 digits.",
                   },
                   required: true,
