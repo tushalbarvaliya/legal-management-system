@@ -3,8 +3,8 @@ export const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/;
 export const pinCodeRegex = /^[1-9][0-9]{5}$/;
 export const PhoneNumberRegex = /^\d{10}$/;
-export const userNameRegex = /^(?=.*\d)[A-Za-z\d!@#$%^&*]{3,}$/;
-
+export const userNameRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z0-9]+$/;
+export const nameRegex = /^[A-Z]?[a-z]+$/;
 export const menuList = [
   { title: "Dash Board", src: "/dashboard.svg", to: "/", alt: "home" },
   { title: "Tickets", src: "/task.svg", to: "/task", alt: "task" },

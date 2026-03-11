@@ -78,12 +78,13 @@ const LoginPageForm = () => {
                 },
                 pattern: {
                   value: userNameRegex,
-                  message: "User Name Must Have digit and Char",
+                  message:
+                    "Username must include letters and numbers only, with no spaces or special characters.",
                 },
                 required: true,
               })}
             />
-            <p id="firstNameError" className="min-h-5 text-xs text-red-600">
+            <p className="min-h-5 text-xs text-red-600">
               {errors.userName?.message}
             </p>
           </div>

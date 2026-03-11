@@ -4,6 +4,7 @@ import type { SignUpFormState } from "@/types/formType";
 import { useForm } from "react-hook-form";
 import {
   emailRegex,
+  nameRegex,
   passwordRegex,
   PhoneNumberRegex,
   pinCodeRegex,
@@ -82,12 +83,13 @@ const SignUpPage = () => {
                   },
                   pattern: {
                     value: userNameRegex,
-                    message: "User Name Must Have digit and Char",
+                    message:
+                      "Username must include letters and numbers only, with no spaces or special characters.",
                   },
                   required: true,
                 })}
               />
-              <p id="firstNameError" className="min-h-5 text-xs text-red-600">
+              <p className="min-h-5 text-xs text-red-600">
                 {errors.userName?.message}
               </p>
             </div>
@@ -109,10 +111,15 @@ const SignUpPage = () => {
                     value: 3,
                     message: "First name length should be greater than 3 ",
                   },
+                  pattern: {
+                    value: nameRegex,
+                    message:
+                      "Only letters are allowed. No numbers, spaces, or special characters.",
+                  },
                   required: true,
                 })}
               />
-              <p id="firstNameError" className="min-h-5 text-xs text-red-600">
+              <p className="min-h-5 text-xs text-red-600">
                 {errors.firstName?.message}
               </p>
             </div>
@@ -134,10 +141,15 @@ const SignUpPage = () => {
                     value: 3,
                     message: "Last name length should be greater than 3 ",
                   },
+                  pattern: {
+                    value: nameRegex,
+                    message:
+                      "Only letters are allowed. No numbers, spaces, or special characters.",
+                  },
                   required: true,
                 })}
               />
-              <p id="firstNameError" className="min-h-5 text-xs text-red-600">
+              <p className="min-h-5 text-xs text-red-600">
                 {errors.lastName?.message}
               </p>
             </div>
@@ -159,7 +171,8 @@ const SignUpPage = () => {
                   required: true,
                   pattern: {
                     value: emailRegex,
-                    message: "Please Enter Email with one Domain.",
+                    message:
+                      "Please enter a valid email address (e.g., user@example.com).",
                   },
                 })}
               />
@@ -267,16 +280,16 @@ const SignUpPage = () => {
                 {...register("address", {
                   minLength: {
                     value: 3,
-                    message: "Address must be length should be greater than 3 ",
+                    message: "Minimum 3 characters required.",
                   },
                   maxLength: {
                     value: 20,
-                    message: "Address must be less than 20 char",
+                    message: "Maximum 20 characters allowed.",
                   },
                   required: true,
                 })}
               />
-              <p id="firstNameError" className="min-h-5 text-xs text-red-600">
+              <p className="min-h-5 text-xs text-red-600">
                 {errors.address?.message}
               </p>
             </div>
@@ -302,10 +315,14 @@ const SignUpPage = () => {
                     value: 6,
                     message: "pin must be length of 6 digit",
                   },
+                  maxLength: {
+                    value: 6,
+                    message: "pin must be length of 6 digit",
+                  },
                   required: true,
                 })}
               />
-              <p id="firstNameError" className="min-h-5 text-xs text-red-600">
+              <p className="min-h-5 text-xs text-red-600">
                 {errors.pinCode?.message}
               </p>
             </div>
@@ -325,12 +342,12 @@ const SignUpPage = () => {
                 {...register("phoneNumber", {
                   pattern: {
                     value: PhoneNumberRegex,
-                    message: "Phone Number Must be in this format xxxxxxxxx.",
+                    message: "Phone number must contain exactly 10 digits.",
                   },
                   required: true,
                 })}
               />
-              <p id="firstNameError" className="min-h-5 text-xs text-red-600">
+              <p className="min-h-5 text-xs text-red-600">
                 {errors.phoneNumber?.message}
               </p>
             </div>
@@ -380,7 +397,7 @@ const SignUpPage = () => {
                   required: true,
                 })}
               />
-              <p id="firstNameError" className="min-h-5 text-xs text-red-600">
+              <p className="min-h-5 text-xs text-red-600">
                 {errors.city?.message}
               </p>
             </div>
@@ -392,8 +409,7 @@ const SignUpPage = () => {
             className="inline-flex w-full items-center justify-center rounded-md bg-zinc-900 px-4 py-2.5 text-sm font-medium text-zinc-50 transition duration-200 hover:scale-[1.01] hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300"
             disabled={isPending}
           >
-              {isPending ? "Creating Your Account..." : "Create Account"}
-            
+            {isPending ? "Creating Your Account..." : "Create Account"}
           </button>
 
           <p className="text-center  mt-4 text-sm text-zinc-600">

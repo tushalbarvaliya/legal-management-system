@@ -32,7 +32,7 @@ export const signUp = async ({
   state,
   city,
 }: SignUpFormState) => {
-  const useAddress = address + " " + city + " " + state + " " + pinCode;
+  const useAddress = address + "$" + city + "$" + state + "$" + pinCode;
   const data: SignUpdata = {
     name: userName,
     first_name: firstName,
