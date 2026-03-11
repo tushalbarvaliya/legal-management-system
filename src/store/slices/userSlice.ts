@@ -1,3 +1,4 @@
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "@/api/axiosInstance";
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -12,7 +13,7 @@ interface UserState {
   phoneNumber: string;
   createdAt: string;
   loading: boolean;
-  error: unknown;
+  error: string;
 }
 
 const initialState: UserState = {
@@ -26,7 +27,7 @@ const initialState: UserState = {
   username: "",
   updatedAt: "",
   loading: false,
-  error: null,
+  error: "",
 };
 
 const userSlice = createSlice({
@@ -40,11 +41,11 @@ const userSlice = createSlice({
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.error.message || "Something went wrong";
       })
       .addCase(fetchUsers.fulfilled, (state, action) => {
         state.loading = false;
-        state.error = null;
+        state.error = "";
         state.email = action.payload.email;
         state.firstName = action.payload.firstName;
         state.lastName = action.payload.lastName;
@@ -57,8 +58,6 @@ const userSlice = createSlice({
       });
   },
 });
-
-import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
   const response = await axiosInstance.get("/users/profile");
