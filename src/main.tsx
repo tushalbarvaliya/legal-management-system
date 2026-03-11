@@ -9,14 +9,15 @@ import { Provider } from "react-redux";
 import "./index.css";
 
 import { persistor, store } from "./store/store.tsx";
-import LoginPage from "./pages/LoginPage.tsx";
 import SignUpPage from "./pages/SignUpPage.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
-import HomePage from "./pages/HomePage.tsx";
+import HomePage from "./pages/HomeLayout.tsx";
 import ProtectedRoute from "./routes/ProtectedRoute.tsx";
 import PublicRoute from "./routes/PublicRoute.tsx";
 import { removeToken } from "./store/slices/authSlice.ts";
 import TermsAndConditions from "./pages/TermsAndConditions.tsx";
+import LoginPageForm from "./pages/LoginPageForm.tsx";
+import HomePageContent from "./pages/HomePageContent.tsx";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
         path: "/",
         element: <HomePage />,
         children: [
+          {
+            path: "",
+            element: <HomePageContent />,
+          },
           {
             path: "profile",
             element: <ProfilePage></ProfilePage>,
@@ -53,6 +58,22 @@ const router = createBrowserRouter([
             element: <ProfilePage></ProfilePage>,
           },
           {
+            path: "session",
+            element: <ProfilePage></ProfilePage>,
+          },
+          {
+            path: "tasks",
+            element: <ProfilePage></ProfilePage>,
+          },
+          {
+            path: "staff",
+            element: <ProfilePage></ProfilePage>,
+          },
+          {
+            path: "invoice",
+            element: <ProfilePage></ProfilePage>,
+          },
+          {
             path: "privacy-policy",
             element: <ProfilePage></ProfilePage>,
           },
@@ -69,7 +90,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/login",
-        element: <LoginPage />,
+        element: <LoginPageForm />,
       },
       {
         path: "/signUp",

@@ -1,31 +1,15 @@
+import { menuList, navItems } from "@/utils/constant";
 import { useState } from "react";
-import { Link } from "react-router";
-
-const navItems = [
-  {
-    label: "Privacy Policy",
-    to: "/privacy-policy",
-    variant: "outline" as const,
-  },
-  {
-    label: "Terms & Conditions",
-    to: "/terms-and-conditions",
-    variant: "default" as const,
-  },
-  {
-    label: "Profile",
-    to: "/profile",
-    variant: "default" as const,
-  },
-];
+import { Link, useLocation } from "react-router";
 
 const Header = () => {
   const [menubarOpen, setMenubarOpen] = useState(false);
+  const pathname = useLocation().pathname;
 
   return (
     <>
-      <header className="sticky top-0 z-30 border-b border-zinc-200 bg-white/90 backdrop-blur overflow-hidden">
-        <div className="mx-auto flex max-w-375 items-center justify-between px-3 py-3 sm:px-4 lg:px-5">
+      <header className="sticky top-0 z-30 border-b border-zinc-200 bg-transparent backdrop-blur  shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+        <div className="mx-auto flex  items-center justify-between px-3 py-3 sm:px-4 lg:px-5">
           <div className="flex items-center gap-2">
             <Link
               to="/"
@@ -46,7 +30,8 @@ const Header = () => {
               {navItems.map((item) => (
                 <Link
                   to={item.to}
-                  className="rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition duration-200 hover:-translate-y-0.5 hover:bg-zinc-50 hover:text-zinc-900"
+                  key={item.to}
+                  className={`rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition duration-200 hover:-translate-y-0.5 hover:bg-zinc-50 hover:text-zinc-900 ${pathname === item.to ? "bg-zinc-200" : ""}`}
                 >
                   {item.label}
                 </Link>
@@ -95,70 +80,29 @@ const Header = () => {
         </div>
 
         <nav className="space-y-2">
-          <Link
-            to="#"
-            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100 hover:text-zinc-900"
-          >
-            <img src="/task.svg" alt="x logo" className="h-5 w-5" />
-            <span>Tickets</span>
-          </Link>
-          <Link
-            to="#"
-            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100 hover:text-zinc-900"
-          >
-            <img src="/cases.svg" alt="x logo" className="h-5 w-5" />
-            <span>Cases</span>
-          </Link>
-          <Link
-            to="#"
-            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100 hover:text-zinc-900"
-          >
-            <img src="/docs.svg" alt="x logo" className="h-5 w-5" />
-            <span>Docs</span>
-          </Link>
-          <Link
-            to="#"
-            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100 hover:text-zinc-900"
-          >
-            <img src="/session.svg" alt="x logo" className="h-5 w-5" />
-            <span>Sessions</span>
-          </Link>
-          <Link
-            to="taskPage.html"
-            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100 hover:text-zinc-900"
-          >
-            <img src="/tasks.svg" alt="x logo" className="h-5 w-5" />
-            <span>Tasks</span>
-          </Link>
-          <Link
-            to="#"
-            className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100 hover:text-zinc-900"
-          >
-            <img src="/staff.svg" alt="x logo" className="h-5 w-5" />
-            <span>Staff</span>
-          </Link>
+          {menuList.map((item) => (
+            <Link
+              to={item.to}
+              key={item.to}
+              className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100 hover:text-zinc-900 ${item.to === pathname ? "bg-zinc-200" : ""}`}
+            >
+              <img src={item.src} alt={item.alt} className="h-5 w-5" />
+              <span>{item.title}</span>
+            </Link>
+          ))}
         </nav>
 
         <hr className="my-4 border-zinc-200" />
         <nav className="space-y-2">
-          <Link
-            to="privacyPolicyPage.html"
-            className="block rounded-lg border border-zinc-200 bg-zinc-100 px-3 py-2 text-sm font-semibold text-zinc-900 transition duration-200 hover:bg-zinc-200"
-          >
-            Privacy Policy
-          </Link>
-          <Link
-            to="termsAndConditionsPage.html"
-            className="block rounded-lg border border-zinc-200 px-3 py-2 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-50"
-          >
-            Terms and Conditions
-          </Link>
-          <Link
-            to="profilePage.html"
-            className="block rounded-lg border border-zinc-200 px-3 py-2 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-50"
-          >
-            Profile
-          </Link>
+          {navItems.map((item) => (
+            <Link
+              to={item.to}
+              key={item.to}
+              className={`block rounded-lg border border-zinc-200 bg-zinc-100 px-3 py-2 text-sm font-semibold text-zinc-900 transition duration-200 hover:bg-zinc-200 ${pathname === item.to ? "bg-zinc-200" : ""}`}
+            >
+              {item.label}
+            </Link>
+          ))}
           <Link
             to="/logout"
             className="block rounded-lg bg-zinc-900 px-4 py-2 text-sm  font-semibold text-white transition duration-200 hover:scale-[1.02] hover:bg-zinc-800"
