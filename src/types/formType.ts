@@ -3,11 +3,6 @@ export type LoginFormState = {
   password: string;
 };
 
-export type LoginFormErrors = {
-  email: string;
-  password: string;
-};
-
 export type SignUpFormState = {
   userName: string;
   firstName: string;
@@ -15,19 +10,6 @@ export type SignUpFormState = {
   email: string;
   password: string;
   _confirmPassword: string;
-  address: string;
-  pinCode: string;
-  phoneNumber: string;
-  state: string;
-  city: string;
-};
-
-export type SignupFormErrors = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
   address: string;
   pinCode: string;
   phoneNumber: string;
