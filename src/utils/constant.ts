@@ -5,6 +5,7 @@ export const pinCodeRegex = /^[1-9][0-9]{5}$/;
 export const PhoneNumberRegex = /^\d{10}$/;
 export const userNameRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z0-9]+$/;
 export const nameRegex = /^[A-Z]?[a-z]+$/;
+export const addressRegex = /^[A-Za-z0-9 ]+$/;
 export const termsAndConditionsList = [
   {
     title: "1. Acceptance of Terms",

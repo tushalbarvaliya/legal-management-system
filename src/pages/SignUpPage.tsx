@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router";
 import type { SignUpFormState } from "@/types/formType";
 import { useForm } from "react-hook-form";
 import {
+  addressRegex,
   emailRegex,
   nameRegex,
   passwordRegex,
@@ -286,6 +287,10 @@ const SignUpPage = () => {
                     value: 20,
                     message: "Maximum 20 characters allowed.",
                   },
+                  pattern: {
+                    value: addressRegex,
+                    message: "Only letters, numbers, and spaces are allowed.",
+                  },
                   required: true,
                 })}
               />
@@ -369,6 +374,10 @@ const SignUpPage = () => {
                     value: 3,
                     message: "State name length should be greater than 3 ",
                   },
+                  pattern: {
+                    value: addressRegex,
+                    message: "Only letters, numbers, and spaces are allowed.",
+                  },
                   required: true,
                 })}
               />
@@ -393,6 +402,10 @@ const SignUpPage = () => {
                   minLength: {
                     value: 3,
                     message: "City name length should be greater than 3 ",
+                  },
+                  pattern: {
+                    value: addressRegex,
+                    message: "Only letters, numbers, and spaces are allowed.",
                   },
                   required: true,
                 })}
