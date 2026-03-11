@@ -22,11 +22,11 @@ const LoginPageForm = () => {
     delayError: 500,
   });
 
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
       console.log(data);
-      
+
       const token = { token: data.access_token };
       dispatch(setToken(token));
       navigate("/");
@@ -145,8 +145,9 @@ const LoginPageForm = () => {
           <button
             type="submit"
             className="inline-flex w-full items-center justify-center rounded-md bg-zinc-900 px-4 py-2.5 text-sm font-medium text-zinc-50 hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300"
+            disabled={isPending}
           >
-            Login
+            {isPending ? "Logging.." : "Login"}
           </button>
 
           <p className="text-center text-sm text-zinc-600">

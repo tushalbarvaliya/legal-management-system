@@ -28,7 +28,7 @@ const SignUpPage = () => {
     delayError: 500,
   });
 
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: signUp,
     onSuccess: () => {
       navigate("/login");
@@ -390,8 +390,10 @@ const SignUpPage = () => {
           <button
             type="submit"
             className="inline-flex w-full items-center justify-center rounded-md bg-zinc-900 px-4 py-2.5 text-sm font-medium text-zinc-50 transition duration-200 hover:scale-[1.01] hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300"
+            disabled={isPending}
           >
-            Create Account
+              {isPending ? "Creating Your Account..." : "Create Account"}
+            
           </button>
 
           <p className="text-center  mt-4 text-sm text-zinc-600">
