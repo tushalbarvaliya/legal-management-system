@@ -52,6 +52,22 @@ const router = createBrowserRouter([
             element: <ProfilePage></ProfilePage>,
           },
           {
+            path: "session",
+            element: <ProfilePage></ProfilePage>,
+          },
+          {
+            path: "tasks",
+            element: <ProfilePage></ProfilePage>,
+          },
+          {
+            path: "staff",
+            element: <ProfilePage></ProfilePage>,
+          },
+          {
+            path: "invoice",
+            element: <ProfilePage></ProfilePage>,
+          },
+          {
             path: "privacy-policy",
             element: <ProfilePage></ProfilePage>,
           },
