@@ -1,68 +1,68 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import axiosInstance from "@/api/axiosInstance";
+import { createSlice } from "@reduxjs/toolkit";
 
 interface UserState {
   email: string;
   firstName: string;
   lastName: string;
-  password: string;
-  role: "Client" | "Lawyer" | "Admin";
-  token: null | string;
+  username: string;
+  role: string;
+  address: string;
+  updatedAt: string;
+  phoneNumber: string;
+  createdAt: string;
+  loading: boolean;
+  error: string;
 }
 
 const initialState: UserState = {
   email: "",
   firstName: "",
   lastName: "",
-  password: "",
-  role: "Client",
-  token: null,
+  role: "",
+  address: "",
+  createdAt: "",
+  phoneNumber: "",
+  username: "",
+  updatedAt: "",
+  loading: false,
+  error: "",
 };
 
 const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {
-    setUser: (
-      state,
-      action: PayloadAction<{
-        email: string;
-        firstName: string;
-        lastName: string;
-        password: string;
-      }>,
-    ) => {
-      state.email = action.payload.email;
-      state.firstName = action.payload.firstName;
-      state.lastName = action.payload.lastName;
-      state.password = action.payload.password;
-      state.token = "1234567890";
-    },
-    setToken: (state, action: PayloadAction<{ token: string }>) => {
-      state.token = action.payload.token;
-    },
-    removeUser: (state) => {
-      state.email = "";
-      state.firstName = "";
-      state.lastName = "";
-      state.password = "";
-      state.role = "Client";
-      state.token = null;
-    },
-    updateUser: (
-      state,
-      action: PayloadAction<{
-        firstName: string;
-        lastName: string;
-        email: string;
-      }>,
-    ) => {
-      state.firstName = action.payload.firstName;
-      state.lastName = action.payload.lastName;
-      state.email = action.payload.email;
-    },
+  reducers: {},
+  extraReducers(builder) {
+    builder
+      .addCase(fetchUsers.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Something went wrong";
+      })
+      .addCase(fetchUsers.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = "";
+        state.email = action.payload.email;
+        state.firstName = action.payload.firstName;
+        state.lastName = action.payload.lastName;
+        state.username = action.payload.name;
+        state.address = action.payload.address;
+        state.phoneNumber = action.payload.phoneNumber;
+        state.role = action.payload.role;
+        state.createdAt = action.payload.createdAt;
+        state.updatedAt = action.payload.updatedAt;
+      });
   },
 });
 
-export const { setUser, setToken, removeUser,updateUser } = userSlice.actions;
+export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
+  const response = await axiosInstance.get("/users/profile");
+  console.log("fetchUser", response.data);
+  return response.data;
+});
 
 export default userSlice.reducer;
