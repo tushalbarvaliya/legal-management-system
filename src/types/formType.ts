@@ -1,19 +1,15 @@
 export type LoginFormState = {
-  email: string;
-  password: string;
-};
-
-export type LoginFormErrors = {
-  email: string;
+  userName: string;
   password: string;
 };
 
 export type SignUpFormState = {
+  userName: string;
   firstName: string;
   lastName: string;
   email: string;
   password: string;
-  confirmPassword: string;
+  _confirmPassword: string;
   address: string;
   pinCode: string;
   phoneNumber: string;
@@ -21,15 +17,15 @@ export type SignUpFormState = {
   city: string;
 };
 
-export type SignupFormErrors = {
-  firstName: string;
-  lastName: string;
+export type SignUpdata = {
+  name: string;
+  first_name: string;
+  last_name: string;
   email: string;
   password: string;
-  confirmPassword: string;
-  address: string;
-  pinCode: string;
   phoneNumber: string;
-  state: string;
-  city: string;
+  role: string;
+  address: string;
+  companyId: number | string;
+  isDeleted: boolean;
 };
