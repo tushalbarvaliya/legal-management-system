@@ -1,21 +1,17 @@
-import axios from "axios";
-
 import type {
   LoginFormState,
   SignUpdata,
   SignUpFormState,
 } from "@/types/formType";
+import axiosInstance from "./axiosInstance";
 
 export const login = async ({ userName, password }: LoginFormState) => {
   const data = { username: userName, password: password };
-  const url = import.meta.env.VITE_BASE_URL + "/auth/login";
-  const response = await axios.post(url, data, {
+  const response = await axiosInstance.post("/auth/login", data, {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
   });
-  console.log(response);
-
   return response.data;
 };
 
@@ -45,9 +41,8 @@ export const signUp = async ({
     companyId: "1",
     isDeleted: false,
   };
-  const url = import.meta.env.VITE_BASE_URL + "/auth/register";
 
-  const response = await axios.post(url, data, {
+  const response = await axiosInstance.post("/auth/register", data, {
     headers: {
       "ngrok-skip-browser-warning": "true",
     },
