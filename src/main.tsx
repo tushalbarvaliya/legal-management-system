@@ -15,6 +15,7 @@ import HomePage from "./pages/HomeLayout.tsx";
 import ProtectedRoute from "./routes/ProtectedRoute.tsx";
 import PublicRoute from "./routes/PublicRoute.tsx";
 import { removeToken } from "./store/slices/authSlice.ts";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage.tsx";
 import TermsAndConditions from "./pages/TermsAndConditions.tsx";
 import LoginPageForm from "./pages/LoginPageForm.tsx";
 import HomePageContent from "./pages/HomePageContent.tsx";
@@ -75,7 +76,7 @@ const router = createBrowserRouter([
           },
           {
             path: "privacy-policy",
-            element: <ProfilePage></ProfilePage>,
+            element: <PrivacyPolicyPage></PrivacyPolicyPage>,
           },
           {
             path: "terms-and-conditions",
