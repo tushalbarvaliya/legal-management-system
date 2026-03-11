@@ -11,11 +11,12 @@ import "./index.css";
 import { persistor, store } from "./store/store.tsx";
 import SignUpPage from "./pages/SignUpPage.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
-import HomePage from "./pages/HomePage.tsx";
+import HomePage from "./pages/HomeLayout.tsx";
 import ProtectedRoute from "./routes/ProtectedRoute.tsx";
 import PublicRoute from "./routes/PublicRoute.tsx";
 import { removeToken } from "./store/slices/authSlice.ts";
 import LoginPageForm from "./pages/LoginPageForm.tsx";
+import HomePageContent from "./pages/HomePageContent.tsx";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
         path: "/",
         element: <HomePage />,
         children: [
+          {
+            path: "",
+            element: <HomePageContent />,
+          },
           {
             path: "profile",
             element: <ProfilePage></ProfilePage>,

@@ -8,8 +8,8 @@ const Header = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-30 border-b border-zinc-200 bg-white/90 backdrop-blur  shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
-        <div className="mx-auto flex max-w-375 items-center justify-between px-3 py-3 sm:px-4 lg:px-5">
+      <header className="sticky top-0 z-30 border-b border-zinc-200 bg-transparent backdrop-blur  shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+        <div className="mx-auto flex  items-center justify-between px-3 py-3 sm:px-4 lg:px-5">
           <div className="flex items-center gap-2">
             <Link
               to="/"
