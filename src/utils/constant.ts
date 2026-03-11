@@ -46,8 +46,7 @@ export const termsAndConditionsList = [
     paragraph:
       "We may update these terms from time to time. Updates become effective when posted on this page, and continued use indicates acceptance of revised terms.",
   },
-
-
+];
 export const menuList = [
   { title: "Dash Board", src: "/dashboard.svg", to: "/", alt: "home" },
   { title: "Tickets", src: "/task.svg", to: "/task", alt: "task" },
