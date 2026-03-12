@@ -29,3 +29,24 @@ export type SignUpdata = {
   companyId: number | string;
   isDeleted: boolean;
 };
+
+export type ResetPasswordState = {
+  oldPassword: string;
+  newPassword: string;
+  confirmNewPassword: string;
+};
+
+export type ForgotPasswordState = {
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
+export type DocsState = {
+  title: string;
+  caseID: string;
+  description: string;
+  fileLink: string;
+  clientID: string;
+  note: string;
+};

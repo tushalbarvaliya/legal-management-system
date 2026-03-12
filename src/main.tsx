@@ -19,6 +19,11 @@ import PrivacyPolicyPage from "./pages/PrivacyPolicyPage.tsx";
 import TermsAndConditions from "./pages/TermsAndConditions.tsx";
 import LoginPageForm from "./pages/LoginPageForm.tsx";
 import HomePageContent from "./pages/HomePageContent.tsx";
+import AdminPage from "./pages/AdminPage.tsx";
+import ResetPassword from "./pages/ResetPassword.tsx";
+import ForgotPassword from "./pages/ForgotPassword.tsx";
+import DocsPage from "./pages/DocsPage.tsx";
+import ClientPage from "./pages/ClientPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -35,52 +40,60 @@ const router = createBrowserRouter([
             element: <HomePageContent />,
           },
           {
+            path: "/admin-panel",
+            element: <AdminPage />,
+          },
+          {
             path: "profile",
-            element: <ProfilePage></ProfilePage>,
+            element: <ProfilePage/>,
           },
           {
             path: "ticket",
-            element: <ProfilePage></ProfilePage>,
+            element: <ProfilePage/>,
           },
           {
             path: "task",
-            element: <ProfilePage></ProfilePage>,
+            element: <ProfilePage/>,
           },
           {
             path: "docs",
-            element: <ProfilePage></ProfilePage>,
+            element: <DocsPage/>,
           },
           {
             path: "cases",
-            element: <ProfilePage></ProfilePage>,
+            element: <ProfilePage/>,
           },
           {
             path: "client",
-            element: <ProfilePage></ProfilePage>,
+            element: <ClientPage/>,
           },
           {
             path: "session",
-            element: <ProfilePage></ProfilePage>,
+            element: <ProfilePage/>,
           },
           {
             path: "tasks",
-            element: <ProfilePage></ProfilePage>,
+            element: <ProfilePage/>,
           },
           {
             path: "staff",
-            element: <ProfilePage></ProfilePage>,
+            element: <ProfilePage/>,
           },
           {
             path: "invoice",
-            element: <ProfilePage></ProfilePage>,
+            element: <ProfilePage/>,
           },
           {
             path: "privacy-policy",
-            element: <PrivacyPolicyPage></PrivacyPolicyPage>,
+            element: <PrivacyPolicyPage/>,
           },
           {
             path: "terms-and-conditions",
-            element: <TermsAndConditions></TermsAndConditions>,
+            element: <TermsAndConditions/>,
+          },
+          {
+            path: "reset-password",
+            element: <ResetPassword/>,
           },
         ],
       },
@@ -95,7 +108,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/signUp",
-        element: <SignUpPage></SignUpPage>,
+        element: <SignUpPage/>,
+      },
+      {
+        path: "/forgot-password",
+        element: <ForgotPassword/>,
       },
     ],
   },
