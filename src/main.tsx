@@ -45,55 +45,55 @@ const router = createBrowserRouter([
           },
           {
             path: "profile",
-            element: <ProfilePage></ProfilePage>,
+            element: <ProfilePage/>,
           },
           {
             path: "ticket",
-            element: <ProfilePage></ProfilePage>,
+            element: <ProfilePage/>,
           },
           {
             path: "task",
-            element: <ProfilePage></ProfilePage>,
+            element: <ProfilePage/>,
           },
           {
             path: "docs",
-            element: <DocsPage></DocsPage>,
+            element: <DocsPage/>,
           },
           {
             path: "cases",
-            element: <ProfilePage></ProfilePage>,
+            element: <ProfilePage/>,
           },
           {
             path: "client",
-            element: <ClientPage></ClientPage>,
+            element: <ClientPage/>,
           },
           {
             path: "session",
-            element: <ProfilePage></ProfilePage>,
+            element: <ProfilePage/>,
           },
           {
             path: "tasks",
-            element: <ProfilePage></ProfilePage>,
+            element: <ProfilePage/>,
           },
           {
             path: "staff",
-            element: <ProfilePage></ProfilePage>,
+            element: <ProfilePage/>,
           },
           {
             path: "invoice",
-            element: <ProfilePage></ProfilePage>,
+            element: <ProfilePage/>,
           },
           {
             path: "privacy-policy",
-            element: <PrivacyPolicyPage></PrivacyPolicyPage>,
+            element: <PrivacyPolicyPage/>,
           },
           {
             path: "terms-and-conditions",
-            element: <TermsAndConditions></TermsAndConditions>,
+            element: <TermsAndConditions/>,
           },
           {
             path: "reset-password",
-            element: <ResetPassword></ResetPassword>,
+            element: <ResetPassword/>,
           },
         ],
       },
@@ -108,11 +108,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/signUp",
-        element: <SignUpPage></SignUpPage>,
+        element: <SignUpPage/>,
       },
       {
         path: "/forgot-password",
-        element: <ForgotPassword></ForgotPassword>,
+        element: <ForgotPassword/>,
       },
     ],
   },
