@@ -1,5 +1,7 @@
 import type {
+  ForgotPasswordState,
   LoginFormState,
+  ResetPasswordState,
   SignUpdata,
   SignUpFormState,
 } from "@/types/formType";
@@ -36,7 +38,7 @@ export const signUp = async ({
     email: email,
     password: password,
     phoneNumber: phoneNumber,
-    role: "ADMIN",
+    role: "lawyer",
     address: useAddress,
     companyId: "1",
     isDeleted: false,
@@ -45,6 +47,37 @@ export const signUp = async ({
   const response = await axiosInstance.post("/auth/register", data, {
     headers: {
       "ngrok-skip-browser-warning": "true",
+    },
+  });
+  return response.data;
+};
+
+
+export const resetPasswordAPI = async ({
+  confirmNewPassword: _confirmPassword,
+  newPassword,
+  oldPassword,
+}: ResetPasswordState) => {
+  const data = { password: oldPassword, new_password: newPassword };
+  const response = await axiosInstance.put("/users/change_password", data, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response.data;
+};
+
+// api not set
+
+export const forgetPasswordAPI = async ({
+  confirmPassword: _confirmPassword,
+  email,
+  password,
+}: ForgotPasswordState) => {
+  const data = { email: email, new_password: password };
+  const response = await axiosInstance.put("/users/forgot_password", data, {
+    headers: {
+      "Content-Type": "application/json",
     },
   });
   return response.data;

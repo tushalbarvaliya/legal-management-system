@@ -6,6 +6,9 @@ export const phoneNumberRegex = /^\d{10}$/;
 export const userNameRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z0-9]+$/;
 export const nameRegex = /^[A-Z]?[a-z]+$/;
 export const addressRegex = /^[A-Za-z0-9 ]+$/;
+export const urlRegex =
+  /\b((?:https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,}))/gi;
+
 export const termsAndConditionsList = [
   {
     title: "1. Acceptance of Terms",
@@ -49,8 +52,15 @@ export const termsAndConditionsList = [
   },
 ];
 export const menuList = [
+  {
+    title: "Admin DashBoard",
+    src: "/admin-dashboard.svg",
+    to: "/admin-panel",
+    alt: "home",
+  },
   { title: "Dash Board", src: "/dashboard.svg", to: "/", alt: "home" },
   { title: "Tickets", src: "/task.svg", to: "/task", alt: "task" },
+  { title: "client", src: "/client.svg", to: "/client", alt: "home" },
   { title: "Cases", src: "/cases.svg", to: "/cases", alt: "cases" },
   { title: "Docs", src: "/docs.svg", to: "/docs", alt: "docs" },
   { title: "Sessions", src: "/session.svg", to: "/session", alt: "session" },

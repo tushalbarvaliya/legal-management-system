@@ -19,6 +19,11 @@ import PrivacyPolicyPage from "./pages/PrivacyPolicyPage.tsx";
 import TermsAndConditions from "./pages/TermsAndConditions.tsx";
 import LoginPageForm from "./pages/LoginPageForm.tsx";
 import HomePageContent from "./pages/HomePageContent.tsx";
+import AdminPage from "./pages/AdminPage.tsx";
+import ResetPassword from "./pages/ResetPassword.tsx";
+import ForgotPassword from "./pages/ForgotPassword.tsx";
+import DocsPage from "./pages/DocsPage.tsx";
+import ClientPage from "./pages/ClientPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +40,10 @@ const router = createBrowserRouter([
             element: <HomePageContent />,
           },
           {
+            path: "/admin-panel",
+            element: <AdminPage />,
+          },
+          {
             path: "profile",
             element: <ProfilePage></ProfilePage>,
           },
@@ -48,7 +57,7 @@ const router = createBrowserRouter([
           },
           {
             path: "docs",
-            element: <ProfilePage></ProfilePage>,
+            element: <DocsPage></DocsPage>,
           },
           {
             path: "cases",
@@ -56,7 +65,7 @@ const router = createBrowserRouter([
           },
           {
             path: "client",
-            element: <ProfilePage></ProfilePage>,
+            element: <ClientPage></ClientPage>,
           },
           {
             path: "session",
@@ -82,6 +91,10 @@ const router = createBrowserRouter([
             path: "terms-and-conditions",
             element: <TermsAndConditions></TermsAndConditions>,
           },
+          {
+            path: "reset-password",
+            element: <ResetPassword></ResetPassword>,
+          },
         ],
       },
     ],
@@ -96,6 +109,10 @@ const router = createBrowserRouter([
       {
         path: "/signUp",
         element: <SignUpPage></SignUpPage>,
+      },
+      {
+        path: "/forgot-password",
+        element: <ForgotPassword></ForgotPassword>,
       },
     ],
   },
