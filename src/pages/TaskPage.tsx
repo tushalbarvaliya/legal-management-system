@@ -1,4 +1,7 @@
-const tasks = [
+import TaskCard from "@/components/Task/TaskCard";
+import type { TaskData } from "@/types/taskType";
+
+const tasks:TaskData[] = [
   {
     _id: "69b6ad73bbf11e70835795f8",
     title: "Test test dhasdf",
@@ -157,8 +160,10 @@ const TaskPage = () => {
 
         {/* list of task */}
         <div className="mt-5 space-y-3 overflow-y-hidden">
-          {tasks.map((item) => (
-            <>{item._id}</>
+          {tasks.map((item:TaskData) => (
+            <>
+              <TaskCard key={item._id} {...item}/>
+            </>
           ))}
         </div>
       </section>
