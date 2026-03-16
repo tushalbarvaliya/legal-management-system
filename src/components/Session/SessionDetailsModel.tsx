@@ -1,4 +1,6 @@
 import type { SessionData } from "@/types/sessionType";
+import { useState } from "react";
+import DeleteSessionModel from "./DeleteSessionModel";
 
 type SessionDetailsProps = {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -13,8 +15,13 @@ const formatData = (date: string) => {
 };
 
 const SessionDetailsModel = (data: SessionDetailsProps) => {
+  const [sessionDeleteModel, setSessionDeleteModel] = useState(false);
   return (
     <>
+      {/* DELETE MODAL */}
+      {sessionDeleteModel && (
+        <DeleteSessionModel {...data} closeModal={setSessionDeleteModel} />
+      )}
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
         <div className="w-full max-w-xl rounded-2xl border border-zinc-200 bg-white shadow-2xl animate-[fadeIn_.2s_ease]">
           <div className="flex items-center justify-between border-b px-6 py-4">
@@ -102,7 +109,7 @@ const SessionDetailsModel = (data: SessionDetailsProps) => {
           </div>
 
           <div className="px-6 pb-6 flex gap-4">
-            <button className="w-full rounded-lg bg-red-500 py-2.5 text-sm font-medium text-white transition hover:bg-red-600 hover:scale-[1.02]">
+            <button className="w-full rounded-lg bg-red-500 py-2.5 text-sm font-medium text-white transition hover:bg-red-600 hover:scale-[1.02]" onClick={()=>{setSessionDeleteModel(true)}}>
               Delete
             </button>
             <button
