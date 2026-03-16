@@ -1,4 +1,6 @@
 import type { SessionData } from "@/types/sessionType";
+import { useState } from "react";
+import SessionDetailsModel from "./SessionDetailsModel";
 
 const formatData = (date: string) => {
   return new Date(date).toLocaleDateString("en-IN", {
@@ -9,9 +11,18 @@ const formatData = (date: string) => {
 };
 
 const SessionCard = (data: SessionData) => {
+  const [sessionModelOpen, setSessionModelOpen] = useState(false);
   return (
     <>
-      <div className="sessionCard relative group bg-white border border-zinc-200 rounded-2xl p-6 shadow-sm cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+      {sessionModelOpen && (
+        <SessionDetailsModel closeModal={setSessionModelOpen} {...data} />
+      )}
+      <div
+        className="sessionCard relative group bg-white border border-zinc-200 rounded-2xl p-6 shadow-sm cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+        onClick={() => {
+          setSessionModelOpen(true);
+        }}
+      >
         <div className="absolute top-0 left-0 w-full h-1 bg-black rounded-t-2xl"></div>
 
         <div className="flex justify-between items-start">
@@ -23,7 +34,8 @@ const SessionCard = (data: SessionData) => {
             <p className="text-sm text-black mt-1">
               Client:
               <span className="text-zinc-700 font-semibold">
-                {" "}{data.clientName}
+                {" "}
+                {data.clientName}
               </span>
             </p>
           </div>
@@ -38,9 +50,7 @@ const SessionCard = (data: SessionData) => {
             <span className="text-zinc-400">
               <img src="/session.svg" alt="session" className="h-5 w-5" />
             </span>
-            <span>
-              {formatData(data.date)}
-            </span>
+            <span>{formatData(data.date)}</span>
           </div>
 
           <div className="flex items-center gap-2">
