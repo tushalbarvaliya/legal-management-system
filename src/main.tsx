@@ -23,6 +23,12 @@ import ResetPassword from "./pages/ResetPassword.tsx";
 import ForgotPassword from "./pages/ForgotPassword.tsx";
 // import DocsPage from "./pages/DocsPage.tsx";
 import ClientPage from "./pages/ClientPage.tsx";
+import DocsPage from "./pages/DocsPage.tsx";
+import CasesPage from "./pages/CasesPage.tsx";
+import SessionPage from "./pages/SessionPage.tsx";
+import TaskPage from "./pages/TaskPage.tsx";
+import StaffPage from "./pages/StaffPage.tsx";
+import InvoicePage from "./pages/InvoicePage.tsx";
 
 export const queryClient = new QueryClient();
 
@@ -43,8 +49,28 @@ const router = createBrowserRouter([
             element: <ProfilePage />,
           },
           {
+            path: "cases",
+            element: <CasesPage />,
+          },
+          {
+            path: "session",
+            element: <SessionPage />,
+          },
+          {
+            path: "tasks",
+            element: <TaskPage />,
+          },
+          {
+            path: "staff",
+            element: <StaffPage />,
+          },
+          {
+            path: "invoice",
+            element: <InvoicePage />,
+          },
+          {
             path: "docs",
-            element: <></>,
+            element: <DocsPage/>,
           },
           {
             path: "client",

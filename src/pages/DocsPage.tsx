@@ -1,4 +1,4 @@
-import DocsHeader from "@/components/Model/DocsModels/DocsHeader";
+import DocsHeader from "@/components/DocsModels/DocsHeader";
 import { documents } from "@/utils/constant";
 
 const DocsPage = () => {

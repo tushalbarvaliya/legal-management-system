@@ -1,6 +1,6 @@
 import { getAllClient } from "@/api/clientAPI";
-import ClientCard from "@/components/Model/Client/ClientCard";
-import ClientHeader from "@/components/Model/Client/ClientHeader";
+import ClientCard from "@/components/Client/ClientCard";
+import ClientHeader from "@/components/Client/ClientHeader";
 import NoClientFound from "@/components/NoClientFound";
 import type { ClientProps } from "@/types/clientType";
 import { useQuery } from "@tanstack/react-query";
