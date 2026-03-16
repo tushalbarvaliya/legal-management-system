@@ -7,11 +7,11 @@ import type {
 } from "@/types/formType";
 import axiosInstance from "./axiosInstance";
 
-export const login = async ({ userName, password }: LoginFormState) => {
-  const data = { username: userName, password: password };
-  const response = await axiosInstance.post("/auth/login", data, {
+export const login = async ({ email, password }: LoginFormState) => {
+  const data = { email: email, password: password };
+  const response = await axiosInstance.post("/login", data, {
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
+      "Content-Type": "application/json",
     },
   });
   return response.data;
@@ -51,7 +51,6 @@ export const signUp = async ({
   });
   return response.data;
 };
-
 
 export const resetPasswordAPI = async ({
   confirmNewPassword: _confirmPassword,

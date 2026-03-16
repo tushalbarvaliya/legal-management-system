@@ -2,7 +2,7 @@ import axiosInstance from "./axiosInstance";
 
 export const getProfile = async () => {
   try {
-    const response = await axiosInstance.get("/users/profile");
+    const response = await axiosInstance.get("/profile");
     return response.data;
   } catch {
     return {
