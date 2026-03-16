@@ -60,6 +60,10 @@ const AddTaskModel = (data: TaskAddProps) => {
                     value: true,
                     message: "Please Enter This value",
                   },
+                  minLength: {
+                    value: 10,
+                    message: "Title should contain Minimum 10 letter",
+                  },
                 })}
               />
               {errors.title?.message && (
@@ -80,6 +84,10 @@ const AddTaskModel = (data: TaskAddProps) => {
                   required: {
                     value: true,
                     message: "Please Enter This value",
+                  },
+                  minLength: {
+                    value: 10,
+                    message: "Description should contain Minimum 10 letter",
                   },
                 })}
               />
