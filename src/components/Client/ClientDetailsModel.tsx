@@ -27,10 +27,20 @@ const ClientDetailsModel = (data: clientDetailModel) => {
               </button>
             </div>
             <div className="space-y-4 px-5 py-4 sm:px-6 sm:py-5">
-              <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+              <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4 flex gap-4">
                 <p className="text-lg font-semibold text-zinc-900">
                   {data.firstName} {data.lastName}
                 </p>
+                {data.isBlock && (
+                  <span className="text-xs bg-zinc-100 text-black px-3 py-1 rounded-full font-medium">
+                    {data.isBlock ? "Block" : ""}
+                  </span>
+                )}
+                {data.isDelete && (
+                  <span className="text-xs bg-red-100 text-red-800 px-3 py-1 rounded-full font-medium">
+                    {data.isDelete ? "Delete" : ""}
+                  </span>
+                )}
               </div>
               <div className="grid grid-cols-1 gap-3 text-sm text-zinc-700 sm:grid-cols-2">
                 <p>
