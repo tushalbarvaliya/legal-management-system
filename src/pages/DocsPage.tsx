@@ -1,6 +1,8 @@
-import DocsHeader from "@/components/DocsHeader";
+import DocsHeader from "@/components/Model/DocsModels/DocsHeader";
+import { documents } from "@/utils/constant";
 
 const DocsPage = () => {
+  const set = new Set(documents.map((items) => items.caseId));
   return (
     <>
       <DocsHeader />
@@ -37,28 +39,18 @@ const DocsPage = () => {
           </div>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 2xl:grid-cols-4">
-          {/* not found */}
-          {/* <div className="col-span-full rounded-xl border border-dashed border-zinc-300 bg-zinc-50 p-6 text-center text-sm text-zinc-600">
-            <p className="font-medium text-zinc-700">
-              No matching clients found.
-            </p>
-            <p className="mt-1 text-xs text-zinc-500">Try another keyword.</p>
-          </div> */}
+          
 
-          <button
-            type="button"
-            className={`w-full rounded-xl border p-4 text-left shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-zinc-100/80 `}
-          >
-            <p className="text-base font-semibold text-zinc-900">
-              tushal Barvaliya
-            </p>
-            <p className="mt-1 text-xs font-medium uppercase tracking-[0.12em] text-zinc-500">
-              43
-            </p>
-          </button>
+          {[...set].map((items) => (
+            <button
+              type="button"
+              className={`w-full rounded-xl border p-4 text-left shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-zinc-100/80 `}
+            >
+              <p className="text-base font-semibold text-zinc-900">{items}</p>
+            </button>
+          ))}
         </div>
       </div>
-      <h1>DocsPage</h1>
     </>
   );
 };

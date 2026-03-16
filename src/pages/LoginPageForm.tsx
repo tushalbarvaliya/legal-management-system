@@ -1,7 +1,7 @@
 import { login } from "@/api/authAPI";
 import { setToken } from "@/store/slices/authSlice";
 import type { LoginFormState } from "@/types/formType";
-import { passwordRegex, userNameRegex } from "@/utils/constant";
+import { emailRegex, passwordRegex } from "@/utils/constant";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -25,7 +25,7 @@ const LoginPageForm = () => {
   const { mutate, isPending } = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
-      const token = { token: data.access_token };
+      const token = { token: data.token };
       dispatch(setToken(token));
       navigate("/");
     },
@@ -56,35 +56,33 @@ const LoginPageForm = () => {
 
         {/* main form */}
         <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
-          <div className="sm:col-span-2">
+          <div className="flex flex-col gap-2 sm:col-span-2">
             <label
-              htmlFor="userName"
+              htmlFor="email"
               className="text-sm font-medium text-zinc-800"
             >
-              User Name
+              Email
             </label>
             <input
-              id="userName"
-              type="text"
+              id="email"
+              type="email"
+              placeholder="you@example.com"
               autoComplete="off"
-              placeholder={"john"}
-              className="field block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-              {...register("userName", {
-                minLength: {
-                  value: 3,
-                  message: "User name length should be greater than 3 ",
-                },
-                pattern: {
-                  value: userNameRegex,
-                  message:
-                    "Username must include letters and numbers only, with no spaces or special characters.",
-                },
+              className="block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
+              {...register("email", {
                 required: true,
+                pattern: {
+                  value: emailRegex,
+                  message:
+                    "Please enter a valid email address (e.g., user@example.com).",
+                },
               })}
             />
-            <p className="min-h-5 text-xs text-red-600">
-              {errors.userName?.message}
-            </p>
+            {errors.email && (
+              <p className="min-h-5 text-xs text-red-600">
+                {errors.email?.message}
+              </p>
+            )}
           </div>
 
           {/* Password */}
@@ -125,10 +123,11 @@ const LoginPageForm = () => {
                 />
               </button>
             </div>
-
-            <p className="min-h-5 text-xs text-red-600">
-              {errors.password?.message}
-            </p>
+            {errors.password && (
+              <p className="min-h-5 text-xs text-red-600">
+                {errors.password?.message}
+              </p>
+            )}
           </div>
 
           <div className="flex justify-end">
