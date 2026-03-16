@@ -9,6 +9,7 @@ import { Button } from "../ui/button";
 import { MoreVertical } from "lucide-react";
 import { useState } from "react";
 import TaskDetailsModel from "./TaskDetailsModel";
+import UpdateTaskModel from "./UpdateTaskModel";
 
 const getPriorityColor = (priority: string) => {
   if (priority == "low") {
@@ -39,10 +40,14 @@ const getStatusColor = (status: string) => {
 };
 const TaskCard = (data: TaskData) => {
   const [openDetailsModel, setOpenDetailsModel] = useState(false);
+  const [openUpdateTaskModel, setUpdateTaskModel] = useState(false);
   return (
     <>
       {openDetailsModel && (
         <TaskDetailsModel {...data} closeModal={setOpenDetailsModel} />
+      )}
+      {openUpdateTaskModel && (
+        <UpdateTaskModel {...data} closeModal={setUpdateTaskModel} />
       )}
       <article
         className="group relative cursor-pointer rounded-xl border border-zinc-200 bg-zinc-50/40 p-4 shadow-sm transition duration-200 hover:bg-zinc-100/80 hover:shadow-soft"
@@ -114,7 +119,14 @@ const TaskCard = (data: TaskData) => {
               </DropdownMenuTrigger>
 
               <DropdownMenuContent align="end" className="w-40">
-                <DropdownMenuItem>Edit</DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setUpdateTaskModel(true)
+                  }}
+                >
+                  Edit
+                </DropdownMenuItem>
 
                 <DropdownMenuItem className="text-rose-500">
                   Delete
