@@ -31,9 +31,6 @@ const ClientDetailsModel = (data: clientDetailModel) => {
                 <p className="text-lg font-semibold text-zinc-900">
                   {data.firstName} {data.lastName}
                 </p>
-                <p className="mt-1 text-xs font-medium uppercase tracking-[0.12em] text-zinc-500">
-                  {data.clientId}
-                </p>
               </div>
               <div className="grid grid-cols-1 gap-3 text-sm text-zinc-700 sm:grid-cols-2">
                 <p>
@@ -54,6 +51,12 @@ const ClientDetailsModel = (data: clientDetailModel) => {
                   <span className="font-medium text-zinc-500">Gender:</span>{" "}
                   <span>{data.gender}</span>
                 </p>
+              </div>
+              <div className="rounded-xl border border-zinc-200 bg-white p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">
+                  Email
+                </p>
+                <p className="mt-1 text-sm text-zinc-700">{data.email}</p>
               </div>
               <div className="rounded-xl border border-zinc-200 bg-white p-4">
                 <p className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">
