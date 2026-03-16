@@ -54,6 +54,7 @@ const ClientCard = (data: ClientProps) => {
     },
   });
   return (
+    // ${data.isDelete && !data.isBlock ? "bg-amber-300" : !data.isDelete && data.isBlock ? "bg-stone-500" : data.isDelete && data.isBlock ? "bg-red-500" : "bg-zinc-50/40"}
     <>
       {clientModelOpen && (
         <ClientDetailsModel {...data} closeModal={setClientModelOpen} />
@@ -69,7 +70,7 @@ const ClientCard = (data: ClientProps) => {
       )}
 
       <article
-        className={`group relative cursor-pointer rounded-xl border border-zinc-200 ${data.isDelete && !data.isBlock ? "bg-amber-300" : !data.isDelete && data.isBlock ? "bg-stone-500" : data.isDelete && data.isBlock ? "bg-red-500" : "bg-zinc-50/40"}  p-4 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-zinc-100/80 hover:shadow-soft sm:p-5 `}
+        className={`group relative cursor-pointer rounded-xl border border-zinc-200  bg-zinc-50/40  p-4 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-zinc-100/80 hover:shadow-soft sm:p-5 `}
         onClick={() => {
           setClientModelOpen(true);
         }}
@@ -87,6 +88,16 @@ const ClientCard = (data: ClientProps) => {
                 <h3 className="text-base font-semibold text-zinc-900">
                   {data.firstName} {data.lastName}
                 </h3>
+                {data.isBlock && (
+                  <span className="text-xs bg-zinc-100 text-black px-3 py-1 rounded-full font-medium">
+                    {data.isBlock ? "Block" : ""}
+                  </span>
+                )}
+                {data.isDelete && (
+                  <span className="text-xs bg-red-100 text-red-800 px-3 py-1 rounded-full font-medium">
+                    {data.isDelete ? "Delete" : ""}
+                  </span>
+                )}
               </div>
               <div className="mt-3 grid grid-cols-1 gap-2 text-sm text-zinc-700 sm:grid-cols-2">
                 <p>

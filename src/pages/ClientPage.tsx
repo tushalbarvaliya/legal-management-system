@@ -26,10 +26,6 @@ const ClientPage = () => {
           <h2 className="text-lg font-semibold tracking-tight text-zinc-900">
             Client List
           </h2>
-          <p
-            id="clientCount"
-            className="text-xs font-medium uppercase tracking-[0.15em] text-zinc-500"
-          ></p>
         </div>
         <div className="mb-4">
           <label htmlFor="clientSearchInput" className="sr-only">
