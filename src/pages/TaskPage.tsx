@@ -101,6 +101,7 @@ const TaskPage = () => {
   return (
     <>
       <section className="rounded-2xl  border border-zinc-200 bg-white p-4 shadow-soft sm:p-6">
+        {/* header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl">
@@ -138,6 +139,27 @@ const TaskPage = () => {
               <option value="completed">Completed</option>
             </select>
           </div>
+        </div>
+        {/* analysis of task */}
+        <div className="mt-5 space-y-3 overflow-y-scroll no-scrollbar">
+          <div className="flex rounded-full justify-center items-center gap-4 flex-wrap text-sm text-stone-500">
+            <p className="rounded-full bg-blue-200 px-2 text-blue-800">
+              Total Task {8}
+            </p>
+            <p className="rounded-full bg-emerald-200 px-2 text-emerald-800">
+              {1} Completed
+            </p>
+            <p className="rounded-full bg-amber-100 px-2  text-amber-800">
+              {2} In Process
+            </p>
+          </div>
+        </div>
+
+        {/* list of task */}
+        <div className="mt-5 space-y-3 overflow-y-hidden">
+          {tasks.map((item) => (
+            <>{item._id}</>
+          ))}
         </div>
       </section>
     </>
