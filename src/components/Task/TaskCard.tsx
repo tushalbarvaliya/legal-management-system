@@ -10,6 +10,7 @@ import { MoreVertical } from "lucide-react";
 import { useState } from "react";
 import TaskDetailsModel from "./TaskDetailsModel";
 import UpdateTaskModel from "./UpdateTaskModel";
+import DeleteTaskModel from "./DeleteTaskModel";
 
 const getPriorityColor = (priority: string) => {
   if (priority == "low") {
@@ -41,6 +42,7 @@ const getStatusColor = (status: string) => {
 const TaskCard = (data: TaskData) => {
   const [openDetailsModel, setOpenDetailsModel] = useState(false);
   const [openUpdateTaskModel, setUpdateTaskModel] = useState(false);
+  const [openDeleteModel, setOpenDeleteModel] = useState(false);
   return (
     <>
       {openDetailsModel && (
@@ -48,6 +50,9 @@ const TaskCard = (data: TaskData) => {
       )}
       {openUpdateTaskModel && (
         <UpdateTaskModel {...data} closeModal={setUpdateTaskModel} />
+      )}
+      {openDeleteModel && (
+        <DeleteTaskModel {...data} closeModal={setOpenDeleteModel} />
       )}
       <article
         className="group relative cursor-pointer rounded-xl border border-zinc-200 bg-zinc-50/40 p-4 shadow-sm transition duration-200 hover:bg-zinc-100/80 hover:shadow-soft"
@@ -122,13 +127,19 @@ const TaskCard = (data: TaskData) => {
                 <DropdownMenuItem
                   onClick={(e) => {
                     e.stopPropagation();
-                    setUpdateTaskModel(true)
+                    setUpdateTaskModel(true);
                   }}
                 >
                   Edit
                 </DropdownMenuItem>
 
-                <DropdownMenuItem className="text-rose-500">
+                <DropdownMenuItem
+                  className="text-rose-500"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpenDeleteModel(true);
+                  }}
+                >
                   Delete
                 </DropdownMenuItem>
                 <DropdownMenuItem className="text-green-600">
