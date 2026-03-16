@@ -5,7 +5,7 @@ const DocsPage = () => {
   const set = new Set(documents.map((items) => items.caseId));
   return (
     <>
-      <DocsHeader />
+    <DocsHeader/>
       <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-soft sm:p-6 mt-4">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <div>

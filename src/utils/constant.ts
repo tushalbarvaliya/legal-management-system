@@ -133,7 +133,7 @@ export const privacyPolicyPage = [
 
 export const clients: ClientProps[] = [
   {
-    clientId: "CL-1001",
+    _id: "CL-1001",
     firstName: "Aarav",
     lastName: "Sharma",
     mobileNumber: "+91 98901 22334",
@@ -142,9 +142,12 @@ export const clients: ClientProps[] = [
     address: "Nehru Place, New Delhi",
     gender: "Male",
     notes: "Prefers follow-ups over calls after 6 PM.",
+    isBlock: false,
+    email: "aarva@gmail.com",
+    isDelete: false,
   },
   {
-    clientId: "CL-1002",
+    _id: "CL-1002",
     firstName: "Mira",
     lastName: "Kapoor",
     mobileNumber: "+91 98111 55772",
@@ -153,9 +156,12 @@ export const clients: ClientProps[] = [
     address: "Bandra West, Mumbai",
     gender: "Female",
     notes: "Looking for monthly consulting package.",
+    isBlock: false,
+    email: "aarva@gmail.com",
+    isDelete: false,
   },
   {
-    clientId: "CL-1003",
+    _id: "CL-1003",
     firstName: "Dev",
     lastName: "Menon",
     mobileNumber: "+91 97555 33661",
@@ -164,6 +170,9 @@ export const clients: ClientProps[] = [
     address: "Whitefield, Bengaluru",
     gender: "Other",
     notes: "",
+    isBlock: false,
+    email: "aarva@gmail.com",
+    isDelete: false,
   },
 ];
 

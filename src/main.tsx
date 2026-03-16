@@ -19,17 +19,10 @@ import PrivacyPolicyPage from "./pages/PrivacyPolicyPage.tsx";
 import TermsAndConditions from "./pages/TermsAndConditions.tsx";
 import LoginPageForm from "./pages/LoginPageForm.tsx";
 import HomePageContent from "./pages/HomePageContent.tsx";
-import AdminPage from "./pages/AdminPage.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import ForgotPassword from "./pages/ForgotPassword.tsx";
 // import DocsPage from "./pages/DocsPage.tsx";
 import ClientPage from "./pages/ClientPage.tsx";
-import CasesPage from "./pages/CasesPage.tsx";
-import TaskPage from "./pages/TaskPage.tsx";
-import StaffPage from "./pages/StaffPage.tsx";
-import SessionPage from "./pages/SessionPage.tsx";
-import InvoicePage from "./pages/InvoicePage.tsx";
-import LogsPage from "./pages/LogsPage.tsx";
 
 export const queryClient = new QueryClient();
 
@@ -46,10 +39,6 @@ const router = createBrowserRouter([
             element: <HomePageContent />,
           },
           {
-            path: "/admin-panel",
-            element: <AdminPage />,
-          },
-          {
             path: "profile",
             element: <ProfilePage />,
           },
@@ -58,36 +47,8 @@ const router = createBrowserRouter([
             element: <></>,
           },
           {
-            path: "cases",
-            element: <CasesPage />,
-          },
-          {
             path: "client",
             element: <ClientPage />,
-          },
-          {
-            path: "session",
-            element: <SessionPage />,
-          },
-          {
-            path: "tasks",
-            element: <TaskPage />,
-          },
-          {
-            path: "logs",
-            element: <LogsPage />,
-          },
-          {
-            path: "tasks/:id",
-            element: <TaskPage />,
-          },
-          {
-            path: "staff",
-            element: <StaffPage />,
-          },
-          {
-            path: "invoice",
-            element: <InvoicePage />,
           },
           {
             path: "privacy-policy",
