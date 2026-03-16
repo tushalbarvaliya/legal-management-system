@@ -1,5 +1,6 @@
 import AddSessionModel from "@/components/Session/AddSessionModel";
 import SessionCard from "@/components/Session/SessionCard";
+import SessionCardSkeleton from "@/components/Session/SessionCardSkeleton";
 import type { SessionData } from "@/types/sessionType";
 import { useState } from "react";
 
@@ -120,6 +121,7 @@ const SessionPage = () => {
             {sessions.map((item) => (
               <SessionCard key={item._id} {...item} />
             ))}
+            <SessionCardSkeleton/>
           </div>
         </div>
         <button
