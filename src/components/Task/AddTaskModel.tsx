@@ -120,8 +120,7 @@ const AddTaskModel = (data: TaskAddProps) => {
                 <label className="block mb-1 font-medium text-zinc-700">
                   Assign To
                 </label>
-                <input
-                  type="text"
+                <select
                   className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm outline-none focus:border-zinc-400"
                   {...register("assignTo", {
                     required: {
@@ -129,7 +128,13 @@ const AddTaskModel = (data: TaskAddProps) => {
                       message: "Please Enter This value",
                     },
                   })}
-                />
+                >
+                  <option value="">Select Staff</option>
+                  <option value="tushal">Tushal Barvaliya</option>
+                  <option value="ketul">Ketul Suthar</option>
+                  <option value="arjun">Arjun Patel</option>
+                </select>
+
                 {errors.assignTo?.message && (
                   <p className="min-h-5 text-xs text-red-600">
                     {errors.assignTo.message}
@@ -153,10 +158,10 @@ const AddTaskModel = (data: TaskAddProps) => {
                       const selectedDate = new Date(value);
                       selectedDate.setHours(0, 0, 0, 0);
 
-                      return (
-                        selectedDate >= today ||
-                        "Please enter a valid future or today's date"
-                      );
+                      if (selectedDate < today) {
+                        return "Please select today or a future date";
+                      }
+                      return true;
                     },
                   })}
                 />
