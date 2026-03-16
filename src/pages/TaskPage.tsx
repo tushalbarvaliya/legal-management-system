@@ -1,5 +1,7 @@
+import AddTaskModel from "@/components/Task/AddTaskModel";
 import TaskCard from "@/components/Task/TaskCard";
 import type { TaskData } from "@/types/taskType";
+import { useState } from "react";
 
 const tasks: TaskData[] = [
   {
@@ -101,6 +103,7 @@ const tasks: TaskData[] = [
 ];
 
 const TaskPage = () => {
+  const [taskAddModel, setTaskAddModel] = useState(false);
   return (
     <>
       <section className="rounded-2xl  border border-zinc-200 bg-white p-4 shadow-soft sm:p-6">
@@ -143,33 +146,39 @@ const TaskPage = () => {
             </select>
           </div>
         </div>
-        
+
         {/* analysis of task */}
         <div className="mt-5 space-y-3 overflow-y-scroll no-scrollbar">
           <div className="flex rounded-full justify-center items-center gap-4 flex-wrap text-sm text-stone-500">
             <p className="rounded-full bg-blue-200 px-2 text-blue-800">
-              Total Task {8}
+              Total Task: {8}
             </p>
             <p className="rounded-full bg-emerald-200 px-2 text-emerald-800">
-              {1} Completed
+              Completed: {1}
             </p>
             <p className="rounded-full bg-amber-100 px-2  text-amber-800">
-              {2} In Process
+              In Process: {2}
             </p>
           </div>
         </div>
 
         {/* Add button ADD */}
         <button className="fixed bottom-6 right-6 z-20 inline-flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-xl transition duration-300 hover:scale-105 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:ring-offset-2 lg:bottom-8 lg:right-8">
-          <img src="/plus.svg" alt="+" className="h-6 w-6" />
+          <img
+            src="/plus.svg"
+            alt="+"
+            className="h-6 w-6"
+            onClick={() => {
+              setTaskAddModel(true);
+            }}
+          />
         </button>
+        {taskAddModel && <AddTaskModel closeModal={setTaskAddModel} />}
 
         {/* list of task */}
         <div className="mt-5 space-y-3 overflow-y-hidden">
           {tasks.map((item: TaskData) => (
-            <>
-              <TaskCard key={item._id} {...item} />
-            </>
+            <TaskCard key={item._id} {...item} />
           ))}
         </div>
       </section>
