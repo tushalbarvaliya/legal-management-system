@@ -1,5 +1,7 @@
+import AddSessionModel from "@/components/Session/AddSessionModel";
 import SessionCard from "@/components/Session/SessionCard";
 import type { SessionData } from "@/types/sessionType";
+import { useState } from "react";
 
 const sessions: SessionData[] = [
   {
@@ -74,8 +76,10 @@ const sessions: SessionData[] = [
   },
 ];
 const SessionPage = () => {
+  const [sessionAddModel, setSessionAddModel] = useState(false);
   return (
     <>
+      {sessionAddModel && <AddSessionModel closeModal={setSessionAddModel} />}
       <section className="rounded-2xl  border border-zinc-200 bg-white p-4 shadow-soft sm:p-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
@@ -112,16 +116,18 @@ const SessionPage = () => {
         </div>
 
         <div className="mt-5 space-y-3 overflow-y-scroll no-scrollbar">
-          <p className="hidden rounded-xl border border-dashed border-zinc-300 bg-zinc-50 p-6 text-center text-sm text-zinc-600">
-            No tasks match your current search or filters.
-          </p>
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3 mt-3">
             {sessions.map((item) => (
-                <SessionCard key={item._id} {...item} />
+              <SessionCard key={item._id} {...item} />
             ))}
           </div>
         </div>
-        <button className="fixed bottom-6 right-6 z-20 inline-flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-xl transition duration-300 hover:scale-105 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:ring-offset-2 lg:bottom-8 lg:right-8">
+        <button
+          className="fixed bottom-6 right-6 z-20 inline-flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-xl transition duration-300 hover:scale-105 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:ring-offset-2 lg:bottom-8 lg:right-8"
+          onClick={() => {
+            setSessionAddModel(true);
+          }}
+        >
           <img src="/plus.svg" alt="+" className="h-6 w-6" />
         </button>
       </section>
