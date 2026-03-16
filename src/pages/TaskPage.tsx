@@ -1,5 +1,6 @@
 import AddTaskModel from "@/components/Task/AddTaskModel";
 import TaskCard from "@/components/Task/TaskCard";
+// import TaskCardSkeleton from "@/components/Task/TaskCardSkeleton";
 import type { TaskData } from "@/types/taskType";
 import { useState } from "react";
 
@@ -180,6 +181,7 @@ const TaskPage = () => {
           {tasks.map((item: TaskData) => (
             <TaskCard key={item._id} {...item} />
           ))}
+          {/* <TaskCardSkeleton/> */}
         </div>
       </section>
     </>
