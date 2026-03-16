@@ -213,7 +213,7 @@ const ProfilePage = () => {
                     type="text"
                     autoComplete="off"
                     placeholder={"121212"}
-                    defaultValue={data?.address.split("$")[3]}
+                    defaultValue={data.pinCode}
                     disabled={!isEdit}
                     className="field block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
                     {...register("pinCode", {
@@ -275,7 +275,7 @@ const ProfilePage = () => {
                     type="text"
                     autoComplete="off"
                     placeholder={"karnataka"}
-                    defaultValue={data?.address.split("$")[2]}
+                    defaultValue={data?.state}
                     disabled={!isEdit}
                     className="field block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
                     {...register("state", {
@@ -307,7 +307,7 @@ const ProfilePage = () => {
                     type="text"
                     autoComplete="off"
                     placeholder={"Deo"}
-                    defaultValue={data?.address.split("$")[1]}
+                    defaultValue={data?.city}
                     disabled={!isEdit}
                     className="field block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
                     {...register("city", {
