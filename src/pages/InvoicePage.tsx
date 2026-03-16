@@ -1,3 +1,5 @@
+import InvoiceList from "@/components/Invoice/InvoiceList";
+
 const InvoicePage = () => {
   return (
     <>
@@ -67,6 +69,7 @@ const InvoicePage = () => {
             </p>
           </article>
         </section>
+        <InvoiceList/>
       </div>
     </>
   );
