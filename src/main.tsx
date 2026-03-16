@@ -22,10 +22,10 @@ import HomePageContent from "./pages/HomePageContent.tsx";
 import AdminPage from "./pages/AdminPage.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import ForgotPassword from "./pages/ForgotPassword.tsx";
-import DocsPage from "./pages/DocsPage.tsx";
+// import DocsPage from "./pages/DocsPage.tsx";
 import ClientPage from "./pages/ClientPage.tsx";
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
@@ -57,7 +57,7 @@ const router = createBrowserRouter([
           },
           {
             path: "docs",
-            element: <DocsPage/>,
+            element: <></>,
           },
           {
             path: "cases",
