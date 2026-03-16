@@ -7,6 +7,8 @@ import {
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { MoreVertical } from "lucide-react";
+import { useState } from "react";
+import TaskDetailsModel from "./TaskDetailsModel";
 
 const getPriorityColor = (priority: string) => {
   if (priority == "low") {
@@ -36,9 +38,18 @@ const getStatusColor = (status: string) => {
   }
 };
 const TaskCard = (data: TaskData) => {
+  const [openDetailsModel, setOpenDetailsModel] = useState(false);
   return (
     <>
-      <article className="group relative cursor-pointer rounded-xl border border-zinc-200 bg-zinc-50/40 p-4 shadow-sm transition duration-200 hover:bg-zinc-100/80 hover:shadow-soft">
+      {openDetailsModel && (
+        <TaskDetailsModel {...data} closeModal={setOpenDetailsModel} />
+      )}
+      <article
+        className="group relative cursor-pointer rounded-xl border border-zinc-200 bg-zinc-50/40 p-4 shadow-sm transition duration-200 hover:bg-zinc-100/80 hover:shadow-soft"
+        onClick={() => {
+          setOpenDetailsModel(true);
+        }}
+      >
         <div className="flex items-start gap-3">
           <div className="min-w-0 flex-1">
             {/* TITLE */}
@@ -105,7 +116,9 @@ const TaskCard = (data: TaskData) => {
               <DropdownMenuContent align="end" className="w-40">
                 <DropdownMenuItem>Edit</DropdownMenuItem>
 
-                <DropdownMenuItem className="text-rose-500">Delete</DropdownMenuItem>
+                <DropdownMenuItem className="text-rose-500">
+                  Delete
+                </DropdownMenuItem>
                 <DropdownMenuItem className="text-green-600">
                   Mark as Completed
                 </DropdownMenuItem>
