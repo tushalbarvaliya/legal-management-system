@@ -1,7 +1,7 @@
 import TaskCard from "@/components/Task/TaskCard";
 import type { TaskData } from "@/types/taskType";
 
-const tasks:TaskData[] = [
+const tasks: TaskData[] = [
   {
     _id: "69b6ad73bbf11e70835795f8",
     title: "Test test dhasdf",
@@ -143,6 +143,7 @@ const TaskPage = () => {
             </select>
           </div>
         </div>
+        
         {/* analysis of task */}
         <div className="mt-5 space-y-3 overflow-y-scroll no-scrollbar">
           <div className="flex rounded-full justify-center items-center gap-4 flex-wrap text-sm text-stone-500">
@@ -158,11 +159,16 @@ const TaskPage = () => {
           </div>
         </div>
 
+        {/* Add button ADD */}
+        <button className="fixed bottom-6 right-6 z-20 inline-flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-xl transition duration-300 hover:scale-105 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:ring-offset-2 lg:bottom-8 lg:right-8">
+          <img src="/plus.svg" alt="+" className="h-6 w-6" />
+        </button>
+
         {/* list of task */}
         <div className="mt-5 space-y-3 overflow-y-hidden">
-          {tasks.map((item:TaskData) => (
+          {tasks.map((item: TaskData) => (
             <>
-              <TaskCard key={item._id} {...item}/>
+              <TaskCard key={item._id} {...item} />
             </>
           ))}
         </div>
