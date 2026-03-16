@@ -1,3 +1,4 @@
+import SessionCard from "@/components/Session/SessionCard";
 import type { SessionData } from "@/types/sessionType";
 
 const sessions: SessionData[] = [
@@ -116,7 +117,7 @@ const SessionPage = () => {
           </p>
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3 mt-3">
             {sessions.map((item) => (
-              <>{item._id}</>
+                <SessionCard key={item._id} {...item} />
             ))}
           </div>
         </div>
