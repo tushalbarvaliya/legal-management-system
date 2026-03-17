@@ -67,21 +67,21 @@ export const menuList = [
     src: "/client.svg",
     to: "/client",
     alt: "home",
-    role: ["lawyer", "lawyer","staff"],
+    role: ["lawyer", "lawyer", "staff"],
   },
   {
     title: "Cases",
     src: "/cases.svg",
     to: "/cases",
     alt: "cases",
-    role: ["lawyer",'staff'],
+    role: ["lawyer", "staff"],
   },
   {
     title: "Docs",
     src: "/docs.svg",
     to: "/docs",
     alt: "docs",
-    role: ["lawyer",'staff'],
+    role: ["lawyer", "staff"],
   },
   {
     title: "Sessions",
@@ -95,7 +95,7 @@ export const menuList = [
     src: "/tasks.svg",
     to: "/tasks",
     alt: "tasks",
-    role: ["lawyer","staff"],
+    role: ["lawyer", "staff"],
   },
   {
     title: "Staff",
@@ -110,6 +110,13 @@ export const menuList = [
     to: "/invoice",
     alt: "invoice",
     role: ["lawyer"],
+  },
+  {
+    title: "lawyer",
+    src: "/invoice.svg",
+    to: "/lawyer",
+    alt: "lawyer",
+    role: ["admin"],
   },
 ];
 

@@ -29,6 +29,7 @@ import SessionPage from "./pages/SessionPage.tsx";
 import TaskPage from "./pages/TaskPage.tsx";
 import StaffPage from "./pages/StaffPage.tsx";
 import InvoicePage from "./pages/InvoicePage.tsx";
+import LawyerPage from "./pages/LawyerPage.tsx";
 
 export const queryClient = new QueryClient();
 
@@ -75,6 +76,10 @@ const router = createBrowserRouter([
           {
             path: "client",
             element: <ClientPage />,
+          },
+          {
+            path: "lawyer",
+            element: <LawyerPage />,
           },
           {
             path: "privacy-policy",
