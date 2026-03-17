@@ -1,5 +1,6 @@
 import type { Invoice } from "@/types/invoiceType";
 import InvoiceCard from "./InvoiceCard";
+import InvoiceCardSkeleton from "./InvoiceCardSkeleton";
 
 const invoices: Invoice[] = [
   {
@@ -81,7 +82,10 @@ const InvoiceList = () => {
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {invoices.map((item) => (
+            <>
             <InvoiceCard {...item} />
+            <InvoiceCardSkeleton/>
+            </>
           ))}
         </div>
       </div>
