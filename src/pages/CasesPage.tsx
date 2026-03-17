@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import CasesCard from "@/components/Case/CasesCard";
 import type { CaseData } from "@/types/caseType";
+import CasesCardSkeleton from "@/components/Case/CasesCardSkeleton";
 
 const cases: CaseData[] = [
   {
@@ -56,8 +57,7 @@ const CasesPage = () => {
         item.CaseDescription.toLowerCase().includes(search.toLowerCase()) ||
         item.clientName.toLowerCase().includes(search.toLowerCase());
 
-      const matchesPriority =
-        priority === "all" || item.priority === priority;
+      const matchesPriority = priority === "all" || item.priority === priority;
 
       return matchesSearch && matchesPriority;
     });
@@ -65,10 +65,8 @@ const CasesPage = () => {
 
   return (
     <section className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-soft sm:p-6">
-      
       {/* Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        
         <div>
           <h1 className="text-2xl font-bold text-zinc-900 sm:text-3xl">
             Cases Management
@@ -80,7 +78,6 @@ const CasesPage = () => {
 
         {/* Search + Filter */}
         <div className="flex w-full flex-col gap-3 sm:flex-row md:w-auto">
-          
           {/* Search */}
           <label className="relative w-full sm:min-w-55 md:min-w-65">
             <img
@@ -115,7 +112,10 @@ const CasesPage = () => {
       <div className="mt-5 space-y-3">
         {filteredCases.length > 0 ? (
           filteredCases.map((item) => (
-            <CasesCard {...item} key={item._id} />
+            <>
+              <CasesCard {...item} key={item._id} />
+              <CasesCardSkeleton />
+            </>
           ))
         ) : (
           <p className="text-center text-sm text-zinc-500 py-6">
