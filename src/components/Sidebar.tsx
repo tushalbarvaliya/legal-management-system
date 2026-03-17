@@ -2,18 +2,24 @@ import { menuList } from "@/utils/constant";
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Link, useLocation } from "react-router";
+import type { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 const Sidebar = () => {
   const pathname = useLocation().pathname;
   const [isHover, setIsHover] = useState(false);
+  const role = useSelector((state: RootState) => state.auth.role);
 
+  const filterMenuList = menuList.filter(
+    (item) => role && item.role.includes(role),
+  );
   return (
     <div
       className="space-y-2"
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
-      {menuList.map((item) => (
+      {filterMenuList.map((item) => (
         <motion.div layout key={item.to}>
           <Link
             to={item.to}

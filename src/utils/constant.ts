@@ -55,19 +55,61 @@ export const termsAndConditionsList = [
 ];
 export const menuList = [
   {
-    title: "Admin DashBoard",
-    src: "/admin-dashboard.svg",
-    to: "/admin-panel",
+    title: "Dash Board",
+    src: "/dashboard.svg",
+    to: "/",
     alt: "home",
+    role: ["admin", "lawyer", "staff"],
   },
-  { title: "Dash Board", src: "/dashboard.svg", to: "/", alt: "home" },
-  { title: "client", src: "/client.svg", to: "/client", alt: "home" },
-  { title: "Cases", src: "/cases.svg", to: "/cases", alt: "cases" },
-  { title: "Docs", src: "/docs.svg", to: "/docs", alt: "docs" },
-  { title: "Sessions", src: "/session.svg", to: "/session", alt: "session" },
-  { title: "Tasks", src: "/tasks.svg", to: "/tasks", alt: "tasks" },
-  { title: "Staff", src: "/staff.svg", to: "/staff", alt: "staff" },
-  { title: "Invoice", src: "/invoice.svg", to: "/invoice", alt: "invoice" },
+  {
+    title: "client",
+    src: "/client.svg",
+    to: "/client",
+    alt: "home",
+    role: ["lawyer", "lawyer","staff"],
+  },
+  {
+    title: "Cases",
+    src: "/cases.svg",
+    to: "/cases",
+    alt: "cases",
+    role: ["lawyer",'staff'],
+  },
+  {
+    title: "Docs",
+    src: "/docs.svg",
+    to: "/docs",
+    alt: "docs",
+    role: ["lawyer",'staff'],
+  },
+  {
+    title: "Sessions",
+    src: "/session.svg",
+    to: "/session",
+    alt: "session",
+    role: ["lawyer"],
+  },
+  {
+    title: "Tasks",
+    src: "/tasks.svg",
+    to: "/tasks",
+    alt: "tasks",
+    role: ["lawyer","staff"],
+  },
+  {
+    title: "Staff",
+    src: "/staff.svg",
+    to: "/staff",
+    alt: "staff",
+    role: ["lawyer"],
+  },
+  {
+    title: "Invoice",
+    src: "/invoice.svg",
+    to: "/invoice",
+    alt: "invoice",
+    role: ["lawyer"],
+  },
 ];
 
 export const navItems = [
@@ -176,7 +218,6 @@ export const clients: ClientProps[] = [
   },
 ];
 
-
 export const staffMembers = [
   "Tushal Mehra",
   "Aarav Singh",
@@ -242,4 +283,3 @@ export const tasks = [
     assignTo: "Kunal Patil",
   },
 ];
-
