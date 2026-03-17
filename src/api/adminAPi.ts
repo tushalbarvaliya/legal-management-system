@@ -1,3 +1,4 @@
+import type { AddLawyerFormData } from "@/components/Lawyer/AddLawyerModel";
 import axiosInstance from "./axiosInstance";
 
 export const getAllUser = async () => {
@@ -16,5 +17,13 @@ export const getTaskCount = async () => {
 };
 export const getCompony = async () => {
   const response = await axiosInstance.get("/admins/dashboard/employees/1");
+  return response.data;
+};
+
+export const makeItLawyer = async (data: AddLawyerFormData) => {
+  const response = await axiosInstance.post("/lawyers/lawyer", {
+    ...data,
+    isBlocked: 0,
+  });
   return response.data;
 };
