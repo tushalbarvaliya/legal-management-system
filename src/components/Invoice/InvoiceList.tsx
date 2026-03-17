@@ -1,4 +1,5 @@
 import type { Invoice } from "@/types/invoiceType";
+import InvoiceCard from "./InvoiceCard";
 
 const invoices: Invoice[] = [
   {
@@ -48,45 +49,29 @@ const InvoiceList = () => {
             </div>
             <div className="flex flex-wrap items-center gap-2">
               <div className="relative">
+                <img
+                  src="/search.svg"
+                  alt="search"
+                  className="pointer-events-none absolute right-3 top-2.5 h-4 w-4 text-zinc-400"
+                />
                 <input
                   id="searchInput"
                   type="text"
                   placeholder="Search invoices"
                   className="w-60 max-w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-700 shadow-sm transition focus:border-zinc-400 focus:outline-none"
                 />
-                <svg
-                  className="pointer-events-none absolute right-3 top-2.5 h-4 w-4 text-zinc-400"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <circle cx="11" cy="11" r="7" />
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="m21 21-4.3-4.3"
-                  />
-                </svg>
               </div>
-              <select
-                id="statusFilter"
-                className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-700 shadow-sm transition focus:border-zinc-400 focus:outline-none"
-              >
+              <select className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-700 shadow-sm transition focus:border-zinc-400 focus:outline-none">
                 <option value="">All Statuses</option>
                 <option value="Paid">Paid</option>
                 <option value="Pending">Pending</option>
                 <option value="Overdue">Overdue</option>
               </select>
-              <select
-                id="clientFilter"
-                className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-700 shadow-sm transition focus:border-zinc-400 focus:outline-none"
-              >
+              <select className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-700 shadow-sm transition focus:border-zinc-400 focus:outline-none">
                 <option value="">All Clients</option>
               </select>
               <div className="flex items-center gap-2">
                 <input
-                  id="dateFrom"
                   type="date"
                   className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-700 shadow-sm transition focus:border-zinc-400 focus:outline-none"
                 />
@@ -94,12 +79,9 @@ const InvoiceList = () => {
             </div>
           </div>
         </div>
-        <div
-          id="invoiceCardList"
-          className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3"
-        >
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {invoices.map((item) => (
-            <>{item.id}</>
+            <InvoiceCard {...item} />
           ))}
         </div>
       </div>
