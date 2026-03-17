@@ -1,8 +1,8 @@
-import type { TaskData } from "@/types/taskType";
+import type { CaseData } from "@/types/caseType";
 
 type TaskDetailsProps = {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>;
-} & ;
+} & CaseData;
 
 const CaseDetailModel = (data: TaskDetailsProps) => {
   return (
@@ -14,7 +14,7 @@ const CaseDetailModel = (data: TaskDetailsProps) => {
             <div className="mb-4 flex items-start justify-between gap-4">
               <div>
                 <h3 className="text-xl font-bold text-zinc-900">
-                  {data.title}
+                  {data.caseTitle}
                 </h3>
                 <p className="mt-1 text-xs text-zinc-500">
                   Created{" "}
@@ -41,10 +41,10 @@ const CaseDetailModel = (data: TaskDetailsProps) => {
                   data Description
                 </p>
                 <p className="mt-1 rounded-xl bg-zinc-50 p-3 leading-relaxed">
-                  {data.description}
+                  {data.CaseDescription}
                 </p>
               </div>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-3">
                   <p className="text-xs text-zinc-500">Priority</p>
                   <p className="mt-1 font-semibold text-zinc-900">
@@ -52,25 +52,15 @@ const CaseDetailModel = (data: TaskDetailsProps) => {
                   </p>
                 </div>
                 <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-3">
-                  <p className="text-xs text-zinc-500">Due Date</p>
+                  <p className="text-xs text-zinc-500">Case Type</p>
                   <p className="mt-1 font-semibold text-zinc-900">
-                    {new Date(data.dueDate).toLocaleDateString("en-IN", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    })}
+                    {data.caseType}
                   </p>
                 </div>
                 <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-3">
-                  <p className="text-xs text-zinc-500">Status</p>
+                  <p className="text-xs text-zinc-500">client Name</p>
                   <p className="mt-1 font-semibold text-zinc-900">
-                    {data.status}
-                  </p>
-                </div>
-                <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-3">
-                  <p className="text-xs text-zinc-500">Assign To</p>
-                  <p className="mt-1 font-semibold text-zinc-900">
-                    {data.assignTo}
+                    {data.clientName}
                   </p>
                 </div>
               </div>

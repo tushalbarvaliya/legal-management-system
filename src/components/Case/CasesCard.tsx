@@ -9,6 +9,7 @@ import { MoreVertical } from "lucide-react";
 import type { CaseData } from "@/types/caseType";
 import { useState } from "react";
 import DeleteCaseModel from "./DeleteTaskModel";
+import CaseDetailModel from "./CaseDetailModel";
 
 const getPriorityColor = (priority: string) => {
   if (priority == "low") {
@@ -29,9 +30,14 @@ const formatData = (date: string) => {
 };
 const CasesCard = (data: CaseData) => {
   const [deleteModel, setDeleteModel] = useState(false);
+  const [detailsModel, setDetailsModel] = useState(false);
   return (
     <>
       {deleteModel && <DeleteCaseModel closeModal={setDeleteModel} {...data} />}
+      {detailsModel && (
+        <CaseDetailModel closeModal={setDetailsModel} {...data} />
+      )}
+
       {/* TASK CARD */}
       <article className="group relative cursor-pointer rounded-xl border border-zinc-200 bg-zinc-50/40 p-4 shadow-sm transition duration-200 hover:bg-zinc-100/80 hover:shadow-soft">
         <div className="flex items-start gap-3">
@@ -87,9 +93,20 @@ const CasesCard = (data: CaseData) => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
-              <DropdownMenuItem>View</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setDetailsModel(true);
+                }}
+              >
+                View
+              </DropdownMenuItem>
               <DropdownMenuItem>Edit</DropdownMenuItem>
-              <DropdownMenuItem className="text-red-500" onClick={()=>{setDeleteModel(true)}}>
+              <DropdownMenuItem
+                className="text-red-500"
+                onClick={() => {
+                  setDeleteModel(true);
+                }}
+              >
                 Delete - soft
               </DropdownMenuItem>
             </DropdownMenuContent>
