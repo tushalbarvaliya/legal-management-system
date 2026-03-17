@@ -9,15 +9,19 @@ import { Button } from "../ui/button";
 import { MoreVertical } from "lucide-react";
 import { useState } from "react";
 import UpdateDocsModel from "./UpdateDocsModel";
+import DeleteDocsModel from "./DeleteDocsModel";
 
 const DocsCard = (items: DocumentData) => {
   const [updateModel, setUpdateModel] = useState(false);
+  const [deleteModel, setDeleteModel] = useState(false);
   return (
     <>
       {updateModel && (
         <UpdateDocsModel {...items} closeModal={setUpdateModel} />
       )}
-
+      {deleteModel && (
+        <DeleteDocsModel {...items} closeModal={setDeleteModel} />
+      )}
       <div className="w-full rounded-xl border p-4 text-left shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-zinc-100/80 flex">
         {/* Left Content */}
         <div className="flex-1">
@@ -76,7 +80,12 @@ const DocsCard = (items: DocumentData) => {
               >
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-red-500">
+              <DropdownMenuItem
+                className="text-red-500"
+                onClick={() => {
+                  setDeleteModel(true);
+                }}
+              >
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
