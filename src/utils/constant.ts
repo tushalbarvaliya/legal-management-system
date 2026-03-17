@@ -176,44 +176,6 @@ export const clients: ClientProps[] = [
   },
 ];
 
-export const documents = [
-  {
-    id: "DOC-001",
-    title: "Contract Draft V1",
-    description: "Initial contract draft prepared for client review.",
-    fileLink: "https://example.com/files/contract-v1.pdf",
-    caseId: "CASE-412",
-    clientId: "CL-1001",
-    notes: "Need signature by Friday.",
-  },
-  {
-    id: "DOC-002",
-    title: "Identity Proof Bundle",
-    description: "Collected government IDs and address proof.",
-    fileLink: "https://example.com/files/id-proof.zip",
-    caseId: "CASE-412",
-    clientId: "CL-1001",
-    notes: "",
-  },
-  {
-    id: "DOC-003",
-    title: "Financial Statement 2025",
-    description: "Annual statement for due diligence checks.",
-    fileLink: "https://example.com/files/fin-statement-2025.xlsx",
-    caseId: "CASE-928",
-    clientId: "CL-1002",
-    notes: "Cross-check line item 14.",
-  },
-  {
-    id: "DOC-004",
-    title: "Case Notes Summary",
-    description: "Compiled notes from previous hearings.",
-    fileLink: "https://example.com/files/case-notes-summary.docx",
-    caseId: "CASE-110",
-    clientId: "CL-1003",
-    notes: "Review with legal team.",
-  },
-];
 
 export const staffMembers = [
   "Tushal Mehra",

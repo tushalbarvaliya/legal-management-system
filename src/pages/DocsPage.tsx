@@ -1,30 +1,63 @@
 import DocsHeader from "@/components/DocsModels/DocsHeader";
-import { documents } from "@/utils/constant";
+
+const documents = [
+  {
+    id: "DOC-001",
+    title: "Contract Draft V1",
+    description: "Initial contract draft prepared for client review.",
+    fileLink: "https://example.com/files/contract-v1.pdf",
+    caseId: "CASE-412",
+    clientId: "CL-1001",
+    notes: "Need signature by Friday.",
+  },
+  {
+    id: "DOC-002",
+    title: "Identity Proof Bundle",
+    description: "Collected government IDs and address proof.",
+    fileLink: "https://example.com/files/id-proof.zip",
+    caseId: "CASE-412",
+    clientId: "CL-1001",
+    notes: "",
+  },
+  {
+    id: "DOC-003",
+    title: "Financial Statement 2025",
+    description: "Annual statement for due diligence checks.",
+    fileLink: "https://example.com/files/fin-statement-2025.xlsx",
+    caseId: "CASE-928",
+    clientId: "CL-1002",
+    notes: "Cross-check line item 14.",
+  },
+  {
+    id: "DOC-004",
+    title: "Case Notes Summary",
+    description: "Compiled notes from previous hearings.",
+    fileLink: "https://example.com/files/case-notes-summary.docx",
+    caseId: "CASE-110",
+    clientId: "CL-1003",
+    notes: "Review with legal team.",
+  },
+];
 
 const DocsPage = () => {
-  const set = new Set(documents.map((items) => items.caseId));
   return (
     <>
-    <DocsHeader/>
+      <DocsHeader />
       <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-soft sm:p-6 mt-4">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <div>
             <h2 className="text-lg font-semibold tracking-tight text-zinc-900">
-              Select Client
+              Select Documents
             </h2>
             <p className="mt-1 text-sm text-zinc-600">
-              Choose a client card to load related documents.
+              Choose a Document card to load related documents.
             </p>
           </div>
-          <p
-            id="clientCardCount"
-            className="text-xs font-medium uppercase tracking-[0.15em] text-zinc-500"
-          ></p>
+          <p className="text-xs uppercase bg-black text-white font-semibold p-2  flex justify-center items-center rounded-full font-mono">
+            {documents.length}
+          </p>
         </div>
         <div className="mb-3">
-          <label htmlFor="clientSearchInput" className="sr-only">
-            Search clients
-          </label>
           <div className="relative">
             <img
               src="/search.svg"
@@ -33,20 +66,20 @@ const DocsPage = () => {
             />
             <input
               type="search"
-              placeholder="Search client by name or client ID"
+              placeholder="Search documents here..."
               className="w-full rounded-xl border border-zinc-200 bg-white py-2.5 pl-9 pr-3 text-sm text-zinc-900 outline-none transition duration-200 placeholder:text-zinc-400 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100"
             />
           </div>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 2xl:grid-cols-4">
-          
-
-          {[...set].map((items) => (
+          {documents.map((items) => (
             <button
               type="button"
               className={`w-full rounded-xl border p-4 text-left shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-zinc-100/80 `}
             >
-              <p className="text-base font-semibold text-zinc-900">{items}</p>
+              <p className="text-base font-semibold text-zinc-900">
+                {items.id}
+              </p>
             </button>
           ))}
         </div>
