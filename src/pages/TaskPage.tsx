@@ -150,7 +150,7 @@ const TaskPage = () => {
 
         {/* analysis of task */}
         <div className="mt-5 space-y-3 overflow-y-scroll no-scrollbar">
-          <div className="flex rounded-full justify-center items-center gap-4 flex-wrap text-sm text-stone-500">
+          <div className="flex rounded-full justify-center items-center gap-4 flex-wrap text-xs text-stone-500">
             <p className="rounded-full bg-blue-200 px-2 text-blue-800">
               Total Task: {8}
             </p>

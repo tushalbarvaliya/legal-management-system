@@ -143,22 +143,6 @@ const AddDocsModal = ({ onClose }: AddModalProps) => {
                     {errors.fileLink?.message}
                   </p>
                 </label>
-                {/* <label className="space-y-1.5 text-sm text-zinc-700">
-                  <span className="font-medium">
-                    File Link <span className="text-red-500">*</span>
-                  </span>
-                  <input
-                    type="file"
-                    placeholder="https://"
-                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 outline-none transition duration-200 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                    {...register("fileLink", {
-                      required: true,
-                    })}
-                  />
-                  <p className=" text-xs text-red-500">
-                    {errors.fileLink?.message}
-                  </p>
-                </label> */}
                 <label className="space-y-1.5 text-sm text-zinc-700">
                   <span className="font-medium">
                     Client ID <span className="text-red-500">*</span>
