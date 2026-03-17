@@ -41,7 +41,7 @@ const documents: DocumentData[] = [
     caseId: "CASE-110",
     clientId: "CL-1003",
     notes: "Review with legal team.",
-    fileType: "pdf",
+    fileType: "excel",
   },
 ];
 
@@ -68,8 +68,8 @@ const DocsPage = () => {
         </div>
 
         {/* Search */}
-        <div className="mb-3">
-          <div className="relative">
+        <div className="mb-3 flex gap-4">
+          <div className="relative flex-1">
             <img
               src="/search.svg"
               alt="search"
@@ -81,12 +81,34 @@ const DocsPage = () => {
               className="w-full rounded-xl border border-zinc-200 bg-white py-2.5 pl-9 pr-3 text-sm outline-none transition duration-200 placeholder:text-zinc-400 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100"
             />
           </div>
+          <select className="rounded-xl border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-700 outline-none transition duration-200 focus:border-zinc-400">
+            <option value="all">All Type</option>
+            {[...new Set(documents.map((item) => item.fileType))].map(
+              (item) => (
+                <option value={item}>{item}</option>
+              ),
+            )}
+          </select>
+          <select className="rounded-xl border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-700 outline-none transition duration-200 focus:border-zinc-400">
+            <option value="all">All Cases</option>
+            {[...new Set(documents.map((item) => item.caseId))].map((item) => (
+              <option value={item}>{item}</option>
+            ))}
+          </select>
+          <select className="rounded-xl border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-700 outline-none transition duration-200 focus:border-zinc-400">
+            <option value="all">All Clients</option>
+            {[...new Set(documents.map((item) => item.clientId))].map(
+              (item) => (
+                <option value={item}>{item}</option>
+              ),
+            )}
+          </select>
         </div>
 
         {/* List */}
         <div className="flex w-full gap-4 flex-col">
           {documents.map((items) => (
-            <DocsCard {...items} key={items.id}/>
+            <DocsCard {...items} key={items.id} />
           ))}
         </div>
       </div>
