@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import CasesCard from "@/components/Case/CasesCard";
 import type { CaseData } from "@/types/caseType";
 
@@ -45,51 +46,84 @@ const cases: CaseData[] = [
 ];
 
 const CasesPage = () => {
+  const [search, setSearch] = useState("");
+  const [priority, setPriority] = useState("all");
+
+  const filteredCases = useMemo(() => {
+    return cases.filter((item) => {
+      const matchesSearch =
+        item.caseTitle.toLowerCase().includes(search.toLowerCase()) ||
+        item.CaseDescription.toLowerCase().includes(search.toLowerCase()) ||
+        item.clientName.toLowerCase().includes(search.toLowerCase());
+
+      const matchesPriority =
+        priority === "all" || item.priority === priority;
+
+      return matchesSearch && matchesPriority;
+    });
+  }, [search, priority]);
+
   return (
-    <>
-      <section className="rounded-2xl  border border-zinc-200 bg-white p-4 shadow-soft sm:p-6">
-        {/* header */}
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl">
-              Cases Management
-            </h1>
-            <p className="mt-1 text-sm text-zinc-600">
-              Track deadlines, update priorities, and manage work in one place.
-            </p>
-          </div>
-          <div className="flex w-full flex-col gap-3 sm:flex-row md:w-auto">
-            <label className="relative w-full min-w-0 sm:min-w-55 md:min-w-65">
-              <span className="sr-only">Search Cases</span>
-
-              <img
-                src="/search.svg"
-                alt="search"
-                className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500"
-              />
-              <input
-                id="searchInput"
-                type="search"
-                placeholder="Search by title or description"
-                className="w-full rounded-xl border border-zinc-200 bg-white py-2.5 pl-9 pr-3 text-sm text-zinc-800 outline-none transition duration-200 placeholder:text-zinc-400 focus:border-zinc-400"
-              />
-            </label>
-            <select className="rounded-xl border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-700 outline-none transition duration-200 focus:border-zinc-400">
-              <option value="all">All Priorities</option>
-              <option value="Low">Low</option>
-              <option value="Medium">Medium</option>
-              <option value="High">High</option>
-            </select>
-          </div>
+    <section className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-soft sm:p-6">
+      
+      {/* Header */}
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        
+        <div>
+          <h1 className="text-2xl font-bold text-zinc-900 sm:text-3xl">
+            Cases Management
+          </h1>
+          <p className="mt-1 text-sm text-zinc-600">
+            Track deadlines, update priorities, and manage work in one place.
+          </p>
         </div>
 
-        <div className="mt-5 space-y-3 overflow-y-hidden">
-          {cases.map((item) => (
+        {/* Search + Filter */}
+        <div className="flex w-full flex-col gap-3 sm:flex-row md:w-auto">
+          
+          {/* Search */}
+          <label className="relative w-full sm:min-w-55 md:min-w-65">
+            <img
+              src="/search.svg"
+              alt="search"
+              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
+            />
+            <input
+              type="search"
+              placeholder="Search by title, description, client..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full rounded-xl border border-zinc-200 py-2.5 pl-9 pr-3 text-sm outline-none focus:border-zinc-400"
+            />
+          </label>
+
+          {/* Priority Filter */}
+          <select
+            value={priority}
+            onChange={(e) => setPriority(e.target.value)}
+            className="rounded-xl border border-zinc-200 px-3 py-2.5 text-sm"
+          >
+            <option value="all">All Priorities</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+      </div>
+
+      {/* List */}
+      <div className="mt-5 space-y-3">
+        {filteredCases.length > 0 ? (
+          filteredCases.map((item) => (
             <CasesCard {...item} key={item._id} />
-          ))}
-        </div>
-      </section>
-    </>
+          ))
+        ) : (
+          <p className="text-center text-sm text-zinc-500 py-6">
+            No cases found
+          </p>
+        )}
+      </div>
+    </section>
   );
 };
 
