@@ -7,6 +7,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { MoreVertical } from "lucide-react";
 import type { CaseData } from "@/types/caseType";
+import { useState } from "react";
+import DeleteCaseModel from "./DeleteTaskModel";
 
 const getPriorityColor = (priority: string) => {
   if (priority == "low") {
@@ -26,13 +28,10 @@ const formatData = (date: string) => {
   });
 };
 const CasesCard = (data: CaseData) => {
+  const [deleteModel, setDeleteModel] = useState(false);
   return (
     <>
-      {/* ADD TASK BUTTON */}
-      <button className="fixed bottom-6 right-6 z-20 inline-flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-xl transition duration-300 hover:scale-105 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:ring-offset-2 lg:bottom-8 lg:right-8">
-        <img src="/plus.svg" alt="+" className="h-6 w-6" />
-      </button>
-
+      {deleteModel && <DeleteCaseModel closeModal={setDeleteModel} {...data} />}
       {/* TASK CARD */}
       <article className="group relative cursor-pointer rounded-xl border border-zinc-200 bg-zinc-50/40 p-4 shadow-sm transition duration-200 hover:bg-zinc-100/80 hover:shadow-soft">
         <div className="flex items-start gap-3">
@@ -67,12 +66,14 @@ const CasesCard = (data: CaseData) => {
 
               <p>
                 <span className="font-semibold text-zinc-700">
-                  Client Name : 
+                  Client Name :
                 </span>{" "}
                 {data.clientName}
               </p>
               <p>
-                <span className="font-semibold text-zinc-700">Case Type : </span>{" "}
+                <span className="font-semibold text-zinc-700">
+                  Case Type :{" "}
+                </span>{" "}
                 {data.caseType}
               </p>
             </div>
@@ -88,11 +89,8 @@ const CasesCard = (data: CaseData) => {
             <DropdownMenuContent align="end" className="w-40">
               <DropdownMenuItem>View</DropdownMenuItem>
               <DropdownMenuItem>Edit</DropdownMenuItem>
-              <DropdownMenuItem className="text-red-500">
-                Delete Soft
-              </DropdownMenuItem>
-              <DropdownMenuItem className="text-red-500">
-                Delete Permanently
+              <DropdownMenuItem className="text-red-500" onClick={()=>{setDeleteModel(true)}}>
+                Delete - soft
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
