@@ -7,6 +7,7 @@ import type {
 } from "@/types/formType";
 import axiosInstance from "./axiosInstance";
 
+// local api done
 export const login = async ({ email, password }: LoginFormState) => {
   const data = { email: email, password: password };
   const response = await axiosInstance.post("/login", data, {
@@ -16,19 +17,6 @@ export const login = async ({ email, password }: LoginFormState) => {
   });
   return response.data;
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 export const signUp = async ({
   userName,
@@ -45,25 +33,33 @@ export const signUp = async ({
 }: SignUpFormState) => {
   const useAddress = address + "$" + city + "$" + state + "$" + pinCode;
   const data: SignUpdata = {
-    name: userName,
-    first_name: firstName,
-    last_name: lastName,
+    username: userName,
+    firstName: firstName,
+    lastName: lastName,
     email: email,
     password: password,
     phoneNumber: phoneNumber,
-    role: "lawyer",
     address: useAddress,
     companyId: "1",
     isDeleted: false,
   };
-
-  const response = await axiosInstance.post("/auth/register", data, {
+  const response = await axiosInstance.post("/signup", data, {
     headers: {
       "ngrok-skip-browser-warning": "true",
     },
   });
   return response.data;
 };
+
+
+
+
+
+
+
+
+
+
 
 export const resetPasswordAPI = async ({
   confirmNewPassword: _confirmPassword,

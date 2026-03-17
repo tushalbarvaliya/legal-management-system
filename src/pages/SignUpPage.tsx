@@ -14,6 +14,7 @@ import {
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { signUp } from "@/api/authAPI";
+import { toast } from "sonner";
 
 const SignUpPage = () => {
   const [formError, setFormError] = useState("");
@@ -33,14 +34,20 @@ const SignUpPage = () => {
   const { mutate, isPending } = useMutation({
     mutationFn: signUp,
     onSuccess: () => {
+      toast.success("User Created");
       navigate("/login");
     },
     onError: (error) => {
+      toast.error(`Something is not right Error : ${error}`);
       setFormError(`Something is not right Error : ${error}`);
     },
   });
   const onSubmit = (data: SignUpFormState) => {
-    mutate(data);
+    if (data.password === data._confirmPassword) {
+      mutate(data);
+    } else {
+      setFormError("Password and Confirm password should be same");
+    }
   };
 
   return (

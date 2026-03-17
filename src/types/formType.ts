@@ -18,13 +18,12 @@ export type SignUpFormState = {
 };
 
 export type SignUpdata = {
-  name: string;
-  first_name: string;
-  last_name: string;
+  username: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   phoneNumber: string;
-  role: string;
   address: string;
   companyId: number | string;
   isDeleted: boolean;
