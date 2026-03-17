@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import DocsCard from "@/components/DocsModels/DocsCard";
 import DocsHeader from "@/components/DocsModels/DocsHeader";
 import type { DocumentData } from "@/types/docsType";
+import DocsCardSkeleton from "@/components/DocsModels/DocsCardSkeleton";
 
 const documents: DocumentData[] = [
   {
@@ -60,21 +61,13 @@ const DocsPage = () => {
         doc.caseId.toLowerCase().includes(search.toLowerCase()) ||
         doc.clientId.toLowerCase().includes(search.toLowerCase());
 
-      const matchesFileType =
-        fileType === "all" || doc.fileType === fileType;
+      const matchesFileType = fileType === "all" || doc.fileType === fileType;
 
-      const matchesCase =
-        caseId === "all" || doc.caseId === caseId;
+      const matchesCase = caseId === "all" || doc.caseId === caseId;
 
-      const matchesClient =
-        clientId === "all" || doc.clientId === clientId;
+      const matchesClient = clientId === "all" || doc.clientId === clientId;
 
-      return (
-        matchesSearch &&
-        matchesFileType &&
-        matchesCase &&
-        matchesClient
-      );
+      return matchesSearch && matchesFileType && matchesCase && matchesClient;
     });
   }, [search, fileType, caseId, clientId]);
 
@@ -83,7 +76,6 @@ const DocsPage = () => {
       <DocsHeader />
 
       <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-soft sm:p-6 mt-4">
-        
         {/* Header */}
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <div>
@@ -101,7 +93,6 @@ const DocsPage = () => {
         </div>
 
         <div className="mb-3 flex gap-4 flex-wrap">
-          
           {/* Search */}
           <div className="relative flex-1 ">
             <img
@@ -130,7 +121,7 @@ const DocsPage = () => {
                 <option key={item} value={item}>
                   {item}
                 </option>
-              )
+              ),
             )}
           </select>
 
@@ -141,13 +132,11 @@ const DocsPage = () => {
             className="rounded-xl border border-zinc-200 px-3 py-2.5 text-sm"
           >
             <option value="all">All Cases</option>
-            {[...new Set(documents.map((item) => item.caseId))].map(
-              (item) => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              )
-            )}
+            {[...new Set(documents.map((item) => item.caseId))].map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
           </select>
 
           {/* Client */}
@@ -162,7 +151,7 @@ const DocsPage = () => {
                 <option key={item} value={item}>
                   {item}
                 </option>
-              )
+              ),
             )}
           </select>
         </div>
@@ -171,7 +160,10 @@ const DocsPage = () => {
         <div className="flex w-full gap-4 flex-col">
           {filteredDocs.length > 0 ? (
             filteredDocs.map((items) => (
-              <DocsCard {...items} key={items.id} />
+              <>
+                <DocsCard {...items} key={items.id} />
+                <DocsCardSkeleton />
+              </>
             ))
           ) : (
             <p className="text-center text-sm text-zinc-500 py-6">
