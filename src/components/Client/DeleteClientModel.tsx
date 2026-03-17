@@ -46,7 +46,7 @@ const DeleteClientModel = (data: deleteClientModel) => {
               </button>
               <button
                 type="button"
-                className="rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white transition duration-200 hover:scale-[1.02] hover:bg-zinc-800"
+                className="rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition duration-200 hover:scale-[1.02] hover:bg-red-400"
                 onClick={() => {
                   mutate(data);
                 }}
