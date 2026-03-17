@@ -1,11 +1,13 @@
 import DocsHeader from "@/components/DocsModels/DocsHeader";
+import type { DocumentData } from "@/types/docsType";
 
-const documents = [
+const documents:DocumentData[] = [
   {
     id: "DOC-001",
     title: "Contract Draft V1",
     description: "Initial contract draft prepared for client review.",
-    fileLink: "https://example.com/files/contract-v1.pdf",
+    documentLink: "https://example.com/files/contract-v1.pdf",
+    fileType:'pdf',
     caseId: "CASE-412",
     clientId: "CL-1001",
     notes: "Need signature by Friday.",
@@ -14,28 +16,31 @@ const documents = [
     id: "DOC-002",
     title: "Identity Proof Bundle",
     description: "Collected government IDs and address proof.",
-    fileLink: "https://example.com/files/id-proof.zip",
+    documentLink: "https://example.com/files/id-proof.zip",
     caseId: "CASE-412",
     clientId: "CL-1001",
     notes: "",
+    fileType:'pdf',
   },
   {
     id: "DOC-003",
     title: "Financial Statement 2025",
     description: "Annual statement for due diligence checks.",
-    fileLink: "https://example.com/files/fin-statement-2025.xlsx",
+    documentLink: "https://example.com/files/fin-statement-2025.xlsx",
     caseId: "CASE-928",
     clientId: "CL-1002",
     notes: "Cross-check line item 14.",
+    fileType:'pdf',
   },
   {
     id: "DOC-004",
     title: "Case Notes Summary",
     description: "Compiled notes from previous hearings.",
-    fileLink: "https://example.com/files/case-notes-summary.docx",
+    documentLink: "https://example.com/files/case-notes-summary.docx",
     caseId: "CASE-110",
     clientId: "CL-1003",
     notes: "Review with legal team.",
+    fileType:'pdf',
   },
 ];
 
