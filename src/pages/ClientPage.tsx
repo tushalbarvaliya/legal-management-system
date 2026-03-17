@@ -1,5 +1,6 @@
 import { getAllClient } from "@/api/clientAPI";
 import ClientCard from "@/components/Client/ClientCard";
+import ClientCardSkeleton from "@/components/Client/ClientCardSkeleton";
 import ClientHeader from "@/components/Client/ClientHeader";
 import NoClientFound from "@/components/NoClientFound";
 import type { ClientProps } from "@/types/clientType";
@@ -51,10 +52,9 @@ const ClientPage = () => {
           {/* map for client list */}
           {!isLoading &&
             filteredClients?.map((item: ClientProps) => {
-              // if (!item.isDelete) {
                 return <ClientCard key={item._id} {...item} />;
-              // }
             })}
+            <ClientCardSkeleton/>
           {filteredClients?.length == 0 && <NoClientFound title="client" />}
         </div>
       </section>

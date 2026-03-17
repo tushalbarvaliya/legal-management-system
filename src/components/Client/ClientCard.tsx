@@ -54,7 +54,6 @@ const ClientCard = (data: ClientProps) => {
     },
   });
   return (
-    // ${data.isDelete && !data.isBlock ? "bg-amber-300" : !data.isDelete && data.isBlock ? "bg-stone-500" : data.isDelete && data.isBlock ? "bg-red-500" : "bg-zinc-50/40"}
     <>
       {clientModelOpen && (
         <ClientDetailsModel {...data} closeModal={setClientModelOpen} />
