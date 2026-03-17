@@ -53,6 +53,7 @@ export const termsAndConditionsList = [
       "We may update these terms from time to time. Updates become effective when posted on this page, and continued use indicates acceptance of revised terms.",
   },
 ];
+
 export const menuList = [
   {
     title: "Dash Board",

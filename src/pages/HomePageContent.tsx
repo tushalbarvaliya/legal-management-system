@@ -1,65 +1,146 @@
+import {
+  getAllUser,
+  getCaseCount,
+  getCompony,
+  getTaskCount,
+} from "@/api/adminAPi";
+import type { RootState } from "@/store/store";
+import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+
 const HomePageContent = () => {
-  const taskList = [
-    {
-      title: "Total tasks assigned",
-      value: "24",
-      src: "/tasks.svg",
-      alt: "menu",
-    },
-    {
-      title: "Total tasks completed",
-      value: "24",
-      src: "/right.svg",
-      alt: "task",
-    },
-    {
-      title: "Total incomplete tasks",
-      value: "24",
-      src: "/clock-icon.svg",
-      alt: "menu",
-    },
-    {
-      title: "Total cases assigned",
-      value: "24",
-      src: "/cases.svg",
-      alt: "menu",
-    },
-    {
-      title: "Today's sessions",
-      value: "24",
-      src: "/session.svg",
-      alt: "menu",
-    },
-    
-  ];
+  const role = useSelector((state: RootState) => state.auth.role);
+
+  const { data, isLoading } = useQuery({
+    queryFn: getAllUser,
+    queryKey: ["allUser"],
+  });
+  const { data: caseCount, isLoading: caseCountLoading } = useQuery({
+    queryFn: getCaseCount,
+    queryKey: ["casesCount"],
+  });
+  const { data: TaskCount, isLoading: taskCountLoading } = useQuery({
+    queryFn: getTaskCount,
+    queryKey: ["taskCount"],
+  });
+  const { data: Compony, isLoading: componyLoading } = useQuery({
+    queryFn: getCompony,
+    queryKey: ["getCompony"],
+  });
+
   return (
     <>
       <div className="grid grid-cols-3 gap-x-2 gap-y-4">
         <div className="rounded-2xl bg-white p-5 shadow-soft sm:p-6 col-span-3">
           <h1 className="text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl">
-            Welcome back, {'Admin'} Tushal
+            Welcome back, {"Admin"} Tushal
           </h1>
           <p className="mt-2 text-sm text-zinc-600 sm:text-base">
             Here is a quick summary of your current workload and session
             activity.
           </p>
         </div>
-        {taskList.map((item) => (
-          <article
-            className="group rounded-2xl border border-zinc-200 bg-white p-5 shadow-soft transition duration-200 hover:-translate-y-0.5 hover:border-zinc-300"
-            key={item.src}
-          >
-            <div className="flex items-start justify-between">
-              <h2 className="text-sm font-semibold text-zinc-600">
-                {item.title}
-              </h2>
-              <div className="rounded-lg bg-zinc-100 p-2 text-zinc-700 transition duration-200 group-hover:bg-zinc-200">
-                <img src={item.src} alt={item.alt} className="h-5 w-5" />
+        {role == "admin" && (
+          <>
+            {/* user count */}
+            <article className="group rounded-2xl border border-zinc-200 bg-white p-5 shadow-soft transition duration-200 hover:-translate-y-0.5 hover:border-zinc-300">
+              <div className="flex items-start justify-between">
+                <h2 className="text-sm font-semibold text-zinc-600 capitalize">
+                  total user
+                </h2>
+                <div className="rounded-lg bg-zinc-100 p-2 text-zinc-700 transition duration-200 group-hover:bg-zinc-200">
+                  <img src={"/client.svg"} alt={"Icon"} className="h-5 w-5" />
+                </div>
               </div>
-            </div>
-            <p className="mt-5 text-3xl font-extrabold text-zinc-900">{item.value}</p>
-          </article>
-        ))}
+              <p className="mt-5 text-3xl font-extrabold text-zinc-900">
+                {!isLoading && data.length}
+                {isLoading && 0}
+              </p>
+            </article>
+
+            {/* case count */}
+            <article className="group rounded-2xl border border-zinc-200 bg-white p-5 shadow-soft transition duration-200 hover:-translate-y-0.5 hover:border-zinc-300">
+              <div className="flex items-start justify-between">
+                <h2 className="text-sm font-semibold text-zinc-600 capitalize">
+                  Case Status
+                </h2>
+                <div className="rounded-lg bg-zinc-100 p-2 text-zinc-700 transition duration-200 group-hover:bg-zinc-200">
+                  <img src={"/cases.svg"} alt={"Icon"} className="h-5 w-5" />
+                </div>
+              </div>
+              <p className="mt-5 text-xs font-extrabold text-zinc-900 flex flex-col">
+                {!caseCountLoading && (
+                  <>
+                    <span>Open Cases : {caseCount.openCases}</span>
+                    <span>Closed Cases : {caseCount.closedCases}</span>
+                    <span>
+                      New Cases in Last 30Days : {caseCount.newCasesLast30Days}
+                    </span>
+                  </>
+                )}
+                {caseCountLoading && (
+                  <>
+                    <span>Open Cases : {0}</span>
+                    <span>Open Cases : {0}</span>
+                    <span>Open Cases : {0}</span>
+                  </>
+                )}
+              </p>
+            </article>
+            {/* task count */}
+            <article className="group rounded-2xl border border-zinc-200 bg-white p-5 shadow-soft transition duration-200 hover:-translate-y-0.5 hover:border-zinc-300">
+              <div className="flex items-start justify-between">
+                <h2 className="text-sm font-semibold text-zinc-600 capitalize">
+                  Task Status
+                </h2>
+                <div className="rounded-lg bg-zinc-100 p-2 text-zinc-700 transition duration-200 group-hover:bg-zinc-200">
+                  <img src={"/task.svg"} alt={"Icon"} className="h-5 w-5" />
+                </div>
+              </div>
+              <p className="mt-5 text-xs font-extrabold text-zinc-900 flex flex-col">
+                {!taskCountLoading && (
+                  <>
+                    <span>Task Due Today : {TaskCount.dueToday}</span>
+                    <span>over Due Task : {TaskCount.overdue}</span>
+                    <span>Completed : {TaskCount.completed}</span>
+                  </>
+                )}
+                {taskCountLoading && (
+                  <>
+                    <span>Task Due Today : {0}</span>
+                    <span>over Due Task : {0}</span>
+                    <span>Completed : {0}</span>
+                  </>
+                )}
+              </p>
+            </article>
+            {/* company count */}
+            <article className="group rounded-2xl border border-zinc-200 bg-white p-5 shadow-soft transition duration-200 hover:-translate-y-0.5 hover:border-zinc-300">
+              <div className="flex items-start justify-between">
+                <h2 className="text-sm font-semibold text-zinc-600 capitalize">
+                  User Status
+                </h2>
+                <div className="rounded-lg bg-zinc-100 p-2 text-zinc-700 transition duration-200 group-hover:bg-zinc-200">
+                  <img src={"/cases.svg"} alt={"Icon"} className="h-5 w-5" />
+                </div>
+              </div>
+              <p className="mt-5 text-xs font-extrabold text-zinc-900 flex flex-col">
+                {!componyLoading && (
+                  <>
+                    <span>Total Lawyer : {Compony?.lawyers.length}</span>
+                    <span>Total Staff : {Compony?.staff.length}</span>
+                  </>
+                )}
+                {componyLoading && (
+                  <>
+                    <span>Total Lawyer : {0}</span>
+                    <span>Total Staff : {0}</span>
+                  </>
+                )}
+              </p>
+            </article>
+          </>
+        )}
       </div>
     </>
   );
