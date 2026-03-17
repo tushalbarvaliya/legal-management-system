@@ -25,7 +25,7 @@ const LoginPageForm = () => {
   const { mutate, isPending } = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
-      const token = { token: data.token, role: data.role };
+      const token = { token: data.access_token };
       dispatch(setToken(token));
       navigate("/");
     },
@@ -65,7 +65,7 @@ const LoginPageForm = () => {
             </label>
             <input
               id="email"
-              type="email"
+              // type="email"
               placeholder="you@example.com"
               autoComplete="off"
               className="block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none transition focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"

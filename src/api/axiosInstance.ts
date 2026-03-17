@@ -3,7 +3,7 @@ import { store } from "@/store/store";
 import { removeToken } from "@/store/slices/authSlice";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: import.meta.env.VITE_BASE_URL,
   timeout: 10000,
 });
 
