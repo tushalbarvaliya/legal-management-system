@@ -1,4 +1,12 @@
+import { getLawyer } from "@/api/lawyerAPI";
+import { useQuery } from "@tanstack/react-query";
+
 const LawyerPage = () => {
+  const { data: lawyerData } = useQuery({
+    queryKey: ["lawyer"],
+    queryFn: getLawyer,
+  });
+  console.log(lawyerData);
   return (
     <>
       <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-soft sm:p-6 mt-4 space-y-4">

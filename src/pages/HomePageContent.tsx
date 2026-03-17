@@ -22,15 +22,27 @@ const HomePageContent = () => {
     queryFn: getAllUser,
     queryKey: ["allUser"],
   });
-  const { data: caseCount, isLoading: caseCountLoading } = useQuery({
+  const {
+    data: caseCount,
+    isLoading: caseCountLoading,
+    isError: caseIsError,
+  } = useQuery({
     queryFn: getCaseCount,
     queryKey: ["casesCount"],
   });
-  const { data: TaskCount, isLoading: taskCountLoading } = useQuery({
+  const {
+    data: TaskCount,
+    isLoading: taskCountLoading,
+    isError: taskIsError,
+  } = useQuery({
     queryFn: getTaskCount,
     queryKey: ["taskCount"],
   });
-  const { data: Compony, isLoading: componyLoading } = useQuery({
+  const {
+    data: Compony,
+    isLoading: componyLoading,
+    isError: componyIsError,
+  } = useQuery({
     queryFn: getCompony,
     queryKey: ["getCompony"],
   });
@@ -96,7 +108,7 @@ const HomePageContent = () => {
                 </div>
               </div>
               <p className="mt-5 text-xs font-extrabold text-zinc-900 flex flex-col">
-                {!caseCountLoading && (
+                {!caseCountLoading && !caseIsError && (
                   <>
                     <span>Open Cases : {caseCount.openCases}</span>
                     <span>Closed Cases : {caseCount.closedCases}</span>
@@ -108,8 +120,8 @@ const HomePageContent = () => {
                 {caseCountLoading && (
                   <>
                     <span>Open Cases : {0}</span>
-                    <span>Open Cases : {0}</span>
-                    <span>Open Cases : {0}</span>
+                    <span>Closed Cases : {0}</span>
+                    <span>New Cases in Last 30Days : {0}</span>
                   </>
                 )}
               </p>
@@ -125,7 +137,7 @@ const HomePageContent = () => {
                 </div>
               </div>
               <p className="mt-5 text-xs font-extrabold text-zinc-900 flex flex-col">
-                {!taskCountLoading && (
+                {!taskCountLoading && !taskIsError && (
                   <>
                     <span>Task Due Today : {TaskCount.dueToday}</span>
                     <span>over Due Task : {TaskCount.overdue}</span>
@@ -152,7 +164,7 @@ const HomePageContent = () => {
                 </div>
               </div>
               <p className="mt-5 text-xs font-extrabold text-zinc-900 flex flex-col">
-                {!componyLoading && (
+                {!componyLoading && !componyIsError && (
                   <>
                     <span>Total Lawyer : {Compony?.lawyers.length}</span>
                     <span>Total Staff : {Compony?.staff.length}</span>
