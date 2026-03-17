@@ -1,0 +1,13 @@
+<svg width="120" height="120" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Handle -->
+  <rect x="30" y="34" width="4" height="20" rx="2" transform="rotate(45 30 34)" fill="#1F2937"/>
+
+  <!-- Head -->
+  <rect x="18" y="14" width="20" height="10" rx="2" transform="rotate(45 18 14)" fill="#374151"/>
+  
+  <!-- Base -->
+  <rect x="10" y="44" width="30" height="6" rx="3" fill="#6B7280"/>
+
+  <!-- Accent -->
+  <rect x="22" y="18" width="20" height="4" rx="2" transform="rotate(45 22 18)" fill="#9CA3AF"/>
+</svg>

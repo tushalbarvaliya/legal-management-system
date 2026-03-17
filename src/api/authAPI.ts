@@ -66,8 +66,7 @@ export const resetPasswordAPI = async ({
   return response.data;
 };
 
-// api not set
-
+// api not se
 export const forgetPasswordAPI = async ({
   confirmPassword: _confirmPassword,
   email,

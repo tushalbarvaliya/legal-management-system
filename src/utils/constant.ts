@@ -113,7 +113,7 @@ export const menuList = [
   },
   {
     title: "lawyer",
-    src: "/invoice.svg",
+    src: "/lawyer.svg",
     to: "/lawyer",
     alt: "lawyer",
     role: ["admin"],
