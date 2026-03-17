@@ -37,3 +37,20 @@ export const getLawyer = async () => {
     .filter(Boolean); // remove undefined
   return matchedUsers;
 };
+
+export const deleteLawyer = async (data: userData) => {
+  const response = await axiosInstance.delete(`/lawyers/lawyer/${data.id}`);
+  return response.data;
+};
+export const blockLawyer = async (data: userData) => {
+  const response = await axiosInstance.put(`/lawyers/lawyer/${data.id}/block`);
+  return response.data;
+};
+
+export const getLawyerById = async (id: string) => {
+  const lawyerRes = await axiosInstance.get<lawyerData[]>("/lawyers");
+
+  const lawyers = lawyerRes.data;
+  const matchedUsers = lawyers.filter((item) => item.id === id);
+  return matchedUsers[0];
+};
