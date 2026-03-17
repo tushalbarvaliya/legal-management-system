@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import DocsCard from "@/components/DocsModels/DocsCard";
 import DocsHeader from "@/components/DocsModels/DocsHeader";
 import type { DocumentData } from "@/types/docsType";
@@ -46,15 +47,47 @@ const documents: DocumentData[] = [
 ];
 
 const DocsPage = () => {
+  const [search, setSearch] = useState("");
+  const [fileType, setFileType] = useState("all");
+  const [caseId, setCaseId] = useState("all");
+  const [clientId, setClientId] = useState("all");
+
+  const filteredDocs = useMemo(() => {
+    return documents.filter((doc) => {
+      const matchesSearch =
+        doc.title.toLowerCase().includes(search.toLowerCase()) ||
+        doc.description.toLowerCase().includes(search.toLowerCase()) ||
+        doc.caseId.toLowerCase().includes(search.toLowerCase()) ||
+        doc.clientId.toLowerCase().includes(search.toLowerCase());
+
+      const matchesFileType =
+        fileType === "all" || doc.fileType === fileType;
+
+      const matchesCase =
+        caseId === "all" || doc.caseId === caseId;
+
+      const matchesClient =
+        clientId === "all" || doc.clientId === clientId;
+
+      return (
+        matchesSearch &&
+        matchesFileType &&
+        matchesCase &&
+        matchesClient
+      );
+    });
+  }, [search, fileType, caseId, clientId]);
+
   return (
     <>
       <DocsHeader />
 
       <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-soft sm:p-6 mt-4">
+        
         {/* Header */}
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <div>
-            <h2 className="text-lg font-semibold tracking-tight text-zinc-900">
+            <h2 className="text-lg font-semibold text-zinc-900">
               Select Documents
             </h2>
             <p className="mt-1 text-sm text-zinc-600">
@@ -62,14 +95,15 @@ const DocsPage = () => {
             </p>
           </div>
 
-          <p className="text-xs uppercase bg-black text-white flex justify-center items-center  font-semibold p-2 rounded-full font-mono">
-            {documents.length}
+          <p className="text-xs uppercase bg-black text-white flex items-center font-semibold p-2 rounded-full font-mono">
+            {filteredDocs.length}
           </p>
         </div>
 
-        {/* Search */}
-        <div className="mb-3 flex gap-4">
-          <div className="relative flex-1">
+        <div className="mb-3 flex gap-4 flex-wrap">
+          
+          {/* Search */}
+          <div className="relative flex-1 ">
             <img
               src="/search.svg"
               alt="search"
@@ -78,38 +112,72 @@ const DocsPage = () => {
             <input
               type="search"
               placeholder="Search documents here..."
-              className="w-full rounded-xl border border-zinc-200 bg-white py-2.5 pl-9 pr-3 text-sm outline-none transition duration-200 placeholder:text-zinc-400 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full rounded-xl border border-zinc-200 py-2.5 pl-9 pr-3 text-sm outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100"
             />
           </div>
-          <select className="rounded-xl border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-700 outline-none transition duration-200 focus:border-zinc-400">
+
+          {/* File Type */}
+          <select
+            value={fileType}
+            onChange={(e) => setFileType(e.target.value)}
+            className="rounded-xl border border-zinc-200 px-3 py-2.5 text-sm"
+          >
             <option value="all">All Type</option>
             {[...new Set(documents.map((item) => item.fileType))].map(
               (item) => (
-                <option value={item}>{item}</option>
-              ),
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              )
             )}
           </select>
-          <select className="rounded-xl border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-700 outline-none transition duration-200 focus:border-zinc-400">
+
+          {/* Case */}
+          <select
+            value={caseId}
+            onChange={(e) => setCaseId(e.target.value)}
+            className="rounded-xl border border-zinc-200 px-3 py-2.5 text-sm"
+          >
             <option value="all">All Cases</option>
-            {[...new Set(documents.map((item) => item.caseId))].map((item) => (
-              <option value={item}>{item}</option>
-            ))}
+            {[...new Set(documents.map((item) => item.caseId))].map(
+              (item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              )
+            )}
           </select>
-          <select className="rounded-xl border border-zinc-200 bg-white px-3 py-2.5 text-sm text-zinc-700 outline-none transition duration-200 focus:border-zinc-400">
+
+          {/* Client */}
+          <select
+            value={clientId}
+            onChange={(e) => setClientId(e.target.value)}
+            className="rounded-xl border border-zinc-200 px-3 py-2.5 text-sm"
+          >
             <option value="all">All Clients</option>
             {[...new Set(documents.map((item) => item.clientId))].map(
               (item) => (
-                <option value={item}>{item}</option>
-              ),
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              )
             )}
           </select>
         </div>
 
         {/* List */}
         <div className="flex w-full gap-4 flex-col">
-          {documents.map((items) => (
-            <DocsCard {...items} key={items.id} />
-          ))}
+          {filteredDocs.length > 0 ? (
+            filteredDocs.map((items) => (
+              <DocsCard {...items} key={items.id} />
+            ))
+          ) : (
+            <p className="text-center text-sm text-zinc-500 py-6">
+              No documents found
+            </p>
+          )}
         </div>
       </div>
     </>
