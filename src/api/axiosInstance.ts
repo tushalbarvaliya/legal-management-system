@@ -1,6 +1,6 @@
 import axios from "axios";
 import { store } from "@/store/store";
-import { removeToken } from "@/store/slices/authSlice";
+// import { removeToken } from "@/store/slices/authSlice";
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
@@ -20,16 +20,6 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-axiosInstance.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      store.dispatch(removeToken());
-      window.location.href = "/login";
-    }
 
-    return Promise.reject(error);
-  },
-);
 
 export default axiosInstance;

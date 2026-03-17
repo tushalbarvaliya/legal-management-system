@@ -46,11 +46,14 @@ export const blockLawyer = async (data: userData) => {
   const response = await axiosInstance.put(`/lawyers/lawyer/${data.id}/block`);
   return response.data;
 };
-
-export const getLawyerById = async (id: string) => {
+export const getLawyerById = async (id: string): Promise<lawyerData> => {
   const lawyerRes = await axiosInstance.get<lawyerData[]>("/lawyers");
 
-  const lawyers = lawyerRes.data;
-  const matchedUsers = lawyers.filter((item) => item.id === id);
-  return matchedUsers[0];
+  const lawyer = lawyerRes.data.find((item) => item.id === id);
+
+  if (!lawyer) {
+    throw new Error("Lawyer not found");
+  }
+
+  return lawyer;
 };
