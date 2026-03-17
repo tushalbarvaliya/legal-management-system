@@ -7,10 +7,17 @@ import {
 import type { DocumentData } from "@/types/docsType";
 import { Button } from "../ui/button";
 import { MoreVertical } from "lucide-react";
+import { useState } from "react";
+import UpdateDocsModel from "./UpdateDocsModel";
 
 const DocsCard = (items: DocumentData) => {
+  const [updateModel, setUpdateModel] = useState(false);
   return (
     <>
+      {updateModel && (
+        <UpdateDocsModel {...items} closeModal={setUpdateModel} />
+      )}
+
       <div className="w-full rounded-xl border p-4 text-left shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-zinc-100/80 flex">
         {/* Left Content */}
         <div className="flex-1">
@@ -62,7 +69,13 @@ const DocsCard = (items: DocumentData) => {
 
             <DropdownMenuContent align="end" className="w-40 font-medium">
               <DropdownMenuItem>View</DropdownMenuItem>
-              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setUpdateModel(true);
+                }}
+              >
+                Edit
+              </DropdownMenuItem>
               <DropdownMenuItem className="text-red-500">
                 Delete
               </DropdownMenuItem>

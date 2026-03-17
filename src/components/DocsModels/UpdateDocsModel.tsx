@@ -2,11 +2,11 @@ import type { DocumentData } from "@/types/docsType";
 import { urlRegex } from "@/utils/constant";
 import { useForm } from "react-hook-form";
 
-type AddModalProps = {
-  onClose: (b: boolean) => void;
-};
+type UpdateModelProps = {
+  closeModal: React.Dispatch<React.SetStateAction<boolean>>;
+} & DocumentData;
 
-const AddDocsModal = ({ onClose }: AddModalProps) => {
+const UpdateDocsModel = (data: UpdateModelProps) => {
   const {
     register,
     handleSubmit,
@@ -14,11 +14,13 @@ const AddDocsModal = ({ onClose }: AddModalProps) => {
   } = useForm<DocumentData>({
     mode: "onChange",
     delayError: 500,
+    defaultValues: {
+      ...data,
+    },
   });
 
   const onSubmit = (data: DocumentData) => {
     console.log(data);
-
     // mutate(data);
   };
 
@@ -36,7 +38,7 @@ const AddDocsModal = ({ onClose }: AddModalProps) => {
                 className="rounded-lg border border-zinc-200 p-2 text-zinc-700 transition duration-200 hover:bg-zinc-100"
                 type="button"
                 onClick={() => {
-                  onClose(false);
+                  data.closeModal(false);
                 }}
               >
                 <img src="/x.svg" alt="x" className="h-4 w-4" />
@@ -71,7 +73,7 @@ const AddDocsModal = ({ onClose }: AddModalProps) => {
                     Case ID <span className="text-red-500">*</span>
                   </span>
                   <input
-                    type="number"
+                    type="text"
                     className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 outline-none transition duration-200 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
                     {...register("caseId", {
                       minLength: {
@@ -133,7 +135,7 @@ const AddDocsModal = ({ onClose }: AddModalProps) => {
                     Client ID <span className="text-red-500">*</span>
                   </span>
                   <input
-                    type="number"
+                    type="text"
                     className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 outline-none transition duration-200 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
                     {...register("clientId", {
                       minLength: {
@@ -164,7 +166,7 @@ const AddDocsModal = ({ onClose }: AddModalProps) => {
                       type="button"
                       className="rounded-lg border border-zinc-300 px-4 py-2.5 text-sm font-semibold text-zinc-700 transition duration-200 hover:bg-zinc-100"
                       onClick={() => {
-                        onClose(false);
+                        data.closeModal(false);
                       }}
                     >
                       Cancel
@@ -197,4 +199,4 @@ const AddDocsModal = ({ onClose }: AddModalProps) => {
   );
 };
 
-export default AddDocsModal;
+export default UpdateDocsModel;
