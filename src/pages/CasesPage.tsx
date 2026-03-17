@@ -1,3 +1,4 @@
+import CasesCard from "@/components/Case/CasesCard";
 import type { CaseData } from "@/types/caseType";
 
 const cases: CaseData[] = [
@@ -8,7 +9,7 @@ const cases: CaseData[] = [
     caseType: "Civil",
     clientId: "CL-101",
     clientName: "Rahul Sharma",
-    priority: "High",
+    priority: "high",
     createdAt: "2026-03-10",
   },
   {
@@ -18,7 +19,7 @@ const cases: CaseData[] = [
     caseType: "Corporate",
     clientId: "CL-102",
     clientName: "Priya Patel",
-    priority: "Medium",
+    priority: "medium",
     createdAt: "2026-03-11",
   },
   {
@@ -28,7 +29,7 @@ const cases: CaseData[] = [
     caseType: "Family",
     clientId: "CL-103",
     clientName: "Amit Verma",
-    priority: "Low",
+    priority: "low",
     createdAt: "2026-03-12",
   },
   {
@@ -38,7 +39,7 @@ const cases: CaseData[] = [
     caseType: "Criminal",
     clientId: "CL-104",
     clientName: "Neha Gupta",
-    priority: "High",
+    priority: "high",
     createdAt: "2026-03-13",
   },
 ];
@@ -84,7 +85,7 @@ const CasesPage = () => {
 
         <div className="mt-5 space-y-3 overflow-y-hidden">
           {cases.map((item) => (
-            <p>{item._id}</p>
+            <CasesCard {...item} key={item._id} />
           ))}
         </div>
       </section>
