@@ -1,6 +1,6 @@
 import AddTaskModel from "@/components/Task/AddTaskModel";
 import TaskCard from "@/components/Task/TaskCard";
-// import TaskCardSkeleton from "@/components/Task/TaskCardSkeleton";
+import TaskCardSkeleton from "@/components/Task/TaskCardSkeleton";
 import type { TaskData } from "@/types/taskType";
 import { useState } from "react";
 
@@ -179,9 +179,11 @@ const TaskPage = () => {
         {/* list of task */}
         <div className="mt-5 space-y-3 overflow-y-hidden">
           {tasks.map((item: TaskData) => (
-            <TaskCard key={item._id} {...item} />
+            <>
+              <TaskCard key={item._id} {...item} />
+              <TaskCardSkeleton />
+            </>
           ))}
-          {/* <TaskCardSkeleton/> */}
         </div>
       </section>
     </>

@@ -4,9 +4,16 @@ import {
   getCompony,
   getTaskCount,
 } from "@/api/adminAPi";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from "@/components/ui/chart";
 import type { RootState } from "@/store/store";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import { Pie, PieChart } from "recharts";
 
 const HomePageContent = () => {
   const role = useSelector((state: RootState) => state.auth.role);
@@ -27,6 +34,26 @@ const HomePageContent = () => {
     queryFn: getCompony,
     queryKey: ["getCompony"],
   });
+
+  const chartData = [
+    { browser: "chrome", visitors: 275, fill: "#156456" },
+    { browser: "firefox", visitors: 187, fill: "#123548" },
+    { browser: "edge", visitors: 173, fill: "#852426" },
+  ];
+  const chartConfig = {
+    chrome: {
+      label: "Chrome",
+      color: "#374dbd",
+    },
+    firefox: {
+      label: "Firefox",
+      color: "#374dbd",
+    },
+    edge: {
+      label: "Edge",
+      color: "#374dbd",
+    },
+  } satisfies ChartConfig;
 
   return (
     <>
@@ -138,6 +165,22 @@ const HomePageContent = () => {
                   </>
                 )}
               </p>
+            </article>
+            <article className="group rounded-2xl border border-zinc-200 bg-white p-5 shadow-soft transition duration-200 hover:-translate-y-0.5 hover:border-zinc-300">
+              <ChartContainer
+                config={chartConfig}
+                className="mx-auto aspect-square max-h-62.5 pb-0 [&_.recharts-pie-label-text]:fill-foreground"
+              >
+                <PieChart>
+                  <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+                  <Pie
+                    data={chartData}
+                    dataKey="visitors"
+                    label
+                    nameKey="browser"
+                  />
+                </PieChart>
+              </ChartContainer>
             </article>
           </>
         )}
