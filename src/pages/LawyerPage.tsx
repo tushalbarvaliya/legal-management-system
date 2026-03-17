@@ -1,4 +1,5 @@
 import { getLawyer } from "@/api/lawyerAPI";
+import LawyerCard from "@/components/Lawyer/LawyerCard";
 import { useQuery } from "@tanstack/react-query";
 
 const LawyerPage = () => {
@@ -27,7 +28,7 @@ const LawyerPage = () => {
           </div>
         </section>
 
-        {/* sesrch */}
+        {/* search */}
 
         <div className="mb-3 flex gap-4 flex-wrap ">
           {/* Search */}
@@ -52,6 +53,11 @@ const LawyerPage = () => {
 
         {/* list of lawyer */}
         {/* map the lawyer details */}
+        <div className="space-y-3">
+          {lawyerData?.map((lawyer) =>
+            lawyer ? <LawyerCard key={lawyer.id} lawyer={lawyer} /> : null,
+          )}
+        </div>
       </div>
     </>
   );

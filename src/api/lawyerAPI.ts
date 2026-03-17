@@ -1,6 +1,6 @@
 import axiosInstance from "./axiosInstance";
 
-type lawyerData = {
+export type lawyerData = {
   userId: string;
   updatedAt: string;
   specialization: string;
