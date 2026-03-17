@@ -25,7 +25,7 @@ const LoginPageForm = () => {
   const { mutate, isPending } = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
-      const token = { token: data.token };
+      const token = { token: data.token, role: data.role };
       dispatch(setToken(token));
       navigate("/");
     },
