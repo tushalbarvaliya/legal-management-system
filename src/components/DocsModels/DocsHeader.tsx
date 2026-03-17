@@ -16,9 +16,6 @@ const DocsHeader = () => {
               Select a client to review case documents. Create, edit, and remove
               records with quick actions.
             </p>
-            <p className="mt-3 inline-flex items-center rounded-full border border-zinc-200 bg-white/80 px-3 py-1 text-xs font-medium text-zinc-600">
-              Minimal workflow, clean records, fast edits
-            </p>
           </div>
           <button
             className="fixed bottom-6 right-6 z-20 inline-flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-xl transition duration-300 hover:scale-105 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:ring-offset-2 lg:bottom-8 lg:right-8"

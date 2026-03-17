@@ -1,13 +1,14 @@
+import DocsCard from "@/components/DocsModels/DocsCard";
 import DocsHeader from "@/components/DocsModels/DocsHeader";
 import type { DocumentData } from "@/types/docsType";
 
-const documents:DocumentData[] = [
+const documents: DocumentData[] = [
   {
     id: "DOC-001",
     title: "Contract Draft V1",
     description: "Initial contract draft prepared for client review.",
     documentLink: "https://example.com/files/contract-v1.pdf",
-    fileType:'pdf',
+    fileType: "pdf",
     caseId: "CASE-412",
     clientId: "CL-1001",
     notes: "Need signature by Friday.",
@@ -20,7 +21,7 @@ const documents:DocumentData[] = [
     caseId: "CASE-412",
     clientId: "CL-1001",
     notes: "",
-    fileType:'pdf',
+    fileType: "pdf",
   },
   {
     id: "DOC-003",
@@ -30,7 +31,7 @@ const documents:DocumentData[] = [
     caseId: "CASE-928",
     clientId: "CL-1002",
     notes: "Cross-check line item 14.",
-    fileType:'pdf',
+    fileType: "pdf",
   },
   {
     id: "DOC-004",
@@ -40,7 +41,7 @@ const documents:DocumentData[] = [
     caseId: "CASE-110",
     clientId: "CL-1003",
     notes: "Review with legal team.",
-    fileType:'pdf',
+    fileType: "pdf",
   },
 ];
 
@@ -48,7 +49,9 @@ const DocsPage = () => {
   return (
     <>
       <DocsHeader />
+
       <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-soft sm:p-6 mt-4">
+        {/* Header */}
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <div>
             <h2 className="text-lg font-semibold tracking-tight text-zinc-900">
@@ -58,34 +61,32 @@ const DocsPage = () => {
               Choose a Document card to load related documents.
             </p>
           </div>
-          <p className="text-xs uppercase bg-black text-white font-semibold p-2  flex justify-center items-center rounded-full font-mono">
+
+          <p className="text-xs uppercase bg-black text-white flex justify-center items-center  font-semibold p-2 rounded-full font-mono">
             {documents.length}
           </p>
         </div>
+
+        {/* Search */}
         <div className="mb-3">
           <div className="relative">
             <img
               src="/search.svg"
               alt="search"
-              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500"
+              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
             />
             <input
               type="search"
               placeholder="Search documents here..."
-              className="w-full rounded-xl border border-zinc-200 bg-white py-2.5 pl-9 pr-3 text-sm text-zinc-900 outline-none transition duration-200 placeholder:text-zinc-400 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100"
+              className="w-full rounded-xl border border-zinc-200 bg-white py-2.5 pl-9 pr-3 text-sm outline-none transition duration-200 placeholder:text-zinc-400 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100"
             />
           </div>
         </div>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 2xl:grid-cols-4">
+
+        {/* List */}
+        <div className="flex w-full gap-4 flex-col">
           {documents.map((items) => (
-            <button
-              type="button"
-              className={`w-full rounded-xl border p-4 text-left shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-zinc-100/80 `}
-            >
-              <p className="text-base font-semibold text-zinc-900">
-                {items.id}
-              </p>
-            </button>
+            <DocsCard {...items} key={items.id}/>
           ))}
         </div>
       </div>
