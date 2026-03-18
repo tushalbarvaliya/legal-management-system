@@ -9,7 +9,6 @@ export type ForgotPasswordState = {
   confirmPassword: string;
 };
 
-
 export type SignUpFormState = {
   userName: string;
   firstName: string;
@@ -24,22 +23,21 @@ export type SignUpFormState = {
   city: string;
 };
 
-
-
-
-
-
 export type SignUpdata = {
-  name: string;
-  first_name: string;
-  last_name: string;
+  username: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   phoneNumber: string;
   role: string;
   address: string;
-  companyId: number | string;
+  companyId: string;
   isDeleted: boolean;
+  isBlock: boolean;
+  pinCode: string;
+  state: string;
+  city: string;
 };
 
 export type ResetPasswordState = {
@@ -47,8 +45,6 @@ export type ResetPasswordState = {
   newPassword: string;
   confirmNewPassword: string;
 };
-
-
 
 export type DocsState = {
   title: string;

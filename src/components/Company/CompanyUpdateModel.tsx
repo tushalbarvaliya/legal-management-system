@@ -35,7 +35,9 @@ const CompanyUpdateModel = (data: UpdateTaskProps) => {
     delayError: 500,
     defaultValues: {
       ...data,
-      createdAt: new Date(data.createdAt).toISOString().split("T")[0],
+      createdAt: data?.createdAt
+        ? new Date(data.createdAt).toISOString().split("T")[0]
+        : "",
     },
   });
 

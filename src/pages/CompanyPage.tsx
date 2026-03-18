@@ -7,13 +7,13 @@ import { Mail, Phone, Calendar } from "lucide-react";
 import { useState } from "react";
 
 export type CompanyData = {
-  Address: string;
-  createdAt: string;
-  email: string;
-  id: number;
-  name: string;
-  phoneNumber: string;
-  updatedAt: string;
+  Address?: string;
+  createdAt?: string;
+  email?: string;
+  id?: number;
+  name?: string;
+  phoneNumber?: string;
+  updatedAt?: string;
 };
 
 const CompanyPage = () => {

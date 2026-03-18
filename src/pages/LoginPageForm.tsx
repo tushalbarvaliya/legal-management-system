@@ -41,6 +41,7 @@ const LoginPageForm = () => {
     },
   });
   const onSubmit = (data: LoginFormState) => {
+    console.log(data);
     mutate(data);
   };
   return (

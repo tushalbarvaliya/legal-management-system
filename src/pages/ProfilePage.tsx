@@ -1,6 +1,8 @@
+import { profileUpdate } from "@/api/authAPI";
 import { getProfile } from "@/api/userAPI";
 import ErrorMessage from "@/components/ErrorMessage";
 import ProfileSkeleton from "@/components/skeleton/ProfileSkeleton";
+import { queryClient } from "@/main";
 import type { SignUpFormState } from "@/types/formType";
 import {
   addressRegex,
@@ -10,16 +12,26 @@ import {
   pinCodeRegex,
 } from "@/utils/constant";
 
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
+import { toast } from "sonner";
 
 const ProfilePage = () => {
   const [isEdit, setIsEdit] = useState(false);
 
-  // const [formError, setFormError] = useState("");
-  // const navigate = useNavigate();
+  const { mutate, isPending: ButtonisPendding } = useMutation({
+    mutationFn: profileUpdate,
+    onSuccess: () => {
+      toast.success("Profile Update Successfully");
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      setIsEdit(false);
+    },
+    onError: (error) => {
+      toast.error(`Error ${error}`);
+    },
+  });
 
   const {
     register,
@@ -30,11 +42,13 @@ const ProfilePage = () => {
     delayError: 500,
   });
 
-  const { data, isLoading, isPending, isError, error } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["profile"],
     queryFn: getProfile,
   });
-  const onSubmit = (_data: SignUpFormState) => {};
+  const onSubmit = (data: SignUpFormState) => {
+    mutate(data);
+  };
 
   return (
     <>
@@ -359,9 +373,9 @@ const ProfilePage = () => {
                   <button
                     type="submit"
                     className="inline-flex w-full items-center justify-center rounded-md bg-zinc-900 px-4 py-2.5 text-sm font-medium text-zinc-50 transition duration-200 hover:scale-[1.01] hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300"
-                    disabled={isPending}
+                    disabled={ButtonisPendding}
                   >
-                    {isPending ? "Editing..." : "Edit"}
+                    {ButtonisPendding ? "Editing..." : "Edit"}
                   </button>
                 </div>
               )}
