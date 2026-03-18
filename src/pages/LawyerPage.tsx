@@ -16,10 +16,9 @@ const LawyerPage = () => {
     queryKey: ["lawyer"],
     queryFn: getLawyer,
   });
-  console.log(lawyerData);
+  // console.log(lawyerData);
 
   const [search, setSearch] = useState("");
-
   const filteredLawyers = useMemo(() => {
     return lawyerData.filter((lawyer) => {
       if (!lawyer) return false;
@@ -31,6 +30,7 @@ const LawyerPage = () => {
       return searchMatch;
     });
   }, [lawyerData, search]);
+
 
   return (
     <>
@@ -74,6 +74,7 @@ const LawyerPage = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full rounded-xl border border-zinc-200 py-2.5 pl-9 pr-3 text-sm focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100"
+              disabled={isError || isLoading}
             />
           </div>
         </div>
@@ -88,7 +89,7 @@ const LawyerPage = () => {
               <LawyerCardSkeleton />
             </>
           )}
-          {!isLoading&&!isError && filteredLawyers.length === 0 && (
+          {!isLoading && !isError && filteredLawyers.length === 0 && (
             <p className="text-sm text-zinc-500">No results found</p>
           )}
           {filteredLawyers.map((lawyer) => {

@@ -2,7 +2,7 @@ import type { ClientProps } from "@/types/clientType";
 import axiosInstance from "./axiosInstance";
 
 export const getAllClient = async () => {
-  const response = await axiosInstance.get("/client");
+  const response = await axiosInstance.get("/clients");
   return response.data;
 };
 

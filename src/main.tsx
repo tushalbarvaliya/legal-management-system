@@ -30,6 +30,7 @@ import TaskPage from "./pages/TaskPage.tsx";
 import StaffPage from "./pages/StaffPage.tsx";
 import InvoicePage from "./pages/InvoicePage.tsx";
 import LawyerPage from "./pages/LawyerPage.tsx";
+import CompanyPage from "./pages/CompanyPage.tsx";
 
 export const queryClient = new QueryClient();
 
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
           {
             path: "profile",
             element: <ProfilePage />,
+          },
+          {
+            path: "company",
+            element: <CompanyPage />,
           },
           {
             path: "cases",

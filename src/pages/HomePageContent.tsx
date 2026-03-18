@@ -10,14 +10,14 @@ const HomePageContent = () => {
       <div className="grid grid-cols-3 gap-x-2 gap-y-2">
         <div className="rounded-2xl bg-white p-5 shadow-soft sm:p-6 col-span-3">
           <h1 className="text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl">
-            Welcome back, {"Admin"} Tushal
+            Welcome back,
           </h1>
           <p className="mt-2 text-sm text-zinc-600 sm:text-base">
             Here is a quick summary of your current workload and session
             activity.
           </p>
         </div>
-        {role == "admin" && <AdminDashBoard />}
+        {role === "admin" && <AdminDashBoard />}
       </div>
     </>
   );

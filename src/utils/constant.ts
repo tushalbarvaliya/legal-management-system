@@ -118,6 +118,13 @@ export const menuList = [
     alt: "lawyer",
     role: ["admin"],
   },
+  {
+    title:'company',
+    src:'/componey.svg',
+    to:'/company',
+    alt:"company",
+    role:['admin']
+  }
 ];
 
 export const navItems = [
