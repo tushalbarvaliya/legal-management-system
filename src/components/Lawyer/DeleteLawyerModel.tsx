@@ -1,11 +1,12 @@
-import { deleteLawyer, type userData } from "@/api/lawyerAPI";
+import { deleteLawyer } from "@/api/lawyerAPI";
 import { queryClient } from "@/main";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+import type { LawyerData } from "./LawyerCard";
 
 type deleteTaskModalProps = {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>;
-} & userData;
+} & LawyerData;
 
 const DeleteLawyerModel = (data: deleteTaskModalProps) => {
   const { mutate, isPending } = useMutation({

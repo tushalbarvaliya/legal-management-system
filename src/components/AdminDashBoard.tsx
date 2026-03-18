@@ -48,21 +48,21 @@ const AdminDashBoard = () => {
   });
 
   const chartData = [
-    { browser: "chrome", visitors: Compony?.lawyers.length, fill: "#156456" },
-    { browser: "firefox", visitors: Compony?.staff.length, fill: "#123548" },
-    { browser: "edge", visitors: data?.length, fill: "#852426" },
+    { browser: "Lawyer", visitors: Compony?.lawyers.length, fill: "#156456" },
+    { browser: "Staff", visitors: Compony?.staff.length, fill: "#123548" },
+    { browser: "User", visitors: data?.length, fill: "#852426" },
   ];
   const chartConfig = {
-    chrome: {
-      label: "Chrome",
+    Lawyer: {
+      label: "Lawyer",
       color: "#374dbd",
     },
-    firefox: {
-      label: "Firefox",
+    Staff: {
+      label: "Staff",
       color: "#374dbd",
     },
-    edge: {
-      label: "Edge",
+    User: {
+      label: "User",
       color: "#374dbd",
     },
   } satisfies ChartConfig;
@@ -186,12 +186,20 @@ const AdminDashBoard = () => {
         </p>
       </article>
       <article className="group rounded-2xl border border-zinc-200 bg-white p-5 shadow-soft transition duration-200 hover:-translate-y-0.5 hover:border-zinc-300">
+        <div className="flex items-start justify-between">
+          <h2 className="text-sm font-semibold text-zinc-600 capitalize">
+            User Chat
+          </h2>
+          <div className="rounded-lg bg-zinc-100 p-2 text-zinc-700 transition duration-200 group-hover:bg-zinc-200">
+            <img src={"/staff.svg"} alt={"Icon"} className="h-5 w-5" />
+          </div>
+        </div>
         {componyIsError && isError && <p>Error</p>}
         {(componyLoading || isLoading) && <Spinner className="size-10" />}
         {!componyLoading && !isLoading && !isError && !componyIsError && (
           <ChartContainer
             config={chartConfig}
-            className="mx-auto aspect-square max-h-62.5 pb-0 [&_.recharts-pie-label-text]:fill-foreground"
+            className="mx-auto aspect-square max-h-50 pb-0 [&_.recharts-pie-label-text]:fill-foreground"
           >
             <PieChart>
               <ChartTooltip content={<ChartTooltipContent hideLabel />} />

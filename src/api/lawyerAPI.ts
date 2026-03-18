@@ -1,3 +1,4 @@
+import type { LawyerData } from "@/components/Lawyer/LawyerCard";
 import axiosInstance from "./axiosInstance";
 
 export type lawyerData = {
@@ -10,8 +11,8 @@ export type lawyerData = {
 };
 
 export type userData = {
-  lastName: string;
-  email: string;
+  lastName?: string;
+  email?: string;
   password: string;
   role: string;
   isDeleted: boolean;
@@ -19,7 +20,7 @@ export type userData = {
   name: string;
   firstName: string;
   id: string;
-  phoneNumber: string;
+  phoneNumber?: string;
   address: string;
   companyId: string;
   isBlocked: string;
@@ -32,13 +33,17 @@ export const getLawyer = async () => {
   const lawyers = lawyerRes.data;
   const users = userRes.data;
 
-  const matchedUsers = lawyers
-    .map((lawyer) => users.find((user) => user.id === lawyer.userId))
-    .filter(Boolean); // remove undefined
-  return matchedUsers;
+  // const matchedUsers = lawyers
+  //   .map((lawyer) => users.find((user) => user.id === lawyer.userId))
+  //   .filter(Boolean);
+  const matchUser = lawyers.map((lawyer) => {
+    const user = users.find((user) => user.id === lawyer.userId);
+    return ({...user,...lawyer})
+  });
+  return matchUser;
 };
 
-export const deleteLawyer = async (data: userData) => {
+export const deleteLawyer = async (data: LawyerData) => {
   const response = await axiosInstance.delete(`/lawyers/lawyer/${data.id}`);
   return response.data;
 };

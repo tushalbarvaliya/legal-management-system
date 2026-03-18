@@ -7,7 +7,7 @@ const HomePageContent = () => {
 
   return (
     <>
-      <div className="grid grid-cols-3 gap-x-2 gap-y-4">
+      <div className="grid grid-cols-3 gap-x-2 gap-y-2">
         <div className="rounded-2xl bg-white p-5 shadow-soft sm:p-6 col-span-3">
           <h1 className="text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl">
             Welcome back, {"Admin"} Tushal

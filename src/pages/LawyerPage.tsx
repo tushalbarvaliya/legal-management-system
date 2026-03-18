@@ -3,33 +3,47 @@ import { getLawyer } from "@/api/lawyerAPI";
 import LawyerCard from "@/components/Lawyer/LawyerCard";
 import { useQuery } from "@tanstack/react-query";
 import AddLawyerModel from "@/components/Lawyer/AddLawyerModel";
+import LawyerCardSkeleton from "@/components/Lawyer/LawyerCardSkeleton";
+import ErrorMessage from "@/components/ErrorMessage";
 
 const LawyerPage = () => {
   const [addModelOpen, setAddModelOpen] = useState(false);
-  const { data: lawyerData = [], isLoading } = useQuery({
+  const {
+    data: lawyerData = [],
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["lawyer"],
     queryFn: getLawyer,
   });
+  console.log(lawyerData);
 
   const [search, setSearch] = useState("");
 
   const filteredLawyers = useMemo(() => {
     return lawyerData.filter((lawyer) => {
       if (!lawyer) return false;
-
       const searchMatch =
-        lawyer.firstName.toLowerCase().includes(search.toLowerCase()) ||
-        lawyer.lastName.toLowerCase().includes(search.toLowerCase()) ||
-        lawyer.email.toLowerCase().includes(search.toLowerCase()) ||
-        lawyer.phoneNumber.includes(search);
-
+        lawyer.firstName?.toLowerCase().includes(search.toLowerCase()) ||
+        lawyer.lastName?.toLowerCase().includes(search.toLowerCase()) ||
+        lawyer.email?.toLowerCase().includes(search.toLowerCase()) ||
+        lawyer.phoneNumber?.includes(search);
       return searchMatch;
     });
   }, [lawyerData, search]);
 
   return (
     <>
-      {addModelOpen && <AddLawyerModel onClose={setAddModelOpen}/>}
+      {addModelOpen && <AddLawyerModel onClose={setAddModelOpen} />}
+      {/* Add Button */}
+      <button
+        className="fixed bottom-6 right-6 h-14 z-99 w-14 rounded-full bg-zinc-900 text-white shadow-xl hover:scale-105"
+        onClick={() => {
+          setAddModelOpen(true);
+        }}
+      >
+        <img src="/plus.svg" alt="+" className="h-6 w-6 m-auto" />
+      </button>
       <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-soft sm:p-6 mt-4 space-y-4">
         {/* Header */}
         <section className="rounded-2xl border border-zinc-200 bg-linear-to-br from-white to-zinc-50 p-5 shadow-soft sm:p-6">
@@ -42,11 +56,6 @@ const LawyerPage = () => {
                 Manage your lawyers efficiently.
               </p>
             </div>
-
-            {/* Add Button */}
-            <button className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-zinc-900 text-white shadow-xl hover:scale-105" onClick={()=>{setAddModelOpen(true)}}>
-              <img src="/plus.svg" alt="+" className="h-6 w-6 m-auto" />
-            </button>
           </div>
         </section>
 
@@ -71,12 +80,17 @@ const LawyerPage = () => {
 
         {/* List */}
         <div className="space-y-3">
-          {isLoading && <p>Loading...</p>}
-
-          {!isLoading && filteredLawyers.length === 0 && (
+          {!isLoading && isError && <ErrorMessage />}
+          {isLoading && (
+            <>
+              <LawyerCardSkeleton />
+              <LawyerCardSkeleton />
+              <LawyerCardSkeleton />
+            </>
+          )}
+          {!isLoading&&!isError && filteredLawyers.length === 0 && (
             <p className="text-sm text-zinc-500">No results found</p>
           )}
-
           {filteredLawyers.map((lawyer) => {
             return lawyer ? (
               <LawyerCard key={lawyer.id} lawyer={lawyer} />

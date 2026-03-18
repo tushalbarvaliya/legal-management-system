@@ -24,6 +24,11 @@ export type SignUpFormState = {
   city: string;
 };
 
+
+
+
+
+
 export type SignUpdata = {
   name: string;
   first_name: string;

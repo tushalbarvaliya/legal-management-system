@@ -1,4 +1,3 @@
-import type { userData } from "@/api/lawyerAPI";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +10,26 @@ import { useState } from "react";
 import DeleteLawyerModel from "./DeleteLawyerModel";
 import UpdateLawyerModel from "./UpdateLawyerModel";
 
-const LawyerCard = ({ lawyer }: { lawyer: userData }) => {
+export type LawyerData = {
+  userId: string;
+  updatedAt: string;
+  specialization: string;
+  isBlocked: boolean;
+  id: string;
+  createdAt: string;
+  lastName?: string | undefined;
+  email?: string | undefined;
+  password?: string | undefined;
+  role?: string | undefined;
+  isDeleted?: boolean | undefined;
+  name?: string | undefined;
+  firstName?: string | undefined;
+  phoneNumber?: string | undefined;
+  address?: string | undefined;
+  companyId?: string | undefined;
+};
+
+const LawyerCard = ({ lawyer }: { lawyer: LawyerData }) => {
   const [deleteModel, setDeleteModel] = useState(false);
   const [updateModel, setUpdateModel] = useState(false);
   return (
@@ -26,7 +44,7 @@ const LawyerCard = ({ lawyer }: { lawyer: userData }) => {
         {/* Left Section */}
         <div className="flex items-center gap-4">
           <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
-            {lawyer.firstName.charAt(0).toUpperCase()}
+            {lawyer.firstName?.charAt(0).toUpperCase()}
           </div>
 
           <div>
@@ -44,12 +62,12 @@ const LawyerCard = ({ lawyer }: { lawyer: userData }) => {
         <div className="flex items-center gap-4">
           <span
             className={`px-3 py-1 text-xs rounded-full font-medium ${
-              lawyer.isBlocked === "\u0000"
+              lawyer.isBlocked === false
                 ? "bg-green-100 text-green-700"
                 : "bg-red-100 text-red-700"
             }`}
           >
-            {lawyer.isBlocked === "\u0000" ? "Active" : "Blocked"}
+            {lawyer.isBlocked === false ? "Active" : "Blocked"}
           </span>
 
           {/* ACTION MENU */}

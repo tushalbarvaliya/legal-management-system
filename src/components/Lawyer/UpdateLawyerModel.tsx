@@ -3,11 +3,11 @@ import { queryClient } from "@/main";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import type { userData } from "@/api/lawyerAPI";
+import type { LawyerData } from "./LawyerCard";
 
 type AddModalProps = {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>;
-} & userData;
+} & LawyerData;
 
 const UpdateLawyerModel = (data: AddModalProps) => {
   const {
