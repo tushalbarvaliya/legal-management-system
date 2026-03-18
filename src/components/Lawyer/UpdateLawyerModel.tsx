@@ -14,7 +14,11 @@ const UpdateLawyerModel = (data: AddModalProps) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<{ specialization: string }>({});
+  } = useForm<{ specialization: string }>({
+    defaultValues: {
+      specialization: data.specialization,
+    },
+  });
 
   const { mutate, isPending } = useMutation({
     mutationFn: makeItLawyer,
@@ -34,7 +38,7 @@ const UpdateLawyerModel = (data: AddModalProps) => {
 
   return (
     <div className="fixed inset-0 z-70">
-      <div className="absolute inset-0 bg-zinc-900/45"></div>
+      <div className="absolute inset-0 bg-zinc-900/45 h-screen"></div>
 
       <div className="relative flex min-h-full items-center justify-center p-4">
         <div className="w-full max-w-3xl bg-white rounded-2xl shadow-soft">
