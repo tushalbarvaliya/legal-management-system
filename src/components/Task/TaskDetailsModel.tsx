@@ -67,12 +67,12 @@ const TaskDetailsModel = (data: TaskDetailsProps) => {
                     {data.status}
                   </p>
                 </div>
-                <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-3">
+                {/* <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-3">
                   <p className="text-xs text-zinc-500">Assign To</p>
                   <p className="mt-1 font-semibold text-zinc-900">
                     {data.assignTo}
                   </p>
-                </div>
+                </div> */}
               </div>
             </div>
 

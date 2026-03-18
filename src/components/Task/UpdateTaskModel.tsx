@@ -1,11 +1,27 @@
+import { getAllUser } from "@/api/adminAPi";
+import { updateTask } from "@/api/taskAPI";
+import { queryClient } from "@/main";
 import type { TaskData } from "@/types/taskType";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 type UpdateTaskProps = {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>;
 } & TaskData;
 
 const UpdateTaskModel = (data: UpdateTaskProps) => {
+  const {mutate} = useMutation({
+    mutationFn: updateTask,
+    onSuccess:()=>{
+      toast.success('Task Edited')
+      queryClient.invalidateQueries({queryKey:['tasks']})
+      data.closeModal(false)
+    },
+    onError:(error)=>{
+      toast.error(`Error ${error}`)
+    }
+  });
   const {
     register,
     handleSubmit,
@@ -20,8 +36,14 @@ const UpdateTaskModel = (data: UpdateTaskProps) => {
   });
 
   const onSubmit = (data: TaskData) => {
-    console.log(data);
+    // console.log(data);
+    mutate(data)
   };
+
+  const { data: userData } = useQuery<[]>({
+    queryFn: getAllUser,
+    queryKey: ["users"],
+  });
   return (
     <>
       <div
@@ -144,9 +166,17 @@ const UpdateTaskModel = (data: UpdateTaskProps) => {
                   })}
                 >
                   <option value="">Select Staff</option>
-                  <option value="tushal">Tushal Barvaliya</option>
-                  <option value="ketul">Ketul Suthar</option>
-                  <option value="arjun">Arjun Patel</option>
+                  {userData?.map(
+                    (item: {
+                      _id: string;
+                      firstName: string;
+                      lastName: string;
+                    }) => (
+                      <option value={item._id} key={item._id}>
+                        {item.firstName} {item.lastName}
+                      </option>
+                    ),
+                  )}
                 </select>
                 {errors.assignTo?.message && (
                   <p className="min-h-5 text-xs text-red-600">

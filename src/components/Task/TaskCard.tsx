@@ -104,11 +104,6 @@ const TaskCard = (data: TaskData) => {
                 </span>
               </p>
 
-              <p>
-                <span className="font-semibold text-zinc-700">Assign To:</span>
-                {"  "}
-                {data.assignTo}
-              </p>
             </div>
           </div>
 
@@ -142,9 +137,9 @@ const TaskCard = (data: TaskData) => {
                 >
                   Delete
                 </DropdownMenuItem>
-                <DropdownMenuItem className="text-green-600">
+                {/* <DropdownMenuItem className="text-green-600">
                   Mark as Completed
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

@@ -14,7 +14,7 @@ const AddTaskModel = (data: TaskAddProps) => {
     mutationFn: addTask,
     onSuccess: () => {
       toast.success("Task Add Successfully");
-      queryClient.invalidateQueries({ queryKey: ["task"] });
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
       data.closeModal(false);
     },
     onError: (error) => {
