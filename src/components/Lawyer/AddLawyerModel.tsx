@@ -101,10 +101,9 @@ const AddLawyerModel = ({ onClose }: AddModalProps) => {
                   >
                     <option value="">Select User</option>
                     {userData?.map((item) =>
-                      item.role != "l" ? (
+                      item.role == "lawyer" ? (
                         <option value={item.id} key={item.id}>
-                          {item.firstName}
-                          {item.lastName}
+                          {item.email}
                         </option>
                       ) : (
                         ""
