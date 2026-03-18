@@ -9,18 +9,17 @@ import ErrorMessage from "@/components/ErrorMessage";
 const LawyerPage = () => {
   const [addModelOpen, setAddModelOpen] = useState(false);
   const {
-    data: lawyerData = [],
+    data: lawyerData,
     isLoading,
     isError,
   } = useQuery({
     queryKey: ["lawyer"],
     queryFn: getLawyer,
   });
-  // console.log(lawyerData);
 
   const [search, setSearch] = useState("");
   const filteredLawyers = useMemo(() => {
-    return lawyerData.filter((lawyer) => {
+    return lawyerData?.filter((lawyer) => {
       if (!lawyer) return false;
       const searchMatch =
         lawyer.firstName?.toLowerCase().includes(search.toLowerCase()) ||
@@ -30,7 +29,6 @@ const LawyerPage = () => {
       return searchMatch;
     });
   }, [lawyerData, search]);
-
 
   return (
     <>
@@ -46,15 +44,13 @@ const LawyerPage = () => {
       </button>
       <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-soft sm:p-6 mt-4 space-y-4">
         {/* Header */}
-        <section className="rounded-2xl border border-zinc-200 bg-linear-to-br from-white to-zinc-50 p-5 shadow-soft sm:p-6">
+        <section className="rounded-2xl border border-stone-200 bg-stone-800 p-5 shadow-soft sm:p-6 text-white">
           <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-zinc-900 sm:text-3xl">
+              <h1 className="text-2xl font-bold  sm:text-3xl">
                 Lawyer Management
               </h1>
-              <p className="mt-2 text-sm text-zinc-600">
-                Manage your lawyers efficiently.
-              </p>
+              <p className="mt-2 text-sm ">Manage your lawyers efficiently.</p>
             </div>
           </div>
         </section>
@@ -89,10 +85,10 @@ const LawyerPage = () => {
               <LawyerCardSkeleton />
             </>
           )}
-          {!isLoading && !isError && filteredLawyers.length === 0 && (
+          {!isLoading && !isError && filteredLawyers?.length === 0 && (
             <p className="text-sm text-zinc-500">No results found</p>
           )}
-          {filteredLawyers.map((lawyer) => {
+          {filteredLawyers?.map((lawyer) => {
             return lawyer ? (
               <LawyerCard key={lawyer.id} lawyer={lawyer} />
             ) : null;
