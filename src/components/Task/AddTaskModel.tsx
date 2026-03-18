@@ -1,10 +1,32 @@
+import { getAllUser } from "@/api/adminAPi";
+import { addTask } from "@/api/taskAPI";
+import { queryClient } from "@/main";
 import type { TaskData } from "@/types/taskType";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 type TaskAddProps = {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const AddTaskModel = (data: TaskAddProps) => {
+  const { mutate } = useMutation({
+    mutationFn: addTask,
+    onSuccess: () => {
+      toast.success("Task Add Successfully");
+      queryClient.invalidateQueries({ queryKey: ["task"] });
+      data.closeModal(false);
+    },
+    onError: (error) => {
+      toast.error(`Error ${error}`);
+    },
+  });
+
+  const { data: userData } = useQuery<[]>({
+    queryFn: getAllUser,
+    queryKey: ["users"],
+  });
+
   const {
     register,
     handleSubmit,
@@ -15,6 +37,7 @@ const AddTaskModel = (data: TaskAddProps) => {
   });
   const onSubmit = (data: TaskData) => {
     console.log(data);
+    mutate(data);
   };
   return (
     <>
@@ -138,9 +161,17 @@ const AddTaskModel = (data: TaskAddProps) => {
                   })}
                 >
                   <option value="">Select Staff</option>
-                  <option value="tushal">Tushal Barvaliya</option>
-                  <option value="ketul">Ketul Suthar</option>
-                  <option value="arjun">Arjun Patel</option>
+                  {userData?.map(
+                    (item: {
+                      _id: string;
+                      firstName: string;
+                      lastName: string;
+                    }) => (
+                      <option value={item._id} key={item._id}>
+                        {item.firstName} {item.lastName}
+                      </option>
+                    ),
+                  )}
                 </select>
 
                 {errors.assignTo?.message && (
