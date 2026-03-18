@@ -284,16 +284,6 @@ const AddClientModel = ({ closeModal }: AddClientModel) => {
                 )}
               </label>
 
-              <label className="space-y-1.5 text-sm text-zinc-700">
-                <span className="font-medium">Notes</span>
-                <textarea
-                  id="notes"
-                  name="notes"
-                  rows={2}
-                  className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 outline-none transition duration-200 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                ></textarea>
-              </label>
-
               <div className="flex flex-col-reverse gap-2 border-t border-zinc-200 pt-4 sm:flex-row sm:justify-end">
                 <button
                   type="button"

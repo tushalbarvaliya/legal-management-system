@@ -1,10 +1,9 @@
 import { useState } from "react";
 import type { ClientProps } from "@/types/clientType";
 import ClientDetailsModel from "./ClientDetailsModel";
-import DeleteClientModel from "./DeleteClientModel";
 import UpdateClientModel from "./UpdateClientModel";
 import { useMutation } from "@tanstack/react-query";
-import { blockClient, unBlockClient, undoDeleteClient } from "@/api/clientAPI";
+import { blockClient, unBlockClient } from "@/api/clientAPI";
 import { toast } from "sonner";
 import {
   DropdownMenu,
@@ -20,7 +19,6 @@ import SoftDeleteModel from "./SoftDeleteModel";
 const ClientCard = (data: ClientProps) => {
   const [clientModelOpen, setClientModelOpen] = useState(false);
   const [openUpdateModel, setOpenUpdateModel] = useState(false);
-  const [clientDeleteModel, setClientDeleteModel] = useState(false);
   const [clientSoftDeleteModel, setClientSoftDeleteModel] = useState(false);
 
   const { mutate: blockMutation } = useMutation({
@@ -30,7 +28,7 @@ const ClientCard = (data: ClientProps) => {
       queryClient.invalidateQueries({ queryKey: ["client"] });
     },
     onError: (error) => {
-      toast.success(`Client Block Error ${error}`);
+      toast.error(`Client Block Error ${error}`);
     },
   });
   const { mutate: unblock } = useMutation({
@@ -40,26 +38,13 @@ const ClientCard = (data: ClientProps) => {
       queryClient.invalidateQueries({ queryKey: ["client"] });
     },
     onError: (error) => {
-      toast.success(`Client unblock Error ${error}`);
-    },
-  });
-  const { mutate: undoDelete } = useMutation({
-    mutationFn: undoDeleteClient,
-    onSuccess: () => {
-      toast.success("client unblock Successfully");
-      queryClient.invalidateQueries({ queryKey: ["client"] });
-    },
-    onError: (error) => {
-      toast.success(`Client unblock Error ${error}`);
+      toast.error(`Client unblock Error ${error}`);
     },
   });
   return (
     <>
       {clientModelOpen && (
         <ClientDetailsModel {...data} closeModal={setClientModelOpen} />
-      )}
-      {clientDeleteModel && (
-        <DeleteClientModel {...data} closeModal={setClientDeleteModel} />
       )}
       {openUpdateModel && (
         <UpdateClientModel {...data} closeModal={setOpenUpdateModel} />
@@ -140,26 +125,6 @@ const ClientCard = (data: ClientProps) => {
                   Delete
                 </DropdownMenuItem>
               )}
-              {data.isDelete && (
-                <DropdownMenuItem
-                  className="text-red-500"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    undoDelete(data);
-                  }}
-                >
-                  Undo Soft Delete
-                </DropdownMenuItem>
-              )}
-              <DropdownMenuItem
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setClientDeleteModel((prev) => !prev);
-                }}
-                className="text-red-500"
-              >
-                Permanent Delete
-              </DropdownMenuItem>
               {!data.isBlock && (
                 <DropdownMenuItem
                   onClick={(e) => {

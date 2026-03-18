@@ -14,11 +14,12 @@ const ClientPage = () => {
     queryFn: getAllClient,
   });
 
-  const filteredClients = clients?.filter((clients: ClientProps) =>
+  let filteredClients = clients?.filter((clients: ClientProps) =>
     Object.values(clients).some((value) =>
       String(value).toLowerCase().includes(search.toLowerCase()),
     ),
   );
+  filteredClients = filteredClients?.filter((item) => item.isDelete == false);
   return (
     <>
       <ClientHeader />
@@ -52,9 +53,16 @@ const ClientPage = () => {
           {/* map for client list */}
           {!isLoading &&
             filteredClients?.map((item: ClientProps) => {
-                return <ClientCard key={item._id} {...item} />;
+              return <ClientCard key={item._id} {...item} />;
             })}
-            <ClientCardSkeleton/>
+          {isLoading && (
+            <>
+              <ClientCardSkeleton />
+              <ClientCardSkeleton />
+              <ClientCardSkeleton />
+              <ClientCardSkeleton />
+            </>
+          )}
           {filteredClients?.length == 0 && <NoClientFound title="client" />}
         </div>
       </section>

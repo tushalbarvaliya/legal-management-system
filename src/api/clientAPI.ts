@@ -7,12 +7,12 @@ export const getAllClient = async () => {
 };
 
 export const createClient = async (data: ClientProps) => {
-  const response = await axiosInstance.post("/client", data);
+  const response = await axiosInstance.post("/clients/client", data);
   return response.data;
 };
 
 export const updateClient = async (data: ClientProps) => {
-  const response = await axiosInstance.patch(`/client/${data._id}`, data);
+  const response = await axiosInstance.patch(`/clients/client/${data._id}`, data);
   return response.data;
 };
 
@@ -22,11 +22,11 @@ export const deletePermanentClient = async (data: ClientProps) => {
 };
 
 export const blockClient = async (data: ClientProps) => {
-  const response = await axiosInstance.delete(`/client/block/${data._id}`);
+  const response = await axiosInstance.put(`/clients/client/${data._id}/block`);
   return response.data;
 };
 export const softDeleteClient = async (data: ClientProps) => {
-  const response = await axiosInstance.delete(`/client/delete/${data._id}`);
+  const response = await axiosInstance.delete(`/clients/client/${data._id}`);
   return response.data;
 };
 export const undoDeleteClient = async (data: ClientProps) => {

@@ -74,12 +74,7 @@ const ClientDetailsModel = (data: clientDetailModel) => {
                 </p>
                 <p className="mt-1 text-sm text-zinc-700">{data.address}</p>
               </div>
-              <div className="rounded-xl border border-zinc-200 bg-white p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">
-                  Notes
-                </p>
-                <p className="mt-1 text-sm text-zinc-700">{data.notes}</p>
-              </div>
+
               <div className="flex justify-end border-t border-zinc-200 pt-4">
                 <button
                   type="button"
