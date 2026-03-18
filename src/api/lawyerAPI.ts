@@ -47,7 +47,7 @@ export const deleteLawyer = async (data: LawyerData) => {
   const response = await axiosInstance.delete(`/lawyers/lawyer/${data.id}`);
   return response.data;
 };
-export const blockLawyer = async (data: userData) => {
+export const blockLawyer = async (data: LawyerData) => {
   const response = await axiosInstance.put(`/lawyers/lawyer/${data.id}/block`);
   return response.data;
 };

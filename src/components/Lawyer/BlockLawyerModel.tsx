@@ -1,11 +1,12 @@
-import { blockLawyer, type userData } from "@/api/lawyerAPI";
+import { blockLawyer } from "@/api/lawyerAPI";
 import { queryClient } from "@/main";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+import type { LawyerData } from "./LawyerCard";
 
 type deleteTaskModalProps = {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>;
-} & userData;
+} & LawyerData;
 
 const BlockLawyerModel = (data: deleteTaskModalProps) => {
   const { mutate, isPending } = useMutation({
@@ -51,7 +52,7 @@ const BlockLawyerModel = (data: deleteTaskModalProps) => {
                 }}
                 disabled={isPending}
               >
-                {isPending ? "Deleting.." : "Delete"}
+                {isPending ? "Block.." : "Block"}
               </button>
             </div>
           </div>
