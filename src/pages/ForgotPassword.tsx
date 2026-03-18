@@ -1,17 +1,21 @@
-import { forgetPasswordAPI } from "@/api/authAPI";
-import type { ForgotPasswordState } from "@/types/formType";
-import { emailRegex, passwordRegex } from "@/utils/constant";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { toast, Toaster } from "sonner";
+
+import { forgetPasswordAPI } from "@/api/authAPI";
+import type { ForgotPasswordState } from "@/types/formType";
+import { emailRegex, passwordRegex } from "@/utils/constant";
 
 const ForgotPassword = () => {
   const [passwordShow, setPasswordShow] = useState(false);
   const [confirmPasswordShow, setConfirmPasswordShow] = useState(false);
+
   const [formError, setFormError] = useState("");
+
   const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -23,10 +27,9 @@ const ForgotPassword = () => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: forgetPasswordAPI,
-    // mutationFn:async()=>{},
     onSuccess: async () => {
       toast.success("Password Change Successful");
-      setFormError('')
+      setFormError("");
       setTimeout(() => {
         navigate("/");
       }, 2000);
@@ -36,6 +39,7 @@ const ForgotPassword = () => {
       setFormError(`Something is not right Error : ${error}`);
     },
   });
+
   const onSubmit = (data: ForgotPasswordState) => {
     if (data.password != data.confirmPassword) {
       toast.error("New Password and Confirm Password Should be Same.");
@@ -46,8 +50,12 @@ const ForgotPassword = () => {
   return (
     <>
       <Toaster position="bottom-right" richColors />
+
       <main className="flex h-fit  justify-center p-4 sm:p-6">
+
         <section className="w-full max-w-md rounded-xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
+
+          {/* Header */}
           <header className="mb-4 flex flex-col gap-3 text-center">
             <div className="mx-auto grid h-12 w-12 items-center rounded-xl border border-zinc-300 bg-zinc-900 text-lg font-semibold text-zinc-100">
               AD
@@ -57,13 +65,15 @@ const ForgotPassword = () => {
               Forgot Password
             </h1>
 
-            <p className="text-sm text-zinc-500">
+            <p className="text-sm text-zinc-900">
               Enter your credentials to continue.
             </p>
           </header>
 
           {/* main form */}
           <form className="space-y-2" onSubmit={handleSubmit(onSubmit)}>
+
+            {/* Email input */}
             <div className="flex flex-col gap-2 sm:col-span-2">
               <label
                 htmlFor="email"
@@ -91,7 +101,8 @@ const ForgotPassword = () => {
                 {errors.email?.message}
               </p>
             </div>
-            {/* Password */}
+
+            {/* Password input */}
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="password"
@@ -134,6 +145,8 @@ const ForgotPassword = () => {
                 {errors.password?.message}
               </p>
             </div>
+
+            {/* confirm password input */}
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="confirmPassword"
@@ -172,12 +185,28 @@ const ForgotPassword = () => {
                 </button>
               </div>
 
-              <p className="min-h-5 text-xs text-red-600">
-                {errors.confirmPassword?.message}
-              </p>
+              {errors.confirmPassword && (
+                <p className="min-h-5 text-xs text-red-600">
+                  {errors.confirmPassword?.message}
+                </p>
+              )}
+
             </div>
 
+            {/* back to login button */}
+            <div className="flex justify-end">
+              <Link
+                to="/login"
+                className="text-xs font-medium text-black hover:text-zinc-500 hover:underline"
+              >
+                Back to Login ?
+              </Link>
+            </div>
+
+            {/* from Error */}
             <p className="min-h-5 text-xs text-red-600">{formError}</p>
+
+            {/* submit Button */}
             <button
               type="submit"
               className="inline-flex w-full items-center justify-center rounded-md bg-zinc-900 px-4 py-2.5 text-sm font-medium text-zinc-50 hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300"

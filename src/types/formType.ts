@@ -3,6 +3,13 @@ export type LoginFormState = {
   password: string;
 };
 
+export type ForgotPasswordState = {
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
+
 export type SignUpFormState = {
   userName: string;
   firstName: string;
@@ -36,11 +43,7 @@ export type ResetPasswordState = {
   confirmNewPassword: string;
 };
 
-export type ForgotPasswordState = {
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
+
 
 export type DocsState = {
   title: string;
