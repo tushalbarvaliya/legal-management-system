@@ -28,9 +28,9 @@ const DeleteLawyerModel = (data: deleteTaskModalProps) => {
         <div className="absolute inset-0 bg-zinc-900/45 h-screen"></div>
         <div className="relative mx-auto flex min-h-full w-full items-center justify-center p-4">
           <div className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-5 shadow-2xl sm:p-6">
-            <h3 className="text-lg font-bold text-zinc-900">Delete Task</h3>
+            <h3 className="text-lg font-bold text-zinc-900">Delete User</h3>
             <p className="mt-2 text-sm text-zinc-600">
-              Are you sure you want to delete this task?
+              Are you sure you want to delete this User?
             </p>
             <p className="mt-1 text-sm font-medium text-zinc-800">
               {data.firstName} {data.lastName}

@@ -53,7 +53,7 @@ const AddLawyerModel = ({ onClose }: AddModalProps) => {
           <div className="w-full max-w-3xl rounded-2xl border border-zinc-200 bg-white shadow-soft">
             <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-4 sm:px-6">
               <h3 className="text-lg font-semibold tracking-tight text-zinc-900">
-                Create Document
+                Give Permission Of Lawyer
               </h3>
               <button
                 className="rounded-lg border border-zinc-200 p-2 text-zinc-700 transition duration-200 hover:bg-zinc-100"
@@ -91,7 +91,7 @@ const AddLawyerModel = ({ onClose }: AddModalProps) => {
                 </label>
                 <label className="space-y-1.5 text-sm text-zinc-700">
                   <span className="font-medium">
-                    Client Name <span className="text-red-500">*</span>
+                    User email <span className="text-red-500">*</span>
                   </span>
                   <select
                     className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
@@ -134,7 +134,7 @@ const AddLawyerModel = ({ onClose }: AddModalProps) => {
                       type="submit"
                       className="rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white transition duration-200 hover:scale-[1.02] hover:bg-zinc-800"
                     >
-                      Create Document
+                      Give Permission
                     </button>
                   </>
                 )}
@@ -145,7 +145,7 @@ const AddLawyerModel = ({ onClose }: AddModalProps) => {
                       className="rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white transition duration-200 hover:scale-[1.02] hover:bg-zinc-800"
                       disabled={isPending}
                     >
-                      Create...
+                      Giving Permission...
                     </button>
                   </>
                 )}

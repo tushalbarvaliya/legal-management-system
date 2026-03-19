@@ -3,6 +3,7 @@ import { queryClient } from "@/main";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import type { LawyerData } from "./LawyerCard";
+import { Button } from "../ui/button";
 
 type deleteTaskModalProps = {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -28,9 +29,9 @@ const BlockLawyerModel = (data: deleteTaskModalProps) => {
         <div className="absolute inset-0 bg-zinc-900/45 h-screen"></div>
         <div className="relative mx-auto flex min-h-full w-full items-center justify-center p-4">
           <div className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-5 shadow-2xl sm:p-6">
-            <h3 className="text-lg font-bold text-zinc-900">Delete Task</h3>
+            <h3 className="text-lg font-bold text-zinc-900"> Block User</h3>
             <p className="mt-2 text-sm text-zinc-600">
-              Are you sure you want to delete this task?
+              Are you sure you want to Block this user?
             </p>
             <p className="mt-1 text-sm font-medium text-zinc-800">
               {data.firstName} {data.lastName}
@@ -45,15 +46,14 @@ const BlockLawyerModel = (data: deleteTaskModalProps) => {
               >
                 Cancel
               </button>
-              <button
-                className="rounded-lg border border-black bg-black px-4 py-2 text-sm font-semibold text-white transition duration-200 hover:scale-[1.02] hover:bg-stone-100"
+              <Button
                 onClick={() => {
                   mutate(data);
                 }}
                 disabled={isPending}
               >
                 {isPending ? "Block.." : "Block"}
-              </button>
+              </Button>
             </div>
           </div>
         </div>
