@@ -1,11 +1,26 @@
+import { addSession } from "@/api/sessionAPi";
+import { queryClient } from "@/main";
 import type { SessionData } from "@/types/sessionType";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 type AddSessionProps = {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const AddSessionModel = ({ closeModal }: AddSessionProps) => {
+  const { mutate } = useMutation({
+    mutationFn: addSession,
+    onSuccess: () => {
+      toast.success("Session Add");
+      queryClient.invalidateQueries({ queryKey: ["sessions"] });
+      closeModal(false);
+    },
+    onError:(error)=>{
+      toast.error(`Error ${error}`)
+    }
+  });
   const {
     register,
     handleSubmit,
@@ -16,7 +31,8 @@ const AddSessionModel = ({ closeModal }: AddSessionProps) => {
   });
 
   const onSubmit = (data: SessionData) => {
-    console.log(data);
+    // console.log(data);
+    mutate(data)
   };
 
   return (
@@ -75,18 +91,18 @@ const AddSessionModel = ({ closeModal }: AddSessionProps) => {
                 </span>
                 <select
                   className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                  {...register("clientName", {
+                  {...register("clientId", {
                     required: "Client ID is required",
                   })}
                 >
                   <option value="">Select Client</option>
-                  <option value="tushal">Tushal Barvaliya</option>
-                  <option value="ketul">Ketul Suthar</option>
-                  <option value="Arjun">Arjun Patel</option>
+                  <option value="8465">Tushal Barvaliya</option>
+                  <option value="685461">Ketul Suthar</option>
+                  <option value="6843231">Arjun Patel</option>
                 </select>
-                {errors.clientName?.message && (
+                {errors.clientId?.message && (
                   <p className="min-h-5 text-xs text-red-600">
-                    {errors.clientName?.message}
+                    {errors.clientId?.message}
                   </p>
                 )}
               </label>
@@ -99,18 +115,18 @@ const AddSessionModel = ({ closeModal }: AddSessionProps) => {
               </span>
               <select
                 className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                {...register("caseTitle", {
+                {...register("caseId", {
                   required: "Case ID is required",
                 })}
               >
                 <option value="">Select Client</option>
-                <option value="tushal">Tushal Barvaliya</option>
-                <option value="ketul">Ketul Suthar</option>
-                <option value="Arjun">Arjun Patel</option>
+                <option value="123">Tushal Barvaliya</option>
+                <option value="123433">Ketul Suthar</option>
+                <option value="1234">Arjun Patel</option>
               </select>
-              {errors.caseTitle?.message && (
+              {errors.caseId?.message && (
                 <p className="min-h-5 text-xs text-red-600">
-                  {errors.caseTitle?.message}
+                  {errors.caseId?.message}
                 </p>
               )}
             </label>
@@ -125,7 +141,7 @@ const AddSessionModel = ({ closeModal }: AddSessionProps) => {
                 <input
                   type="date"
                   className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                  {...register("date", {
+                  {...register("sessionDate", {
                     required: "Please enter a date",
                     validate: (value) => {
                       const today = new Date();
@@ -141,9 +157,9 @@ const AddSessionModel = ({ closeModal }: AddSessionProps) => {
                     },
                   })}
                 />
-                {errors.date?.message && (
+                {errors.sessionDate?.message && (
                   <p className="min-h-5 text-xs text-red-600">
-                    {errors.date?.message}
+                    {errors.sessionDate?.message}
                   </p>
                 )}
               </label>
@@ -157,13 +173,13 @@ const AddSessionModel = ({ closeModal }: AddSessionProps) => {
                 <input
                   type="time"
                   className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                  {...register("time", {
+                  {...register("sessionTime", {
                     required: "Time is required",
                   })}
                 />
-                {errors.time?.message && (
+                {errors.sessionTime?.message && (
                   <p className="min-h-5 text-xs text-red-600">
-                    {errors.time?.message}
+                    {errors.sessionTime?.message}
                   </p>
                 )}
               </label>
@@ -178,7 +194,7 @@ const AddSessionModel = ({ closeModal }: AddSessionProps) => {
               <input
                 type="text"
                 className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                {...register("location", {
+                {...register("sessionLocation", {
                   required: "Location is required",
                   minLength: {
                     value: 20,
@@ -186,9 +202,33 @@ const AddSessionModel = ({ closeModal }: AddSessionProps) => {
                   },
                 })}
               />
-              {errors.location?.message && (
+              {errors.sessionLocation?.message && (
                 <p className="min-h-5 text-xs text-red-600">
-                  {errors.location?.message}
+                  {errors.sessionLocation?.message}
+                </p>
+              )}
+            </label>
+
+            {/* court Name */}
+            <label className="space-y-1.5 text-sm text-zinc-700">
+              <span className="font-medium">
+                Court Name <span className="text-red-500">*</span>
+              </span>
+
+              <input
+                type="text"
+                className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
+                {...register("courtName", {
+                  required: "Location is required",
+                  minLength: {
+                    value: 5,
+                    message: "Location should be minimum 20 letter long",
+                  },
+                })}
+              />
+              {errors.courtName?.message && (
+                <p className="min-h-5 text-xs text-red-600">
+                  {errors.courtName?.message}
                 </p>
               )}
             </label>

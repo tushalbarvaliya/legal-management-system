@@ -1,13 +1,12 @@
 export type SessionData = {
   _id: string;
   title: string;
-  date: string;
-  clientName: string;
+  sessionDate: string;
   clientId: string;
-  caseTitle: string;
   caseId: string;
-  location: string;
-  time: string;
+  sessionLocation: string;
+  sessionTime: string;
+  courtName:string;
   createdAt: string;
   updatedAt: string;
   note: string;

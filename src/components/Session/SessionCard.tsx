@@ -35,13 +35,13 @@ const SessionCard = (data: SessionData) => {
               Client:
               <span className="text-zinc-700 font-semibold">
                 {" "}
-                {data.clientName}
+                {data.caseId}
               </span>
             </p>
           </div>
 
           <span className="text-xs bg-zinc-100 text-black px-3 py-1 rounded-full font-medium">
-            {data.caseTitle}
+            {data.clientId}
           </span>
         </div>
 
@@ -50,21 +50,21 @@ const SessionCard = (data: SessionData) => {
             <span className="text-zinc-400">
               <img src="/session.svg" alt="session" className="h-5 w-5" />
             </span>
-            <span>{formatData(data.date)}</span>
+            <span>{formatData(data.sessionDate)}</span>
           </div>
 
           <div className="flex items-center gap-2">
             <span className="text-zinc-400">
               <img src="/clock-icon.svg" alt="clock" className="h-5 w-5" />
             </span>
-            <span>{data.time}</span>
+            <span>{data.sessionTime}</span>
           </div>
 
           <div className="flex items-center gap-2">
             <span className="text-zinc-400">
               <img src="/location.svg" alt="location" className="h-5 w-5" />
             </span>
-            <span>{data.location}</span>
+            <span>{data.sessionLocation}</span>
           </div>
         </div>
       </div>
