@@ -1,5 +1,5 @@
 export type Invoice = {
-  id: string;
+  _id: string;
   client: string;
   caseId: string;
   amount: number;

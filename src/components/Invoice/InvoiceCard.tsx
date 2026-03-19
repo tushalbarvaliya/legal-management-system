@@ -1,16 +1,25 @@
 import type { Invoice } from "@/types/invoiceType";
+import { formatData } from "@/utils/formatDate";
 import { useState } from "react";
+import EditInvoiceModel from "./EditInvoiceModel";
+import DeleteInvoiceModel from "./DeleteTaskModel";
 
 const InvoiceCard = (invoice: Invoice) => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const [editOpen, setEditOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
 
   return (
     <>
+      {editOpen && <EditInvoiceModel closeModal={setEditOpen} {...invoice} />}
+      {deleteOpen && (
+        <DeleteInvoiceModel closeModal={setDeleteOpen} {...invoice} />
+      )}
       <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-soft transition duration-200 hover:-translate-y-0.5 hover:border-zinc-300">
         <div className="flex items-start justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
-              {invoice.id}
+              {invoice._id}
             </p>
             <p className="mt-1 text-lg font-semibold text-zinc-900">
               {invoice.client}
@@ -38,31 +47,26 @@ const InvoiceCard = (invoice: Invoice) => {
                 data-action="view"
                 data-id="${invoice.id}"
                 className="block w-full rounded-md px-3 py-2 text-left text-sm text-zinc-700 transition duration-150 hover:bg-zinc-100"
-                
               >
                 View
               </button>
               <button
-                data-action="edit"
-                data-id="${invoice.id}"
                 className="block w-full rounded-md px-3 py-2 text-left text-sm text-zinc-700 transition duration-150 hover:bg-zinc-100"
-                
+                onClick={() => {
+                  setEditOpen(true);
+                }}
               >
                 Edit
               </button>
               <button
-                data-action="delete"
-                data-id="${invoice.id}"
                 className="block w-full rounded-md px-3 py-2 text-left text-sm text-rose-600 transition duration-150 hover:bg-rose-50"
-                
+                onClick={() => {
+                  setDeleteOpen(true);
+                }}
               >
                 Delete
               </button>
-              <button
-                data-action="download"
-                data-id="${invoice.id}"
-                className="block w-full rounded-md px-3 py-2 text-left text-sm text-zinc-700 transition duration-150 hover:bg-zinc-100"
-              >
+              <button className="block w-full rounded-md px-3 py-2 text-left text-sm text-zinc-700 transition duration-150 hover:bg-zinc-100">
                 Download Invoice
               </button>
             </div>
@@ -82,7 +86,9 @@ const InvoiceCard = (invoice: Invoice) => {
 
           <div>
             <p className="text-xs uppercase text-zinc-400">Due</p>
-            <p className="font-medium text-zinc-800">{invoice.dueDate}</p>
+            <p className="font-medium text-zinc-800">
+              {formatData(invoice.dueDate)}
+            </p>
           </div>
 
           <div>
@@ -94,12 +100,16 @@ const InvoiceCard = (invoice: Invoice) => {
 
           <div>
             <p className="text-xs uppercase text-zinc-400">Invoice Date</p>
-            <p className="font-medium text-zinc-800">{invoice.invoiceDate}</p>
+            <p className="font-medium text-zinc-800">
+              {formatData(invoice.invoiceDate)}
+            </p>
           </div>
 
           <div>
             <p className="text-xs uppercase text-zinc-400">Due Date</p>
-            <p className="font-medium text-zinc-800">{invoice.dueDate}</p>
+            <p className="font-medium text-zinc-800">
+              {formatData(invoice.dueDate)}
+            </p>
           </div>
         </div>
       </div>
