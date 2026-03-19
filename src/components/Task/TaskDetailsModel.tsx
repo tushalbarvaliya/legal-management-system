@@ -44,7 +44,7 @@ const TaskDetailsModel = (data: TaskDetailsProps) => {
                   {data.description}
                 </p>
               </div>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-3">
                   <p className="text-xs text-zinc-500">Priority</p>
                   <p className="mt-1 font-semibold text-zinc-900">
