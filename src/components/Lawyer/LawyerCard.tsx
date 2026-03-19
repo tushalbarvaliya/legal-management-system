@@ -10,6 +10,7 @@ import { useState } from "react";
 import DeleteLawyerModel from "./DeleteLawyerModel";
 import UpdateLawyerModel from "./UpdateLawyerModel";
 import BlockLawyerModel from "./BlockLawyerModel";
+import type { userData } from "@/api/lawyerAPI";
 
 export type LawyerData = {
   firstName?: string | undefined;
@@ -20,7 +21,7 @@ export type LawyerData = {
   name?: string | undefined;
   userId: string;
   updatedAt: string;
-  isBlocked: string;
+  isBlocked: number;
   createdAt: string;
   password?: string | undefined;
   role?: string | undefined;
@@ -30,7 +31,7 @@ export type LawyerData = {
   id: string;
 };
 
-const LawyerCard = ({ lawyer }: { lawyer: LawyerData }) => {
+const LawyerCard = ({ lawyer }: { lawyer: userData }) => {
   const [deleteModel, setDeleteModel] = useState(false);
   const [updateModel, setUpdateModel] = useState(false);
   const [blockModel, setBlockModel] = useState(false);
@@ -89,12 +90,12 @@ const LawyerCard = ({ lawyer }: { lawyer: LawyerData }) => {
           {/* Status Badge */}
           <span
             className={`px-3 py-1 text-xs rounded-full font-medium whitespace-nowrap ${
-              lawyer.isBlocked === "\u0000"
+              lawyer.isBlocked === 0
                 ? "bg-green-100 text-green-700"
                 : "bg-red-100 text-red-700"
             }`}
           >
-            {lawyer.isBlocked === "\u0000" ? "Active" : "Blocked"}
+            {lawyer.isBlocked === 0 ? "Active" : "Blocked"}
           </span>
 
           {/* MENU */}

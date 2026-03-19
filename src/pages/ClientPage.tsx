@@ -6,8 +6,8 @@ import NoClientFound from "@/components/NoClientFound";
 import type { ClientProps } from "@/types/clientType";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-
 const ClientPage = () => {
+  
   const [search, setSearch] = useState("");
   const { data: clients, isLoading } = useQuery<ClientProps[]>({
     queryKey: ["client"],

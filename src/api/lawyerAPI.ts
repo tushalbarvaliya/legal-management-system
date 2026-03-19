@@ -33,9 +33,6 @@ export const getLawyer = async () => {
   const lawyers = lawyerRes.data;
   const users = userRes.data;
 
-  // const matchedUsers = lawyers
-  //   .map((lawyer) => users.find((user) => user.id === lawyer.userId))
-  //   .filter(Boolean);
   const matchUser = lawyers.map((lawyer) => {
     const user = users.find((user) => user.id === lawyer.userId);
     return ({...user,...lawyer})

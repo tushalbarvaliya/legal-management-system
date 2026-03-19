@@ -8,9 +8,11 @@ import type {
 import axiosInstance from "./axiosInstance";
 
 export const login = async ({ email, password }: LoginFormState) => {
+  // const data = { username: email, password: password };
   const data = { email: email, password: password };
   const response = await axiosInstance.post("/auth/login", data, {
     headers: {
+      // "Content-Type": "application/x-www-form-urlencoded",
       "Content-Type": "application/json",
     },
   });

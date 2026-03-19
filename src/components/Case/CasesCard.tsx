@@ -11,6 +11,8 @@ import { useState } from "react";
 import DeleteCaseModel from "./DeleteTaskModel";
 import CaseDetailModel from "./CaseDetailModel";
 import EditCaseModel from "./EditCaseModel";
+import type { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 const getPriorityColor = (priority: string) => {
   if (priority == "low") {
@@ -30,6 +32,7 @@ const formatData = (date: string) => {
   });
 };
 const CasesCard = (data: CaseData) => {
+  const role = useSelector((state: RootState) => state.auth.role);
   const [deleteModel, setDeleteModel] = useState(false);
   const [detailsModel, setDetailsModel] = useState(false);
   const [updateModel, setUpdateModel] = useState(false);
@@ -110,14 +113,18 @@ const CasesCard = (data: CaseData) => {
               >
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuItem
-                className="text-red-500"
-                onClick={() => {
-                  setDeleteModel(true);
-                }}
-              >
-                Delete - soft
-              </DropdownMenuItem>
+              {role == "lawyer" && (
+                <>
+                  <DropdownMenuItem
+                    className="text-red-500"
+                    onClick={() => {
+                      setDeleteModel(true);
+                    }}
+                  >
+                    Delete
+                  </DropdownMenuItem>
+                </>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

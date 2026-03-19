@@ -1,10 +1,18 @@
 import AdminDashBoard from "@/components/AdminDashBoard";
 import type { RootState } from "@/store/store";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 
 const HomePageContent = () => {
   const role = useSelector((state: RootState) => state.auth.role);
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    if (role !== "admin") {
+      navigate("/cases");
+    }
+  }, [role, navigate]);
   return (
     <>
       <div className="grid grid-cols-3 gap-x-2 gap-y-2">

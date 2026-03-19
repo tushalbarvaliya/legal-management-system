@@ -1,9 +1,11 @@
 import { useState } from "react";
 import AddClientModel from "./AddClientModel";
+import type { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 const ClientHeader = () => {
   const [addModal, setAddModal] = useState(false);
-
+  const role = useSelector((state: RootState) => state.auth.role);
   return (
     <>
       {addModal && <AddClientModel closeModal={setAddModal} />}
@@ -21,13 +23,14 @@ const ClientHeader = () => {
               Smart search, quick actions, and detailed client profiles
             </p>
           </div>
-
-          <button
-            className="fixed bottom-6 right-6 z-20 inline-flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-xl transition duration-300 hover:scale-105 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:ring-offset-2 lg:bottom-8 lg:right-8"
-            onClick={() => setAddModal(true)}
-          >
-            <img src="/plus.svg" alt="+" className="h-6 w-6" />
-          </button>
+          {role == "lawyer" && (
+            <button
+              className="fixed bottom-6 right-6 z-20 inline-flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-xl transition duration-300 hover:scale-105 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:ring-offset-2 lg:bottom-8 lg:right-8"
+              onClick={() => setAddModal(true)}
+            >
+              <img src="/plus.svg" alt="+" className="h-6 w-6" />
+            </button>
+          )}
         </div>
       </section>
     </>

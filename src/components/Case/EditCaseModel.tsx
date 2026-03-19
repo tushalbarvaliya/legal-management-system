@@ -45,7 +45,7 @@ const EditCaseModel = (data: Props) => {
         onClick={() => data.closeModal(false)}
       >
         {/* Overlay */}
-        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm h-screen"></div>
 
         {/* Modal */}
         <div

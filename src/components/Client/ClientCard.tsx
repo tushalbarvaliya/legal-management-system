@@ -15,8 +15,11 @@ import { Button } from "@/components/ui/button";
 import { MoreVertical } from "lucide-react";
 import { queryClient } from "@/main";
 import SoftDeleteModel from "./SoftDeleteModel";
+import type { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 const ClientCard = (data: ClientProps) => {
+  const role = useSelector((state: RootState) => state.auth.role);
   const [clientModelOpen, setClientModelOpen] = useState(false);
   const [openUpdateModel, setOpenUpdateModel] = useState(false);
   const [clientSoftDeleteModel, setClientSoftDeleteModel] = useState(false);
@@ -98,55 +101,57 @@ const ClientCard = (data: ClientProps) => {
             </div>
           </div>
           {/* menu */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <MoreVertical className="w-4 h-4" />
-              </Button>
-            </DropdownMenuTrigger>
+          {role == "lawyer" && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <MoreVertical className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
 
-            <DropdownMenuContent align="end" className="w-40">
-              <DropdownMenuItem
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setOpenUpdateModel((prev) => !prev);
-                }}
-              >
-                Edit
-              </DropdownMenuItem>
-              {!data.isDelete && (
-                <DropdownMenuItem
-                  className="text-red-500"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setClientSoftDeleteModel((prev) => !prev);
-                  }}
-                >
-                  Delete
-                </DropdownMenuItem>
-              )}
-              {!data.isBlock && (
+              <DropdownMenuContent align="end" className="w-40">
                 <DropdownMenuItem
                   onClick={(e) => {
                     e.stopPropagation();
-                    blockMutation(data);
+                    setOpenUpdateModel((prev) => !prev);
                   }}
                 >
-                  Block
+                  Edit
                 </DropdownMenuItem>
-              )}
-              {data.isBlock && (
-                <DropdownMenuItem
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    unblock(data);
-                  }}
-                >
-                  UnBlock
-                </DropdownMenuItem>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
+                {!data.isDelete && (
+                  <DropdownMenuItem
+                    className="text-red-500"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setClientSoftDeleteModel((prev) => !prev);
+                    }}
+                  >
+                    Delete
+                  </DropdownMenuItem>
+                )}
+                {!data.isBlock && (
+                  <DropdownMenuItem
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      blockMutation(data);
+                    }}
+                  >
+                    Block
+                  </DropdownMenuItem>
+                )}
+                {data.isBlock && (
+                  <DropdownMenuItem
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      unblock(data);
+                    }}
+                  >
+                    UnBlock
+                  </DropdownMenuItem>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
       </article>
     </>

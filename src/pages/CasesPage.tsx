@@ -5,8 +5,11 @@ import CasesCardSkeleton from "@/components/Case/CasesCardSkeleton";
 import AddCaseModel from "@/components/Case/AddCaseModel";
 import { useQuery } from "@tanstack/react-query";
 import { getAddCase } from "@/api/caseAPI";
+import type { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 const CasesPage = () => {
+  const role = useSelector((state: RootState) => state.auth.role);
   const [addModel, setAddModel] = useState(false);
   const [search, setSearch] = useState("");
   const [priority, setPriority] = useState("all");
@@ -33,14 +36,16 @@ const CasesPage = () => {
     <>
       {addModel && <AddCaseModel closeModal={setAddModel} />}
       {/* ADD TASK BUTTON */}
-      <button
-        className="fixed bottom-6 right-6 z-20 inline-flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-xl transition duration-300 hover:scale-105 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:ring-offset-2 lg:bottom-8 lg:right-8"
-        onClick={() => {
-          setAddModel(true);
-        }}
-      >
-        <img src="/plus.svg" alt="+" className="h-6 w-6" />
-      </button>
+      {role == "lawyer" && (
+        <button
+          className="fixed bottom-6 right-6 z-20 inline-flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-xl transition duration-300 hover:scale-105 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:ring-offset-2 lg:bottom-8 lg:right-8"
+          onClick={() => {
+            setAddModel(true);
+          }}
+        >
+          <img src="/plus.svg" alt="+" className="h-6 w-6" />
+        </button>
+      )}
 
       <section className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-soft sm:p-6">
         {/* Header */}
