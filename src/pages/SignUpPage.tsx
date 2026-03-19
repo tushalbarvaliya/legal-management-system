@@ -1,7 +1,10 @@
 import { Link, useNavigate } from "react-router";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { toast, Toaster } from "sonner";
 
 import type { SignUpFormState } from "@/types/formType";
-import { useForm } from "react-hook-form";
 import {
   addressRegex,
   emailRegex,
@@ -11,14 +14,14 @@ import {
   pinCodeRegex,
   userNameRegex,
 } from "@/utils/constant";
-import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
 import { signUp } from "@/api/authAPI";
 
 const SignUpPage = () => {
   const [formError, setFormError] = useState("");
+
   const [passwordShow, setPasswordShow] = useState(false);
   const [confirmPasswordShow, setConfirmPasswordShow] = useState(false);
+
   const navigate = useNavigate();
 
   const {
@@ -33,19 +36,29 @@ const SignUpPage = () => {
   const { mutate, isPending } = useMutation({
     mutationFn: signUp,
     onSuccess: () => {
+      toast.success("Sign Up successfully");
       navigate("/login");
     },
     onError: (error) => {
+      toast.error(`Something is not right Error : ${error}`);
       setFormError(`Something is not right Error : ${error}`);
     },
   });
+
   const onSubmit = (data: SignUpFormState) => {
-    mutate(data);
+    if (data._confirmPassword === data.password) {
+      mutate(data);
+    } else {
+      toast.error(`Password And Confirm Password Should Be Same`);
+      setFormError(`Password And Confirm Password Should Be Same`);
+    }
   };
 
   return (
     <main className="flex min-h-screen items-center justify-center p-4 sm:p-6">
+      <Toaster richColors />
       <section className="w-full max-w-4xl rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
+        {/* Header */}
         <header className="mb-6 space-y-3 text-center">
           <div className="mx-auto inline-flex">
             <div className="group grid h-14 w-14 place-items-center rounded-xl border border-zinc-300 bg-zinc-900 text-xl font-semibold text-zinc-100 transition duration-200 hover:scale-105 hover:bg-zinc-800">
@@ -57,12 +70,14 @@ const SignUpPage = () => {
           <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">
             Create your account
           </h1>
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm font-medium text-zinc-900">
             Fill in your details to get started.
           </p>
         </header>
 
+        {/* Main Form */}
         <form id="signupForm" noValidate onSubmit={handleSubmit(onSubmit)}>
+          {/* User Name Input */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="sm:col-span-2">
               <label
@@ -90,10 +105,15 @@ const SignUpPage = () => {
                   required: true,
                 })}
               />
-              <p className="min-h-5 text-xs text-red-600">
-                {errors.userName?.message}
-              </p>
+
+              {errors.userName && (
+                <p className="min-h-5 text-xs text-red-600">
+                  {errors.userName?.message}
+                </p>
+              )}
             </div>
+
+            {/* First Name */}
             <div>
               <label
                 htmlFor="firstName"
@@ -120,10 +140,15 @@ const SignUpPage = () => {
                   required: true,
                 })}
               />
-              <p className="min-h-5 text-xs text-red-600">
-                {errors.firstName?.message}
-              </p>
+
+              {errors.firstName && (
+                <p className="min-h-5 text-xs text-red-600">
+                  {errors.firstName?.message}
+                </p>
+              )}
             </div>
+
+            {/* Last Name */}
             <div>
               <label
                 htmlFor="lastName"
@@ -150,11 +175,15 @@ const SignUpPage = () => {
                   required: true,
                 })}
               />
-              <p className="min-h-5 text-xs text-red-600">
-                {errors.lastName?.message}
-              </p>
+
+              {errors.lastName && (
+                <p className="min-h-5 text-xs text-red-600">
+                  {errors.lastName?.message}
+                </p>
+              )}
             </div>
 
+            {/* Email */}
             <div className="flex flex-col gap-2 sm:col-span-2">
               <label
                 htmlFor="email"
@@ -178,10 +207,14 @@ const SignUpPage = () => {
                 })}
               />
 
-              <p className="min-h-5 text-xs text-red-600">
-                {errors.email?.message}
-              </p>
+              {errors.email && (
+                <p className="min-h-5 text-xs text-red-600">
+                  {errors.email?.message}
+                </p>
+              )}
             </div>
+
+            {/* Password Input */}
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="password"
@@ -219,10 +252,15 @@ const SignUpPage = () => {
                   />
                 </button>
               </div>
-              <p className="min-h-5 text-xs text-red-600">
-                {errors.password?.message}
-              </p>
+
+              {errors.password && (
+                <p className="min-h-5 text-xs text-red-600">
+                  {errors.password?.message}
+                </p>
+              )}
             </div>
+
+            {/* Confirm Password Input */}
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="_confirmPassword"
@@ -248,6 +286,7 @@ const SignUpPage = () => {
                   })}
                 />
 
+                {/* Eye Button */}
                 <button
                   type="button"
                   className="absolute inset-y-0 right-0 grid w-10 place-items-center text-zinc-500 hover:text-zinc-700"
@@ -260,11 +299,15 @@ const SignUpPage = () => {
                   />
                 </button>
               </div>
-              <p className="min-h-5 text-xs text-red-600">
-                {errors._confirmPassword?.message}
-              </p>
+
+              {errors._confirmPassword && (
+                <p className="min-h-5 text-xs text-red-600">
+                  {errors._confirmPassword?.message}
+                </p>
+              )}
             </div>
 
+            {/* Address Input */}
             <div className="flex flex-col gap-2 sm:col-span-2">
               <label
                 htmlFor="address"
@@ -294,10 +337,15 @@ const SignUpPage = () => {
                   required: true,
                 })}
               />
-              <p className="min-h-5 text-xs text-red-600">
-                {errors.address?.message}
-              </p>
+
+              {errors.address && (
+                <p className="min-h-5 text-xs text-red-600">
+                  {errors.address?.message}
+                </p>
+              )}
             </div>
+
+            {/* Pin Code Input */}
             <div>
               <label
                 htmlFor="pinCode"
@@ -327,10 +375,15 @@ const SignUpPage = () => {
                   required: true,
                 })}
               />
-              <p className="min-h-5 text-xs text-red-600">
-                {errors.pinCode?.message}
-              </p>
+
+              {errors.pinCode && (
+                <p className="min-h-5 text-xs text-red-600">
+                  {errors.pinCode?.message}
+                </p>
+              )}
             </div>
+
+            {/* Phone Number Input */}
             <div>
               <label
                 htmlFor="phoneNumber"
@@ -352,10 +405,14 @@ const SignUpPage = () => {
                   required: true,
                 })}
               />
-              <p className="min-h-5 text-xs text-red-600">
-                {errors.phoneNumber?.message}
-              </p>
+              {errors.phoneNumber && (
+                <p className="min-h-5 text-xs text-red-600">
+                  {errors.phoneNumber?.message}
+                </p>
+              )}
             </div>
+
+            {/* State Input */}
             <div>
               <label
                 htmlFor="state"
@@ -381,10 +438,15 @@ const SignUpPage = () => {
                   required: true,
                 })}
               />
-              <p className="min-h-5 text-xs text-red-600">
-                {errors.state?.message}
-              </p>
+
+              {errors.state && (
+                <p className="min-h-5 text-xs text-red-600">
+                  {errors.state?.message}
+                </p>
+              )}
             </div>
+
+            {/* City Input */}
             <div>
               <label
                 htmlFor="city"
@@ -410,13 +472,18 @@ const SignUpPage = () => {
                   required: true,
                 })}
               />
-              <p className="min-h-5 text-xs text-red-600">
-                {errors.city?.message}
-              </p>
+              {errors.city && (
+                <p className="min-h-5 text-xs text-red-600">
+                  {errors.city?.message}
+                </p>
+              )}
             </div>
           </div>
+
+          {/* Form Error */}
           <p className="min-h-5 text-xs text-red-600">{formError}</p>
 
+          {/* Submit Button */}
           <button
             type="submit"
             className="inline-flex w-full items-center justify-center rounded-md bg-zinc-900 px-4 py-2.5 text-sm font-medium text-zinc-50 transition duration-200 hover:scale-[1.01] hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-300"
@@ -425,8 +492,9 @@ const SignUpPage = () => {
             {isPending ? "Creating Your Account..." : "Create Account"}
           </button>
 
+          {/* Login Link */}
           <p className="text-center  mt-4 text-sm text-zinc-600">
-            Already have an account?
+            Already have an account?{" "}
             <Link
               to="/login"
               className="font-medium text-zinc-900 underline-offset-4 transition hover:text-zinc-700 hover:underline"

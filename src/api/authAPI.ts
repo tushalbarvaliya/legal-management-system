@@ -7,11 +7,13 @@ import type {
 } from "@/types/formType";
 import axiosInstance from "./axiosInstance";
 
-export const login = async ({ userName, password }: LoginFormState) => {
-  const data = { username: userName, password: password };
+export const login = async ({ email, password }: LoginFormState) => {
+  // const data = { username: email, password: password };
+  const data = { email: email, password: password };
   const response = await axiosInstance.post("/auth/login", data, {
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
+      // "Content-Type": "application/x-www-form-urlencoded",
+      "Content-Type": "application/json",
     },
   });
   return response.data;
@@ -30,18 +32,21 @@ export const signUp = async ({
   state,
   city,
 }: SignUpFormState) => {
-  const useAddress = address + "$" + city + "$" + state + "$" + pinCode;
-  const data: SignUpdata = {
+  const data = {
     name: userName,
     first_name: firstName,
     last_name: lastName,
     email: email,
     password: password,
     phoneNumber: phoneNumber,
-    role: "lawyer",
-    address: useAddress,
+    role: "admin",
+    address: address,
     companyId: "1",
     isDeleted: false,
+    isBlock: false,
+    pinCode: pinCode,
+    state: state,
+    city: city,
   };
 
   const response = await axiosInstance.post("/auth/register", data, {
@@ -52,13 +57,12 @@ export const signUp = async ({
   return response.data;
 };
 
-
 export const resetPasswordAPI = async ({
   confirmNewPassword: _confirmPassword,
   newPassword,
   oldPassword,
 }: ResetPasswordState) => {
-  const data = { password: oldPassword, new_password: newPassword };
+  const data = { oldPassword: oldPassword, newPassword: newPassword };
   const response = await axiosInstance.put("/users/change_password", data, {
     headers: {
       "Content-Type": "application/json",
@@ -67,15 +71,22 @@ export const resetPasswordAPI = async ({
   return response.data;
 };
 
-// api not set
-
 export const forgetPasswordAPI = async ({
   confirmPassword: _confirmPassword,
   email,
   password,
 }: ForgotPasswordState) => {
-  const data = { email: email, new_password: password };
+  const data = { email: email, newPassword: password };
   const response = await axiosInstance.put("/users/forgot_password", data, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response.data;
+};
+
+export const profileUpdate = async (data: SignUpFormState) => {
+  const response = await axiosInstance.patch("/users/updateProfile", data, {
     headers: {
       "Content-Type": "application/json",
     },

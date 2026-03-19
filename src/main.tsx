@@ -19,13 +19,20 @@ import PrivacyPolicyPage from "./pages/PrivacyPolicyPage.tsx";
 import TermsAndConditions from "./pages/TermsAndConditions.tsx";
 import LoginPageForm from "./pages/LoginPageForm.tsx";
 import HomePageContent from "./pages/HomePageContent.tsx";
-import AdminPage from "./pages/AdminPage.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import ForgotPassword from "./pages/ForgotPassword.tsx";
-import DocsPage from "./pages/DocsPage.tsx";
+// import DocsPage from "./pages/DocsPage.tsx";
 import ClientPage from "./pages/ClientPage.tsx";
+import DocsPage from "./pages/DocsPage.tsx";
+import CasesPage from "./pages/CasesPage.tsx";
+import SessionPage from "./pages/SessionPage.tsx";
+import TaskPage from "./pages/TaskPage.tsx";
+import StaffPage from "./pages/StaffPage.tsx";
+import InvoicePage from "./pages/InvoicePage.tsx";
+import LawyerPage from "./pages/LawyerPage.tsx";
+import CompanyPage from "./pages/CompanyPage.tsx";
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
@@ -40,60 +47,56 @@ const router = createBrowserRouter([
             element: <HomePageContent />,
           },
           {
-            path: "/admin-panel",
-            element: <AdminPage />,
-          },
-          {
             path: "profile",
-            element: <ProfilePage/>,
+            element: <ProfilePage />,
           },
           {
-            path: "ticket",
-            element: <ProfilePage/>,
+            path: "company",
+            element: <CompanyPage />,
           },
           {
-            path: "task",
-            element: <ProfilePage/>,
+            path: "cases",
+            element: <CasesPage />,
+          },
+          {
+            path: "session",
+            element: <SessionPage />,
+          },
+          {
+            path: "tasks",
+            element: <TaskPage />,
+          },
+          {
+            path: "staff",
+            element: <StaffPage />,
+          },
+          {
+            path: "invoice",
+            element: <InvoicePage />,
           },
           {
             path: "docs",
             element: <DocsPage/>,
           },
           {
-            path: "cases",
-            element: <ProfilePage/>,
-          },
-          {
             path: "client",
-            element: <ClientPage/>,
+            element: <ClientPage />,
           },
           {
-            path: "session",
-            element: <ProfilePage/>,
-          },
-          {
-            path: "tasks",
-            element: <ProfilePage/>,
-          },
-          {
-            path: "staff",
-            element: <ProfilePage/>,
-          },
-          {
-            path: "invoice",
-            element: <ProfilePage/>,
+            path: "lawyer",
+            element: <LawyerPage />,
           },
           {
             path: "privacy-policy",
-            element: <PrivacyPolicyPage/>,
+            element: <PrivacyPolicyPage />,
           },
           {
             path: "terms-and-conditions",
-            element: <TermsAndConditions/>,
+            element: <TermsAndConditions />,
           },
           {
             path: "reset-password",
-            element: <ResetPassword/>,
+            element: <ResetPassword />,
           },
         ],
       },
@@ -108,11 +111,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/signUp",
-        element: <SignUpPage/>,
+        element: <SignUpPage />,
       },
       {
         path: "/forgot-password",
-        element: <ForgotPassword/>,
+        element: <ForgotPassword />,
       },
     ],
   },

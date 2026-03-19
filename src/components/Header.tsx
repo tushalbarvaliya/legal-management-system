@@ -1,10 +1,17 @@
+import type { RootState } from "@/store/store";
 import { menuList, navItems } from "@/utils/constant";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router";
 
 const Header = () => {
   const [menubarOpen, setMenubarOpen] = useState(false);
   const pathname = useLocation().pathname;
+  const role = useSelector((state: RootState) => state.auth.role);
+
+  const filterMenuList = menuList.filter(
+    (item) => role && item.role.includes(role),
+  );
 
   return (
     <>
@@ -80,7 +87,7 @@ const Header = () => {
         </div>
 
         <nav className="space-y-2">
-          {menuList.map((item) => (
+          {filterMenuList.map((item) => (
             <Link
               to={item.to}
               key={item.to}

@@ -1,11 +1,20 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { jwtDecode } from "jwt-decode";
 
-interface authState {
-  token: string | null;
+interface JwtPayload {
+  id: string;
+  role: string;
+  exp: number;
 }
 
-const initialState: authState = {
+interface AuthState {
+  token: string | null;
+  role: string;
+}
+
+const initialState: AuthState = {
   token: null,
+  role: "",
 };
 
 const authSlice = createSlice({
@@ -14,13 +23,21 @@ const authSlice = createSlice({
   reducers: {
     setToken: (state, action: PayloadAction<{ token: string }>) => {
       state.token = action.payload.token;
+      try {
+        const decoded = jwtDecode<JwtPayload>(action.payload.token);
+        state.role = decoded.role || "";
+      } catch (error) {
+        console.error(`Invalid token ${error}`);
+        state.role = "";
+      }
     },
+
     removeToken: (state) => {
       state.token = null;
+      state.role = "";
     },
   },
 });
 
 export const { setToken, removeToken } = authSlice.actions;
-
 export default authSlice.reducer;

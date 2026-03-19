@@ -1,0 +1,220 @@
+import {
+  getAllUser,
+  getCaseCount,
+  getCompony,
+  getTaskCount,
+} from "@/api/adminAPi";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from "@/components/ui/chart";
+import { useQuery } from "@tanstack/react-query";
+import { Pie, PieChart } from "recharts";
+import { Spinner } from "./ui/spinner";
+
+const AdminDashBoard = () => {
+  const { data, isLoading, isError } = useQuery({
+    queryFn: getAllUser,
+    queryKey: ["allUser"],
+  });
+
+  const {
+    data: caseCount,
+    isLoading: caseCountLoading,
+    isError: caseIsError,
+  } = useQuery({
+    queryFn: getCaseCount,
+    queryKey: ["casesCount"],
+  });
+
+  const {
+    data: TaskCount,
+    isLoading: taskCountLoading,
+    isError: taskIsError,
+  } = useQuery({
+    queryFn: getTaskCount,
+    queryKey: ["taskCount"],
+  });
+
+  const {
+    data: Compony,
+    isLoading: componyLoading,
+    isError: componyIsError,
+  } = useQuery({
+    queryFn: getCompony,
+    queryKey: ["getCompony"],
+  });
+
+  const chartData = [
+    { browser: "Lawyer", visitors: Compony?.lawyers.length, fill: "#156456" },
+    { browser: "Staff", visitors: Compony?.staff.length, fill: "#123548" },
+    { browser: "User", visitors: data?.length, fill: "#852426" },
+  ];
+  const chartConfig = {
+    Lawyer: {
+      label: "Lawyer",
+      color: "#374dbd",
+    },
+    Staff: {
+      label: "Staff",
+      color: "#374dbd",
+    },
+    User: {
+      label: "User",
+      color: "#374dbd",
+    },
+  } satisfies ChartConfig;
+  return (
+    <>
+      {/* user count */}
+      <article className="group rounded-2xl border border-zinc-200 bg-white p-5 shadow-soft transition duration-200 hover:-translate-y-0.5 hover:border-zinc-300">
+        <div className="flex items-start justify-between">
+          <h2 className="text-sm font-semibold text-zinc-600 capitalize">
+            total user
+          </h2>
+          <div className="rounded-lg bg-zinc-100 p-2 text-zinc-700 transition duration-200 group-hover:bg-zinc-200">
+            <img src={"/client.svg"} alt={"Icon"} className="h-5 w-5" />
+          </div>
+        </div>
+        <p className="mt-5 text-3xl font-extrabold text-zinc-900">
+          {!isLoading && !isError && data.length}
+          {isError && "Error"}
+          {isLoading && <Spinner className="size-8" />}
+        </p>
+      </article>
+
+      {/* case count */}
+      <article className="group rounded-2xl border border-zinc-200 bg-white p-5 shadow-soft transition duration-200 hover:-translate-y-0.5 hover:border-zinc-300">
+        <div className="flex items-start justify-between">
+          <h2 className="text-sm font-semibold text-zinc-600 capitalize">
+            Case Status
+          </h2>
+          <div className="rounded-lg bg-zinc-100 p-2 text-zinc-700 transition duration-200 group-hover:bg-zinc-200">
+            <img src={"/cases.svg"} alt={"Icon"} className="h-5 w-5" />
+          </div>
+        </div>
+        <p className="mt-5 text-xs font-extrabold text-zinc-900 flex flex-col">
+          {!caseCountLoading && !caseIsError && (
+            <>
+              <span>Open Cases : {caseCount.openCases}</span>
+              <span>Closed Cases : {caseCount.closedCases}</span>
+              <span>
+                New Cases in Last 30Days : {caseCount.newCasesLast30Days}
+              </span>
+            </>
+          )}
+          {caseCountLoading && (
+            <>
+              <span className="flex items-center">
+                Open Cases : <Spinner className="size-3 ml-2" />
+              </span>
+              <span className="flex items-center">
+                Closed Cases : <Spinner className="size-3 ml-2" />
+              </span>
+              <span className="flex items-center">
+                New Cases in Last 30Days : <Spinner className="size-3 ml-2" />
+              </span>
+            </>
+          )}
+          {caseIsError && "Error"}
+        </p>
+      </article>
+      {/* task count */}
+      <article className="group rounded-2xl border border-zinc-200 bg-white p-5 shadow-soft transition duration-200 hover:-translate-y-0.5 hover:border-zinc-300">
+        <div className="flex items-start justify-between">
+          <h2 className="text-sm font-semibold text-zinc-600 capitalize">
+            Task Status
+          </h2>
+          <div className="rounded-lg bg-zinc-100 p-2 text-zinc-700 transition duration-200 group-hover:bg-zinc-200">
+            <img src={"/task.svg"} alt={"Icon"} className="h-5 w-5" />
+          </div>
+        </div>
+        <p className="mt-5 text-xs font-extrabold text-zinc-900 flex flex-col">
+          {!taskCountLoading && !taskIsError && (
+            <>
+              <span>Task Due Today : {TaskCount.dueToday}</span>
+              <span>over Due Task : {TaskCount.overdue}</span>
+              <span>Completed : {TaskCount.completed}</span>
+            </>
+          )}
+          {taskCountLoading && (
+            <>
+              <span className="flex items-center">
+                Task Due Today : <Spinner className="size-3 ml-2" />
+              </span>
+              <span className="flex items-center">
+                over Due Task : <Spinner className="size-3 ml-2" />
+              </span>
+              <span className="flex items-center">
+                Completed : <Spinner className="size-3 ml-2" />
+              </span>
+            </>
+          )}
+          {taskIsError && "Error"}
+        </p>
+      </article>
+      {/* company count */}
+      <article className="group rounded-2xl border border-zinc-200 bg-white p-5 shadow-soft transition duration-200 hover:-translate-y-0.5 hover:border-zinc-300">
+        <div className="flex items-start justify-between">
+          <h2 className="text-sm font-semibold text-zinc-600 capitalize">
+            User Status
+          </h2>
+          <div className="rounded-lg bg-zinc-100 p-2 text-zinc-700 transition duration-200 group-hover:bg-zinc-200">
+            <img src={"/cases.svg"} alt={"Icon"} className="h-5 w-5" />
+          </div>
+        </div>
+        <p className="mt-5 text-xs font-extrabold text-zinc-900 flex flex-col">
+          {!componyLoading && !componyIsError && (
+            <>
+              <span>Total Lawyer : {Compony?.lawyers.length}</span>
+              <span>Total Staff : {Compony?.staff.length}</span>
+            </>
+          )}
+          {componyLoading && (
+            <>
+              <span className="flex items-center">
+                Total Lawyer : <Spinner className="size-3 ml-2" />
+              </span>
+              <span className="flex items-center">
+                Total Staff : <Spinner className="size-3 ml-2" />
+              </span>
+            </>
+          )}
+          {componyIsError && "Error"}
+        </p>
+      </article>
+      <article className="group rounded-2xl border border-zinc-200 bg-white p-5 shadow-soft transition duration-200 hover:-translate-y-0.5 hover:border-zinc-300">
+        <div className="flex items-start justify-between">
+          <h2 className="text-sm font-semibold text-zinc-600 capitalize">
+            User Chat
+          </h2>
+          <div className="rounded-lg bg-zinc-100 p-2 text-zinc-700 transition duration-200 group-hover:bg-zinc-200">
+            <img src={"/staff.svg"} alt={"Icon"} className="h-5 w-5" />
+          </div>
+        </div>
+        {componyIsError && isError && <p>Error</p>}
+        {(componyLoading || isLoading) && <Spinner className="size-10" />}
+        {!componyLoading && !isLoading && !isError && !componyIsError && (
+          <ChartContainer
+            config={chartConfig}
+            className="mx-auto aspect-square max-h-50 pb-0 [&_.recharts-pie-label-text]:fill-foreground"
+          >
+            <PieChart>
+              <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+              <Pie
+                data={chartData}
+                dataKey="visitors"
+                label
+                nameKey="browser"
+              />
+            </PieChart>
+          </ChartContainer>
+        )}
+      </article>
+    </>
+  );
+};
+
+export default AdminDashBoard;
