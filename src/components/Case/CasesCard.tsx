@@ -10,6 +10,7 @@ import type { CaseData } from "@/types/caseType";
 import { useState } from "react";
 import DeleteCaseModel from "./DeleteTaskModel";
 import CaseDetailModel from "./CaseDetailModel";
+import EditCaseModel from "./EditCaseModel";
 
 const getPriorityColor = (priority: string) => {
   if (priority == "low") {
@@ -31,12 +32,14 @@ const formatData = (date: string) => {
 const CasesCard = (data: CaseData) => {
   const [deleteModel, setDeleteModel] = useState(false);
   const [detailsModel, setDetailsModel] = useState(false);
+  const [updateModel, setUpdateModel] = useState(false);
   return (
     <>
       {deleteModel && <DeleteCaseModel closeModal={setDeleteModel} {...data} />}
       {detailsModel && (
         <CaseDetailModel closeModal={setDetailsModel} {...data} />
       )}
+      {updateModel && <EditCaseModel closeModal={setUpdateModel} {...data} />}
 
       {/* TASK CARD */}
       <article className="group relative cursor-pointer rounded-xl border border-zinc-200 bg-zinc-50/40 p-4 shadow-sm transition duration-200 hover:bg-zinc-100/80 hover:shadow-soft">
@@ -100,7 +103,13 @@ const CasesCard = (data: CaseData) => {
               >
                 View
               </DropdownMenuItem>
-              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setUpdateModel(true);
+                }}
+              >
+                Edit
+              </DropdownMenuItem>
               <DropdownMenuItem
                 className="text-red-500"
                 onClick={() => {

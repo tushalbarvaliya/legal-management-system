@@ -2,56 +2,22 @@ import { useMemo, useState } from "react";
 import CasesCard from "@/components/Case/CasesCard";
 import type { CaseData } from "@/types/caseType";
 import CasesCardSkeleton from "@/components/Case/CasesCardSkeleton";
-
-const cases: CaseData[] = [
-  {
-    _id: "CASE-001",
-    caseTitle: "Property Dispute",
-    CaseDescription: "Dispute regarding land ownership between two parties.",
-    caseType: "Civil",
-    clientId: "CL-101",
-    clientName: "Rahul Sharma",
-    priority: "high",
-    createdAt: "2026-03-10",
-  },
-  {
-    _id: "CASE-002",
-    caseTitle: "Contract Breach",
-    CaseDescription: "Client claims breach of contract by supplier.",
-    caseType: "Corporate",
-    clientId: "CL-102",
-    clientName: "Priya Patel",
-    priority: "medium",
-    createdAt: "2026-03-11",
-  },
-  {
-    _id: "CASE-003",
-    caseTitle: "Family Settlement",
-    CaseDescription: "Family property settlement and inheritance issue.",
-    caseType: "Family",
-    clientId: "CL-103",
-    clientName: "Amit Verma",
-    priority: "low",
-    createdAt: "2026-03-12",
-  },
-  {
-    _id: "CASE-004",
-    caseTitle: "Tax Evasion Investigation",
-    CaseDescription: "Investigation related to alleged tax evasion.",
-    caseType: "Criminal",
-    clientId: "CL-104",
-    clientName: "Neha Gupta",
-    priority: "high",
-    createdAt: "2026-03-13",
-  },
-];
+import AddCaseModel from "@/components/Case/AddCaseModel";
+import { useQuery } from "@tanstack/react-query";
+import { getAddCase } from "@/api/caseAPI";
 
 const CasesPage = () => {
+  const [addModel, setAddModel] = useState(false);
   const [search, setSearch] = useState("");
   const [priority, setPriority] = useState("all");
 
+  const { data: cases, isLoading } = useQuery({
+    queryKey: ["cases"],
+    queryFn: getAddCase,
+  });
+
   const filteredCases = useMemo(() => {
-    return cases.filter((item) => {
+    return cases?.filter((item: CaseData) => {
       const matchesSearch =
         item.caseTitle.toLowerCase().includes(search.toLowerCase()) ||
         item.CaseDescription.toLowerCase().includes(search.toLowerCase()) ||
@@ -61,15 +27,21 @@ const CasesPage = () => {
 
       return matchesSearch && matchesPriority;
     });
-  }, [search, priority]);
+  }, [search, priority, cases]);
 
   return (
     <>
+      {addModel && <AddCaseModel closeModal={setAddModel} />}
       {/* ADD TASK BUTTON */}
-      <button className="fixed bottom-6 right-6 z-20 inline-flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-xl transition duration-300 hover:scale-105 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:ring-offset-2 lg:bottom-8 lg:right-8">
+      <button
+        className="fixed bottom-6 right-6 z-20 inline-flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-xl transition duration-300 hover:scale-105 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:ring-offset-2 lg:bottom-8 lg:right-8"
+        onClick={() => {
+          setAddModel(true);
+        }}
+      >
         <img src="/plus.svg" alt="+" className="h-6 w-6" />
       </button>
-      
+
       <section className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-soft sm:p-6">
         {/* Header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -116,11 +88,18 @@ const CasesPage = () => {
 
         {/* List */}
         <div className="mt-5 space-y-3">
-          {filteredCases.length > 0 ? (
-            filteredCases.map((item) => (
+          {isLoading && (
+            <>
+              <CasesCardSkeleton />
+              <CasesCardSkeleton />
+              <CasesCardSkeleton />
+            </>
+          )}
+          {filteredCases?.length > 0 ? (
+            filteredCases.map((item: CaseData) => (
               <>
                 <CasesCard {...item} key={item._id} />
-                <CasesCardSkeleton />
+                {/* <CasesCardSkeleton /> */}
               </>
             ))
           ) : (

@@ -1,10 +1,25 @@
+import { softDeleteCase } from "@/api/caseAPI";
+import { queryClient } from "@/main";
 import type { CaseData } from "@/types/caseType";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 type deleteTaskModalProps = {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>;
 } & CaseData;
 
 const DeleteCaseModel = (data: deleteTaskModalProps) => {
+  const { mutate, isPending } = useMutation({
+    mutationFn: softDeleteCase,
+    onSuccess: () => {
+      toast.success("Delete Successfully");
+      queryClient.invalidateQueries({ queryKey: ["cases"] });
+      data.closeModal(false);
+    },
+    onError: (error) => {
+      toast.error(`Error ${error}`);
+    },
+  });
   return (
     <>
       <div className="fixed inset-0 z-70">
@@ -28,7 +43,13 @@ const DeleteCaseModel = (data: deleteTaskModalProps) => {
               >
                 Cancel
               </button>
-              <button className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-700 transition duration-200 hover:scale-[1.02] hover:bg-rose-100">
+              <button
+                className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-700 transition duration-200 hover:scale-[1.02] hover:bg-rose-100"
+                onClick={() => {
+                  mutate(data);
+                }}
+                disabled={isPending}
+              >
                 Delete
               </button>
             </div>
