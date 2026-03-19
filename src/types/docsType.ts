@@ -1,10 +1,9 @@
 export type DocumentData = {
-  id: string;
+  _id: string;
   title: string;
   documentLink: string;
   fileType: string;
   description: string;
-  notes: string;
+  note: string;
   caseId: string;
-  clientId: string;
 };

@@ -1,12 +1,28 @@
+import { updateDocs } from "@/api/docsAPI";
+import { queryClient } from "@/main";
 import type { DocumentData } from "@/types/docsType";
 import { urlRegex } from "@/utils/constant";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 type UpdateModelProps = {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>;
 } & DocumentData;
 
 const UpdateDocsModel = (data: UpdateModelProps) => {
+  const { mutate, isPending } = useMutation({
+    mutationFn: updateDocs,
+    onSuccess: () => {
+      toast.success("Docs Edit successfully");
+      queryClient.invalidateQueries({ queryKey: ["docs"] });
+      data.closeModal(false);
+    },
+    onError: (error) => {
+      toast.error(`Error ${error.message}`);
+    },
+  });
+
   const {
     register,
     handleSubmit,
@@ -21,7 +37,7 @@ const UpdateDocsModel = (data: UpdateModelProps) => {
 
   const onSubmit = (data: DocumentData) => {
     console.log(data);
-    // mutate(data);
+    mutate(data);
   };
 
   return (
@@ -132,21 +148,20 @@ const UpdateDocsModel = (data: UpdateModelProps) => {
                 </label>
                 <label className="space-y-1.5 text-sm text-zinc-700">
                   <span className="font-medium">
-                    Client ID <span className="text-red-500">*</span>
+                    fileType <span className="text-red-500">*</span>
                   </span>
                   <input
                     type="text"
                     className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 outline-none transition duration-200 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                    {...register("clientId", {
-                      minLength: {
-                        value: 3,
-                        message: "caseID length should be greater than 3",
+                    {...register("fileType", {
+                      required: {
+                        value: true,
+                        message: "File Type Is Required",
                       },
-                      required: true,
                     })}
                   />
                   <p className=" text-xs text-red-500">
-                    {errors.clientId?.message}
+                    {errors.fileType?.message}
                   </p>
                 </label>
               </div>
@@ -156,11 +171,11 @@ const UpdateDocsModel = (data: UpdateModelProps) => {
                 <textarea
                   rows={3}
                   className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 outline-none transition duration-200 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                  {...register("notes")}
+                  {...register("note")}
                 ></textarea>
               </label>
               <div className="flex flex-col-reverse gap-2 border-t border-zinc-200 pt-4 sm:flex-row sm:justify-end">
-                {!false && (
+                {!isPending && (
                   <>
                     <button
                       type="button"
@@ -179,12 +194,12 @@ const UpdateDocsModel = (data: UpdateModelProps) => {
                     </button>
                   </>
                 )}
-                {false && (
+                {isPending && (
                   <>
                     <button
                       type="submit"
                       className="rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white transition duration-200 hover:scale-[1.02] hover:bg-zinc-800"
-                      disabled={false}
+                      disabled={isPending}
                     >
                       Create...
                     </button>

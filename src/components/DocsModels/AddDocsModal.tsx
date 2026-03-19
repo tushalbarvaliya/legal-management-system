@@ -1,12 +1,27 @@
+import { createDocs } from "@/api/docsAPI";
+import { queryClient } from "@/main";
 import type { DocumentData } from "@/types/docsType";
 import { urlRegex } from "@/utils/constant";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 type AddModalProps = {
   onClose: (b: boolean) => void;
 };
 
 const AddDocsModal = ({ onClose }: AddModalProps) => {
+  const {mutate,isPending} = useMutation({
+    mutationFn: createDocs,
+    onSuccess: () => {
+      toast.success("Docs Add successfully");
+      queryClient.invalidateQueries({ queryKey: ["docs"] });
+      onClose(false);
+    },
+    onError: (error) => {
+      toast.error(`Error ${error.message}`);
+    },
+  });
   const {
     register,
     handleSubmit,
@@ -17,9 +32,9 @@ const AddDocsModal = ({ onClose }: AddModalProps) => {
   });
 
   const onSubmit = (data: DocumentData) => {
-    console.log(data);
+    // console.log(data);
 
-    // mutate(data);
+    mutate(data);
   };
 
   return (
@@ -130,21 +145,20 @@ const AddDocsModal = ({ onClose }: AddModalProps) => {
                 </label>
                 <label className="space-y-1.5 text-sm text-zinc-700">
                   <span className="font-medium">
-                    Client ID <span className="text-red-500">*</span>
+                    fileType <span className="text-red-500">*</span>
                   </span>
                   <input
-                    type="number"
+                    type="text"
                     className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 outline-none transition duration-200 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                    {...register("clientId", {
-                      minLength: {
-                        value: 3,
-                        message: "caseID length should be greater than 3",
+                    {...register("fileType", {
+                      required: {
+                        value: true,
+                        message: "File Type Is Required",
                       },
-                      required: true,
                     })}
                   />
                   <p className=" text-xs text-red-500">
-                    {errors.clientId?.message}
+                    {errors.fileType?.message}
                   </p>
                 </label>
               </div>
@@ -154,11 +168,11 @@ const AddDocsModal = ({ onClose }: AddModalProps) => {
                 <textarea
                   rows={3}
                   className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 outline-none transition duration-200 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                  {...register("notes")}
+                  {...register("note")}
                 ></textarea>
               </label>
               <div className="flex flex-col-reverse gap-2 border-t border-zinc-200 pt-4 sm:flex-row sm:justify-end">
-                {!false && (
+                {!isPending && (
                   <>
                     <button
                       type="button"
@@ -177,12 +191,12 @@ const AddDocsModal = ({ onClose }: AddModalProps) => {
                     </button>
                   </>
                 )}
-                {false && (
+                {isPending && (
                   <>
                     <button
                       type="submit"
                       className="rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white transition duration-200 hover:scale-[1.02] hover:bg-zinc-800"
-                      disabled={false}
+                      disabled={isPending}
                     >
                       Create...
                     </button>

@@ -1,10 +1,25 @@
+import { deleteDocs } from "@/api/docsAPI";
+import { queryClient } from "@/main";
 import type { DocumentData } from "@/types/docsType";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 type deleteTaskModalProps = {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>;
 } & DocumentData;
 
 const DeleteDocsModel = (data: deleteTaskModalProps) => {
+  const { mutate } = useMutation({
+    mutationFn: deleteDocs,
+    onSuccess: () => {
+      toast.success("Docs Delete successfully");
+      queryClient.invalidateQueries({ queryKey: ["docs"] });
+      data.closeModal(false);
+    },
+    onError: (error) => {
+      toast.error(`Error ${error.message}`);
+    },
+  });
   return (
     <>
       <div className="fixed inset-0 z-70">
@@ -28,7 +43,12 @@ const DeleteDocsModel = (data: deleteTaskModalProps) => {
               >
                 Cancel
               </button>
-              <button className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-700 transition duration-200 hover:scale-[1.02] hover:bg-rose-100">
+              <button
+                className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-700 transition duration-200 hover:scale-[1.02] hover:bg-rose-100"
+                onClick={() => {
+                  mutate(data);
+                }}
+              >
                 Delete
               </button>
             </div>
