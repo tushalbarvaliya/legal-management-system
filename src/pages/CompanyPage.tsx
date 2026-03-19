@@ -127,7 +127,6 @@ const CompanyPage = () => {
           {/* Footer Info */}
           <div className="bg-white rounded-xl border p-4 text-sm text-black flex justify-between">
             <span>Last Updated: {formatDate(companyData?.updatedAt)}</span>
-            <span className="text-indigo-600 font-medium">Active</span>
           </div>
         </div>
       </section>

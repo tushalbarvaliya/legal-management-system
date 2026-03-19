@@ -30,14 +30,14 @@ export const signUp = async ({
   state,
   city,
 }: SignUpFormState) => {
-  const data: SignUpdata = {
-    username: userName,
-    firstName: firstName,
-    lastName: lastName,
+  const data = {
+    name: userName,
+    first_name: firstName,
+    last_name: lastName,
     email: email,
     password: password,
     phoneNumber: phoneNumber,
-    role: "guest",
+    role: "admin",
     address: address,
     companyId: "1",
     isDeleted: false,
