@@ -1,10 +1,12 @@
 import { getAllTask } from "@/api/taskAPI";
+import ErrorMessage from "@/components/ErrorMessage";
 import AddTaskModel from "@/components/Task/AddTaskModel";
 import TaskCard from "@/components/Task/TaskCard";
+import TaskCardSkeleton from "@/components/Task/TaskCardSkeleton";
+import { Spinner } from "@/components/ui/spinner";
 import type { TaskData } from "@/types/taskType";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-
 
 const TaskPage = () => {
   const [taskAddModel, setTaskAddModel] = useState(false);
@@ -13,7 +15,11 @@ const TaskPage = () => {
   const [priorityFilter, setPriorityFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
 
-  const { data: tasks } = useQuery({
+  const {
+    data: tasks,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["tasks"],
     queryFn: getAllTask,
   });
@@ -65,6 +71,7 @@ const TaskPage = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm"
+            disabled={isLoading || isError}
           />
 
           {/*  Priority */}
@@ -72,6 +79,7 @@ const TaskPage = () => {
             value={priorityFilter}
             onChange={(e) => setPriorityFilter(e.target.value)}
             className="rounded-xl border border-zinc-200 px-3 py-2.5 text-sm"
+            disabled={isLoading || isError}
           >
             <option value="all">All Priorities</option>
             <option value="low">Low</option>
@@ -84,6 +92,7 @@ const TaskPage = () => {
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
             className="rounded-xl border border-zinc-200 px-3 py-2.5 text-sm"
+            disabled={isLoading || isError}
           >
             <option value="all">All Statuses</option>
             <option value="inProgress">In Progress</option>
@@ -94,14 +103,14 @@ const TaskPage = () => {
 
       {/* Stats */}
       <div className="mt-5 flex flex-wrap justify-center gap-4 text-xs text-stone-500">
-        <p className="rounded-full bg-blue-200 px-2 text-blue-800">
-          Total Task: {total}
+        <p className="rounded-full bg-blue-200 px-2 text-blue-800 flex gap-2">
+          Total Task: {isLoading ? <Spinner /> : total ? total : 0}
         </p>
-        <p className="rounded-full bg-emerald-200 px-2 text-emerald-800">
-          Completed: {completed}
+        <p className="rounded-full bg-emerald-200 px-2 text-emerald-800 flex gap-2">
+          Completed: {isLoading ? <Spinner /> : completed ? completed : 0}
         </p>
-        <p className="rounded-full bg-amber-100 px-2 text-amber-800">
-          In Process: {inProgress}
+        <p className="rounded-full bg-amber-100 px-2 text-amber-800 flex gap-2">
+          In Process: {isLoading ? <Spinner /> : inProgress ? inProgress : 0}
         </p>
       </div>
 
@@ -117,13 +126,28 @@ const TaskPage = () => {
 
       {/* Task List */}
       <div className="mt-5 space-y-3">
-        {filteredTasks?.length > 0 ? (
-          filteredTasks?.map((item: TaskData) => (
-            <TaskCard key={item._id} {...item} />
-          ))
-        ) : (
-          <p className="text-center text-sm text-zinc-900">No tasks found</p>
+        {isLoading && (
+          <>
+            <TaskCardSkeleton />
+            <TaskCardSkeleton />
+            <TaskCardSkeleton />
+            <TaskCardSkeleton />
+            <TaskCardSkeleton />
+          </>
         )}
+        {isError && <ErrorMessage />}
+
+        {!isLoading &&
+          !isError &&
+          (filteredTasks?.length > 0 ? (
+            filteredTasks.map((item: TaskData) => (
+              <div>
+                <TaskCard {...item} key={item._id} />
+              </div>
+            ))
+          ) : (
+            <p className="text-center text-sm text-zinc-900">No tasks found</p>
+          ))}
       </div>
     </section>
   );
