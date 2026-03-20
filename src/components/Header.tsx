@@ -15,7 +15,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-30 border-b border-zinc-200 bg-transparent backdrop-blur  shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+      <header className="sticky top-0 z-30 border-b border-zinc-200 bg-black text-white backdrop-blur  shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
         <div className="mx-auto flex  items-center justify-between px-3 py-3 sm:px-4 lg:px-5">
           <div className="flex items-center gap-2">
             <Link
@@ -25,7 +25,7 @@ const Header = () => {
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-900 text-sm font-bold text-white shadow-soft">
                 AD
               </div>
-              <span className="text-lg font-semibold tracking-tight text-zinc-900">
+              <span className="text-lg font-semibold tracking-tight text-white">
                 Arcade Demo
               </span>
             </Link>
@@ -38,14 +38,14 @@ const Header = () => {
                 <Link
                   to={item.to}
                   key={item.to}
-                  className={`rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition duration-200 hover:-translate-y-0.5 hover:bg-zinc-50 hover:text-zinc-900 ${pathname === item.to ? "bg-zinc-200" : ""}`}
+                  className={`rounded-lg border  border-zinc-200 bg-white px-4 py-2 text-sm font-semibold text-zinc-700 transition duration-200 hover:-translate-y-0.5 hover:bg-zinc-50 hover:text-zinc-900 ${pathname === item.to ? "bg-zinc-200" : ""}`}
                 >
                   {item.label}
                 </Link>
               ))}
               <Link
                 to="/logout"
-                className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white transition duration-200 hover:scale-[1.02] hover:bg-zinc-800"
+                className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white transition duration-200 hover:scale-[1.02] hover:bg-amber-500"
               >
                 Logout
               </Link>
@@ -53,13 +53,16 @@ const Header = () => {
           </div>
 
           <button
-            id="menuButton"
-            className="inline-flex items-center justify-center rounded-lg border border-zinc-200 p-2 text-zinc-700 transition duration-200 hover:bg-zinc-100 lg:hidden"
+            className="inline-flex items-center justify-center rounded-lg border border-zinc-200 p-2 text-white transition duration-200 bg-zinc-100 lg:hidden hover:bg-zinc-200"
             onClick={() => {
               setMenubarOpen((prev) => !prev);
             }}
           >
-            <img src="/menuIcon.svg" alt="menu" className="h-5 w-5" />
+            <img
+              src="/menuIcon.svg"
+              alt="menu"
+              className="h-5 w-5 "
+            />
           </button>
         </div>
       </header>
