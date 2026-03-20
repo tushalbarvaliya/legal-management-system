@@ -2,14 +2,18 @@ import { getAllClient } from "@/api/clientAPI";
 import ClientCard from "@/components/Client/ClientCard";
 import ClientCardSkeleton from "@/components/Client/ClientCardSkeleton";
 import ClientHeader from "@/components/Client/ClientHeader";
+import ErrorMessage from "@/components/ErrorMessage";
 import NoClientFound from "@/components/NoClientFound";
 import type { ClientProps } from "@/types/clientType";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 const ClientPage = () => {
-  
   const [search, setSearch] = useState("");
-  const { data: clients, isLoading } = useQuery<ClientProps[]>({
+  const {
+    data: clients,
+    isLoading,
+    isError,
+  } = useQuery<ClientProps[]>({
     queryKey: ["client"],
     queryFn: getAllClient,
   });
@@ -46,12 +50,15 @@ const ClientPage = () => {
               onChange={(e) => {
                 setSearch(e.target.value);
               }}
+              disabled={isError||isLoading}
             />
           </div>
         </div>
         <div id="clientList" className="space-y-3">
           {/* map for client list */}
+          {isError && <ErrorMessage />}
           {!isLoading &&
+            !isError &&
             filteredClients?.map((item: ClientProps) => {
               return <ClientCard key={item._id} {...item} />;
             })}
