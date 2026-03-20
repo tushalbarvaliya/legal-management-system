@@ -75,7 +75,7 @@ const Header = () => {
       ></div>
 
       <aside
-        className={`fixed right-0 top-0 z-50 h-full w-72 ${menubarOpen ? "" : "translate-x-full"} border-l border-zinc-200 bg-white p-5 shadow-2xl transition-transform duration-300 lg:hidden overflow-scroll`}
+        className={`fixed right-0 top-0 z-50 h-full w-72 ${menubarOpen ? "" : "translate-x-full"} border-l border-zinc-200 bg-white p-5 shadow-2xl transition-transform duration-300 lg:hidden overflow-scroll no-scrollbar`}
       >
         <div className="mb-6 flex items-center justify-between ">
           <h2 className="text-base font-semibold text-zinc-900">Workspace</h2>
