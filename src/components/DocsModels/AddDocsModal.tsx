@@ -2,6 +2,7 @@ import { createDocs } from "@/api/docsAPI";
 import { queryClient } from "@/main";
 import type { DocumentData } from "@/types/docsType";
 import { urlRegex } from "@/utils/constant";
+import { convertToBase64 } from "@/utils/converteToBase64";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -11,7 +12,7 @@ type AddModalProps = {
 };
 
 const AddDocsModal = ({ onClose }: AddModalProps) => {
-  const {mutate,isPending} = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: createDocs,
     onSuccess: () => {
       toast.success("Docs Add successfully");
@@ -25,6 +26,7 @@ const AddDocsModal = ({ onClose }: AddModalProps) => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<DocumentData>({
     mode: "onChange",
@@ -32,9 +34,9 @@ const AddDocsModal = ({ onClose }: AddModalProps) => {
   });
 
   const onSubmit = (data: DocumentData) => {
-    // console.log(data);
+    console.log(data);
 
-    mutate(data);
+    // mutate(data);
   };
 
   return (
@@ -128,16 +130,17 @@ const AddDocsModal = ({ onClose }: AddModalProps) => {
                     File Link <span className="text-red-500">*</span>
                   </span>
                   <input
-                    type="url"
-                    placeholder="https://"
-                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 outline-none transition duration-200 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                    {...register("documentLink", {
-                      required: true,
-                      pattern: {
-                        value: urlRegex,
-                        message: "Please Enter a valid URL",
-                      },
-                    })}
+                    type="file"
+                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm"
+                    required
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      const fileType = file?.name.split(".").pop() || "";
+                      if (!file) return;
+                      const base64 = await convertToBase64(file);
+                      setValue("fileType", fileType);
+                      setValue("documentLink", base64);
+                    }}
                   />
                   <p className=" text-xs text-red-500">
                     {errors.documentLink?.message}
@@ -149,6 +152,7 @@ const AddDocsModal = ({ onClose }: AddModalProps) => {
                   </span>
                   <input
                     type="text"
+                    disabled
                     className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 outline-none transition duration-200 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
                     {...register("fileType", {
                       required: {
