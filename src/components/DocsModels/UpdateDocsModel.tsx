@@ -1,8 +1,11 @@
+import { getAddCase } from "@/api/caseAPI";
 import { updateDocs } from "@/api/docsAPI";
+import type { caseDataType } from "@/Data/caseData";
 import { queryClient } from "@/main";
 import type { DocumentData } from "@/types/docsType";
 import { convertToBase64 } from "@/utils/converteToBase64";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -11,6 +14,12 @@ type UpdateModelProps = {
 } & DocumentData;
 
 const UpdateDocsModel = ({ closeModal, ...data }: UpdateModelProps) => {
+  const [replcaeFile, setReplaceFile] = useState<boolean>(false);
+
+  const { data: caseData } = useQuery<caseDataType[]>({
+    queryKey: ["cases"],
+    queryFn: getAddCase,
+  });
   const { mutate, isPending } = useMutation({
     mutationFn: updateDocs,
     onSuccess: () => {
@@ -93,12 +102,23 @@ const UpdateDocsModel = ({ closeModal, ...data }: UpdateModelProps) => {
                   <span className="font-medium">
                     Case ID <span className="text-red-500">*</span>
                   </span>
-                  <input
-                    type="number"
-                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm"
-                    {...register("caseId", { required: true })}
-                  />
-                  <p className="text-xs text-red-500">
+
+                  <select
+                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 outline-none transition duration-200 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
+                    {...register("caseId", {
+                      minLength: {
+                        value: 1,
+                        message: "caseID length should be greater than 3",
+                      },
+                      required: true,
+                    })}
+                  >
+                    <option value="">Select ...</option>
+                    {caseData?.map((item) => {
+                      return <option value={item.id}>{item.title}</option>;
+                    })}
+                  </select>
+                  <p className=" text-xs text-red-500">
                     {errors.caseId?.message}
                   </p>
                 </label>
@@ -120,34 +140,40 @@ const UpdateDocsModel = ({ closeModal, ...data }: UpdateModelProps) => {
               </label>
 
               {/* File Upload */}
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <label className="space-y-1.5 text-sm text-zinc-700">
-                  <span className="font-medium">Replace File</span>
-                  <input
-                    type="file"
-                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm"
-                    onChange={async (e) => {
-                      const file = e.target.files?.[0];
-                      if (!file) return;
+              {!replcaeFile ? (
+                <div className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm" onClick={()=>{setReplaceFile(true)}}>
+                    File Uploaded Please Click to replace it
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <label className="space-y-1.5 text-sm text-zinc-700">
+                    <span className="font-medium">Replace File</span>
+                    <input
+                      type="file"
+                      className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
 
-                      const base64 = await convertToBase64(file);
+                        const base64 = await convertToBase64(file);
 
-                      setValue("documentLink", base64);
-                      setValue("fileType", file.type);
-                    }}
-                  />
-                </label>
+                        setValue("documentLink", base64);
+                        setValue("fileType", file.type);
+                      }}
+                    />
+                  </label>
 
-                <label className="space-y-1.5 text-sm text-zinc-700">
-                  <span className="font-medium">File Type</span>
-                  <input
-                    type="text"
-                    disabled
-                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm"
-                    {...register("fileType")}
-                  />
-                </label>
-              </div>
+                  <label className="space-y-1.5 text-sm text-zinc-700">
+                    <span className="font-medium">File Type</span>
+                    <input
+                      type="text"
+                      disabled
+                      className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm"
+                      {...register("fileType")}
+                    />
+                  </label>
+                </div>
+              )}
 
               {/* Notes */}
               <label className="space-y-1.5 text-sm text-zinc-700">
