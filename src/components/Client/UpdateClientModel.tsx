@@ -1,6 +1,6 @@
 import { updateClient } from "@/api/clientAPI";
 import { queryClient } from "@/main";
-import type { ClientProps } from "@/types/clientType";
+import type { ClientAddData } from "@/types/clientType";
 import {
   addressRegex,
   emailRegex,
@@ -13,7 +13,7 @@ import { toast } from "sonner";
 
 type UpdateClientModelProps = {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>;
-} & ClientProps;
+} & ClientAddData;
 
 const UpdateClientModel = ({ closeModal, ...data }: UpdateClientModelProps) => {
   const { mutate } = useMutation({
@@ -32,14 +32,16 @@ const UpdateClientModel = ({ closeModal, ...data }: UpdateClientModelProps) => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
-  } = useForm<ClientProps>({
+  } = useForm<ClientAddData>({
     mode: "onChange",
     delayError: 500,
     defaultValues: data,
   });
-
-  const onSubmit = (data: ClientProps) => {
+  setValue("isBlocked", false);
+  setValue("isDeleted", false);
+  const onSubmit = (data: ClientAddData) => {
     // console.log(data);
     mutate(data);
   };

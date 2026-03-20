@@ -1,9 +1,8 @@
 import { useState } from "react";
-import type { ClientProps } from "@/types/clientType";
 import ClientDetailsModel from "./ClientDetailsModel";
 import UpdateClientModel from "./UpdateClientModel";
 import { useMutation } from "@tanstack/react-query";
-import { blockClient, unBlockClient } from "@/api/clientAPI";
+import { blockClient } from "@/api/clientAPI";
 import { toast } from "sonner";
 import {
   DropdownMenu,
@@ -17,8 +16,9 @@ import { queryClient } from "@/main";
 import SoftDeleteModel from "./SoftDeleteModel";
 import type { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
+import type { ClientData } from "@/types/clientType";
 
-const ClientCard = (data: ClientProps) => {
+const ClientCard = (data: ClientData) => {
   const role = useSelector((state: RootState) => state.auth.role);
   const [clientModelOpen, setClientModelOpen] = useState(false);
   const [openUpdateModel, setOpenUpdateModel] = useState(false);
@@ -34,16 +34,7 @@ const ClientCard = (data: ClientProps) => {
       toast.error(`Client Block Error ${error}`);
     },
   });
-  const { mutate: unblock } = useMutation({
-    mutationFn: unBlockClient,
-    onSuccess: () => {
-      toast.success("client unblock Successfully");
-      queryClient.invalidateQueries({ queryKey: ["client"] });
-    },
-    onError: (error) => {
-      toast.error(`Client unblock Error ${error}`);
-    },
-  });
+
   return (
     <>
       {clientModelOpen && (
@@ -67,29 +58,24 @@ const ClientCard = (data: ClientProps) => {
         >
           <div className="flex min-w-0 gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-white text-xs font-semibold text-zinc-700">
-              {data.firstName[0]}
-              {data.lastName[0]}
+              {/* {data.firstName[0]} */}
+              {/* {data.lastName[0]} */}
             </div>
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <h3 className="text-base font-semibold text-zinc-900">
-                  {data.firstName} {data.lastName}
+                  {/* {data.firstName} {data.lastName} */}
                 </h3>
-                {data.isBlock && (
+                {data.isBlocked == "\u0001" && (
                   <span className="text-xs bg-zinc-100 text-black px-3 py-1 rounded-full font-medium">
-                    {data.isBlock ? "Block" : ""}
-                  </span>
-                )}
-                {data.isDelete && (
-                  <span className="text-xs bg-red-100 text-red-800 px-3 py-1 rounded-full font-medium">
-                    {data.isDelete ? "Delete" : ""}
+                    {data.isBlocked ? "Block" : ""}
                   </span>
                 )}
               </div>
               <div className="mt-3 grid grid-cols-1 gap-2 text-sm text-zinc-700 sm:grid-cols-2">
                 <p>
                   <span className="font-medium text-zinc-500">Mobile :</span>{" "}
-                  {data.mobileNumber}
+                  {/* {data.mobileNumber} */}
                 </p>
                 <p>
                   <span className="font-medium text-zinc-500">
@@ -118,7 +104,7 @@ const ClientCard = (data: ClientProps) => {
                 >
                   Edit
                 </DropdownMenuItem>
-                {!data.isDelete && (
+                {!(data.isDeleted == "\u0001") && (
                   <DropdownMenuItem
                     className="text-red-500"
                     onClick={(e) => {
@@ -129,7 +115,7 @@ const ClientCard = (data: ClientProps) => {
                     Delete
                   </DropdownMenuItem>
                 )}
-                {!data.isBlock && (
+                {!(data.isBlocked == "\u0001") && (
                   <DropdownMenuItem
                     onClick={(e) => {
                       e.stopPropagation();
@@ -137,16 +123,6 @@ const ClientCard = (data: ClientProps) => {
                     }}
                   >
                     Block
-                  </DropdownMenuItem>
-                )}
-                {data.isBlock && (
-                  <DropdownMenuItem
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      unblock(data);
-                    }}
-                  >
-                    UnBlock
                   </DropdownMenuItem>
                 )}
               </DropdownMenuContent>

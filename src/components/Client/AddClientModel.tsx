@@ -1,6 +1,7 @@
 import { createClient } from "@/api/clientAPI";
 import { queryClient } from "@/main";
-import type { ClientProps } from "@/types/clientType";
+import type { RootState } from "@/store/store";
+import type { ClientAddData } from "@/types/clientType";
 import {
   addressRegex,
   emailRegex,
@@ -9,6 +10,7 @@ import {
 } from "@/utils/constant";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 import { toast } from "sonner";
 
 type AddClientModel = {
@@ -16,7 +18,7 @@ type AddClientModel = {
 };
 
 const AddClientModel = ({ closeModal }: AddClientModel) => {
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: createClient,
     mutationKey: ["addClient"],
     onSuccess: () => {
@@ -32,14 +34,24 @@ const AddClientModel = ({ closeModal }: AddClientModel) => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
-  } = useForm<ClientProps>({
+  } = useForm<ClientAddData>({
     mode: "onChange",
     delayError: 500,
   });
-  const onSubmit = (data: ClientProps) => {
+  setValue("isBlocked", false);
+  setValue("isDeleted", false);
+  const id = Number(useSelector((state: RootState) => state.auth.id));
+  const onSubmit = (data: ClientAddData) => {
     // console.log(data);
-    mutate(data);
+    mutate({
+      ...data,
+      userId: id,
+      crNumber: 0,
+      vatNumber: 0,
+      vatPercentage: 0,
+    });
   };
 
   return (
@@ -297,8 +309,9 @@ const AddClientModel = ({ closeModal }: AddClientModel) => {
                 <button
                   type="submit"
                   className="rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white transition duration-200 hover:scale-[1.02] hover:bg-zinc-800"
+                  disabled={isPending}
                 >
-                  Create Client
+                  {isPending ? "Creating..." : "Create Client"}
                 </button>
               </div>
             </form>

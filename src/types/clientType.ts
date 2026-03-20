@@ -1,14 +1,26 @@
-export type ClientProps = {
-  firstName: string;
-  lastName: string;
-  mobileNumber: string;
-  otherNumber: string;
+export type ClientData = {
+  vatPercentage: number;
+  id: number;
+  isBlocked: string;
+  isDeleted: string;
+  lawyerId: number;
+  updatedAt: string;
+  crNumber: number;
+  vatNumber: number;
   occupation: string;
-  gender: string;
-  address: string;
-  notes: string;
-  _id: string;
-  email: string;
-  isBlock: boolean;
-  isDelete: boolean;
+  userId: number;
+  createdAt: string;
+};
+export type ClientAddData = {
+  vatPercentage: number;
+  id: number;
+  isBlocked: boolean;
+  isDeleted: boolean;
+  lawyerId: number;
+  updatedAt: string;
+  crNumber: number;
+  vatNumber: number;
+  occupation: string;
+  userId: number;
+  createdAt: string;
 };

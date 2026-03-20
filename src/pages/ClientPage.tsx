@@ -4,7 +4,7 @@ import ClientCardSkeleton from "@/components/Client/ClientCardSkeleton";
 import ClientHeader from "@/components/Client/ClientHeader";
 import ErrorMessage from "@/components/ErrorMessage";
 import NoClientFound from "@/components/NoClientFound";
-import type { ClientProps } from "@/types/clientType";
+import type { ClientData } from "@/types/clientType";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 const ClientPage = () => {
@@ -13,17 +13,19 @@ const ClientPage = () => {
     data: clients,
     isLoading,
     isError,
-  } = useQuery<ClientProps[]>({
+  } = useQuery<ClientData[]>({
     queryKey: ["client"],
     queryFn: getAllClient,
   });
 
-  let filteredClients = clients?.filter((clients: ClientProps) =>
+  let filteredClients = clients?.filter((clients: ClientData) =>
     Object.values(clients).some((value) =>
       String(value).toLowerCase().includes(search.toLowerCase()),
     ),
   );
-  filteredClients = filteredClients?.filter((item) => item.isDelete == false);
+  filteredClients = filteredClients?.filter(
+    (item) => item.isDeleted == "\u0000",
+  );
   return (
     <>
       <ClientHeader />
@@ -50,7 +52,7 @@ const ClientPage = () => {
               onChange={(e) => {
                 setSearch(e.target.value);
               }}
-              disabled={isError||isLoading}
+              disabled={isError || isLoading}
             />
           </div>
         </div>
@@ -59,8 +61,8 @@ const ClientPage = () => {
           {isError && <ErrorMessage />}
           {!isLoading &&
             !isError &&
-            filteredClients?.map((item: ClientProps) => {
-              return <ClientCard key={item._id} {...item} />;
+            filteredClients?.map((item: ClientData) => {
+              return <ClientCard key={item.id} {...item} />;
             })}
           {isLoading && (
             <>

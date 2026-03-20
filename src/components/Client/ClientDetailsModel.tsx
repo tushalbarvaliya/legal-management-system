@@ -1,8 +1,9 @@
-import type { ClientProps } from "@/types/clientType";
+import type { ClientData } from "@/types/clientType";
+import { formatData } from "@/utils/formatDate";
 
 type clientDetailModel = {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>;
-} & ClientProps;
+} & ClientData;
 
 const ClientDetailsModel = (data: clientDetailModel) => {
   return (
@@ -15,6 +16,7 @@ const ClientDetailsModel = (data: clientDetailModel) => {
             <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-4 sm:px-6">
               <h3 className="text-lg font-semibold tracking-tight text-zinc-900">
                 Client Details
+                <p className="text-xs mt-2 text-stone-600">{formatData(data.createdAt)}</p>
               </h3>
               <button
                 type="button"
@@ -29,29 +31,29 @@ const ClientDetailsModel = (data: clientDetailModel) => {
             <div className="space-y-4 px-5 py-4 sm:px-6 sm:py-5">
               <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4 flex gap-4">
                 <p className="text-lg font-semibold text-zinc-900">
-                  {data.firstName} {data.lastName}
+                  {/* {data.firstName} {data.lastName} */}
                 </p>
-                {data.isBlock && (
+                {data.isBlocked == "\u0001" && (
                   <span className="text-xs bg-zinc-100 text-black px-3 py-1 rounded-full font-medium">
-                    {data.isBlock ? "Block" : ""}
+                    {data.isBlocked ? "Block" : ""}
                   </span>
                 )}
-                {data.isDelete && (
+                {data.isDeleted === "\u0001" && (
                   <span className="text-xs bg-red-100 text-red-800 px-3 py-1 rounded-full font-medium">
-                    {data.isDelete ? "Delete" : ""}
+                    {data.isDeleted ? "Delete" : ""}
                   </span>
                 )}
               </div>
               <div className="grid grid-cols-1 gap-3 text-sm text-zinc-700 sm:grid-cols-2">
                 <p>
                   <span className="font-medium text-zinc-500">Mobile:</span>{" "}
-                  <span>{data.mobileNumber}</span>
+                  {/* <span>{data.mobileNumber}</span> */}
                 </p>
                 <p>
                   <span className="font-medium text-zinc-500">
                     Other Phone:
                   </span>{" "}
-                  <span>{data.otherNumber}</span>
+                  {/* <span>{data.otherNumber}</span> */}
                 </p>
                 <p>
                   <span className="font-medium text-zinc-500">Occupation:</span>{" "}
@@ -59,20 +61,20 @@ const ClientDetailsModel = (data: clientDetailModel) => {
                 </p>
                 <p>
                   <span className="font-medium text-zinc-500">Gender:</span>{" "}
-                  <span>{data.gender}</span>
+                  {/* <span>{data.gender}</span> */}
                 </p>
               </div>
               <div className="rounded-xl border border-zinc-200 bg-white p-4">
                 <p className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">
                   Email
                 </p>
-                <p className="mt-1 text-sm text-zinc-700">{data.email}</p>
+                {/* <p className="mt-1 text-sm text-zinc-700">{data.email}</p> */}
               </div>
               <div className="rounded-xl border border-zinc-200 bg-white p-4">
                 <p className="text-xs font-semibold uppercase tracking-[0.12em] text-zinc-500">
                   Address
                 </p>
-                <p className="mt-1 text-sm text-zinc-700">{data.address}</p>
+                {/* <p className="mt-1 text-sm text-zinc-700">{data.address}</p> */}
               </div>
 
               <div className="flex justify-end border-t border-zinc-200 pt-4">
