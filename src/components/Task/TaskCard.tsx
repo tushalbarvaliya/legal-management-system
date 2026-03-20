@@ -11,6 +11,7 @@ import { useState } from "react";
 import TaskDetailsModel from "./TaskDetailsModel";
 import UpdateTaskModel from "./UpdateTaskModel";
 import DeleteTaskModel from "./DeleteTaskModel";
+import type { taskDatatype } from "@/Data/taskData";
 
 const getPriorityColor = (priority: string) => {
   if (priority == "low") {
@@ -39,7 +40,7 @@ const getStatusColor = (status: string) => {
     return "bg-emerald-100 text-emerald-700";
   }
 };
-const TaskCard = (data: TaskData) => {
+const TaskCard = (data: taskDatatype) => {
   const [openDetailsModel, setOpenDetailsModel] = useState(false);
   const [openUpdateTaskModel, setUpdateTaskModel] = useState(false);
   const [openDeleteModel, setOpenDeleteModel] = useState(false);
@@ -92,7 +93,7 @@ const TaskCard = (data: TaskData) => {
 
               <p>
                 <span className="font-semibold text-zinc-700">Due:</span>{" "}
-                {formatData(data.dueDate)}
+                {formatData(data.createdAt)}
               </p>
 
               <p>

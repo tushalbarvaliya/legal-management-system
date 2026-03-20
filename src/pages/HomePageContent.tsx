@@ -20,8 +20,8 @@ const HomePageContent = () => {
         </div>
         {role === "admin" && <AdminDashBoard />}
       </div>
-      {/* {role === "lawyer" && <LawyerBoard />} */}
-      {role === "lawyer" && <StaffDashBoard />}
+      {role === "lawyer" && <LawyerBoard />}
+      {/* {role === "lawyer" && <StaffDashBoard />} */}
       {role === "staff" && <StaffDashBoard />}
     </>
   );

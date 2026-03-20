@@ -1,23 +1,32 @@
-import type { Invoice } from "@/types/invoiceType";
 import axiosInstance from "./axiosInstance";
+import { invoiceData, type InvoiceDataType } from "@/Data/invoiceData";
 
-export const addInvoice = async (data: Invoice) => {
-  const response = await axiosInstance.post("/invoices/invoice", data);
-  return response.data;
+export const addInvoice = async (data: InvoiceDataType) => {
+  try {
+    const response = await axiosInstance.post("/invoices/invoice", data);
+    return response.data;
+  } catch {
+    console.log(data);
+    ;
+  }
 };
-export const updateInvoice = async (data: Invoice) => {
+export const updateInvoice = async (data: InvoiceDataType) => {
   const response = await axiosInstance.patch(
-    `/invoices/invoice/${data._id}`,
+    `/invoices/invoice/${data.id}`,
     data,
   );
   return response.data;
 };
-export const deleteInvoice = async (data: Invoice) => {
-  const response = await axiosInstance.delete(`/invoice/${data._id}`);
+export const deleteInvoice = async (data: InvoiceDataType) => {
+  const response = await axiosInstance.delete(`/invoice/${data.id}`);
   return response.data;
 };
 
 export const getAllInvoice = async () => {
-  const response = await axiosInstance.get("/invoices/");
-  return response.data;
+  try {
+    const response = await axiosInstance.get("/invoices/");
+    return response.data;
+  } catch {
+    return invoiceData;
+  }
 };

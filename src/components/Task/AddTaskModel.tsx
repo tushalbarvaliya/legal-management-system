@@ -1,5 +1,6 @@
-import { getAllUser } from "@/api/adminAPi";
+import { getAllStaff } from "@/api/staffAPI";
 import { addTask } from "@/api/taskAPI";
+import type { StaffData } from "@/Data/staffData";
 import { queryClient } from "@/main";
 import type { TaskData } from "@/types/taskType";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -9,6 +10,7 @@ import { toast } from "sonner";
 type TaskAddProps = {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
 const AddTaskModel = (data: TaskAddProps) => {
   const { mutate } = useMutation({
     mutationFn: addTask,
@@ -22,9 +24,9 @@ const AddTaskModel = (data: TaskAddProps) => {
     },
   });
 
-  const { data: userData } = useQuery<[]>({
-    queryFn: getAllUser,
-    queryKey: ["users"],
+  const { data: staffData } = useQuery<StaffData[]>({
+    queryKey: ["staff"],
+    queryFn: getAllStaff,
   });
 
   const {
@@ -161,17 +163,9 @@ const AddTaskModel = (data: TaskAddProps) => {
                   })}
                 >
                   <option value="">Select Staff</option>
-                  {userData?.map(
-                    (item: {
-                      _id: string;
-                      firstName: string;
-                      lastName: string;
-                    }) => (
-                      <option value={item._id} key={item._id}>
-                        {item.firstName} {item.lastName}
-                      </option>
-                    ),
-                  )}
+                  {staffData?.map((item) => (
+                    <option value={item.user_id}>{item.user_id}</option>
+                  ))}
                 </select>
 
                 {errors.assignTo?.message && (

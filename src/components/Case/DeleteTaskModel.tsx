@@ -1,12 +1,12 @@
 import { softDeleteCase } from "@/api/caseAPI";
+import type { caseDataType } from "@/Data/caseData";
 import { queryClient } from "@/main";
-import type { CaseData } from "@/types/caseType";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 type deleteTaskModalProps = {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>;
-} & CaseData;
+} & caseDataType;
 
 const DeleteCaseModel = (data: deleteTaskModalProps) => {
   const { mutate, isPending } = useMutation({
@@ -31,7 +31,7 @@ const DeleteCaseModel = (data: deleteTaskModalProps) => {
               Are you sure you want to delete this Case?
             </p>
             <p className="mt-1 text-sm font-medium text-zinc-800">
-              {data.caseTitle}
+              {data.title}
             </p>
 
             <div className="mt-5 flex gap-2 sm:justify-end">
@@ -50,7 +50,7 @@ const DeleteCaseModel = (data: deleteTaskModalProps) => {
                 }}
                 disabled={isPending}
               >
-                Delete
+                {isPending? "Deleting":'Delete'}
               </button>
             </div>
           </div>

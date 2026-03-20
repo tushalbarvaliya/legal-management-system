@@ -1,7 +1,8 @@
+import { getAllUser } from "@/api/adminAPi";
 import { addCase } from "@/api/caseAPI";
+import type { caseDataType } from "@/Data/caseData";
 import { queryClient } from "@/main";
-import type { CaseData } from "@/types/caseType";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -26,12 +27,16 @@ const AddCaseModel = (data: Props) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CaseData>({
+  } = useForm<caseDataType>({
     mode: "onChange",
     delayError: 500,
   });
+  const { data: userData } = useQuery({
+    queryFn: getAllUser,
+    queryKey: ["users"],
+  });
 
-  const onSubmit = (formData: CaseData) => {
+  const onSubmit = (formData: caseDataType) => {
     mutate(formData);
   };
 
@@ -51,9 +56,7 @@ const AddCaseModel = (data: Props) => {
         >
           {/* Header */}
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-xl font-bold text-zinc-900">
-              Add New Case
-            </h3>
+            <h3 className="text-xl font-bold text-zinc-900">Add New Case</h3>
             <button
               onClick={() => data.closeModal(false)}
               className="rounded-lg border border-zinc-200 p-2 text-zinc-600 hover:bg-zinc-100"
@@ -75,20 +78,20 @@ const AddCaseModel = (data: Props) => {
               <input
                 type="text"
                 className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm outline-none focus:border-zinc-400"
-                {...register("caseTitle", {
+                {...register("title", {
                   required: {
                     value: true,
                     message: "Please enter case title",
                   },
                   minLength: {
-                    value: 5,
+                    value: 3,
                     message: "Minimum 5 characters required",
                   },
                 })}
               />
-              {errors.caseTitle?.message && (
+              {errors.title?.message && (
                 <p className="min-h-5 text-xs text-red-600">
-                  {errors.caseTitle.message}
+                  {errors.title.message}
                 </p>
               )}
             </div>
@@ -101,20 +104,20 @@ const AddCaseModel = (data: Props) => {
               <textarea
                 rows={3}
                 className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm outline-none focus:border-zinc-400"
-                {...register("CaseDescription", {
+                {...register("description", {
                   required: {
                     value: true,
                     message: "Please enter description",
                   },
                   minLength: {
-                    value: 10,
+                    value: 3,
                     message: "Minimum 10 characters required",
                   },
                 })}
               />
-              {errors.CaseDescription?.message && (
+              {errors.description?.message && (
                 <p className="min-h-5 text-xs text-red-600">
-                  {errors.CaseDescription.message}
+                  {errors.description.message}
                 </p>
               )}
             </div>
@@ -129,16 +132,16 @@ const AddCaseModel = (data: Props) => {
                 <input
                   type="text"
                   className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm outline-none focus:border-zinc-400"
-                  {...register("caseType", {
+                  {...register("type", {
                     required: {
                       value: true,
                       message: "Please enter case type",
                     },
                   })}
                 />
-                {errors.caseType?.message && (
+                {errors.type?.message && (
                   <p className="min-h-5 text-xs text-red-600">
-                    {errors.caseType.message}
+                    {errors.type.message}
                   </p>
                 )}
               </div>
@@ -150,7 +153,7 @@ const AddCaseModel = (data: Props) => {
                 </label>
                 <select
                   className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm outline-none focus:border-zinc-400"
-                  {...register("priority", {
+                  {...register("caseStage", {
                     required: {
                       value: true,
                       message: "Please select priority",
@@ -162,9 +165,9 @@ const AddCaseModel = (data: Props) => {
                   <option value="medium">Medium</option>
                   <option value="high">High</option>
                 </select>
-                {errors.priority?.message && (
+                {errors.caseStage?.message && (
                   <p className="min-h-5 text-xs text-red-600">
-                    {errors.priority.message}
+                    {errors.caseStage.message}
                   </p>
                 )}
               </div>
@@ -174,8 +177,7 @@ const AddCaseModel = (data: Props) => {
                 <label className="block mb-1 font-medium text-zinc-700">
                   Client ID
                 </label>
-                <input
-                  type="text"
+                <select
                   className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm outline-none focus:border-zinc-400"
                   {...register("clientId", {
                     required: {
@@ -183,7 +185,19 @@ const AddCaseModel = (data: Props) => {
                       message: "Please enter client ID",
                     },
                   })}
-                />
+                >
+                  {userData?.map(
+                    (item: {
+                      id: string;
+                      firstName: string;
+                      lastName: string;
+                    }) => (
+                      <option value={item.id} key={item.id}>
+                        {item.firstName} {item.lastName}
+                      </option>
+                    ),
+                  )}
+                </select>
                 {errors.clientId?.message && (
                   <p className="min-h-5 text-xs text-red-600">
                     {errors.clientId.message}
@@ -199,16 +213,16 @@ const AddCaseModel = (data: Props) => {
                 <input
                   type="text"
                   className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm outline-none focus:border-zinc-400"
-                  {...register("clientName", {
+                  {...register("caseCity", {
                     required: {
                       value: true,
                       message: "Please enter client name",
                     },
                   })}
                 />
-                {errors.clientName?.message && (
+                {errors.clientId?.message && (
                   <p className="min-h-5 text-xs text-red-600">
-                    {errors.clientName.message}
+                    {errors.clientId.message}
                   </p>
                 )}
               </div>

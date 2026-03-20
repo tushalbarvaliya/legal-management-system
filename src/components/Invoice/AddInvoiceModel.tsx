@@ -1,7 +1,12 @@
+import { getAddCase } from "@/api/caseAPI";
+import { getAllClient } from "@/api/clientAPI";
 import { addInvoice } from "@/api/invoiceAPI";
+import type { caseDataType } from "@/Data/caseData";
+import type { InvoiceDataType } from "@/Data/invoiceData";
 import { queryClient } from "@/main";
+import type { ClientData } from "@/types/clientType";
 import type { Invoice } from "@/types/invoiceType";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -22,20 +27,26 @@ const AddInvoiceModel = (data: Props) => {
     },
   });
 
+  const { data: caseData } = useQuery<caseDataType[]>({
+    queryKey: ["cases"],
+    queryFn: getAddCase,
+  });
+  const { data: clientData } = useQuery<ClientData[]>({
+    queryKey: ["client"],
+    queryFn: getAllClient,
+  });
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<Invoice>({
+  } = useForm<InvoiceDataType>({
     mode: "onChange",
     delayError: 500,
   });
 
-  const amount = watch("amount");
-
-  const onSubmit = (formData: Invoice) => {
-    mutate(formData);
+  const onSubmit = (formData: InvoiceDataType) => {
+    mutate({...formData,companyId:1});
   };
 
   const inputClass =
@@ -56,9 +67,7 @@ const AddInvoiceModel = (data: Props) => {
       >
         {/* Header */}
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-xl font-bold text-zinc-900">
-            Add New Invoice
-          </h3>
+          <h3 className="text-xl font-bold text-zinc-900">Add New Invoice</h3>
           <button
             onClick={() => data.closeModal(false)}
             className="rounded-lg border border-zinc-200 p-2 text-zinc-600 hover:bg-zinc-100"
@@ -75,16 +84,25 @@ const AddInvoiceModel = (data: Props) => {
           {/* Client */}
           <div>
             <label className="block mb-1 font-medium text-zinc-700">
-              Client
+              Client Id
             </label>
-            <input
-              className={inputClass}
-              {...register("client", {
-                required: "Please enter client name",
+            <select
+              className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 outline-none transition duration-200 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
+              {...register("caseId", {
+                minLength: {
+                  value: 1,
+                  message: "caseID length should be greater than 3",
+                },
+                required: true,
               })}
-            />
+            >
+              <option value="">Select ...</option>
+              {clientData?.map((item) => {
+                return <option value={item.id}>{item.occupation}</option>;
+              })}
+            </select>
             <p className="min-h-5 text-xs text-red-600">
-              {errors.client?.message}
+              {errors.clientId?.message}
             </p>
           </div>
 
@@ -93,12 +111,22 @@ const AddInvoiceModel = (data: Props) => {
             <label className="block mb-1 font-medium text-zinc-700">
               Case ID
             </label>
-            <input
-              className={inputClass}
+
+            <select
+              className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 outline-none transition duration-200 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
               {...register("caseId", {
-                required: "Please enter case ID",
+                minLength: {
+                  value: 1,
+                  message: "caseID length should be greater than 3",
+                },
+                required: true,
               })}
-            />
+            >
+              <option value="">Select ...</option>
+              {caseData?.map((item) => {
+                return <option value={item.id}>{item.title}</option>;
+              })}
+            </select>
             <p className="min-h-5 text-xs text-red-600">
               {errors.caseId?.message}
             </p>
@@ -108,77 +136,35 @@ const AddInvoiceModel = (data: Props) => {
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
               <label className="block mb-1 font-medium text-zinc-700">
-                Amount
+                Total Amount
               </label>
               <input
                 type="number"
                 className={inputClass}
-                {...register("amount", {
+                {...register("totalAmount", {
                   required: "Enter amount",
                   min: { value: 0, message: "Invalid amount" },
                 })}
               />
               <p className="min-h-5 text-xs text-red-600">
-                {errors.amount?.message}
+                {errors.totalAmount?.message}
               </p>
             </div>
 
             <div>
               <label className="block mb-1 font-medium text-zinc-700">
-                Paid
+                Total Hours
               </label>
               <input
                 type="number"
                 className={inputClass}
-                {...register("paid", {
+                {...register("totalHours", {
                   required: "Enter paid amount",
                   min: { value: 0, message: "Invalid value" },
-                  validate: (value) =>
-                    value <= amount || "Paid cannot exceed amount",
                 })}
               />
               <p className="min-h-5 text-xs text-red-600">
-                {errors.paid?.message}
-              </p>
-            </div>
-          </div>
-
-          {/* Dates */}
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <div>
-              <label className="block mb-1 font-medium text-zinc-700">
-                Invoice Date
-              </label>
-              <input
-                type="date"
-                className={inputClass}
-                {...register("invoiceDate", {
-                  required: "Select invoice date",
-                })}
-              />
-              <p className="min-h-5 text-xs text-red-600">
-                {errors.invoiceDate?.message}
-              </p>
-            </div>
-
-            <div>
-              <label className="block mb-1 font-medium text-zinc-700">
-                Due Date
-              </label>
-              <input
-                type="date"
-                className={inputClass}
-                {...register("dueDate", {
-                  required: "Select due date",
-                  validate: (value) => {
-                    const inv = new Date(watch("invoiceDate"));
-                    const due = new Date(value);
-                    return due >= inv || "Due must be after invoice date";
-                  },
-                })}
-              />
-              <p className="min-h-5 text-xs text-red-600">
-                {errors.dueDate?.message}
+                {errors.totalHours?.message}
               </p>
             </div>
           </div>

@@ -12,6 +12,7 @@ import UpdateDocsModel from "./UpdateDocsModel";
 import DeleteDocsModel from "./DeleteDocsModel";
 import { Link } from "react-router";
 import DocsDetailsModal from "./DocsDetailsModal";
+import { downloadBase64File } from "@/utils/downloadBase64";
 
 const DocsCard = (items: DocumentData) => {
   const [updateModel, setUpdateModel] = useState(false);
@@ -95,6 +96,17 @@ const DocsCard = (items: DocumentData) => {
                 }}
               >
                 Delete
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() =>
+                  downloadBase64File(
+                    items.documentLink,
+                    "invoice",
+                    items.fileType,
+                  )
+                }
+              >
+                Download
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

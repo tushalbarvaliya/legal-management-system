@@ -1,8 +1,9 @@
-import type { CaseData } from "@/types/caseType";
+import type { caseDataType } from "@/Data/caseData";
+import { formatData } from "@/utils/formatDate";
 
 type TaskDetailsProps = {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>;
-} & CaseData;
+} & caseDataType;
 
 const CaseDetailModel = (data: TaskDetailsProps) => {
   return (
@@ -14,15 +15,11 @@ const CaseDetailModel = (data: TaskDetailsProps) => {
             <div className="mb-4 flex items-start justify-between gap-4">
               <div>
                 <h3 className="text-xl font-bold text-zinc-900">
-                  {data.caseTitle}
+                  {data.title}
                 </h3>
                 <p className="mt-1 text-xs text-zinc-500">
                   Created{" "}
-                  {new Date(data.createdAt).toLocaleDateString("en-IN", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                  })}
+                  {formatData(data.createdAt)}
                 </p>
               </div>
               <button
@@ -41,26 +38,26 @@ const CaseDetailModel = (data: TaskDetailsProps) => {
                   data Description
                 </p>
                 <p className="mt-1 rounded-xl bg-zinc-50 p-3 leading-relaxed">
-                  {data.CaseDescription}
+                  {data.description}
                 </p>
               </div>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-3">
                   <p className="text-xs text-zinc-500">Priority</p>
                   <p className="mt-1 font-semibold text-zinc-900">
-                    {data.priority}
+                    {data.status}
                   </p>
                 </div>
                 <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-3">
                   <p className="text-xs text-zinc-500">Case Type</p>
                   <p className="mt-1 font-semibold text-zinc-900">
-                    {data.caseType}
+                    {data.type}
                   </p>
                 </div>
                 <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-3">
                   <p className="text-xs text-zinc-500">client Name</p>
                   <p className="mt-1 font-semibold text-zinc-900">
-                    {data.clientName}
+                    {data.clientId}
                   </p>
                 </div>
               </div>

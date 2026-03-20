@@ -1,6 +1,5 @@
 import axios from "axios";
 import { store } from "@/store/store";
-// import { removeToken } from "@/store/slices/authSlice";
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,

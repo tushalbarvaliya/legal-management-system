@@ -1,8 +1,8 @@
-import type { TaskData } from "@/types/taskType";
+import type { taskDatatype } from "@/Data/taskData";
 
 type TaskDetailsProps = {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>;
-} & TaskData;
+} & taskDatatype;
 
 const TaskDetailsModel = (data: TaskDetailsProps) => {
   return (
@@ -54,7 +54,7 @@ const TaskDetailsModel = (data: TaskDetailsProps) => {
                 <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-3">
                   <p className="text-xs text-zinc-500">Due Date</p>
                   <p className="mt-1 font-semibold text-zinc-900">
-                    {new Date(data.dueDate).toLocaleDateString("en-IN", {
+                    {new Date(data.createdAt).toLocaleDateString("en-IN", {
                       day: "2-digit",
                       month: "short",
                       year: "numeric",

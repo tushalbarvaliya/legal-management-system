@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import CasesCard from "@/components/Case/CasesCard";
-import type { CaseData } from "@/types/caseType";
 import CasesCardSkeleton from "@/components/Case/CasesCardSkeleton";
 import AddCaseModel from "@/components/Case/AddCaseModel";
 import { useQuery } from "@tanstack/react-query";
@@ -8,34 +7,31 @@ import { getAddCase } from "@/api/caseAPI";
 import type { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import ErrorMessage from "@/components/ErrorMessage";
+import type { caseDataType } from "@/Data/caseData";
 
 const CasesPage = () => {
   const role = useSelector((state: RootState) => state.auth.role);
   const [addModel, setAddModel] = useState(false);
   const [search, setSearch] = useState("");
-  const [priority, setPriority] = useState("all");
 
   const {
     data: cases,
     isLoading,
     isError,
-  } = useQuery({
+  } = useQuery<caseDataType[]>({
     queryKey: ["cases"],
     queryFn: getAddCase,
   });
 
-  const filteredCases = useMemo(() => {
-    return cases?.filter((item: CaseData) => {
+  const filteredCases: caseDataType[] | undefined = useMemo(() => {
+    return cases?.filter((item: caseDataType) => {
       const matchesSearch =
-        item.caseTitle.toLowerCase().includes(search.toLowerCase()) ||
-        item.CaseDescription.toLowerCase().includes(search.toLowerCase()) ||
-        item.clientName.toLowerCase().includes(search.toLowerCase());
+        item.title.toLowerCase().includes(search.toLowerCase()) ||
+        item.description.toLowerCase().includes(search.toLowerCase());
 
-      const matchesPriority = priority === "all" || item.priority === priority;
-
-      return matchesSearch && matchesPriority;
+      return matchesSearch;
     });
-  }, [search, priority, cases]);
+  }, [search, cases]);
 
   return (
     <>
@@ -84,17 +80,6 @@ const CasesPage = () => {
             </label>
 
             {/* Priority Filter */}
-            <select
-              value={priority}
-              onChange={(e) => setPriority(e.target.value)}
-              className="rounded-xl border border-zinc-200 px-3 py-2.5 text-sm"
-              disabled={isLoading || isError}
-            >
-              <option value="all">All Priorities</option>
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
-            </select>
           </div>
         </div>
 
@@ -110,10 +95,10 @@ const CasesPage = () => {
           {isError && <ErrorMessage />}
           {!isLoading &&
             !isError &&
-            (filteredCases?.length > 0 ? (
-              filteredCases.map((item: CaseData) => (
+            (filteredCases && filteredCases?.length > 0 ? (
+              filteredCases.map((item: caseDataType) => (
                 <div>
-                  <CasesCard {...item} key={item._id} />
+                  <CasesCard {...item} key={item.id} />
                   {/* <CasesCardSkeleton /> */}
                 </div>
               ))

@@ -1,11 +1,11 @@
-import type { Invoice } from "@/types/invoiceType";
 import { formatData } from "@/utils/formatDate";
 import { useState } from "react";
 import EditInvoiceModel from "./EditInvoiceModel";
 import DeleteInvoiceModel from "./DeleteTaskModel";
 import InvoiceDetailsModal from "./InvoiceDetailsModal";
+import type { InvoiceDataType } from "@/Data/invoiceData";
 
-const InvoiceCard = (invoice: Invoice) => {
+const InvoiceCard = (invoice: InvoiceDataType) => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [editOpen, setEditOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
@@ -24,10 +24,10 @@ const InvoiceCard = (invoice: Invoice) => {
         <div className="flex items-start justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-zinc-500">
-              {invoice._id}
+              {invoice.id}
             </p>
             <p className="mt-1 text-lg font-semibold text-zinc-900">
-              {invoice.client}
+              {invoice.clientId}
             </p>
             <p className="text-sm text-zinc-500">{invoice.caseId}</p>
           </div>
@@ -81,19 +81,19 @@ const InvoiceCard = (invoice: Invoice) => {
 
         <div className="mt-4 grid grid-cols-2 gap-3 text-sm text-zinc-600">
           <div>
-            <p className="text-xs uppercase text-zinc-400">Invoice</p>
-            <p className="font-medium text-zinc-800">${invoice.amount}</p>
+            <p className="text-xs uppercase text-zinc-400">Total Amount</p>
+            <p className="font-medium text-zinc-800">${invoice.totalAmount}</p>
           </div>
 
           <div>
-            <p className="text-xs uppercase text-zinc-400">Paid</p>
-            <p className="font-medium text-zinc-800">${invoice.paid}</p>
+            <p className="text-xs uppercase text-zinc-400">Total Hours</p>
+            <p className="font-medium text-zinc-800">${invoice.totalHours}</p>
           </div>
 
           <div>
             <p className="text-xs uppercase text-zinc-400">Due</p>
             <p className="font-medium text-zinc-800">
-              {formatData(invoice.dueDate)}
+              {invoice.paidAt}
             </p>
           </div>
 
@@ -107,14 +107,14 @@ const InvoiceCard = (invoice: Invoice) => {
           <div>
             <p className="text-xs uppercase text-zinc-400">Invoice Date</p>
             <p className="font-medium text-zinc-800">
-              {formatData(invoice.invoiceDate)}
+              {formatData(invoice.createdAt)}
             </p>
           </div>
 
           <div>
             <p className="text-xs uppercase text-zinc-400">Due Date</p>
             <p className="font-medium text-zinc-800">
-              {formatData(invoice.dueDate)}
+              {formatData(invoice.lawyerId)}
             </p>
           </div>
         </div>

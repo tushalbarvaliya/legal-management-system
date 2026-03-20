@@ -1,18 +1,18 @@
 import { useMemo, useState } from "react";
-import type { Invoice } from "@/types/invoiceType";
 import InvoiceCard from "./InvoiceCard";
 import InvoiceCardSkeleton from "./InvoiceCardSkeleton";
 import { useQuery } from "@tanstack/react-query";
 import { getAllInvoice } from "@/api/invoiceAPI";
 import ErrorMessage from "../ErrorMessage";
 import { Button } from "../ui/button";
+import type { InvoiceDataType } from "@/Data/invoiceData";
 
 const InvoiceList = () => {
   const {
     data: invoices,
     isLoading,
     isError,
-  } = useQuery<Invoice[]>({
+  } = useQuery<InvoiceDataType[] | undefined>({
     queryKey: ["invoices"],
     queryFn: getAllInvoice,
   });
@@ -29,30 +29,13 @@ const InvoiceList = () => {
     setDate("");
   };
 
+  // Extract unique clients
   const clientOptions = useMemo(() => {
     if (!invoices) return [];
-    return [...new Set(invoices.map((i) => i.client))];
+    return [...new Set(invoices.map((i) => i.clientId))];
   }, [invoices]);
 
-  const filteredInvoices = useMemo(() => {
-    if (!invoices) return [];
 
-    return invoices.filter((inv) => {
-      const matchSearch =
-        inv.client.toLowerCase().includes(search.toLowerCase()) ||
-        inv.caseId.toLowerCase().includes(search.toLowerCase());
-
-      const matchStatus = status ? inv.status === status : true;
-
-      const matchClient = client ? inv.client === client : true;
-
-      const matchDate = date
-        ? new Date(inv.invoiceDate).toISOString().split("T")[0] >= date
-        : true;
-
-      return matchSearch && matchStatus && matchClient && matchDate;
-    });
-  }, [invoices, search, status, client, date]);
 
   return (
     <div className="rounded-xl border border-zinc-200 bg-white/80 p-4 space-y-4">
@@ -105,7 +88,9 @@ const InvoiceList = () => {
           >
             <option value="">All Clients</option>
             {clientOptions.map((c) => (
-              <option key={c}>{c}</option>
+              <option key={c} value={c}>
+                {c}
+              </option>
             ))}
           </select>
 
@@ -117,6 +102,7 @@ const InvoiceList = () => {
             className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm focus:border-zinc-400 outline-none"
             disabled={isLoading || isError}
           />
+
           <Button onClick={clearFilters} disabled={isLoading || isError}>
             Clear
           </Button>
@@ -125,20 +111,25 @@ const InvoiceList = () => {
 
       {/* List */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        {/* Loading */}
         {isLoading &&
           Array.from({ length: 6 }).map((_, i) => (
             <InvoiceCardSkeleton key={i} />
           ))}
+
+        {/* Error */}
         {isError && (
           <div className="col-span-full text-center text-zinc-500">
             <ErrorMessage />
           </div>
         )}
-        {!isError &&
-          !isLoading &&
-          (filteredInvoices.length > 0 ? (
-            filteredInvoices.map((item) => (
-              <InvoiceCard {...item} key={item._id} />
+
+        {/* Data */}
+        {!isLoading &&
+          !isError &&
+          (invoices.length > 0 ? (
+            invoices.map((item) => (
+              <InvoiceCard {...item} key={item.id} />
             ))
           ) : (
             <p className="col-span-full text-center text-zinc-500">

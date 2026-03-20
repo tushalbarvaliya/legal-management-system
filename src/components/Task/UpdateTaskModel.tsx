@@ -1,5 +1,6 @@
 import { getAllUser } from "@/api/adminAPi";
 import { updateTask } from "@/api/taskAPI";
+import type { taskDatatype } from "@/Data/taskData";
 import { queryClient } from "@/main";
 import type { TaskData } from "@/types/taskType";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -8,7 +9,7 @@ import { toast } from "sonner";
 
 type UpdateTaskProps = {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>;
-} & TaskData;
+} & taskDatatype;
 
 const UpdateTaskModel = (data: UpdateTaskProps) => {
   const {mutate} = useMutation({
@@ -31,7 +32,7 @@ const UpdateTaskModel = (data: UpdateTaskProps) => {
     delayError: 500,
     defaultValues: {
       ...data,
-      dueDate: new Date(data.dueDate).toISOString().split("T")[0],
+      dueDate: new Date(data.createdAt).toISOString().split("T")[0],
     },
   });
 
@@ -40,7 +41,7 @@ const UpdateTaskModel = (data: UpdateTaskProps) => {
     mutate(data)
   };
 
-  const { data: userData } = useQuery<[]>({
+  const { data: userData } = useQuery({
     queryFn: getAllUser,
     queryKey: ["users"],
   });

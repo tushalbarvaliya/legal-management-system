@@ -1,13 +1,13 @@
 import { updateCase } from "@/api/caseAPI";
+import type { caseDataType } from "@/Data/caseData";
 import { queryClient } from "@/main";
-import type { CaseData } from "@/types/caseType";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 type Props = {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>;
-} & CaseData;
+} & caseDataType;
 
 const EditCaseModel = (data: Props) => {
   const { mutate, isPending } = useMutation({
@@ -26,7 +26,7 @@ const EditCaseModel = (data: Props) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CaseData>({
+  } = useForm<caseDataType>({
     mode: "onChange",
     delayError: 500,
     defaultValues: {
@@ -34,8 +34,8 @@ const EditCaseModel = (data: Props) => {
     },
   });
 
-  const onSubmit = (formData: CaseData) => {
-    mutate({ ...formData, _id: data._id });
+  const onSubmit = (formData: caseDataType) => {
+    mutate({ ...formData, id: data.id });
   };
 
   return (
@@ -78,7 +78,7 @@ const EditCaseModel = (data: Props) => {
               <input
                 type="text"
                 className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm outline-none focus:border-zinc-400"
-                {...register("caseTitle", {
+                {...register("title", {
                   required: {
                     value: true,
                     message: "Please enter case title",
@@ -89,9 +89,9 @@ const EditCaseModel = (data: Props) => {
                   },
                 })}
               />
-              {errors.caseTitle?.message && (
+              {errors.title?.message && (
                 <p className="min-h-5 text-xs text-red-600">
-                  {errors.caseTitle.message}
+                  {errors.title.message}
                 </p>
               )}
             </div>
@@ -104,7 +104,7 @@ const EditCaseModel = (data: Props) => {
               <textarea
                 rows={3}
                 className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm outline-none focus:border-zinc-400"
-                {...register("CaseDescription", {
+                {...register("description", {
                   required: {
                     value: true,
                     message: "Please enter description",
@@ -115,9 +115,9 @@ const EditCaseModel = (data: Props) => {
                   },
                 })}
               />
-              {errors.CaseDescription?.message && (
+              {errors.description?.message && (
                 <p className="min-h-5 text-xs text-red-600">
-                  {errors.CaseDescription.message}
+                  {errors.description.message}
                 </p>
               )}
             </div>
@@ -132,16 +132,16 @@ const EditCaseModel = (data: Props) => {
                 <input
                   type="text"
                   className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm outline-none focus:border-zinc-400"
-                  {...register("caseType", {
+                  {...register("type", {
                     required: {
                       value: true,
                       message: "Please enter case type",
                     },
                   })}
                 />
-                {errors.caseType?.message && (
+                {errors.type?.message && (
                   <p className="min-h-5 text-xs text-red-600">
-                    {errors.caseType.message}
+                    {errors.type.message}
                   </p>
                 )}
               </div>
@@ -153,7 +153,7 @@ const EditCaseModel = (data: Props) => {
                 </label>
                 <select
                   className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm outline-none focus:border-zinc-400"
-                  {...register("priority", {
+                  {...register("caseStage", {
                     required: {
                       value: true,
                       message: "Please select priority",
@@ -165,9 +165,9 @@ const EditCaseModel = (data: Props) => {
                   <option value="medium">Medium</option>
                   <option value="high">High</option>
                 </select>
-                {errors.priority?.message && (
+                {errors.caseStage?.message && (
                   <p className="min-h-5 text-xs text-red-600">
-                    {errors.priority.message}
+                    {errors.caseStage.message}
                   </p>
                 )}
               </div>
@@ -202,16 +202,16 @@ const EditCaseModel = (data: Props) => {
                 <input
                   type="text"
                   className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm outline-none focus:border-zinc-400"
-                  {...register("clientName", {
+                  {...register("clientId", {
                     required: {
                       value: true,
                       message: "Please enter client name",
                     },
                   })}
                 />
-                {errors.clientName?.message && (
+                {errors.clientId?.message && (
                   <p className="min-h-5 text-xs text-red-600">
-                    {errors.clientName.message}
+                    {errors.clientId.message}
                   </p>
                 )}
               </div>

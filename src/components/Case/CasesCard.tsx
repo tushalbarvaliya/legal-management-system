@@ -6,32 +6,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreVertical } from "lucide-react";
-import type { CaseData } from "@/types/caseType";
 import { useState } from "react";
 import DeleteCaseModel from "./DeleteTaskModel";
 import CaseDetailModel from "./CaseDetailModel";
 import EditCaseModel from "./EditCaseModel";
 import type { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
+import type { caseDataType } from "@/Data/caseData";
+import { formatData } from "@/utils/formatDate";
 
-const getPriorityColor = (priority: string) => {
-  if (priority == "low") {
-    return "bg-zinc-100 text-zinc-700";
-  } else if (priority == "medium") {
-    return "bg-amber-100 text-amber-700";
-  } else if (priority == "high") {
-    return "bg-rose-100 text-rose-700";
-  }
-};
-
-const formatData = (date: string) => {
-  return new Date(date).toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-};
-const CasesCard = (data: CaseData) => {
+const CasesCard = (data: caseDataType) => {
   const role = useSelector((state: RootState) => state.auth.role);
   const [deleteModel, setDeleteModel] = useState(false);
   const [detailsModel, setDetailsModel] = useState(false);
@@ -51,12 +35,12 @@ const CasesCard = (data: CaseData) => {
             {/* TITLE */}
             <div className="group/title relative inline-flex max-w-full items-center">
               <h2 className="truncate text-sm font-semibold text-zinc-900 transition duration-200 group-hover:text-zinc-950">
-                {data.caseTitle}
+                {data.title}
               </h2>
 
               {/* TOOLTIP */}
               <div className="pointer-events-none absolute left-0 top-full z-10 mt-2 hidden w-70 max-w-[70vw] rounded-lg bg-zinc-900/95 p-3 text-xs leading-relaxed text-zinc-100 opacity-0 shadow-lg backdrop-blur-sm transition duration-200 group-hover/title:block group-hover/title:opacity-100">
-                {data.CaseDescription}
+                {data.description}
               </div>
             </div>
 
@@ -70,9 +54,9 @@ const CasesCard = (data: CaseData) => {
               <p>
                 <span className="font-semibold text-zinc-700">Priority:</span>
                 <span
-                  className={`ml-1 inline-flex rounded-full px-2 py-0.5 font-medium ${getPriorityColor(data.priority)}`}
+                  className={`ml-1 inline-flex rounded-full px-2 py-0.5 font-medium `}
                 >
-                  {data.priority}
+                  {data.caseStage}
                 </span>
               </p>
 
@@ -80,13 +64,13 @@ const CasesCard = (data: CaseData) => {
                 <span className="font-semibold text-zinc-700">
                   Client Name :
                 </span>{" "}
-                {data.clientName}
+                {data.clientId}
               </p>
               <p>
                 <span className="font-semibold text-zinc-700">
                   Case Type :{" "}
                 </span>{" "}
-                {data.caseType}
+                {data.type}
               </p>
             </div>
           </div>

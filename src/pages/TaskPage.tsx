@@ -4,6 +4,7 @@ import AddTaskModel from "@/components/Task/AddTaskModel";
 import TaskCard from "@/components/Task/TaskCard";
 import TaskCardSkeleton from "@/components/Task/TaskCardSkeleton";
 import { Spinner } from "@/components/ui/spinner";
+import type { taskDatatype } from "@/Data/taskData";
 import type { TaskData } from "@/types/taskType";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
@@ -19,14 +20,14 @@ const TaskPage = () => {
     data: tasks,
     isLoading,
     isError,
-  } = useQuery({
+  } = useQuery<taskDatatype[]>({
     queryKey: ["tasks"],
     queryFn: getAllTask,
   });
 
   // filtered data
   const filteredTasks = useMemo(() => {
-    return tasks?.filter((task: TaskData) => {
+    return tasks?.filter((task: taskDatatype) => {
       const matchesSearch =
         task.title.toLowerCase().includes(search.toLowerCase()) ||
         task.description.toLowerCase().includes(search.toLowerCase());
@@ -44,10 +45,10 @@ const TaskPage = () => {
   // stats
   const total = filteredTasks?.length;
   const completed = filteredTasks?.filter(
-    (t: TaskData) => t.status === "completed",
+    (t: taskDatatype) => t.status === "completed",
   ).length;
   const inProgress = filteredTasks?.filter(
-    (t: TaskData) => t.status === "inProgress",
+    (t: taskDatatype) => t.status === "inProgress",
   ).length;
 
   return (
@@ -119,7 +120,7 @@ const TaskPage = () => {
         onClick={() => setTaskAddModel(true)}
         className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-zinc-900 text-white flex justify-center items-center"
       >
-        <img src="/plus.svg" alt="+" className="h-6 w-6"/>
+        <img src="/plus.svg" alt="+" className="h-6 w-6" />
       </button>
 
       {taskAddModel && <AddTaskModel closeModal={setTaskAddModel} />}
@@ -140,9 +141,9 @@ const TaskPage = () => {
         {!isLoading &&
           !isError &&
           (filteredTasks?.length > 0 ? (
-            filteredTasks.map((item: TaskData) => (
+            filteredTasks.map((item: taskDatatype) => (
               <div>
-                <TaskCard {...item} key={item._id} />
+                <TaskCard {...item} key={item.id} />
               </div>
             ))
           ) : (

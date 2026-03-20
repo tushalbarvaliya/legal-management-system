@@ -1,9 +1,10 @@
+import { getAddCase } from "@/api/caseAPI";
 import { createDocs } from "@/api/docsAPI";
+import type { caseDataType } from "@/Data/caseData";
 import { queryClient } from "@/main";
 import type { DocumentData } from "@/types/docsType";
-import { urlRegex } from "@/utils/constant";
 import { convertToBase64 } from "@/utils/converteToBase64";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -31,6 +32,11 @@ const AddDocsModal = ({ onClose }: AddModalProps) => {
   } = useForm<DocumentData>({
     mode: "onChange",
     delayError: 500,
+  });
+
+  const { data } = useQuery<caseDataType[]>({
+    queryKey: ["cases"],
+    queryFn: getAddCase,
   });
 
   const onSubmit = (data: DocumentData) => {
@@ -73,8 +79,8 @@ const AddDocsModal = ({ onClose }: AddModalProps) => {
                     className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 outline-none transition duration-200 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
                     {...register("title", {
                       minLength: {
-                        value: 10,
-                        message: "Title length should be greater than 10 ",
+                        value: 3,
+                        message: "Title length should be greater than 3 ",
                       },
                       required: true,
                     })}
@@ -87,17 +93,22 @@ const AddDocsModal = ({ onClose }: AddModalProps) => {
                   <span className="font-medium">
                     Case ID <span className="text-red-500">*</span>
                   </span>
-                  <input
-                    type="number"
+
+                  <select
                     className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 outline-none transition duration-200 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
                     {...register("caseId", {
                       minLength: {
-                        value: 3,
+                        value: 1,
                         message: "caseID length should be greater than 3",
                       },
                       required: true,
                     })}
-                  />
+                  >
+                    <option value="">Select ...</option>
+                    {data?.map((item) => {
+                      return <option value={item.id}>{item.title}</option>;
+                    })}
+                  </select>
                   <p className=" text-xs text-red-500">
                     {errors.caseId?.message}
                   </p>
@@ -113,8 +124,8 @@ const AddDocsModal = ({ onClose }: AddModalProps) => {
                   className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 outline-none transition duration-200 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
                   {...register("description", {
                     minLength: {
-                      value: 10,
-                      message: "description length should be greater than 10",
+                      value: 3,
+                      message: "description length should be greater than 3",
                     },
                     required: true,
                   })}
@@ -135,10 +146,10 @@ const AddDocsModal = ({ onClose }: AddModalProps) => {
                     required
                     onChange={async (e) => {
                       const file = e.target.files?.[0];
-                      const fileType = file?.name.split(".").pop() || "";
+                      const mimeType = file?.type || "";
                       if (!file) return;
                       const base64 = await convertToBase64(file);
-                      setValue("fileType", fileType);
+                      setValue("fileType", mimeType);
                       setValue("documentLink", base64);
                     }}
                   />
