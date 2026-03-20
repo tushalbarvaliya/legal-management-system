@@ -10,11 +10,13 @@ interface JwtPayload {
 interface AuthState {
   token: string | null;
   role: string;
+  id: string;
 }
 
 const initialState: AuthState = {
   token: null,
   role: "",
+  id: "",
 };
 
 const authSlice = createSlice({
@@ -26,15 +28,18 @@ const authSlice = createSlice({
       try {
         const decoded = jwtDecode<JwtPayload>(action.payload.token);
         state.role = decoded.role || "";
+        state.id = decoded.id;
       } catch (error) {
         console.error(`Invalid token ${error}`);
         state.role = "";
+        state.id = "";
       }
     },
 
     removeToken: (state) => {
       state.token = null;
       state.role = "";
+      state.id = "";
     },
   },
 });

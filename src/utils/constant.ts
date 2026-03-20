@@ -60,7 +60,7 @@ export const menuList = [
     src: "/dashboard.svg",
     to: "/",
     alt: "home",
-    role: ["admin"],
+    role: ["admin",'lawyer','staff','client'],
   },
   {
     title: "client",
