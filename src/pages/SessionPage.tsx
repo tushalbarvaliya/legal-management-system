@@ -1,7 +1,9 @@
 import { getAllSession } from "@/api/sessionAPi";
+import ErrorMessage from "@/components/ErrorMessage";
 import AddSessionModel from "@/components/Session/AddSessionModel";
 import SessionCard from "@/components/Session/SessionCard";
 import SessionCardSkeleton from "@/components/Session/SessionCardSkeleton";
+import { Spinner } from "@/components/ui/spinner";
 import type { SessionData } from "@/types/sessionType";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
@@ -12,7 +14,11 @@ const SessionPage = () => {
   const [search, setSearch] = useState("");
   const [dateFilter, setDateFilter] = useState("");
 
-  const { data: sessions, isLoading } = useQuery({
+  const {
+    data: sessions,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["sessions"],
     queryFn: getAllSession,
   });
@@ -66,6 +72,7 @@ const SessionPage = () => {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full rounded-xl border border-zinc-200 py-2.5 pl-9 pr-3 text-sm"
+                disabled={isLoading || isError}
               />
             </label>
 
@@ -74,19 +81,25 @@ const SessionPage = () => {
               value={dateFilter}
               onChange={(e) => setDateFilter(e.target.value)}
               className="rounded-xl border border-zinc-200 px-3 py-2.5 text-sm"
+              disabled={isLoading || isError}
             />
 
             <button
               onClick={handleClear}
               className="rounded-lg bg-zinc-900 px-4 py-2.5 text-sm text-white hover:bg-zinc-800"
+              disabled={isLoading || isError}
             >
               Clear
             </button>
           </div>
         </div>
 
-        <p className="mt-4 text-sm text-zinc-500">
-          Showing {filteredSessions?.length} sessions
+        <p className="mt-4 text-sm text-zinc-500 flex gap-3">
+          Showing
+          {isLoading && <Spinner />}
+          {isError && 0}
+          {!isLoading && !isError && filteredSessions?.length}
+          sessions
         </p>
 
         <div className="mt-5">
@@ -99,21 +112,27 @@ const SessionPage = () => {
                 <SessionCardSkeleton />
               </>
             )}
-            {filteredSessions?.length > 0 ? (
-              filteredSessions?.map((item: SessionData) => (
-                <SessionCard key={item._id} {...item} />
-              ))
-            ) : (
-              <p className="col-span-full text-center text-sm text-zinc-500">
-                No sessions found
-              </p>
+            {isError && (
+              <div className="md:col-span-2 xl:col-span-3">
+                <ErrorMessage />
+              </div>
             )}
+
+            {!isLoading &&
+              !isError &&
+              (filteredSessions?.length > 0 ? (
+                filteredSessions.map((item: SessionData) => (
+                  <div>
+                    <SessionCard {...item} key={item._id} />
+                  </div>
+                ))
+              ) : (
+                <p className="col-span-full text-center text-sm text-zinc-500">
+                  No sessions found
+                </p>
+              ))}
           </div>
-
-          {/* Optional skeleton */}
-          {/* <SessionCardSkeleton /> */}
         </div>
-
         <button
           onClick={() => setSessionAddModel(true)}
           className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-zinc-900 text-white"
