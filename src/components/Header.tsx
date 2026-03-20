@@ -22,7 +22,7 @@ const Header = () => {
               to="/"
               className="group inline-flex items-center gap-3 transition-transform duration-300 hover:scale-[1.02]"
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-900 text-sm font-bold text-white shadow-soft">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-sm font-bold text-black shadow-soft">
                 AD
               </div>
               <span className="text-lg font-semibold tracking-tight text-white">
@@ -58,11 +58,7 @@ const Header = () => {
               setMenubarOpen((prev) => !prev);
             }}
           >
-            <img
-              src="/menuIcon.svg"
-              alt="menu"
-              className="h-5 w-5 "
-            />
+            <img src="/menuIcon.svg" alt="menu" className="h-5 w-5 " />
           </button>
         </div>
       </header>
