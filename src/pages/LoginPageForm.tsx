@@ -33,7 +33,7 @@ const LoginPageForm = () => {
       toast.success("Success fully login");
       dispatch(setToken(token));
 
-      navigate("/");
+      navigate("/cases");
     },
     onError: (error) => {
       toast.error(`Something is not right Error : ${error}`);

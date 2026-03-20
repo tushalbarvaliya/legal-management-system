@@ -31,6 +31,7 @@ import StaffPage from "./pages/StaffPage.tsx";
 import InvoicePage from "./pages/InvoicePage.tsx";
 import LawyerPage from "./pages/LawyerPage.tsx";
 import CompanyPage from "./pages/CompanyPage.tsx";
+import ProtectedRouteByRole from "./routes/ProtectedRouteByRole.tsx";
 
 export const queryClient = new QueryClient();
 
@@ -44,47 +45,91 @@ const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <HomePageContent />,
+            element: (
+              <ProtectedRouteByRole allowedRoles={["admin"]}>
+                <HomePageContent />
+              </ProtectedRouteByRole>
+            ),
           },
           {
             path: "profile",
-            element: <ProfilePage />,
+            element: (
+              <ProtectedRouteByRole allowedRoles={["admin", "staff", "lawyer"]}>
+                <ProfilePage />
+              </ProtectedRouteByRole>
+            ),
           },
           {
             path: "company",
-            element: <CompanyPage />,
+            element: (
+              <ProtectedRouteByRole allowedRoles={["admin"]}>
+                <CompanyPage />
+              </ProtectedRouteByRole>
+            ),
           },
           {
             path: "cases",
-            element: <CasesPage />,
+            element: (
+              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
+                <CasesPage />
+              </ProtectedRouteByRole>
+            ),
           },
           {
             path: "session",
-            element: <SessionPage />,
+            element: (
+              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
+                <SessionPage />
+              </ProtectedRouteByRole>
+            ),
           },
           {
             path: "tasks",
-            element: <TaskPage />,
+            element: (
+              <ProtectedRouteByRole allowedRoles={["staff", "lawyer"]}>
+                <TaskPage />
+              </ProtectedRouteByRole>
+            ),
           },
           {
             path: "staff",
-            element: <StaffPage />,
+            element: (
+              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
+                <StaffPage />
+              </ProtectedRouteByRole>
+            ),
           },
           {
             path: "invoice",
-            element: <InvoicePage />,
+            element: (
+              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
+                <InvoicePage />
+              </ProtectedRouteByRole>
+            ),
           },
           {
             path: "docs",
-            element: <DocsPage/>,
+            element: (
+              <ProtectedRouteByRole allowedRoles={["lawyer", "admin"]}>
+                <DocsPage />
+              </ProtectedRouteByRole>
+            ),
           },
           {
             path: "client",
-            element: <ClientPage />,
+            element: (
+              <ProtectedRouteByRole allowedRoles={["lawyer", "client"]}>
+                <ClientPage />
+              </ProtectedRouteByRole>
+            ),
           },
           {
             path: "lawyer",
-            element: <LawyerPage />,
+            element: (
+              <ProtectedRouteByRole allowedRoles={["admin"]}>
+                <LawyerPage />
+              </ProtectedRouteByRole>
+            ),
           },
           {
             path: "privacy-policy",
@@ -96,7 +141,13 @@ const router = createBrowserRouter([
           },
           {
             path: "reset-password",
-            element: <ResetPassword />,
+            element: (
+              <ProtectedRouteByRole
+                allowedRoles={["admin", "lawyer", "staff", "guest", "client"]}
+              >
+                <ResetPassword />
+              </ProtectedRouteByRole>
+            ),
           },
         ],
       },
@@ -138,5 +189,5 @@ createRoot(document.getElementById("root")!).render(
         </QueryClientProvider>
       </PersistGate>
     </Provider>
-  </StrictMode>,
+  </StrictMode>
 );
