@@ -4,9 +4,15 @@ import InvoiceCard from "./InvoiceCard";
 import InvoiceCardSkeleton from "./InvoiceCardSkeleton";
 import { useQuery } from "@tanstack/react-query";
 import { getAllInvoice } from "@/api/invoiceAPI";
+import ErrorMessage from "../ErrorMessage";
+import { Button } from "../ui/button";
 
 const InvoiceList = () => {
-  const { data: invoices, isLoading } = useQuery<Invoice[]>({
+  const {
+    data: invoices,
+    isLoading,
+    isError,
+  } = useQuery<Invoice[]>({
     queryKey: ["invoices"],
     queryFn: getAllInvoice,
   });
@@ -73,6 +79,7 @@ const InvoiceList = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-60 max-w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm focus:border-zinc-400 outline-none"
+              disabled={isLoading || isError}
             />
           </div>
 
@@ -81,6 +88,7 @@ const InvoiceList = () => {
             value={status}
             onChange={(e) => setStatus(e.target.value)}
             className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm focus:border-zinc-400 outline-none"
+            disabled={isLoading || isError}
           >
             <option value="">All Statuses</option>
             <option value="Paid">Paid</option>
@@ -93,6 +101,7 @@ const InvoiceList = () => {
             value={client}
             onChange={(e) => setClient(e.target.value)}
             className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm focus:border-zinc-400 outline-none"
+            disabled={isLoading || isError}
           >
             <option value="">All Clients</option>
             {clientOptions.map((c) => (
@@ -106,33 +115,36 @@ const InvoiceList = () => {
             value={date}
             onChange={(e) => setDate(e.target.value)}
             className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm focus:border-zinc-400 outline-none"
+            disabled={isLoading || isError}
           />
-          <button
-            onClick={clearFilters}
-            className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-100 transition"
-          >
+          <Button onClick={clearFilters} disabled={isLoading || isError}>
             Clear
-          </button>
+          </Button>
         </div>
       </div>
 
       {/* List */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {isLoading &&
-          Array.from({ length: 4 }).map((_, i) => (
+          Array.from({ length: 6 }).map((_, i) => (
             <InvoiceCardSkeleton key={i} />
           ))}
-
-        {!isLoading &&
-          filteredInvoices.map((item) => (
-            <InvoiceCard key={item._id} {...item} />
-          ))}
-
-        {!isLoading && filteredInvoices.length === 0 && (
-          <p className="col-span-full text-center text-zinc-500">
-            No invoices found
-          </p>
+        {isError && (
+          <div className="col-span-full text-center text-zinc-500">
+            <ErrorMessage />
+          </div>
         )}
+        {!isError &&
+          !isLoading &&
+          (filteredInvoices.length > 0 ? (
+            filteredInvoices.map((item) => (
+              <InvoiceCard {...item} key={item._id} />
+            ))
+          ) : (
+            <p className="col-span-full text-center text-zinc-500">
+              No invoices found
+            </p>
+          ))}
       </div>
     </div>
   );
