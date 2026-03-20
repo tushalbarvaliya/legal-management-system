@@ -12,8 +12,6 @@ import { persistor, store } from "./store/store.tsx";
 import SignUpPage from "./pages/SignUpPage.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 import HomePage from "./pages/HomeLayout.tsx";
-import ProtectedRoute from "./routes/ProtectedRoute.tsx";
-import PublicRoute from "./routes/PublicRoute.tsx";
 import { removeToken } from "./store/slices/authSlice.ts";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage.tsx";
 import TermsAndConditions from "./pages/TermsAndConditions.tsx";
@@ -37,139 +35,130 @@ export const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
-    element: <ProtectedRoute />,
+    path: "/",
+    element: <HomePage />,
     children: [
       {
-        path: "/",
-        element: <HomePage />,
-        children: [
-          {
-            path: "",
-            element: (
-              <ProtectedRouteByRole allowedRoles={["admin"]}>
-                <HomePageContent />
-              </ProtectedRouteByRole>
-            ),
-          },
-          {
-            path: "profile",
-            element: (
-              <ProtectedRouteByRole allowedRoles={["admin", "staff", "lawyer"]}>
-                <ProfilePage />
-              </ProtectedRouteByRole>
-            ),
-          },
-          {
-            path: "company",
-            element: (
-              <ProtectedRouteByRole allowedRoles={["admin"]}>
-                <CompanyPage />
-              </ProtectedRouteByRole>
-            ),
-          },
-          {
-            path: "cases",
-            element: (
-              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
-                <CasesPage />
-              </ProtectedRouteByRole>
-            ),
-          },
-          {
-            path: "session",
-            element: (
-              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
-                <SessionPage />
-              </ProtectedRouteByRole>
-            ),
-          },
-          {
-            path: "tasks",
-            element: (
-              <ProtectedRouteByRole allowedRoles={["staff", "lawyer"]}>
-                <TaskPage />
-              </ProtectedRouteByRole>
-            ),
-          },
-          {
-            path: "staff",
-            element: (
-              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
-                <StaffPage />
-              </ProtectedRouteByRole>
-            ),
-          },
-          {
-            path: "invoice",
-            element: (
-              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
-                <InvoicePage />
-              </ProtectedRouteByRole>
-            ),
-          },
-          {
-            path: "docs",
-            element: (
-              <ProtectedRouteByRole allowedRoles={["lawyer", "admin"]}>
-                <DocsPage />
-              </ProtectedRouteByRole>
-            ),
-          },
-          {
-            path: "client",
-            element: (
-              <ProtectedRouteByRole allowedRoles={["lawyer", "client"]}>
-                <ClientPage />
-              </ProtectedRouteByRole>
-            ),
-          },
-          {
-            path: "lawyer",
-            element: (
-              <ProtectedRouteByRole allowedRoles={["admin"]}>
-                <LawyerPage />
-              </ProtectedRouteByRole>
-            ),
-          },
-          {
-            path: "privacy-policy",
-            element: <PrivacyPolicyPage />,
-          },
-          {
-            path: "terms-and-conditions",
-            element: <TermsAndConditions />,
-          },
-          {
-            path: "reset-password",
-            element: (
-              <ProtectedRouteByRole
-                allowedRoles={["admin", "lawyer", "staff", "guest", "client"]}
-              >
-                <ResetPassword />
-              </ProtectedRouteByRole>
-            ),
-          },
-        ],
+        path: "",
+        element: (
+          <ProtectedRouteByRole allowedRoles={["admin"]}>
+            <HomePageContent />
+          </ProtectedRouteByRole>
+        ),
+      },
+      {
+        path: "profile",
+        element: (
+          <ProtectedRouteByRole allowedRoles={["admin", "staff", "lawyer"]}>
+            <ProfilePage />
+          </ProtectedRouteByRole>
+        ),
+      },
+      {
+        path: "company",
+        element: (
+          <ProtectedRouteByRole allowedRoles={["admin"]}>
+            <CompanyPage />
+          </ProtectedRouteByRole>
+        ),
+      },
+      {
+        path: "cases",
+        element: (
+          <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
+            <CasesPage />
+          </ProtectedRouteByRole>
+        ),
+      },
+      {
+        path: "session",
+        element: (
+          <ProtectedRouteByRole allowedRoles={["lawyer"]}>
+            <SessionPage />
+          </ProtectedRouteByRole>
+        ),
+      },
+      {
+        path: "tasks",
+        element: (
+          <ProtectedRouteByRole allowedRoles={["staff", "lawyer"]}>
+            <TaskPage />
+          </ProtectedRouteByRole>
+        ),
+      },
+      {
+        path: "staff",
+        element: (
+          <ProtectedRouteByRole allowedRoles={["lawyer"]}>
+            <StaffPage />
+          </ProtectedRouteByRole>
+        ),
+      },
+      {
+        path: "invoice",
+        element: (
+          <ProtectedRouteByRole allowedRoles={["lawyer"]}>
+            <InvoicePage />
+          </ProtectedRouteByRole>
+        ),
+      },
+      {
+        path: "docs",
+        element: (
+          <ProtectedRouteByRole allowedRoles={["lawyer", "admin"]}>
+            <DocsPage />
+          </ProtectedRouteByRole>
+        ),
+      },
+      {
+        path: "client",
+        element: (
+          <ProtectedRouteByRole allowedRoles={["lawyer", "client"]}>
+            <ClientPage />
+          </ProtectedRouteByRole>
+        ),
+      },
+      {
+        path: "lawyer",
+        element: (
+          <ProtectedRouteByRole allowedRoles={["admin"]}>
+            <LawyerPage />
+          </ProtectedRouteByRole>
+        ),
+      },
+      {
+        path: "privacy-policy",
+        element: <PrivacyPolicyPage />,
+      },
+      {
+        path: "terms-and-conditions",
+        element: <TermsAndConditions />,
+      },
+      {
+        path: "reset-password",
+        element: (
+          <ProtectedRouteByRole
+            allowedRoles={["admin", "lawyer", "staff", "guest", "client"]}
+          >
+            <ResetPassword />
+          </ProtectedRouteByRole>
+        ),
       },
     ],
   },
   {
-    element: <PublicRoute />,
-    children: [
-      {
-        path: "/login",
-        element: <LoginPageForm />,
-      },
-      {
-        path: "/signUp",
-        element: <SignUpPage />,
-      },
-      {
-        path: "/forgot-password",
-        element: <ForgotPassword />,
-      },
-    ],
+    path: "/login",
+    element: <LoginPageForm />,
   },
+  {
+    path: "/signUp",
+    element: <SignUpPage />,
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPassword />,
+  },
+
   {
     path: "/logout",
     loader: () => {
@@ -189,5 +178,5 @@ createRoot(document.getElementById("root")!).render(
         </QueryClientProvider>
       </PersistGate>
     </Provider>
-  </StrictMode>
+  </StrictMode>,
 );
