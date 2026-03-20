@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAddCase } from "@/api/caseAPI";
 import type { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
+import ErrorMessage from "@/components/ErrorMessage";
 
 const CasesPage = () => {
   const role = useSelector((state: RootState) => state.auth.role);
@@ -14,7 +15,11 @@ const CasesPage = () => {
   const [search, setSearch] = useState("");
   const [priority, setPriority] = useState("all");
 
-  const { data: cases, isLoading } = useQuery({
+  const {
+    data: cases,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["cases"],
     queryFn: getAddCase,
   });
@@ -74,6 +79,7 @@ const CasesPage = () => {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full rounded-xl border border-zinc-200 py-2.5 pl-9 pr-3 text-sm outline-none focus:border-zinc-400"
+                disabled={isLoading || isError}
               />
             </label>
 
@@ -82,6 +88,7 @@ const CasesPage = () => {
               value={priority}
               onChange={(e) => setPriority(e.target.value)}
               className="rounded-xl border border-zinc-200 px-3 py-2.5 text-sm"
+              disabled={isLoading || isError}
             >
               <option value="all">All Priorities</option>
               <option value="low">Low</option>
@@ -100,18 +107,21 @@ const CasesPage = () => {
               <CasesCardSkeleton />
             </>
           )}
-          {filteredCases?.length > 0 ? (
-            filteredCases.map((item: CaseData) => (
-              <>
-                <CasesCard {...item} key={item._id} />
-                {/* <CasesCardSkeleton /> */}
-              </>
-            ))
-          ) : (
-            <p className="text-center text-sm text-zinc-500 py-6">
-              No cases found
-            </p>
-          )}
+          {isError && <ErrorMessage />}
+          {!isLoading &&
+            !isError &&
+            (filteredCases?.length > 0 ? (
+              filteredCases.map((item: CaseData) => (
+                <div>
+                  <CasesCard {...item} key={item._id} />
+                  {/* <CasesCardSkeleton /> */}
+                </div>
+              ))
+            ) : (
+              <p className="text-center text-sm text-zinc-500 py-6">
+                No cases found
+              </p>
+            ))}
         </div>
       </section>
     </>
