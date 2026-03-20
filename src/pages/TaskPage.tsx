@@ -117,9 +117,9 @@ const TaskPage = () => {
       {/* ➕ Add Button */}
       <button
         onClick={() => setTaskAddModel(true)}
-        className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-zinc-900 text-white"
+        className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-zinc-900 text-white flex justify-center items-center"
       >
-        +
+        <img src="/plus.svg" alt="+" className="h-6 w-6"/>
       </button>
 
       {taskAddModel && <AddTaskModel closeModal={setTaskAddModel} />}
