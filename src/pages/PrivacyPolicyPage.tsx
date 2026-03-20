@@ -1,4 +1,7 @@
-import { privacyPolicyPage } from "@/utils/constant";
+import {
+  privacyPolicyPage,
+  type privacyPolicyPageData,
+} from "@/utils/privacyConstant";
 import { Link } from "react-router";
 
 const PrivacyPolicyPage = () => {
@@ -14,7 +17,7 @@ const PrivacyPolicyPage = () => {
       </section>
 
       <section className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-soft flex flex-col gap-4 sm:p-6 m-4">
-        {privacyPolicyPage.map((item) => (
+        {privacyPolicyPage.map((item: privacyPolicyPageData) => (
           <div>
             <h2 className="text-lg font-semibold text-zinc-900">
               {item.title}
