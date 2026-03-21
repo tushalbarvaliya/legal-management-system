@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { Routes, Route, useLocation } from "react-router-dom"
 
 import ProtectedRouteByRole from "./routes/ProtectedRouteByRole"
 import CasesPage from "./pages/CasesPage"
@@ -15,11 +15,14 @@ import TermsAndConditionsPage from "./pages/TermsAndConditionsPage"
 import LoginPage from "./pages/LoginPage"
 import SignUpPage from "./pages/SignUpPage"
 import ForgotPasswordPage from "./pages/ForgotPasswordPage"
+import { AnimatePresence } from "framer-motion"
+import LogoutPage from "./pages/LogoutPage"
 
 const App = () => {
+  const location = useLocation()
   return (
-    <BrowserRouter>
-      <Routes>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
         <Route
           path="/"
           element={
@@ -32,17 +35,17 @@ const App = () => {
         />
 
         <Route
-          path="/case"
+          path="/cases"
           element={
             <>
               <CasesPage />
             </>
           }
         />
-        <Route path="/case/:id" element={<></>} />
-        <Route path="/case/add" element={<></>} />
-        <Route path="/case/edit/:id" element={<></>} />
-        <Route path="/case/delete/:id" element={<></>} />
+        <Route path="/cases/:id" element={<></>} />
+        <Route path="/cases/add" element={<></>} />
+        <Route path="/cases/edit/:id" element={<></>} />
+        <Route path="/cases/delete/:id" element={<></>} />
 
         <Route
           path="/docs"
@@ -155,15 +158,8 @@ const App = () => {
             </>
           }
         />
+        <Route path="/login" element={<LoginPage />} />
 
-        <Route
-          path="/login"
-          element={
-            <>
-              <LoginPage />
-            </>
-          }
-        />
         <Route
           path="/signup"
           element={
@@ -181,6 +177,7 @@ const App = () => {
           }
         />
 
+        <Route path="/logout" element={<LogoutPage />} />
         <Route
           path="*"
           element={
@@ -190,7 +187,7 @@ const App = () => {
           }
         />
       </Routes>
-    </BrowserRouter>
+    </AnimatePresence>
   )
 }
 
