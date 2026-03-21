@@ -5,7 +5,7 @@ import { termsAndConditionsList, type termsAndConditionsListType } from "@/utils
 
 const TermsAndConditionsPage = () => {
   return (
-    <motion.div className="space-y-2" initial={{y:20,opacity:0}} animate={{y:0,opacity:1}}>
+    <motion.div className="space-y-2" initial={{y:20,opacity:0}} animate={{y:0,opacity:1}} exit={{opacity:0,y:-20}}>
       <section className="shadow-soft  rounded-2xl border border-zinc-200 bg-white p-5 sm:p-6">
         <h1 className="text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl">
           Terms and Conditions
