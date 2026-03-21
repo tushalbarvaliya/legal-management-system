@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { Link } from "react-router"
 import { toast } from "sonner"
+import { motion } from "framer-motion"
 
 import ErrorMessage from "@/components/ErrorMessage"
 import ProfileSkeleton from "@/components/profile/ProfileSkeleton"
@@ -74,7 +75,7 @@ const ProfilePage = () => {
   }
 
   return (
-    <>
+    <motion.div initial={{y:10,opacity:0}} animate={{y:0,opacity:1}} exit={{y:-10,opacity:0}}>
       {isError && <ErrorMessage message={error.message}></ErrorMessage>}
       {isLoading && <ProfileSkeleton />}
       {!isLoading && !isError && (
@@ -348,7 +349,7 @@ const ProfilePage = () => {
           </section>
         </main>
       )}
-    </>
+    </motion.div>
   )
 }
 
