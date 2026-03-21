@@ -24,7 +24,7 @@ const Sidebar = () => {
         <motion.div layout key={item.to}>
           <Link
             to={item.to}
-            className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100 hover:text-zinc-900 ${
+            className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-200 hover:text-zinc-900  ${
               item.to === pathname ? "bg-zinc-200" : ""
             }`}
           >
