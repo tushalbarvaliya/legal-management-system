@@ -139,14 +139,13 @@ const ForgotPasswordPage = () => {
                   })}
                 />
 
-                <Button
-                  variant={"outline"}
+                <button
                   type="button"
-                  className="absolute inset-y-0 right-0 scale-175 place-items-center text-zinc-500 hover:text-zinc-700"
+                  className="absolute inset-y-0 right-0 border-0 hover:bg-transparent mx-2 place-items-center text-zinc-500 hover:text-zinc-700"
                   onClick={() => setPasswordShow((prev) => !prev)}
                 >
                   {passwordShow ? <EyeOff /> : <Eye />}
-                </Button>
+                </button>
               </div>
 
               <p className="min-h-5 text-xs text-red-600">
@@ -183,14 +182,13 @@ const ForgotPasswordPage = () => {
                   })}
                 />
 
-                <Button
-                  variant={"outline"}
+                <button
                   type="button"
-                  className="absolute inset-y-0 right-0 scale-175 place-items-center text-zinc-500 hover:text-zinc-700"
+                  className="absolute inset-y-0 right-0 mx-2 place-items-center text-zinc-500 hover:text-zinc-700"
                   onClick={() => setConfirmPasswordShow((prev) => !prev)}
                 >
                   {confirmPasswordShow ? <EyeOff /> : <Eye />}
-                </Button>
+                </button>
               </div>
 
               {errors.confirmPassword && (
