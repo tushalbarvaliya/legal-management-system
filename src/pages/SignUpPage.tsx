@@ -463,7 +463,6 @@ const SignUpPage = () => {
             {/* Submit Button */}
             <Button
               type="submit"
-              // className="inline-flex w-full items-center justify-center rounded-md bg-zinc-900 px-4 py-2.5 text-sm font-medium text-zinc-50 transition duration-200 hover:scale-[1.01] hover:bg-zinc-800 focus-visible:ring-2 focus-visible:ring-zinc-300 focus-visible:outline-none"
               className="mt-4 w-full bg-black p-6 text-white"
               disabled={isPending}
             >
