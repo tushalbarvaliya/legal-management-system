@@ -1,9 +1,19 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
+import ProtectedRouteByRole from "./routes/ProtectedRouteByRole"
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<></>} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRouteByRole
+              allowedRoles={["admin", "lawyer", "staff", "guest"]}
+            >
+              <></>
+            </ProtectedRouteByRole>
+          }
+        />
 
         <Route path="/case" element={<></>} />
         <Route path="/case/:id" element={<></>} />
@@ -50,16 +60,22 @@ const App = () => {
         <Route path="/profile" element={<></>} />
         <Route path="/reset-password" element={<></>} />
 
-
         <Route path="/privacy-policy" element={<></>} />
         <Route path="/terms-and-conditions" element={<></>} />
 
-        <Route path="/login" element={<></>} />
+        <Route path="/login" element={<>login</>} />
         <Route path="/signup" element={<></>} />
         <Route path="/forgot-password" element={<></>} />
-        
-        <Route path="*" element={<> <h1>404</h1> </>} />
 
+        <Route
+          path="*"
+          element={
+            <>
+              {" "}
+              <h1>404</h1>{" "}
+            </>
+          }
+        />
       </Routes>
     </BrowserRouter>
   )
