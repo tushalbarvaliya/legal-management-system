@@ -130,7 +130,10 @@ const ProfilePage = () => {
                         message:
                           "Only letters are allowed. No numbers, spaces, or special characters.",
                       },
-                      required: true,
+                      required: {
+                        value:true,
+                        message:"Please Enter a Value"
+                      },
                     })}
                   />
                   <p className="min-h-5 text-xs text-red-600">
@@ -162,7 +165,10 @@ const ProfilePage = () => {
                         message:
                           "Only letters are allowed. No numbers, spaces, or special characters.",
                       },
-                      required: true,
+                      required: {
+                        value:true,
+                        message:"Please Enter a Value"
+                      },
                     })}
                   />
                   <p className="min-h-5 text-xs text-red-600">
@@ -199,7 +205,10 @@ const ProfilePage = () => {
                         message:
                           "Only letters, numbers, and spaces are allowed.",
                       },
-                      required: true,
+                      required: {
+                        value:true,
+                        message:"Please Enter a Value"
+                      },
                     })}
                   />
                   <p className="min-h-5 text-xs text-red-600">
@@ -226,7 +235,10 @@ const ProfilePage = () => {
                         value: phoneNumberRegex,
                         message: "Phone number must contain exactly 10 digits.",
                       },
-                      required: true,
+                      required: {
+                        value:true,
+                        message:"Please Enter a Value"
+                      },
                     })}
                   />
                   <p className="min-h-5 text-xs text-red-600">
