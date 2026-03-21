@@ -7,6 +7,12 @@ import { useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 
+type ResetFormData = {
+  oldPassword: string
+  confirmNewPassword: string
+  newPassword: string
+}
+
 const ResetPasswordPage = () => {
   const [oldPasswordShow, setOldPasswordShow] = useState(false)
   const [newPasswordShow, setNewPasswordShow] = useState(false)
@@ -17,12 +23,15 @@ const ResetPasswordPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<ResetFormData>({
     mode: "onChange",
     delayError: 500,
   })
 
-  const { mutate, isPending } = useMutation({
+  const { mutate, isPending } = useMutation<{
+    password: string
+    new_password: string
+  }>({
     mutationFn: putResetPassword,
     onSuccess: () => {
       toast.success("Password Change Successful")
@@ -33,13 +42,17 @@ const ResetPasswordPage = () => {
     },
   })
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: ResetFormData) => {
     if (data.newPassword != data.confirmNewPassword) {
       toast.error("New Password and Confirm Password Should be Same.")
     } else if (data.oldPassword == data.newPassword) {
       toast.error("old Password and new Password Should not be Same.")
     } else {
-      mutate(data)
+      const reqData = {
+        password: data.oldPassword,
+        new_password: data.newPassword,
+      }
+      mutate(reqData)
     }
   }
   return (
@@ -69,8 +82,8 @@ const ResetPasswordPage = () => {
                   className="block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 pr-10 text-sm text-zinc-900 transition outline-none placeholder:text-zinc-400 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
                   {...register("oldPassword", {
                     required: {
-                      value:true,
-                      message:"Please enter a value"
+                      value: true,
+                      message: "Please enter a value",
                     },
                     pattern: {
                       value: passwordRegex,
@@ -109,7 +122,10 @@ const ResetPasswordPage = () => {
                   placeholder="Enter your password"
                   className="block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 pr-10 text-sm text-zinc-900 transition outline-none placeholder:text-zinc-400 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
                   {...register("newPassword", {
-                    required: true,
+                    required: {
+                      value: true,
+                      message: "Please enter a value",
+                    },
                     pattern: {
                       value: passwordRegex,
                       message:
@@ -147,7 +163,10 @@ const ResetPasswordPage = () => {
                   placeholder="Enter your password"
                   className="block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 pr-10 text-sm text-zinc-900 transition outline-none placeholder:text-zinc-400 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
                   {...register("confirmNewPassword", {
-                    required: true,
+                    required: {
+                      value: true,
+                      message: "Please enter a value",
+                    },
                     pattern: {
                       value: passwordRegex,
                       message:

@@ -11,7 +11,7 @@ export const getProfile = async () => {
   }
 }
 
-export const patchProfileUpdate = async (data:ProfileFormData) => {
+export const patchProfileUpdate = async (data: ProfileFormData) => {
   try {
     const response = await axiosInstance.patch("/users/updateProfile", data)
     return response.data
@@ -20,7 +20,12 @@ export const patchProfileUpdate = async (data:ProfileFormData) => {
   }
 }
 
-export const putResetPassword = async (data) => {
+type putReqDataType = {
+  password: string
+  new_password: string
+}
+
+export const putResetPassword = async (data: putReqDataType) => {
   try {
     const response = await axiosInstance.put("/users/change_password", data)
     return response.data
