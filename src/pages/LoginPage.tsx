@@ -141,7 +141,7 @@ const LoginPage = () => {
 
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-0 grid w-10 place-items-center text-zinc-500 hover:text-zinc-700"
+                  className="absolute inset-y-0 right-0 mx-2 place-items-center text-zinc-500 hover:text-zinc-700"
                   onClick={() => setPasswordShow((prev) => !prev)}
                 >
                   {passwordShow ? <EyeOff /> : <Eye />}
@@ -167,7 +167,7 @@ const LoginPage = () => {
             {/* Submit button */}
             <Button
               type="submit"
-              className="text-md w-full p-6"
+              className="text-md w-full bg-black p-6 text-white"
               disabled={isPending}
             >
               {isPending ? "Logging.." : "Login"}

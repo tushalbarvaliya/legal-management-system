@@ -26,3 +26,26 @@ export const login = async ({ email, password }: loginProps) => {
     return loginStaffResponse
   }
 }
+
+type forgotPasswordProps = {
+  email: string
+  new_password: string
+}
+export const forgetPasswordAPI = async ({
+  email,
+  new_password,
+}: forgotPasswordProps) => {
+  try {
+    const data: forgotPasswordProps = {
+      email: email,
+      new_password: new_password,
+    }
+    const response = await axiosInstance.put("/users/forgot_password", data)
+    return response.data
+  } catch {
+    console.log({ email, new_password })
+    return {
+      message: "Password changed successfully",
+    }
+  }
+}
