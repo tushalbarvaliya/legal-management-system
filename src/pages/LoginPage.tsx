@@ -1,15 +1,18 @@
 import { motion } from "framer-motion"
 import { Link, useNavigate } from "react-router-dom"
-import { Toaster } from "@/components/ui/sonner"
 import { useForm } from "react-hook-form"
-import { toast } from "sonner"
 import { useMutation } from "@tanstack/react-query"
+import { toast } from "sonner"
+import { useState } from "react"
+import { Eye, EyeOff } from "lucide-react"
+
+
+import { Toaster } from "@/components/ui/sonner"
 import { login } from "@/api/authAPI"
 import { useAppDispatch } from "@/hooks/hooks"
 import { setAuth } from "@/store/slice/authSlice"
 import { emailRegex, passwordRegex } from "@/utils/regex"
-import { useState } from "react"
-import { Eye, EyeOff } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 type loginFromTye = {
   email: string
@@ -33,18 +36,18 @@ const LoginPage = () => {
     mutationFn: login,
     onSuccess: (data) => {
       const token = { token: data.access_token }
-      toast.success("Success fully login")
+      toast.success("Success fully login", { duration: 1000 })
       dispatch(setAuth(token))
       setTimeout(() => {
-        navigate("/cases")
-      }, 2000)
+        navigate("/")
+      }, 1500)
     },
     onError: (error) => {
       toast.error(`Something is not right Error : ${error}`)
     },
   })
   const onSubmit = (data: loginFromTye) => {
-    console.log(data)
+    // console.log(data)
     mutate(data)
   }
   return (
@@ -157,13 +160,13 @@ const LoginPage = () => {
             </div>
 
             {/* Submit button */}
-            <button
+            <Button
               type="submit"
-              className="inline-flex w-full items-center justify-center rounded-md bg-zinc-900 px-4 py-2.5 text-sm font-medium text-zinc-50 hover:bg-zinc-800 focus-visible:ring-2 focus-visible:ring-zinc-300 focus-visible:outline-none"
+              className="w-full p-6 text-md"
               disabled={isPending}
             >
               {isPending ? "Logging.." : "Login"}
-            </button>
+            </Button>
 
             {/* Sign up link */}
             <p className="text-center text-sm text-black">
