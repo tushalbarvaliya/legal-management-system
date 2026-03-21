@@ -49,3 +49,40 @@ export const forgetPasswordAPI = async ({
     }
   }
 }
+
+type SignupProps = {
+  name: string
+  first_name: string
+  last_name: string
+  email: string
+  phoneNumber: string
+  password: string
+  role: string
+  gender: string
+  address: string
+  companyId: number
+}
+export type SignUpFormdata = {
+  name: string
+  first_name: string
+  last_name: string
+  email: string
+  phoneNumber: string
+  password: string
+  role: string
+  gender: string
+  address: string
+  companyId: number
+}
+
+export const signUp = async (signUpData: SignUpFormdata) => {
+  const data: SignupProps = signUpData
+  data.companyId = 1
+  try {
+    const response = await axiosInstance.post("/auth/register", data)
+    return response.data
+  } catch {
+    console.log(data)
+    return null
+  }
+}
