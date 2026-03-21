@@ -1,8 +1,10 @@
 import { useState } from "react"
 import { Link, useLocation } from "react-router"
+import { motion } from "framer-motion"
 
 import { menuList, navItems } from "@/utils/navigationList"
 import { useAppSelector } from "@/hooks/hooks"
+import { TextAlignJustify, X } from "lucide-react"
 
 const Header = () => {
   const [menubarOpen, setMenubarOpen] = useState(false)
@@ -15,7 +17,13 @@ const Header = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-30 border-b border-zinc-200 bg-black text-white shadow-[0_3px_10px_rgb(0,0,0,0.2)] backdrop-blur">
+      <motion.header
+        className="sticky top-0 z-30 border-b border-zinc-200 bg-black text-white shadow-[0_3px_10px_rgb(0,0,0,0.2)] backdrop-blur"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 20 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="mx-auto flex items-center justify-between px-3 py-3 sm:px-4 lg:px-5">
           <div className="flex items-center gap-2">
             <Link
@@ -58,10 +66,10 @@ const Header = () => {
               setMenubarOpen((prev) => !prev)
             }}
           >
-            <img src="/menuIcon.svg" alt="menu" className="h-5 w-5" />
+            <TextAlignJustify className="text-black"/>
           </button>
         </div>
-      </header>
+      </motion.header>
       <div
         id="drawerOverlay"
         className={`fixed inset-0 z-40 bg-black/30 ${menubarOpen ? "" : "pointer-events-none opacity-0"} h-screen w-screen shadow-[inset_0_0_80px_rgba(0,0,0,0.25)] transition-opacity duration-300 lg:hidden`}
@@ -81,7 +89,7 @@ const Header = () => {
               setMenubarOpen((prev) => !prev)
             }}
           >
-            <img src="/x.svg" alt="x logo" className="h-5 w-5" />
+            <X />
           </button>
         </div>
 
@@ -92,7 +100,7 @@ const Header = () => {
               key={item.to}
               className={`flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100 hover:text-zinc-900 ${item.to === pathname ? "bg-zinc-200" : ""}`}
             >
-              <img src={item.src} alt={item.alt} className="h-5 w-5" />
+              {item.icons && <item.icons />}
               <span>{item.title}</span>
             </Link>
           ))}

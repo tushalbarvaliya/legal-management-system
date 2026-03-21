@@ -28,7 +28,7 @@ const Sidebar = () => {
               item.to === pathname ? "bg-zinc-200" : ""
             }`}
           >
-            <img src={item.src} alt={item.alt} className="max-h-5 max-w-5" />
+            {item.icons && <item.icons />}
 
             <AnimatePresence>
               {isHover && (
