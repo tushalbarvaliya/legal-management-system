@@ -7,6 +7,7 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom"
 import { toast, Toaster } from "sonner"
+import { motion } from "framer-motion"
 
 type ForgotPasswordFormData = {
   email: string
@@ -32,7 +33,7 @@ const ForgotPasswordPage = () => {
   const { mutate, isPending } = useMutation({
     mutationFn: forgetPasswordAPI,
     onSuccess: async () => {
-      toast.success("Password Change Successful")
+      toast.success("Password Change Successful", { duration: 1500 })
       setTimeout(() => {
         navigate("/")
       }, 2000)
@@ -51,11 +52,15 @@ const ForgotPasswordPage = () => {
     }
   }
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.5 }}
+    >
       <Toaster position="bottom-right" richColors />
-
       <main className="flex h-fit justify-center p-4 sm:p-6">
-        <section className="w-full max-w-md rounded-xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
+        <section className="w-full max-w-md rounded-xl border border-black bg-white p-6 shadow-sm sm:p-8">
           {/* Header */}
           <header className="mb-4 flex flex-col gap-3 text-center">
             <div className="mx-auto grid h-12 w-12 items-center rounded-xl border border-zinc-300 bg-zinc-900 text-lg font-semibold text-zinc-100">
@@ -134,13 +139,14 @@ const ForgotPasswordPage = () => {
                   })}
                 />
 
-                <button
+                <Button
+                  variant={"outline"}
                   type="button"
-                  className="absolute inset-y-0 right-0 grid w-10 place-items-center text-zinc-500 hover:text-zinc-700"
+                  className="absolute inset-y-0 right-0 scale-175 place-items-center text-zinc-500 hover:text-zinc-700"
                   onClick={() => setPasswordShow((prev) => !prev)}
                 >
                   {passwordShow ? <EyeOff /> : <Eye />}
-                </button>
+                </Button>
               </div>
 
               <p className="min-h-5 text-xs text-red-600">
@@ -177,13 +183,14 @@ const ForgotPasswordPage = () => {
                   })}
                 />
 
-                <button
+                <Button
+                  variant={"outline"}
                   type="button"
-                  className="absolute inset-y-0 right-0 grid w-10 place-items-center text-zinc-500 hover:text-zinc-700"
+                  className="absolute inset-y-0 right-0 scale-175 place-items-center text-zinc-500 hover:text-zinc-700"
                   onClick={() => setConfirmPasswordShow((prev) => !prev)}
                 >
                   {confirmPasswordShow ? <EyeOff /> : <Eye />}
-                </button>
+                </Button>
               </div>
 
               {errors.confirmPassword && (
@@ -194,7 +201,7 @@ const ForgotPasswordPage = () => {
             </div>
 
             {/* back to login button */}
-            <div className="flex justify-end">
+            <div className="my-4 flex justify-end">
               <Link
                 to="/login"
                 className="text-xs font-medium text-black hover:text-zinc-500 hover:underline"
@@ -214,7 +221,7 @@ const ForgotPasswordPage = () => {
           </form>
         </section>
       </main>
-    </>
+    </motion.div>
   )
 }
 
