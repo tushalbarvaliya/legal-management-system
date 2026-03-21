@@ -1,4 +1,13 @@
+import { motion } from "framer-motion"
+import { useMutation } from "@tanstack/react-query"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { Link, useNavigate } from "react-router-dom"
+import { toast, Toaster } from "sonner"
+import { Eye, EyeOff } from "lucide-react"
+
 import { signUp, type SignUpFormdata } from "@/api/authAPI"
+import { Button } from "@/components/ui/button"
 import {
   addressRegex,
   emailRegex,
@@ -7,11 +16,6 @@ import {
   phoneNumberRegex,
   userNameRegex,
 } from "@/utils/regex"
-import { useMutation } from "@tanstack/react-query"
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { Link, useNavigate } from "react-router-dom"
-import { toast, Toaster } from "sonner"
 
 type formDataType = {
   confirmPassword: string
@@ -53,10 +57,15 @@ const SignUpPage = () => {
     }
   }
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.5 }}
+    >
       <main className="flex min-h-screen items-center justify-center p-4 sm:p-6">
         <Toaster richColors />
-        <section className="w-full max-w-4xl rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">
+        <section className="w-full max-w-4xl rounded-2xl border border-black bg-white p-6 shadow-sm sm:p-8">
           {/* Header */}
           <header className="mb-6 space-y-3 text-center">
             <div className="mx-auto inline-flex">
@@ -259,11 +268,7 @@ const SignUpPage = () => {
                     className="absolute inset-y-0 right-0 grid w-10 place-items-center text-zinc-500 hover:text-zinc-700"
                     onClick={() => setPasswordShow((prev) => !prev)}
                   >
-                    <img
-                      src={passwordShow ? "/closeEye.svg" : "/openEye.svg"}
-                      alt="button"
-                      className="scale-70 opacity-50"
-                    />
+                    {passwordShow ? <EyeOff /> : <Eye />}
                   </button>
                 </div>
 
@@ -309,13 +314,7 @@ const SignUpPage = () => {
                     className="absolute inset-y-0 right-0 grid w-10 place-items-center text-zinc-500 hover:text-zinc-700"
                     onClick={() => setConfirmPasswordShow((prev) => !prev)}
                   >
-                    <img
-                      src={
-                        confirmPasswordShow ? "/closeEye.svg" : "/openEye.svg"
-                      }
-                      alt="button"
-                      className="scale-70 opacity-50"
-                    />
+                    {confirmPasswordShow ? <EyeOff /> : <Eye />}
                   </button>
                 </div>
 
@@ -368,7 +367,7 @@ const SignUpPage = () => {
               </div>
 
               {/* Phone Number Input */}
-              <div>
+              <div className="sm:col-span-2">
                 <label
                   htmlFor="phoneNumber"
                   className="text-sm font-medium text-zinc-800"
@@ -462,13 +461,14 @@ const SignUpPage = () => {
             </div>
 
             {/* Submit Button */}
-            <button
+            <Button
               type="submit"
-              className="inline-flex w-full items-center justify-center rounded-md bg-zinc-900 px-4 py-2.5 text-sm font-medium text-zinc-50 transition duration-200 hover:scale-[1.01] hover:bg-zinc-800 focus-visible:ring-2 focus-visible:ring-zinc-300 focus-visible:outline-none"
+              // className="inline-flex w-full items-center justify-center rounded-md bg-zinc-900 px-4 py-2.5 text-sm font-medium text-zinc-50 transition duration-200 hover:scale-[1.01] hover:bg-zinc-800 focus-visible:ring-2 focus-visible:ring-zinc-300 focus-visible:outline-none"
+              className="mt-4 w-full bg-black p-6 text-white"
               disabled={isPending}
             >
               {isPending ? "Creating Your Account..." : "Create Account"}
-            </button>
+            </Button>
 
             {/* Login Link */}
             <p className="mt-4 text-center text-sm text-zinc-600">
@@ -483,7 +483,7 @@ const SignUpPage = () => {
           </form>
         </section>
       </main>
-    </>
+    </motion.div>
   )
 }
 
