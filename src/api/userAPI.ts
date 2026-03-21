@@ -20,7 +20,7 @@ export const patchProfileUpdate = async (data: ProfileFormData) => {
   }
 }
 
-type putReqDataType = {
+export type putReqDataType = {
   password: string
   new_password: string
 }
