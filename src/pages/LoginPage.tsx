@@ -167,7 +167,7 @@ const LoginPage = () => {
             {/* Submit button */}
             <Button
               type="submit"
-              className="text-md w-full p-6"
+              className="text-md w-full p-6 bg-black text-white"
               disabled={isPending}
             >
               {isPending ? "Logging.." : "Login"}
