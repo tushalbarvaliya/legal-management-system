@@ -1,6 +1,9 @@
-import { loginAdminResponse, loginLawyerResponse, loginStaffResponse } from "@/data/loginData"
+import {
+  loginAdminResponse,
+  loginLawyerResponse,
+  loginStaffResponse,
+} from "@/data/loginData"
 import axiosInstance from "./axiosInstance"
-import { data } from "react-router-dom"
 
 type loginProps = {
   email: string
@@ -17,7 +20,7 @@ export const login = async ({ email, password }: loginProps) => {
     })
     return response.data
   } catch {
-    console.log(data);
+    console.log({ email, password })
     return loginAdminResponse
     return loginLawyerResponse
     return loginStaffResponse
