@@ -17,22 +17,25 @@ import SignUpPage from "./pages/SignUpPage"
 import ForgotPasswordPage from "./pages/ForgotPasswordPage"
 import { AnimatePresence } from "framer-motion"
 import LogoutPage from "./pages/LogoutPage"
+import HomeLayout from "./pages/HomePageLayout"
 
 const App = () => {
   const location = useLocation()
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route
-          path="/"
-          element={
-            <ProtectedRouteByRole
-              allowedRoles={["admin", "lawyer", "staff", "guest"]}
-            >
-              <></>
-            </ProtectedRouteByRole>
-          }
-        />
+        <Route path="/" element={<HomeLayout />}>
+          <Route
+            path=""
+            element={
+              <ProtectedRouteByRole
+                allowedRoles={["admin", "lawyer", "staff", "guest"]}
+              >
+                <></>
+              </ProtectedRouteByRole>
+            }
+          />
+        </Route>
 
         <Route
           path="/cases"
