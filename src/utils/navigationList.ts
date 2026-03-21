@@ -53,7 +53,7 @@ export const menuList: menuListType[] = [
   },
   {
     title: "Tasks",
-    to: "/tasks",
+    to: "/task",
     role: ["lawyer", "staff"],
     icons:SquareCheck
   },
