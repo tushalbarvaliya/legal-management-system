@@ -1,73 +1,85 @@
-export const menuList = [
+import {
+  BriefcaseBusiness,
+  Building2,
+  CalendarRange,
+  FileCheck,
+  IdCardLanyard,
+  LayoutDashboard,
+  ReceiptIndianRupee,
+  SquareCheck,
+  UserRound,
+  Users,
+  type LucideProps,
+} from "lucide-react"
+type menuListType = {
+  title: string
+  to: string
+  role: string[]
+  icons: React.ForwardRefExoticComponent<
+    Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
+  >
+}
+
+export const menuList: menuListType[] = [
   {
     title: "Dash Board",
-    src: "/dashboard.svg",
     to: "/",
-    alt: "home",
     role: ["admin", "lawyer", "staff", "client"],
+    icons: LayoutDashboard,
   },
   {
     title: "client",
-    src: "/client.svg",
     to: "/client",
-    alt: "home",
+    icons: Users,
     role: ["lawyer", "lawyer", "staff"],
   },
   {
     title: "Cases",
-    src: "/cases.svg",
     to: "/cases",
-    alt: "cases",
+    icons: BriefcaseBusiness,
     role: ["lawyer", "staff"],
   },
   {
     title: "Docs",
-    src: "/docs.svg",
     to: "/docs",
-    alt: "docs",
     role: ["lawyer", "staff"],
+    icons:FileCheck
   },
   {
     title: "Sessions",
-    src: "/session.svg",
     to: "/session",
-    alt: "session",
     role: ["lawyer"],
+    icons:CalendarRange 
   },
   {
     title: "Tasks",
-    src: "/tasks.svg",
     to: "/tasks",
-    alt: "tasks",
     role: ["lawyer", "staff"],
+    icons:SquareCheck
   },
   {
     title: "Staff",
-    src: "/staff.svg",
     to: "/staff",
-    alt: "staff",
     role: ["lawyer"],
+    icons:IdCardLanyard
   },
   {
     title: "Invoice",
-    src: "/invoice.svg",
     to: "/invoice",
-    alt: "invoice",
     role: ["lawyer"],
+    icons: ReceiptIndianRupee,
   },
   {
     title: "lawyer",
-    src: "/lawyer.svg",
     to: "/lawyer",
-    alt: "lawyer",
     role: ["admin"],
+    icons:UserRound
   },
   {
     title: "company",
-    src: "/componey.svg",
     to: "/company",
-    alt: "company",
     role: ["admin"],
+    icons:Building2
   },
 ]
 
