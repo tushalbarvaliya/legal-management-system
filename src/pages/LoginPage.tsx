@@ -6,7 +6,6 @@ import { toast } from "sonner"
 import { useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
 
-
 import { Toaster } from "@/components/ui/sonner"
 import { login } from "@/api/authAPI"
 import { useAppDispatch } from "@/hooks/hooks"
@@ -93,7 +92,10 @@ const LoginPage = () => {
                 autoComplete="off"
                 className="block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 transition outline-none placeholder:text-zinc-400 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
                 {...register("email", {
-                  required: true,
+                  required: {
+                    value: true,
+                    message: "Please Enter a value",
+                  },
                   pattern: {
                     value: emailRegex,
                     message:
@@ -125,7 +127,10 @@ const LoginPage = () => {
                   placeholder="Enter your password"
                   className="block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 pr-10 text-sm text-zinc-900 transition outline-none placeholder:text-zinc-400 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
                   {...register("password", {
-                    required: true,
+                    required: {
+                      value: true,
+                      message: "Please Enter a value",
+                    },
                     pattern: {
                       value: passwordRegex,
                       message:
@@ -162,7 +167,7 @@ const LoginPage = () => {
             {/* Submit button */}
             <Button
               type="submit"
-              className="w-full p-6 text-md"
+              className="text-md w-full p-6"
               disabled={isPending}
             >
               {isPending ? "Logging.." : "Login"}
