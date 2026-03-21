@@ -1,11 +1,13 @@
-import { putResetPassword } from "@/api/userAPI"
-import { passwordRegex } from "@/utils/regex"
+import { motion } from "framer-motion"
 import { useMutation } from "@tanstack/react-query"
-import { Eye, EyeOff } from "lucide-react"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
+import { Eye, EyeOff } from "lucide-react"
 import { Link, useNavigate } from "react-router-dom"
 import { toast } from "sonner"
+
+import { putResetPassword, type putReqDataType } from "@/api/userAPI"
+import { passwordRegex } from "@/utils/regex"
 
 type ResetFormData = {
   oldPassword: string
@@ -28,11 +30,8 @@ const ResetPasswordPage = () => {
     delayError: 500,
   })
 
-  const { mutate, isPending } = useMutation<{
-    password: string
-    new_password: string
-  }>({
-    mutationFn: putResetPassword,
+  const { mutate, isPending } = useMutation({
+    mutationFn: (data: putReqDataType) => putResetPassword(data),
     onSuccess: () => {
       toast.success("Password Change Successful")
       navigate("/")
@@ -48,7 +47,7 @@ const ResetPasswordPage = () => {
     } else if (data.oldPassword == data.newPassword) {
       toast.error("old Password and new Password Should not be Same.")
     } else {
-      const reqData = {
+      const reqData: putReqDataType = {
         password: data.oldPassword,
         new_password: data.newPassword,
       }
@@ -56,7 +55,11 @@ const ResetPasswordPage = () => {
     }
   }
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+    >
       <main className="flex h-fit justify-center">
         <section className="w-full max-w-md rounded-xl border-2 border-black bg-white p-6 shadow-sm sm:p-8">
           <header className="my-2 flex items-center justify-between">
@@ -209,7 +212,7 @@ const ResetPasswordPage = () => {
           </form>
         </section>
       </main>
-    </>
+    </motion.div>
   )
 }
 
