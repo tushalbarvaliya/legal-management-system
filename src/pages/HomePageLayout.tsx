@@ -14,7 +14,7 @@ const HomeLayout = () => {
         <Header />
         <div className="mt-4 flex items-center gap-2">
           {role != "guest" && (
-            <div className="mx-2 hidden rounded-xl bg-white p-4 shadow-[0px_10px_1px_rgba(221,221,221,1),0_10px_20px_rgba(204,204,204,1)] lg:block">
+            <div className="mx-2 hidden rounded-xl bg-white p-4 border border-black lg:block">
               <Sidebar />
             </div>
           )}
