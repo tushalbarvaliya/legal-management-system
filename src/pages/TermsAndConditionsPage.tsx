@@ -1,5 +1,6 @@
-import { termsAndConditionsList, type termsAndConditionsListType } from "@/utils/policyConstant"
 import { Link } from "react-router-dom"
+
+import { termsAndConditionsList, type termsAndConditionsListType } from "@/utils/policyConstant"
 
 const TermsAndConditionsPage = () => {
   return (
