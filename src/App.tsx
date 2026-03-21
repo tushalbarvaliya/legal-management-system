@@ -35,132 +35,132 @@ const App = () => {
               </ProtectedRouteByRole>
             }
           />
+
+          <Route
+            path="/cases"
+            element={
+              <>
+                <CasesPage />
+              </>
+            }
+          />
+          <Route path="/cases/:id" element={<></>} />
+          <Route path="/cases/add" element={<></>} />
+          <Route path="/cases/edit/:id" element={<></>} />
+          <Route path="/cases/delete/:id" element={<></>} />
+
+          <Route
+            path="/docs"
+            element={
+              <>
+                <DocumentPage />
+              </>
+            }
+          />
+          <Route path="/docs/:id" element={<></>} />
+          <Route path="/docs/add" element={<></>} />
+          <Route path="/docs/edit/:id" element={<></>} />
+          <Route path="/docs/delete/:id" element={<></>} />
+
+          <Route
+            path="/client"
+            element={
+              <>
+                <ClientPage />
+              </>
+            }
+          />
+          <Route path="/client/:id" element={<></>} />
+          <Route path="/client/add" element={<></>} />
+          <Route path="/client/edit/:id" element={<></>} />
+          <Route path="/client/delete/:id" element={<></>} />
+
+          <Route
+            path="/staff"
+            element={
+              <>
+                <StaffPage />
+              </>
+            }
+          />
+          <Route path="/staff/:id" element={<></>} />
+          <Route path="/staff/add" element={<></>} />
+          <Route path="/staff/edit/:id" element={<></>} />
+          <Route path="/staff/delete/:id" element={<></>} />
+
+          <Route
+            path="/session"
+            element={
+              <>
+                <SessionPage />
+              </>
+            }
+          />
+          <Route path="/session/:id" element={<></>} />
+          <Route path="/session/add" element={<></>} />
+          <Route path="/session/edit/:id" element={<></>} />
+          <Route path="/session/delete/:id" element={<></>} />
+
+          <Route
+            path="/task"
+            element={
+              <>
+                <TaskPage />
+              </>
+            }
+          />
+          <Route path="/task/:id" element={<></>} />
+          <Route path="/task/add" element={<></>} />
+          <Route path="/task/edit/:id" element={<></>} />
+          <Route path="/task/delete/:id" element={<></>} />
+
+          <Route
+            path="/invoice"
+            element={
+              <>
+                <InvoicePage />
+              </>
+            }
+          />
+          <Route path="/invoice/:id" element={<></>} />
+          <Route path="/invoice/add" element={<></>} />
+          <Route path="/invoice/edit/:id" element={<></>} />
+          <Route path="/invoice/delete/:id" element={<></>} />
+
+          <Route
+            path="/profile"
+            element={
+              <>
+                <ProfilePage />
+              </>
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              <>
+                <ResetPasswordPage />
+              </>
+            }
+          />
+
+          <Route
+            path="/privacy-policy"
+            element={
+              <>
+                <PrivacyPolicyPage />
+              </>
+            }
+          />
+          <Route
+            path="/terms-and-conditions"
+            element={
+              <>
+                <TermsAndConditionsPage />
+              </>
+            }
+          />
         </Route>
-
-        <Route
-          path="/cases"
-          element={
-            <>
-              <CasesPage />
-            </>
-          }
-        />
-        <Route path="/cases/:id" element={<></>} />
-        <Route path="/cases/add" element={<></>} />
-        <Route path="/cases/edit/:id" element={<></>} />
-        <Route path="/cases/delete/:id" element={<></>} />
-
-        <Route
-          path="/docs"
-          element={
-            <>
-              <DocumentPage />
-            </>
-          }
-        />
-        <Route path="/docs/:id" element={<></>} />
-        <Route path="/docs/add" element={<></>} />
-        <Route path="/docs/edit/:id" element={<></>} />
-        <Route path="/docs/delete/:id" element={<></>} />
-
-        <Route
-          path="/client"
-          element={
-            <>
-              <ClientPage />
-            </>
-          }
-        />
-        <Route path="/client/:id" element={<></>} />
-        <Route path="/client/add" element={<></>} />
-        <Route path="/client/edit/:id" element={<></>} />
-        <Route path="/client/delete/:id" element={<></>} />
-
-        <Route
-          path="/staff"
-          element={
-            <>
-              <StaffPage />
-            </>
-          }
-        />
-        <Route path="/staff/:id" element={<></>} />
-        <Route path="/staff/add" element={<></>} />
-        <Route path="/staff/edit/:id" element={<></>} />
-        <Route path="/staff/delete/:id" element={<></>} />
-
-        <Route
-          path="/session"
-          element={
-            <>
-              <SessionPage />
-            </>
-          }
-        />
-        <Route path="/session/:id" element={<></>} />
-        <Route path="/session/add" element={<></>} />
-        <Route path="/session/edit/:id" element={<></>} />
-        <Route path="/session/delete/:id" element={<></>} />
-
-        <Route
-          path="/task"
-          element={
-            <>
-              <TaskPage />
-            </>
-          }
-        />
-        <Route path="/task/:id" element={<></>} />
-        <Route path="/task/add" element={<></>} />
-        <Route path="/task/edit/:id" element={<></>} />
-        <Route path="/task/delete/:id" element={<></>} />
-
-        <Route
-          path="/invoice"
-          element={
-            <>
-              <InvoicePage />
-            </>
-          }
-        />
-        <Route path="/invoice/:id" element={<></>} />
-        <Route path="/invoice/add" element={<></>} />
-        <Route path="/invoice/edit/:id" element={<></>} />
-        <Route path="/invoice/delete/:id" element={<></>} />
-
-        <Route
-          path="/profile"
-          element={
-            <>
-              <ProfilePage />
-            </>
-          }
-        />
-        <Route
-          path="/reset-password"
-          element={
-            <>
-              <ResetPasswordPage />
-            </>
-          }
-        />
-
-        <Route
-          path="/privacy-policy"
-          element={
-            <>
-              <PrivacyPolicyPage />
-            </>
-          }
-        />
-        <Route
-          path="/terms-and-conditions"
-          element={
-            <>
-              <TermsAndConditionsPage />
-            </>
-          }
-        />
         <Route path="/login" element={<LoginPage />} />
 
         <Route
