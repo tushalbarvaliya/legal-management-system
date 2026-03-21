@@ -21,12 +21,12 @@ const PrivacyPolicyPage = () => {
             <h2 className="text-lg font-semibold text-zinc-900">
               {item.title}
             </h2>
-            <p className="mb-2">{item.paragraph}</p>
+            <p className="mb-2 dark:text-black">{item.paragraph}</p>
           </div>
         ))}
         <div >
           <h2 className="text-lg font-semibold text-zinc-900">9. Contact Us</h2>
-          <p className="mb-2">
+          <p className="mb-2 dark:text-black">
             If you have privacy questions, contact us at{" "}
             <Link
               to="mailto:privacy@acmedesk.com"
