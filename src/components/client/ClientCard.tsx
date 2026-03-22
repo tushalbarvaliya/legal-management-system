@@ -81,55 +81,58 @@ const ClientCard = (data: ClineDataType) => {
             </div>
           </div>
           {/* menu */}
-          {role == "lawyer" && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <MoreVertical className="h-4 w-4 text-black" />
-                </Button>
-              </DropdownMenuTrigger>
 
-              <DropdownMenuContent align="end" className="w-40">
-                <DropdownMenuItem
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    navigate(`/client/${data.id}`)
-                  }}
-                >
-                  View
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    navigate(`/client/edit/${data.id}`)
-                  }}
-                >
-                  Edit
-                </DropdownMenuItem>
-                {!(data.isDeleted == "\u0001") && (
-                  <DropdownMenuItem
-                    className="text-red-500"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      navigate(`/client/delete/${data.id}`)
-                    }}
-                  >
-                    Delete
-                  </DropdownMenuItem>
-                )}
-                {!(data.isBlocked == "\u0001") && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <MoreVertical className="h-4 w-4 text-black" />
+              </Button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent align="end" className="w-40">
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.stopPropagation()
+                  navigate(`/client/${data.id}`)
+                }}
+              >
+                View
+              </DropdownMenuItem>
+              {role == "lawyer" && (
+                <>
                   <DropdownMenuItem
                     onClick={(e) => {
                       e.stopPropagation()
-                      blockMutation(data.id)
+                      navigate(`/client/edit/${data.id}`)
                     }}
                   >
-                    Block
+                    Edit
                   </DropdownMenuItem>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+                  {!(data.isDeleted == "\u0001") && (
+                    <DropdownMenuItem
+                      className="text-red-500"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        navigate(`/client/delete/${data.id}`)
+                      }}
+                    >
+                      Delete
+                    </DropdownMenuItem>
+                  )}
+                  {!(data.isBlocked == "\u0001") && (
+                    <DropdownMenuItem
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        blockMutation(data.id)
+                      }}
+                    >
+                      Block
+                    </DropdownMenuItem>
+                  )}
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </article>
     </>
