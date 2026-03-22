@@ -85,7 +85,7 @@ const ClientCard = (data: ClineDataType) => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon">
-                  <MoreVertical className="h-4 w-4" />
+                  <MoreVertical className="h-4 w-4 text-black" />
                 </Button>
               </DropdownMenuTrigger>
 
