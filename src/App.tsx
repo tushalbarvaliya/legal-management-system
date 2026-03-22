@@ -70,10 +70,38 @@ const App = () => {
               </>
             }
           />
-          <Route path="/client/:id" element={<></>} />
-          <Route path="/client/add" element={<></>} />
-          <Route path="/client/edit/:id" element={<></>} />
-          <Route path="/client/delete/:id" element={<></>} />
+          <Route
+            path="/client/:id"
+            element={
+              <>
+                <ClientPage />
+              </>
+            }
+          />
+          <Route
+            path="/client/add"
+            element={
+              <>
+                <ClientPage />
+              </>
+            }
+          />
+          <Route
+            path="/client/edit/:id"
+            element={
+              <>
+                <ClientPage />
+              </>
+            }
+          />
+          <Route
+            path="/client/delete/:id"
+            element={
+              <>
+                <ClientPage />
+              </>
+            }
+          />
 
           <Route
             path="/staff"
