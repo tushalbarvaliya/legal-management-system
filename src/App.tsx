@@ -111,10 +111,10 @@ const App = () => {
               </>
             }
           />
-          <Route path="/staff/:id" element={<></>} />
-          <Route path="/staff/add" element={<></>} />
-          <Route path="/staff/edit/:id" element={<></>} />
-          <Route path="/staff/delete/:id" element={<></>} />
+          <Route path="/staff/:id" element={<><StaffPage /></>} />
+          <Route path="/staff/add" element={<><StaffPage /></>} />
+          <Route path="/staff/edit/:id" element={<><StaffPage /></>} />
+          <Route path="/staff/delete/:id" element={<><StaffPage /></>} />
 
           <Route
             path="/session"
