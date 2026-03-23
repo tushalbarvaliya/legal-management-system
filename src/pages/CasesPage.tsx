@@ -97,8 +97,8 @@ const CasesPage = () => {
             !isError &&
             (filteredCases && filteredCases?.length > 0 ? (
               filteredCases.map((item: caseDataType) => (
-                <div>
-                  <CasesCard {...item} key={item.id} />
+                <div key={item.id}>
+                  <CasesCard {...item} />
                 </div>
               ))
             ) : (
