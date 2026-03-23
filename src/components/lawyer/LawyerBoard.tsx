@@ -1,9 +1,9 @@
+import { useQuery } from "@tanstack/react-query"
+
 import { getAllCases } from "@/api/caseAPI"
 import { getAllTask } from "@/api/taskAPI"
 import type { caseDataType } from "@/data/caseData"
 import type { taskDataType } from "@/data/taskData"
-import { useQuery } from "@tanstack/react-query"
-import { Spinner } from "../ui/spinner"
 import ErrorMessage from "../ErrorMessage"
 import LawyerBoardSkeleton from "./LawyerBoardSkeleton"
 

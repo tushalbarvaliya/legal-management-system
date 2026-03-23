@@ -291,10 +291,10 @@ const App = () => {
               </>
             }
           />
-          <Route path="/invoice/:id" element={<></>} />
-          <Route path="/invoice/add" element={<></>} />
-          <Route path="/invoice/edit/:id" element={<></>} />
-          <Route path="/invoice/delete/:id" element={<></>} />
+          <Route path="/invoice/:id" element={<><InvoicePage /></>} />
+          <Route path="/invoice/add" element={<><InvoicePage /></>} />
+          <Route path="/invoice/edit/:id" element={<><InvoicePage /></>} />
+          <Route path="/invoice/delete/:id" element={<><InvoicePage /></>} />
 
           <Route
             path="/profile"

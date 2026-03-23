@@ -1,8 +1,9 @@
+import { useQuery } from "@tanstack/react-query"
+
 import { getAllTask } from "@/api/taskAPI"
 import type { taskDataType } from "@/data/taskData"
-import { useQuery } from "@tanstack/react-query"
-import { Spinner } from "../ui/spinner"
 import ErrorMessage from "../ErrorMessage"
+import LawyerBoardSkeleton from "../lawyer/LawyerBoardSkeleton"
 
 const StaffDashboard = () => {
   const {
@@ -26,7 +27,7 @@ const StaffDashboard = () => {
       {/* Loading */}
       {isLoading && (
         <div className="flex justify-center py-10">
-          <Spinner />
+          <LawyerBoardSkeleton />
         </div>
       )}
 
