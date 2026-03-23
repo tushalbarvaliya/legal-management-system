@@ -57,10 +57,10 @@ const App = () => {
               </>
             }
           />
-          <Route path="/docs/:id" element={<></>} />
-          <Route path="/docs/add" element={<></>} />
-          <Route path="/docs/edit/:id" element={<></>} />
-          <Route path="/docs/delete/:id" element={<></>} />
+          <Route path="/docs/:id" element={<><DocumentPage /></>} />
+          <Route path="/docs/add" element={<><DocumentPage /></>} />
+          <Route path="/docs/edit/:id" element={<><DocumentPage /></>} />
+          <Route path="/docs/delete/:id" element={<><DocumentPage /></>} />
 
           <Route
             path="/client"
