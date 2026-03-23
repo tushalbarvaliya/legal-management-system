@@ -71,7 +71,7 @@ const CasesPage = () => {
               <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
               <input
                 type="search"
-                placeholder="Search by title, description, client..."
+                placeholder="Search by title and description"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full rounded-xl border border-zinc-200 py-2.5 pr-3 pl-9 text-sm outline-none focus:border-zinc-400"
