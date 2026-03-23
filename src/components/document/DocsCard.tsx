@@ -1,30 +1,27 @@
+import { MoreVertical } from "lucide-react"
+import { Link, useLocation, useNavigate } from "react-router"
+
+import { Button } from "../ui/button"
+import { downloadBase64File } from "@/utils/downloadBase64File"
+import type { docsDataType } from "@/data/docsData"
+import DeleteDocsModel from "./DeleteDocsModel"
+import DocsDetailsModal from "./DocsDetailsModal"
+import UpdateDocsModel from "./UpdateDocsModel"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Button } from "../ui/button"
-import { MoreVertical } from "lucide-react"
-import { useState } from "react"
-// import UpdateDocsModel from "./UpdateDocsModel"
-// import DeleteDocsModel from "./DeleteDocsModel"
-import { Link, useLocation, useNavigate } from "react-router"
-// import DocsDetailsModal from "./DocsDetailsModal"
-import { downloadBase64File } from "@/utils/downloadBase64File"
-import type { docsDataType } from "@/data/docsData"
-import DeleteDocsModel from "./DeleteDocsModel"
-import DocsDetailsModal from "./DocsDetailsModal"
 
 const DocsCard = (items: docsDataType) => {
   const pathname = useLocation().pathname
   const navigate = useNavigate()
-  const [updateModel, setUpdateModel] = useState(false)
   return (
     <>
-      {/* {updateModel && (
-        <UpdateDocsModel {...items} closeModal={setUpdateModel} />
-      )} */}
+      {pathname === `/docs/edit/${items.id}` && (
+        <UpdateDocsModel data={items} />
+      )}
       {pathname === `/docs/${items.id}` && <DocsDetailsModal {...items} />}
       {pathname === `/docs/delete/${items.id}` && (
         <DeleteDocsModel {...items} />
@@ -84,7 +81,7 @@ const DocsCard = (items: docsDataType) => {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  setUpdateModel(true)
+                  navigate(`/docs/edit/${items.id}`)
                 }}
               >
                 Edit

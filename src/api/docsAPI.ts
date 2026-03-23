@@ -1,4 +1,4 @@
-import { docsData } from "@/data/docsData"
+import { docsData, type docsDataType } from "@/data/docsData"
 import axiosInstance from "./axiosInstance"
 import type { AddDocsFormData } from "@/components/document/AddDocsModal"
 
@@ -20,7 +20,7 @@ export const createDocs = async (data: AddDocsFormData) => {
   }
 }
 
-export const updateDocs = async (data) => {
+export const updateDocs = async (data:docsDataType) => {
   try {
     const response = await axiosInstance.patch(
       `/documents/document/${data.id}`,
@@ -32,7 +32,7 @@ export const updateDocs = async (data) => {
   }
 }
 
-export const deleteDocs = async (data) => {
+export const deleteDocs = async (data:docsDataType) => {
   try {
     const response = await axiosInstance.delete(
       `/documents/document/${data.id}`
