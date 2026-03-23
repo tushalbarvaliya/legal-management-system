@@ -1,10 +1,4 @@
 import {
-  getAllUser,
-  getCaseCount,
-  getCompony,
-  getTaskCount,
-} from "@/api/adminAPi"
-import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
@@ -12,208 +6,135 @@ import {
 } from "@/components/ui/chart"
 import { useQuery } from "@tanstack/react-query"
 import { Pie, PieChart } from "recharts"
-import { Spinner } from "./ui/spinner"
+import { Spinner } from "../ui/spinner"
+import {
+  getAllUser,
+  getCaseCount,
+  getCompony,
+  getTaskCount,
+} from "@/api/adminAPI"
+import Card from "../Card"
 
 const AdminDashBoard = () => {
-  const { data, isLoading, isError } = useQuery({
+  const {
+    data: users,
+    isLoading,
+    isError,
+  } = useQuery({
     queryFn: getAllUser,
     queryKey: ["allUser"],
   })
 
-  const {
-    data: caseCount,
-    isLoading: caseCountLoading,
-    isError: caseIsError,
-  } = useQuery({
+  const { data: caseCount, isLoading: caseLoading } = useQuery({
     queryFn: getCaseCount,
     queryKey: ["casesCount"],
   })
 
-  const {
-    data: TaskCount,
-    isLoading: taskCountLoading,
-    isError: taskIsError,
-  } = useQuery({
+  const { data: taskCount, isLoading: taskLoading } = useQuery({
     queryFn: getTaskCount,
     queryKey: ["taskCount"],
   })
 
-  const {
-    data: Compony,
-    isLoading: componyLoading,
-    isError: componyIsError,
-  } = useQuery({
+  const { data: company, isLoading: companyLoading } = useQuery({
     queryFn: getCompony,
-    queryKey: ["getCompony"],
+    queryKey: ["company"],
   })
 
   const chartData = [
-    { browser: "Lawyer", visitors: Compony?.lawyers.length, fill: "#156456" },
-    { browser: "Staff", visitors: Compony?.staff.length, fill: "#123548" },
-    { browser: "User", visitors: data?.length, fill: "#852426" },
+    { name: "Lawyer", value: company?.lawyers?.length || 0, fill: "#4f46e5" },
+    { name: "Staff", value: company?.staff?.length || 0, fill: "#06b6d4" },
+    { name: "User", value: users?.length || 0, fill: "#f59e0b" },
   ]
-  const chartConfig = {
-    Lawyer: {
-      label: "Lawyer",
-      color: "#374dbd",
-    },
-    Staff: {
-      label: "Staff",
-      color: "#374dbd",
-    },
-    User: {
-      label: "User",
-      color: "#374dbd",
-    },
-  } satisfies ChartConfig
-  return (
-    <>
-      {/* user count */}
-      <article className="group shadow-soft rounded-2xl border border-zinc-200 bg-white p-5 transition duration-200 hover:-translate-y-0.5 hover:border-zinc-300">
-        <div className="flex items-start justify-between">
-          <h2 className="text-sm font-semibold text-zinc-600 capitalize">
-            total user
-          </h2>
-          <div className="rounded-lg bg-zinc-100 p-2 text-zinc-700 transition duration-200 group-hover:bg-zinc-200">
-            <img src={"/client.svg"} alt={"Icon"} className="h-5 w-5" />
-          </div>
-        </div>
-        <p className="mt-5 text-3xl font-extrabold text-zinc-900">
-          {!isLoading && !isError && data.length}
-          {isError && "Error"}
-          {isLoading && <Spinner className="size-8" />}
-        </p>
-      </article>
 
-      {/* case count */}
-      <article className="group shadow-soft rounded-2xl border border-zinc-200 bg-white p-5 transition duration-200 hover:-translate-y-0.5 hover:border-zinc-300">
-        <div className="flex items-start justify-between">
-          <h2 className="text-sm font-semibold text-zinc-600 capitalize">
-            Case Status
-          </h2>
-          <div className="rounded-lg bg-zinc-100 p-2 text-zinc-700 transition duration-200 group-hover:bg-zinc-200">
-            <img src={"/cases.svg"} alt={"Icon"} className="h-5 w-5" />
+  const chartConfig = {
+    Lawyer: { label: "Lawyer" },
+    Staff: { label: "Staff" },
+    User: { label: "User" },
+  } satisfies ChartConfig
+
+  return (
+    <div className="space-y-6">
+      {/* HEADER */}
+
+      {/* GRID */}
+      <div className="mt-4 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
+        {/* USERS */}
+        <Card title="Total Users" icon="/client.svg">
+          {isLoading ? (
+            <Spinner />
+          ) : isError ? (
+            <p className="text-sm text-red-500">Error loading users</p>
+          ) : (
+            <p className="text-3xl font-bold text-zinc-900">
+              {users?.length || 0}
+            </p>
+          )}
+        </Card>
+
+        {/* CASES */}
+        <Card title="Case Status" icon="/cases.svg">
+          {caseLoading ? (
+            <Spinner />
+          ) : (
+            <div className="space-y-2 text-sm text-zinc-700">
+              <p>Open: {caseCount?.openCases || 0}</p>
+              <p>Closed: {caseCount?.closedCases || 0}</p>
+              <p>Last 30 Days: {caseCount?.newCasesLast30Days || 0}</p>
+            </div>
+          )}
+        </Card>
+
+        {/* TASKS */}
+        <Card title="Task Status" icon="/task.svg">
+          {taskLoading ? (
+            <Spinner />
+          ) : (
+            <div className="space-y-2 text-sm text-zinc-700">
+              <p>Due Today: {taskCount?.dueToday || 0}</p>
+              <p>Overdue: {taskCount?.overdue || 0}</p>
+              <p>Completed: {taskCount?.completed || 0}</p>
+            </div>
+          )}
+        </Card>
+
+        {/* COMPANY */}
+        <Card title="User Distribution" icon="/staff.svg">
+          {companyLoading ? (
+            <Spinner />
+          ) : (
+            <div className="space-y-2 text-sm text-zinc-700">
+              <p>Lawyers: {company?.lawyers?.length || 0}</p>
+              <p>Staff: {company?.staff?.length || 0}</p>
+            </div>
+          )}
+        </Card>
+      </div>
+
+      {/* CHART SECTION */}
+      <div className="rounded-2xl border  bg-white p-6 shadow-sm border-black">
+        <h2 className="mb-4 text-lg font-semibold text-zinc-800">
+          User Analytics
+        </h2>
+
+        {(companyLoading || isLoading) && (
+          <div className="flex justify-center">
+            <Spinner />
           </div>
-        </div>
-        <p className="mt-5 flex flex-col text-xs font-extrabold text-zinc-900">
-          {!caseCountLoading && !caseIsError && (
-            <>
-              <span>Open Cases : {caseCount.openCases}</span>
-              <span>Closed Cases : {caseCount.closedCases}</span>
-              <span>
-                New Cases in Last 30Days : {caseCount.newCasesLast30Days}
-              </span>
-            </>
-          )}
-          {caseCountLoading && (
-            <>
-              <span className="flex items-center">
-                Open Cases : <Spinner className="ml-2 size-3" />
-              </span>
-              <span className="flex items-center">
-                Closed Cases : <Spinner className="ml-2 size-3" />
-              </span>
-              <span className="flex items-center">
-                New Cases in Last 30Days : <Spinner className="ml-2 size-3" />
-              </span>
-            </>
-          )}
-          {caseIsError && "Error"}
-        </p>
-      </article>
-      {/* task count */}
-      <article className="group shadow-soft rounded-2xl border border-zinc-200 bg-white p-5 transition duration-200 hover:-translate-y-0.5 hover:border-zinc-300">
-        <div className="flex items-start justify-between">
-          <h2 className="text-sm font-semibold text-zinc-600 capitalize">
-            Task Status
-          </h2>
-          <div className="rounded-lg bg-zinc-100 p-2 text-zinc-700 transition duration-200 group-hover:bg-zinc-200">
-            <img src={"/task.svg"} alt={"Icon"} className="h-5 w-5" />
-          </div>
-        </div>
-        <p className="mt-5 flex flex-col text-xs font-extrabold text-zinc-900">
-          {!taskCountLoading && !taskIsError && (
-            <>
-              <span>Task Due Today : {TaskCount.dueToday}</span>
-              <span>over Due Task : {TaskCount.overdue}</span>
-              <span>Completed : {TaskCount.completed}</span>
-            </>
-          )}
-          {taskCountLoading && (
-            <>
-              <span className="flex items-center">
-                Task Due Today : <Spinner className="ml-2 size-3" />
-              </span>
-              <span className="flex items-center">
-                over Due Task : <Spinner className="ml-2 size-3" />
-              </span>
-              <span className="flex items-center">
-                Completed : <Spinner className="ml-2 size-3" />
-              </span>
-            </>
-          )}
-          {taskIsError && "Error"}
-        </p>
-      </article>
-      {/* company count */}
-      <article className="group shadow-soft rounded-2xl border border-zinc-200 bg-white p-5 transition duration-200 hover:-translate-y-0.5 hover:border-zinc-300">
-        <div className="flex items-start justify-between">
-          <h2 className="text-sm font-semibold text-zinc-600 capitalize">
-            User Status
-          </h2>
-          <div className="rounded-lg bg-zinc-100 p-2 text-zinc-700 transition duration-200 group-hover:bg-zinc-200">
-            <img src={"/cases.svg"} alt={"Icon"} className="h-5 w-5" />
-          </div>
-        </div>
-        <p className="mt-5 flex flex-col text-xs font-extrabold text-zinc-900">
-          {!componyLoading && !componyIsError && (
-            <>
-              <span>Total Lawyer : {Compony?.lawyers.length}</span>
-              <span>Total Staff : {Compony?.staff.length}</span>
-            </>
-          )}
-          {componyLoading && (
-            <>
-              <span className="flex items-center">
-                Total Lawyer : <Spinner className="ml-2 size-3" />
-              </span>
-              <span className="flex items-center">
-                Total Staff : <Spinner className="ml-2 size-3" />
-              </span>
-            </>
-          )}
-          {componyIsError && "Error"}
-        </p>
-      </article>
-      <article className="group shadow-soft rounded-2xl border border-zinc-200 bg-white p-5 transition duration-200 hover:-translate-y-0.5 hover:border-zinc-300">
-        <div className="flex items-start justify-between">
-          <h2 className="text-sm font-semibold text-zinc-600 capitalize">
-            User Chat
-          </h2>
-          <div className="rounded-lg bg-zinc-100 p-2 text-zinc-700 transition duration-200 group-hover:bg-zinc-200">
-            <img src={"/staff.svg"} alt={"Icon"} className="h-5 w-5" />
-          </div>
-        </div>
-        {componyIsError && isError && <p>Error</p>}
-        {(componyLoading || isLoading) && <Spinner className="size-10" />}
-        {!componyLoading && !isLoading && !isError && !componyIsError && (
+        )}
+
+        {!companyLoading && !isLoading && (
           <ChartContainer
             config={chartConfig}
-            className="mx-auto aspect-square max-h-50 pb-0 [&_.recharts-pie-label-text]:fill-foreground"
+            className="mx-auto aspect-square max-h-72"
           >
             <PieChart>
-              <ChartTooltip content={<ChartTooltipContent hideLabel />} />
-              <Pie
-                data={chartData}
-                dataKey="visitors"
-                label
-                nameKey="browser"
-              />
+              <ChartTooltip content={<ChartTooltipContent />} />
+              <Pie data={chartData} dataKey="value" nameKey="name" label />
             </PieChart>
           </ChartContainer>
         )}
-      </article>
-    </>
+      </div>
+    </div>
   )
 }
 
