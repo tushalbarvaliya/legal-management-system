@@ -18,6 +18,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage"
 import { AnimatePresence } from "framer-motion"
 import LogoutPage from "./pages/LogoutPage"
 import HomeLayout from "./pages/HomePageLayout"
+import HomePageContent from "./pages/HomePageContent"
 
 const App = () => {
   const location = useLocation()
@@ -31,7 +32,7 @@ const App = () => {
               <ProtectedRouteByRole
                 allowedRoles={["admin", "lawyer", "staff", "guest"]}
               >
-                <></>
+                <HomePageContent/>
               </ProtectedRouteByRole>
             }
           />
