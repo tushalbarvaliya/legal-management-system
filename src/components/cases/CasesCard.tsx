@@ -13,6 +13,7 @@ import {
 import type { caseDataType } from "@/data/caseData"
 import DeleteCaseModel from "./DeleteCaseModel"
 import { useLocation, useNavigate } from "react-router-dom"
+import CaseDetailModel from "./CaseDetailModel"
 // import DeleteCaseModel from "./DeleteTaskModel";
 // import CaseDetailModel from "./CaseDetailModel";
 // import EditCaseModel from "./EditCaseModel";
@@ -28,9 +29,7 @@ const CasesCard = (data: caseDataType) => {
   return (
     <>
       {pathname === `/cases/delete/${data.id}` && <DeleteCaseModel {...data} />}
-      {/* {detailsModel && (
-        <CaseDetailModel closeModal={setDetailsModel} {...data} />
-      )} */}
+      {pathname === `/cases/${data.id}` && <CaseDetailModel {...data} />}
       {/* {updateModel && <EditCaseModel closeModal={setUpdateModel} {...data} />} */}
 
       {/* TASK CARD */}
@@ -90,7 +89,7 @@ const CasesCard = (data: caseDataType) => {
             <DropdownMenuContent align="end" className="w-40">
               <DropdownMenuItem
                 onClick={() => {
-                  setDetailsModel(true)
+                  navigate(`/cases/${data.id}`)
                 }}
               >
                 View
