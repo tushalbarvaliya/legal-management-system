@@ -1,4 +1,4 @@
-import { casesData } from "@/data/caseData"
+import { casesData, type caseDataType } from "@/data/caseData"
 import axiosInstance from "./axiosInstance"
 
 export const getAllCases = async () => {
@@ -30,7 +30,7 @@ export const patchCase = async (data) => {
 }
 
 
-export const deleteCase = async (data) => {
+export const deleteCase = async (data:caseDataType) => {
   try {
     const response = await axiosInstance.delete(`/cases/${data.id}`)
     return response.data
