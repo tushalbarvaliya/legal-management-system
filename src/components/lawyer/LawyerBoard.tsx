@@ -5,6 +5,7 @@ import type { taskDataType } from "@/data/taskData"
 import { useQuery } from "@tanstack/react-query"
 import { Spinner } from "../ui/spinner"
 import ErrorMessage from "../ErrorMessage"
+import LawyerBoardSkeleton from "./LawyerBoardSkeleton"
 
 const LawyerBoard = () => {
   const {
@@ -41,7 +42,7 @@ const LawyerBoard = () => {
       {/* Loading */}
       {isLoading && (
         <div className="flex justify-center py-10">
-          <Spinner />
+          <LawyerBoardSkeleton />
         </div>
       )}
 

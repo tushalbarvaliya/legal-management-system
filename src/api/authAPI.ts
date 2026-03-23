@@ -20,10 +20,9 @@ export const login = async ({ email, password }: loginProps) => {
     })
     return response.data
   } catch {
-    console.log({ email, password })
     return loginLawyerResponse
-    return loginAdminResponse
     return loginStaffResponse
+    return loginAdminResponse
   }
 }
 
