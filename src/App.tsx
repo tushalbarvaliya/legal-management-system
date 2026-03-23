@@ -44,10 +44,10 @@ const App = () => {
               </>
             }
           />
-          <Route path="/cases/:id" element={<></>} />
-          <Route path="/cases/add" element={<></>} />
-          <Route path="/cases/edit/:id" element={<></>} />
-          <Route path="/cases/delete/:id" element={<></>} />
+          <Route path="/cases/:id" element={<><CasesPage /></>} />
+          <Route path="/cases/add" element={<><CasesPage /></>} />
+          <Route path="/cases/edit/:id" element={<><CasesPage /></>} />
+          <Route path="/cases/delete/:id" element={<><CasesPage /></>} />
 
           <Route
             path="/docs"
