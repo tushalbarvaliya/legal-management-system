@@ -44,10 +44,38 @@ const App = () => {
               </>
             }
           />
-          <Route path="/cases/:id" element={<><CasesPage /></>} />
-          <Route path="/cases/add" element={<><CasesPage /></>} />
-          <Route path="/cases/edit/:id" element={<><CasesPage /></>} />
-          <Route path="/cases/delete/:id" element={<><CasesPage /></>} />
+          <Route
+            path="/cases/:id"
+            element={
+              <>
+                <CasesPage />
+              </>
+            }
+          />
+          <Route
+            path="/cases/add"
+            element={
+              <>
+                <CasesPage />
+              </>
+            }
+          />
+          <Route
+            path="/cases/edit/:id"
+            element={
+              <>
+                <CasesPage />
+              </>
+            }
+          />
+          <Route
+            path="/cases/delete/:id"
+            element={
+              <>
+                <CasesPage />
+              </>
+            }
+          />
 
           <Route
             path="/docs"
@@ -57,10 +85,38 @@ const App = () => {
               </>
             }
           />
-          <Route path="/docs/:id" element={<><DocumentPage /></>} />
-          <Route path="/docs/add" element={<><DocumentPage /></>} />
-          <Route path="/docs/edit/:id" element={<><DocumentPage /></>} />
-          <Route path="/docs/delete/:id" element={<><DocumentPage /></>} />
+          <Route
+            path="/docs/:id"
+            element={
+              <>
+                <DocumentPage />
+              </>
+            }
+          />
+          <Route
+            path="/docs/add"
+            element={
+              <>
+                <DocumentPage />
+              </>
+            }
+          />
+          <Route
+            path="/docs/edit/:id"
+            element={
+              <>
+                <DocumentPage />
+              </>
+            }
+          />
+          <Route
+            path="/docs/delete/:id"
+            element={
+              <>
+                <DocumentPage />
+              </>
+            }
+          />
 
           <Route
             path="/client"
@@ -111,10 +167,38 @@ const App = () => {
               </>
             }
           />
-          <Route path="/staff/:id" element={<><StaffPage /></>} />
-          <Route path="/staff/add" element={<><StaffPage /></>} />
-          <Route path="/staff/edit/:id" element={<><StaffPage /></>} />
-          <Route path="/staff/delete/:id" element={<><StaffPage /></>} />
+          <Route
+            path="/staff/:id"
+            element={
+              <>
+                <StaffPage />
+              </>
+            }
+          />
+          <Route
+            path="/staff/add"
+            element={
+              <>
+                <StaffPage />
+              </>
+            }
+          />
+          <Route
+            path="/staff/edit/:id"
+            element={
+              <>
+                <StaffPage />
+              </>
+            }
+          />
+          <Route
+            path="/staff/delete/:id"
+            element={
+              <>
+                <StaffPage />
+              </>
+            }
+          />
 
           <Route
             path="/session"
@@ -137,10 +221,38 @@ const App = () => {
               </>
             }
           />
-          <Route path="/task/:id" element={<></>} />
-          <Route path="/task/add" element={<></>} />
-          <Route path="/task/edit/:id" element={<></>} />
-          <Route path="/task/delete/:id" element={<></>} />
+          <Route
+            path="/task/:id"
+            element={
+              <>
+                <TaskPage />
+              </>
+            }
+          />
+          <Route
+            path="/task/add"
+            element={
+              <>
+                <TaskPage />
+              </>
+            }
+          />
+          <Route
+            path="/task/edit/:id"
+            element={
+              <>
+                <TaskPage />
+              </>
+            }
+          />
+          <Route
+            path="/task/delete/:id"
+            element={
+              <>
+                <TaskPage />
+              </>
+            }
+          />
 
           <Route
             path="/invoice"
