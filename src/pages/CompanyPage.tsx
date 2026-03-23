@@ -1,9 +1,9 @@
-import { company } from "@/api/adminAPi"
+import { company } from "@/api/adminAPI"
 import CompanyPageSkeleton from "@/components/company/CompanyPageSkeleton"
 import CompanyUpdateModel from "@/components/company/CompanyUpdateModel"
 import { Button } from "@/components/ui/button"
 import { useQuery } from "@tanstack/react-query"
-import { Mail, Phone, Calendar } from "lucide-react"
+import { Mail, Phone, Calendar, MapPin, Hospital } from "lucide-react"
 import { useState } from "react"
 
 export type CompanyData = {
@@ -53,7 +53,7 @@ const CompanyPage = () => {
             {/* left side  header */}
             <div className="flex flex-1 items-center gap-4">
               <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600">
-                <img src="/componey.svg" alt="company" className="h-6 w-6" />
+                <Hospital />
               </div>
               <div>
                 <h1 className="text-xl font-semibold text-gray-900">
@@ -81,7 +81,7 @@ const CompanyPage = () => {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {/* Address */}
             <div className="flex items-center gap-3 rounded-xl border bg-white p-4">
-              <img src="/location.svg" alt="location" />
+              <MapPin />
               <div>
                 <p className="text-xs text-gray-500">Address</p>
                 <p className="text-sm font-medium text-gray-800">

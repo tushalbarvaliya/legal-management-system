@@ -1,4 +1,4 @@
-// import AdminDashBoard from "@/components/admin/AdminDashBoard"
+import AdminDashBoard from "@/components/admin/AdminDashBoard"
 import LawyerBoard from "@/components/lawyer/LawyerBoard"
 import StaffDashBoard from "@/components/staff/StaffDashBoard"
 import TypingQuote from "@/components/TypingQuote"
@@ -22,8 +22,9 @@ const HomePageContent = () => {
         <div className="bg-white col-span-full rounded-2xl h-40 border border-black">
           <TypingQuote />
         </div>
-        {/* {role === "admin" && <AdminDashBoard />} */}
+        {/* {role === "lawyer" && <AdminDashBoard />} */}
       </div>
+        {role === "admin" && <AdminDashBoard />}
       {role === "lawyer" && <LawyerBoard />}
       {role === "staff" && <StaffDashBoard />}
     </>

@@ -19,6 +19,7 @@ import { AnimatePresence } from "framer-motion"
 import LogoutPage from "./pages/LogoutPage"
 import HomeLayout from "./pages/HomePageLayout"
 import HomePageContent from "./pages/HomePageContent"
+import CompanyPage from "./pages/CompanyPage"
 
 const App = () => {
   const location = useLocation()
@@ -32,11 +33,18 @@ const App = () => {
               <ProtectedRouteByRole
                 allowedRoles={["admin", "lawyer", "staff", "guest"]}
               >
-                <HomePageContent/>
+                <HomePageContent />
               </ProtectedRouteByRole>
             }
           />
-
+          <Route
+            path="/company"
+            element={
+              <>
+                <CompanyPage />
+              </>
+            }
+          />
           <Route
             path="/cases"
             element={
@@ -291,10 +299,38 @@ const App = () => {
               </>
             }
           />
-          <Route path="/invoice/:id" element={<><InvoicePage /></>} />
-          <Route path="/invoice/add" element={<><InvoicePage /></>} />
-          <Route path="/invoice/edit/:id" element={<><InvoicePage /></>} />
-          <Route path="/invoice/delete/:id" element={<><InvoicePage /></>} />
+          <Route
+            path="/invoice/:id"
+            element={
+              <>
+                <InvoicePage />
+              </>
+            }
+          />
+          <Route
+            path="/invoice/add"
+            element={
+              <>
+                <InvoicePage />
+              </>
+            }
+          />
+          <Route
+            path="/invoice/edit/:id"
+            element={
+              <>
+                <InvoicePage />
+              </>
+            }
+          />
+          <Route
+            path="/invoice/delete/:id"
+            element={
+              <>
+                <InvoicePage />
+              </>
+            }
+          />
 
           <Route
             path="/profile"
