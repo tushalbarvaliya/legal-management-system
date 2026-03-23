@@ -9,26 +9,28 @@ import { MoreVertical } from "lucide-react"
 import { useState } from "react"
 // import UpdateDocsModel from "./UpdateDocsModel"
 // import DeleteDocsModel from "./DeleteDocsModel"
-import { Link } from "react-router"
+import { Link, useLocation, useNavigate } from "react-router"
 // import DocsDetailsModal from "./DocsDetailsModal"
 import { downloadBase64File } from "@/utils/downloadBase64File"
 import type { docsDataType } from "@/data/docsData"
+import DeleteDocsModel from "./DeleteDocsModel"
 
 const DocsCard = (items: docsDataType) => {
+  const pathname = useLocation().pathname
+  const navigate = useNavigate()
   const [updateModel, setUpdateModel] = useState(false)
   const [deleteModel, setDeleteModel] = useState(false)
-  const [detailsModel, setDetailsModel] = useState(false)
   return (
     <>
       {/* {updateModel && (
         <UpdateDocsModel {...items} closeModal={setUpdateModel} />
-      )}
-      {deleteModel && (
-        <DeleteDocsModel {...items} closeModal={setDeleteModel} />
-      )}
-      {detailsModel && (
-        <DocsDetailsModal {...items} closeModal={setDetailsModel} />
       )} */}
+      {/* {deleteModel && (
+        <DeleteDocsModel {...items} closeModal={setDeleteModel} />
+      )} */}
+      {pathname === `/docs/delete/${items.id}` && (
+        <DeleteDocsModel {...items} />
+      )}
       <div className="flex w-full rounded-xl border p-4 text-left shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-zinc-100/80">
         {/* Left Content */}
         <div className="flex-1">
@@ -92,7 +94,7 @@ const DocsCard = (items: docsDataType) => {
               <DropdownMenuItem
                 className="text-red-500"
                 onClick={() => {
-                  setDeleteModel(true)
+                  navigate(`/docs/delete/${items.id}`)
                 }}
               >
                 Delete
