@@ -1,9 +1,10 @@
+import { toast } from "sonner"
+import { useNavigate } from "react-router-dom"
+import { useMutation } from "@tanstack/react-query"
+
 import { deleteDocs } from "@/api/docsAPI"
 import type { docsDataType } from "@/data/docsData"
 import { queryClient } from "@/main"
-import { useMutation } from "@tanstack/react-query"
-import { useNavigate } from "react-router-dom"
-import { toast } from "sonner"
 
 const DeleteDocsModel = (data: docsDataType) => {
   const navigate = useNavigate()
