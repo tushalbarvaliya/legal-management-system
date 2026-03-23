@@ -1,32 +1,22 @@
-import { useForm } from "react-hook-form"
-import { useMutation, useQuery } from "@tanstack/react-query"
 import { toast } from "sonner"
-import { useNavigate } from "react-router-dom"
 import { X } from "lucide-react"
+import { useForm } from "react-hook-form"
+import { useNavigate } from "react-router-dom"
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { useEffect } from "react"
 
-import { postCase } from "@/api/caseAPI"
-import { queryClient } from "@/main"
+import { patchCase } from "@/api/caseAPI"
 import { getAllClient } from "@/api/clientAPI"
+import type { caseDataType } from "@/data/caseData"
 import type { ClineDataType } from "@/data/clientData"
+import { queryClient } from "@/main"
 
-export type caseAddFormDataType = {
-  caseNumber: number
-  title: string
-  type: string
-  description: string
-  status: string
-  caseClosedDate: string
-  caseStage: string
-  caseCity: string
-  clientId: number
-}
-
-const AddCaseModel = () => {
+const EditCaseModel = (data: caseDataType) => {
   const navigate = useNavigate()
   const { mutate, isPending } = useMutation({
-    mutationFn: postCase,
+    mutationFn: patchCase,
     onSuccess: () => {
-      toast.success("Case Add Successfully")
+      toast.success("Case Updated Successfully")
       queryClient.invalidateQueries({ queryKey: ["cases"] })
       navigate("/cases")
     },
@@ -38,17 +28,36 @@ const AddCaseModel = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm<caseAddFormDataType>({
+  } = useForm<caseDataType>({
     mode: "onChange",
     delayError: 500,
+    defaultValues: data,
   })
   const { data: userData } = useQuery<ClineDataType[]>({
     queryFn: getAllClient,
     queryKey: ["client"],
   })
 
-  const onSubmit = (formData: caseAddFormDataType) => {
+  useEffect(() => {
+    if (data && userData) {
+      reset(data)
+    }
+  }, [data, userData, reset])
+
+  useEffect(() => {
+    if (data && userData) {
+      reset({
+        ...data,
+        caseClosedDate: data.caseClosedDate
+          ? new Date(data.caseClosedDate).toISOString().split("T")[0]
+          : "",
+      })
+    }
+  }, [data, userData, reset])
+
+  const onSubmit = (formData: caseDataType) => {
     mutate(formData)
   }
 
@@ -56,7 +65,7 @@ const AddCaseModel = () => {
     <>
       <div className="fixed inset-0 z-9999 flex items-center justify-center">
         {/* Overlay */}
-        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+        <div className="absolute inset-0 h-screen bg-black/40 backdrop-blur-sm"></div>
 
         {/* Modal */}
         <div
@@ -65,7 +74,7 @@ const AddCaseModel = () => {
         >
           {/* Header */}
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-xl font-bold text-zinc-900">Add New Case</h3>
+            <h3 className="text-xl font-bold text-zinc-900">Edit Case</h3>
             <button
               onClick={() => navigate("/cases")}
               className="rounded-lg border border-zinc-200 p-2 text-zinc-600 hover:bg-zinc-100"
@@ -308,15 +317,14 @@ const AddCaseModel = () => {
                 disabled={isPending}
                 className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white hover:scale-[1.02] hover:bg-zinc-800"
               >
-                {isPending ? "Adding..." : "Add Case"}
+                {isPending ? "Editing..." : "Edit Case"}
               </button>
             </div>
           </form>
-
         </div>
       </div>
     </>
   )
 }
 
-export default AddCaseModel
+export default EditCaseModel

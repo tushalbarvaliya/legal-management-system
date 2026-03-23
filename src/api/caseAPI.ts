@@ -1,5 +1,6 @@
 import { casesData, type caseDataType } from "@/data/caseData"
 import axiosInstance from "./axiosInstance"
+import type { caseAddFormDataType } from "@/components/cases/AddCaseModel"
 
 export const getAllCases = async () => {
   try {
@@ -11,7 +12,7 @@ export const getAllCases = async () => {
   }
 }
 
-export const postCase = async (data) => {
+export const postCase = async (data: caseAddFormDataType) => {
   try {
     const response = await axiosInstance.post("/cases/case/", data)
     return response.data
@@ -20,7 +21,7 @@ export const postCase = async (data) => {
   }
 }
 
-export const patchCase = async (data) => {
+export const patchCase = async (data: caseDataType) => {
   try {
     const response = await axiosInstance.patch(`/cases/case/${data.id}`, data)
     return response.data
@@ -29,8 +30,7 @@ export const patchCase = async (data) => {
   }
 }
 
-
-export const deleteCase = async (data:caseDataType) => {
+export const deleteCase = async (data: caseDataType) => {
   try {
     const response = await axiosInstance.delete(`/cases/${data.id}`)
     return response.data

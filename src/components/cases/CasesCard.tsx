@@ -1,36 +1,29 @@
 import { MoreVertical } from "lucide-react"
-import { useState } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
 
 import { Button } from "@/components/ui/button"
 import { useAppSelector } from "@/hooks/hooks"
 import { formatDate } from "@/utils/formate"
+import type { caseDataType } from "@/data/caseData"
+import DeleteCaseModel from "./DeleteCaseModel"
+import CaseDetailModel from "./CaseDetailModel"
+import EditCaseModel from "./EditCaseModel"
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu"
-import type { caseDataType } from "@/data/caseData"
-import DeleteCaseModel from "./DeleteCaseModel"
-import { useLocation, useNavigate } from "react-router-dom"
-import CaseDetailModel from "./CaseDetailModel"
-// import DeleteCaseModel from "./DeleteTaskModel";
-// import CaseDetailModel from "./CaseDetailModel";
-// import EditCaseModel from "./EditCaseModel";
-// import type { caseDataType } from "@/Data/caseData";
-// import { formatData } from "@/utils/formatDate";
 
 const CasesCard = (data: caseDataType) => {
   const pathname = useLocation().pathname
   const navigate = useNavigate()
   const role = useAppSelector((state) => state.auth.role)
-  const [detailsModel, setDetailsModel] = useState(false)
-  const [updateModel, setUpdateModel] = useState(false)
   return (
     <>
       {pathname === `/cases/delete/${data.id}` && <DeleteCaseModel {...data} />}
       {pathname === `/cases/${data.id}` && <CaseDetailModel {...data} />}
-      {/* {updateModel && <EditCaseModel closeModal={setUpdateModel} {...data} />} */}
+      {pathname === `/cases/edit/${data.id}` && <EditCaseModel {...data} />}
 
       {/* TASK CARD */}
       <article className="group hover:shadow-soft relative cursor-pointer rounded-xl border border-zinc-200 bg-zinc-50/40 p-4 shadow-sm transition duration-200 hover:bg-zinc-100/80">
@@ -96,7 +89,7 @@ const CasesCard = (data: caseDataType) => {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  setUpdateModel(true)
+                  navigate(`/cases/edit/${data.id}`)
                 }}
               >
                 Edit
