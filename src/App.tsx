@@ -208,10 +208,38 @@ const App = () => {
               </>
             }
           />
-          <Route path="/session/:id" element={<></>} />
-          <Route path="/session/add" element={<></>} />
-          <Route path="/session/edit/:id" element={<></>} />
-          <Route path="/session/delete/:id" element={<></>} />
+          <Route
+            path="/session/:id"
+            element={
+              <>
+                <SessionPage />
+              </>
+            }
+          />
+          <Route
+            path="/session/add"
+            element={
+              <>
+                <SessionPage />
+              </>
+            }
+          />
+          <Route
+            path="/session/edit/:id"
+            element={
+              <>
+                <SessionPage />
+              </>
+            }
+          />
+          <Route
+            path="/session/delete/:id"
+            element={
+              <>
+                <SessionPage />
+              </>
+            }
+          />
 
           <Route
             path="/task"
