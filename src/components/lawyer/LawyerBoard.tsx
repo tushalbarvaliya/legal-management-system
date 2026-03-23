@@ -37,12 +37,6 @@ const LawyerBoard = () => {
   return (
     <div className="mt-4 space-y-6">
       {/* Header */}
-      <div className="rounded-2xl border border-black bg-white p-6 text-black shadow-lg">
-        <h1 className="text-2xl font-bold"> Lawyer Dashboard</h1>
-        <p className="mt-1 text-sm text-zinc-900">
-          Quick summary of your tasks and cases
-        </p>
-      </div>
 
       {/* Loading */}
       {isLoading && (
