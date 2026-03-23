@@ -14,20 +14,18 @@ import { Link, useLocation, useNavigate } from "react-router"
 import { downloadBase64File } from "@/utils/downloadBase64File"
 import type { docsDataType } from "@/data/docsData"
 import DeleteDocsModel from "./DeleteDocsModel"
+import DocsDetailsModal from "./DocsDetailsModal"
 
 const DocsCard = (items: docsDataType) => {
   const pathname = useLocation().pathname
   const navigate = useNavigate()
   const [updateModel, setUpdateModel] = useState(false)
-  const [deleteModel, setDeleteModel] = useState(false)
   return (
     <>
       {/* {updateModel && (
         <UpdateDocsModel {...items} closeModal={setUpdateModel} />
       )} */}
-      {/* {deleteModel && (
-        <DeleteDocsModel {...items} closeModal={setDeleteModel} />
-      )} */}
+      {pathname === `/docs/${items.id}` && <DocsDetailsModal {...items} />}
       {pathname === `/docs/delete/${items.id}` && (
         <DeleteDocsModel {...items} />
       )}
@@ -79,7 +77,7 @@ const DocsCard = (items: docsDataType) => {
             <DropdownMenuContent align="end" className="w-40 font-medium">
               <DropdownMenuItem
                 onClick={() => {
-                  setDetailsModel(true)
+                  navigate(`/docs/${items.id}`)
                 }}
               >
                 View
