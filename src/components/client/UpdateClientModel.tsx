@@ -85,7 +85,6 @@ const UpdateClientModel = ({ data }: { data: ClientDataType }) => {
     }
   }, [data, reset])
   const onSubmit = (formData: EditClientType) => {
-    console.log('sdfd',formData);
     mutate({ data:formData, id: data.client.id })
   }
 
@@ -360,7 +359,7 @@ const UpdateClientModel = ({ data }: { data: ClientDataType }) => {
               </div>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <label className="col-span-full space-y-1.5 text-sm text-zinc-700">
-                  <span className="font-medium">Other Phone Number</span>
+                  <span className="font-medium"> Phone Number</span>
                   <input
                     id="otherPhone"
                     type="text"
