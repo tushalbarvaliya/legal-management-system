@@ -18,12 +18,10 @@ const InvoiceList = () => {
     queryFn: getAllInvoice,
   })
 
-  const [search, setSearch] = useState("")
   const [status, setStatus] = useState("")
   const [client, setClient] = useState("")
 
   const clearFilters = () => {
-    setSearch("")
     setStatus("")
     setClient("")
   }
@@ -37,20 +35,15 @@ const InvoiceList = () => {
     if (!invoices) return []
 
     return invoices.filter((invoice) => {
-      const matchesSearch =
-        invoice.id?.toString().includes(search) ||
-        invoice.clientId?.toString().includes(search) ||
-        invoice.status?.toLowerCase().includes(search.toLowerCase())
-
       const matchesStatus =
         !status || invoice.status?.toLowerCase() === status.toLowerCase()
 
       const matchesClient =
         !client || String(invoice.clientId) === String(client)
 
-      return matchesSearch && matchesStatus && matchesClient
+      return matchesStatus && matchesClient
     })
-  }, [invoices, search, status, client])
+  }, [invoices, status, client])
 
   return (
     <div className="space-y-4 rounded-xl border border-zinc-200 bg-white/80 p-4">
@@ -65,22 +58,6 @@ const InvoiceList = () => {
 
         {/* Filters */}
         <div className="flex flex-wrap items-center gap-2">
-          {/* Search */}
-          <div className="relative">
-            <img
-              src="/search.svg"
-              className="absolute top-2.5 right-3 h-4 w-4"
-            />
-            <input
-              type="text"
-              placeholder="Search invoices"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-60 max-w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-400"
-              disabled={isLoading || isError}
-            />
-          </div>
-
           {/* Status */}
           <select
             value={status}
@@ -111,7 +88,7 @@ const InvoiceList = () => {
 
           {/* Date */}
 
-          <Button onClick={clearFilters} disabled={isLoading || isError}>
+          <Button onClick={clearFilters} disabled={isLoading || isError} className="p-4">
             Clear
           </Button>
         </div>

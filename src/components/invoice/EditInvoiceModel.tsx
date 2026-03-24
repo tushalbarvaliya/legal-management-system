@@ -90,11 +90,11 @@ const EditInvoiceModel = (data: invoiceDataType) => {
           {/* Client */}
           <div>
             <label className="mb-1 block font-medium text-zinc-700">
-              Case Id
+              Client Id
             </label>
             <select
               className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-              {...register("caseId", {
+              {...register("clientId", {
                 minLength: {
                   value: 1,
                   message: "caseID length should be greater than 3",
@@ -111,19 +111,19 @@ const EditInvoiceModel = (data: invoiceDataType) => {
               })}
             </select>
             <p className="min-h-5 text-xs text-red-600">
-              {errors.caseId?.message}
+              {errors.clientId?.message}
             </p>
           </div>
 
           {/* Case ID */}
           <div>
             <label className="mb-1 block font-medium text-zinc-700">
-              Client ID
+              Case ID
             </label>
 
             <select
               className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-              {...register("clientId", {
+              {...register("caseId", {
                 minLength: {
                   value: 1,
                   message: "caseID length should be greater than 3",
@@ -140,7 +140,7 @@ const EditInvoiceModel = (data: invoiceDataType) => {
               })}
             </select>
             <p className="min-h-5 text-xs text-red-600">
-              {errors.clientId?.message}
+              {errors.caseId?.message}
             </p>
           </div>
 
