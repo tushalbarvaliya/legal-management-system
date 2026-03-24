@@ -21,6 +21,7 @@ import HomeLayout from "./pages/HomePageLayout"
 import HomePageContent from "./pages/HomePageContent"
 import CompanyPage from "./pages/CompanyPage"
 import LawyerPage from "./pages/LawyerPage"
+import Error from "./components/ErrorPage"
 
 const App = () => {
   const location = useLocation()
@@ -32,7 +33,7 @@ const App = () => {
             path=""
             element={
               <ProtectedRouteByRole
-                allowedRoles={["admin", "lawyer", "staff", "client","null"]}
+                allowedRoles={["admin", "lawyer", "staff", "client", "null"]}
               >
                 <HomePageContent />
               </ProtectedRouteByRole>
@@ -431,7 +432,7 @@ const App = () => {
           path="*"
           element={
             <>
-              <h1>404</h1>
+              <Error />
             </>
           }
         />
