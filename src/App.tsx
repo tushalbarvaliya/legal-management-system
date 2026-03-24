@@ -20,6 +20,7 @@ import LogoutPage from "./pages/LogoutPage"
 import HomeLayout from "./pages/HomePageLayout"
 import HomePageContent from "./pages/HomePageContent"
 import CompanyPage from "./pages/CompanyPage"
+import LawyerPage from "./pages/LawyerPage"
 
 const App = () => {
   const location = useLocation()
@@ -42,6 +43,14 @@ const App = () => {
             element={
               <>
                 <CompanyPage />
+              </>
+            }
+          />
+          <Route
+            path="/lawyer"
+            element={
+              <>
+                <LawyerPage />
               </>
             }
           />

@@ -1,43 +1,13 @@
 import { lawyerData } from "@/data/lawyerData"
 import axiosInstance from "./axiosInstance"
 
-export type lawyerData = {
-  userId: string
-  updatedAt: string
-  specialization: string
-  isBlocked: boolean
-  id: string
-  createdAt: string
-}
-
-export type userData = {
-  lastName?: string
-  email?: string
-  password: string
-  role: string
-  isDeleted: boolean
-  createdAt: string
-  name: string
-  firstName: string
-  id: string
-  phoneNumber?: string
-  address: string
-  companyId: string
-  isBlocked: string
-  updatedAt: string
-}
 export const getLawyer = async () => {
-  const lawyerRes = await axiosInstance.get<lawyerData[]>("/lawyers")
-  const userRes = await axiosInstance.get<userData[]>("/users")
-
-  const lawyers = lawyerRes.data
-  const users = userRes.data
-
-  const matchUser = lawyers.map((lawyer) => {
-    const user = users.find((user) => user.id === lawyer.userId)
-    return { ...user, ...lawyer }
-  })
-  return matchUser
+  try {
+    const response = await axiosInstance.get("/lawyers/")
+    return response.data
+  } catch {
+    return lawyerData
+  }
 }
 
 export const deleteLawyer = async (data) => {

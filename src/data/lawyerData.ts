@@ -1,4 +1,37 @@
-export const lawyerData = [
+type user = {
+  lastName: string
+  email: string
+  password: string
+  gender: string | null
+  companyId: number
+  isBlocked: string
+  updatedAt: string
+  name: string
+  firstName: string
+  id: number
+  phoneNumber: string
+  address: string
+  role: string
+  isDeleted: boolean
+  createdAt: string
+}
+
+type lawyer = {
+  id: number
+  specialization: string
+  isDeleted: boolean
+  updatedAt: string
+  userId: number
+  isBlocked: boolean
+  createdAt: string
+}
+
+export type LawyerDataType = {
+  lawyer: lawyer
+  user: user
+}
+
+export const lawyerData: LawyerDataType[] = [
   {
     lawyer: {
       id: 2,
@@ -41,7 +74,7 @@ export const lawyerData = [
       lastName: "shah",
       email: "ansh@gmail.com",
       password: "$2b$12$/QCNCA2PPh.tCnNjiUu3cuvAOwcDDkA9suZxQx39OJOCwKbmysdTm",
-      gender: null,
+      gender: "female",
       companyId: 1,
       isBlocked: "\u0000",
       updatedAt: "2026-03-17T06:18:47",
@@ -69,7 +102,7 @@ export const lawyerData = [
       lastName: "string",
       email: "string",
       password: "$2b$12$I4ZwrG6K74ztfhW8U4//qerFHOoFuOWciPX2ozsFdpHuhard9iPiO",
-      gender: null,
+      gender: "male",
       companyId: 1,
       isBlocked: "\u0000",
       updatedAt: "2026-03-11T05:32:37",
@@ -227,10 +260,10 @@ export const lawyerData = [
     lawyer: {
       id: 11,
       specialization: "divorce",
-      isDeleted: true,
+      isDeleted: false,
       updatedAt: "2026-03-20T12:08:10",
       userId: 42,
-      isBlocked: true,
+      isBlocked: false,
       createdAt: "2026-03-20T12:08:10",
     },
     user: {
