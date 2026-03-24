@@ -408,34 +408,12 @@ const App = () => {
             }
           />
         </Route>
+
         <Route path="/login" element={<LoginPage />} />
-
-        <Route
-          path="/signup"
-          element={
-            <>
-              <SignUpPage />
-            </>
-          }
-        />
-        <Route
-          path="/forgot-password"
-          element={
-            <>
-              <ForgotPasswordPage />
-            </>
-          }
-        />
-
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/logout" element={<LogoutPage />} />
-        <Route
-          path="*"
-          element={
-            <>
-              <Error />
-            </>
-          }
-        />
+        <Route path="*" element={<Error />} />
       </Routes>
     </AnimatePresence>
   )

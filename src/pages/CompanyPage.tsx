@@ -1,7 +1,9 @@
 import { company } from "@/api/adminAPI"
 import CompanyPageSkeleton from "@/components/company/CompanyPageSkeleton"
 import CompanyUpdateModel from "@/components/company/CompanyUpdateModel"
+import Error from "@/components/ErrorPage"
 import { Button } from "@/components/ui/button"
+import { formatDate } from "@/utils/formate"
 import { useQuery } from "@tanstack/react-query"
 import { Mail, Phone, Calendar, MapPin, Hospital } from "lucide-react"
 import { useState } from "react"
@@ -18,24 +20,18 @@ export type CompanyData = {
 
 const CompanyPage = () => {
   const [updateCompanyModel, setUpdateCompanyModel] = useState(false)
-  const { data, isLoading } = useQuery<CompanyData[]>({
+  const { data, isLoading, isError } = useQuery<CompanyData[]>({
     queryKey: ["company"],
     queryFn: company,
   })
 
   const companyData = data?.find((item) => item.id === 1)
 
-  const formatDate = (date?: string) =>
-    date
-      ? new Date(date).toLocaleDateString("en-IN", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        })
-      : "-"
-
   if (isLoading) {
     return <CompanyPageSkeleton />
+  }
+  if (isError) {
+    return <Error />
   }
 
   return (
@@ -118,7 +114,9 @@ const CompanyPage = () => {
               <div>
                 <p className="text-xs text-gray-500">Founded On</p>
                 <p className="text-sm font-medium text-gray-800">
-                  {formatDate(companyData?.createdAt)}
+                  {companyData?.createdAt
+                    ? formatDate(companyData.createdAt)
+                    : "N/A"}
                 </p>
               </div>
             </div>
@@ -126,7 +124,12 @@ const CompanyPage = () => {
 
           {/* Footer Info */}
           <div className="flex justify-between rounded-xl border bg-white p-4 text-sm text-black">
-            <span>Last Updated: {formatDate(companyData?.updatedAt)}</span>
+            <span>
+              Last Updated:{" "}
+              {companyData?.updatedAt
+                ? formatDate(companyData.updatedAt)
+                : "N/A"}
+            </span>
           </div>
         </div>
       </section>

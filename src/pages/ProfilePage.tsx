@@ -33,7 +33,7 @@ const getSafeProfileData = (data: UserProfileType): ProfileFormData => ({
 
 const ProfilePage = () => {
   const [isEdit, setIsEdit] = useState(false)
-  const navigate=useNavigate()
+  const navigate = useNavigate()
 
   const { data, isLoading, isError, error } = useQuery<UserProfileType>({
     queryKey: ["profile"],
@@ -47,7 +47,7 @@ const ProfilePage = () => {
     formState: { errors },
   } = useForm<ProfileFormData>({
     mode: "onChange",
-    delayError: 500,
+    delayError: 300,
   })
 
   useEffect(() => {
@@ -59,10 +59,12 @@ const ProfilePage = () => {
   const { mutate, isPending: ButtonIsPending } = useMutation({
     mutationFn: patchProfileUpdate,
     onSuccess: () => {
-      toast.success("Profile Updated Successfully")
+      toast.success("Profile Updated Successfully", { duration: 1500 })
       queryClient.invalidateQueries({ queryKey: ["profile"] })
       setIsEdit(false)
-      navigate('/')
+      setTimeout(() => {
+        navigate("/")
+      }, 2000)
     },
     onError: (error) => {
       toast.error(`Error ${error}`)
@@ -73,39 +75,54 @@ const ProfilePage = () => {
     mutate(formData)
   }
 
+  if (isLoading) {
+    return <ProfileSkeleton />
+  }
+  if (isError) {
+    return <ErrorMessage message={error.message} />
+  }
+
   return (
     <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
-      {isError && <ErrorMessage message={error.message} />}
-      {isLoading && <ProfileSkeleton />}
-
       {!isLoading && !isError && data && (
-        <main className="flex items-center justify-center p-4 sm:p-6">
-          <section className="w-full max-w-4xl rounded-2xl border border-black bg-white p-6 shadow-sm sm:p-8">
+        <main className="flex items-center justify-center p-3 sm:p-6">
+          <section className="w-full max-w-4xl rounded-2xl border border-black bg-white p-4 shadow-sm sm:p-8">
             {/* Header */}
-            <header className="my-4 flex items-center justify-between">
-              <div className="flex">
-                <div className="group grid h-18 w-18 place-items-center rounded-xl border bg-zinc-900 text-white">
+            <header className="my-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              {/* Left */}
+              <div className="flex items-center gap-3">
+                <div className="grid h-14 w-14 place-items-center rounded-xl bg-zinc-900 text-sm text-white sm:h-16 sm:w-16 sm:text-base">
                   <span className="uppercase">
                     {data.firstName?.[0] ?? "N"}
                     {data.lastName?.[0] ?? "N"}
                   </span>
                 </div>
 
-                <div className="mx-2">
-                  <h1 className="text-xl font-semibold">Profile</h1>
-                  <p className="text-sm text-zinc-500">{data.name ?? "-"}</p>
-                  <p className="text-sm text-zinc-500">{data.email ?? "-"}</p>
+                <div>
+                  <h1 className="text-lg font-semibold sm:text-xl">Profile</h1>
+
+                  <div className="flex flex-wrap gap-2 text-xs text-zinc-500 sm:text-sm">
+                    <p>{data.id ?? "-"}</p>
+                    <p>{data.name ?? "-"}</p>
+                  </div>
+
+                  <p className="text-xs break-all text-zinc-500 sm:text-sm">
+                    {data.email ?? "-"}
+                  </p>
                 </div>
               </div>
 
-              <Link to={"/reset-password"}>
-                <Button className="bg-black text-white">Reset Password</Button>
+              {/* Right */}
+              <Link to={"/reset-password"} className="w-full sm:w-auto">
+                <Button className="w-full bg-black text-white sm:w-auto">
+                  Reset Password
+                </Button>
               </Link>
             </header>
 
             {/* Form */}
             <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {/* First Name */}
                 <div>
                   <label className="text-sm font-medium">First Name</label>
@@ -136,7 +153,7 @@ const ProfilePage = () => {
                 </div>
 
                 {/* Address */}
-                <div className="col-span-2">
+                <div className="sm:col-span-2">
                   <label className="text-sm font-medium">Address</label>
                   <input
                     disabled={!isEdit}
@@ -152,7 +169,7 @@ const ProfilePage = () => {
                 </div>
 
                 {/* Phone */}
-                <div className="col-span-2">
+                <div className="sm:col-span-2">
                   <label className="text-sm font-medium">Phone</label>
                   <input
                     disabled={!isEdit}
@@ -208,10 +225,10 @@ const ProfilePage = () => {
                   Edit
                 </Button>
               ) : (
-                <div className="flex gap-4">
+                <div className="mt-4 flex flex-col gap-3 sm:flex-row">
                   <Button
                     type="button"
-                    className="mt-4 w-1/2"
+                    className="w-full sm:w-1/2"
                     onClick={() => setIsEdit(false)}
                   >
                     Cancel
@@ -220,7 +237,7 @@ const ProfilePage = () => {
                   <Button
                     type="submit"
                     disabled={ButtonIsPending}
-                    className="mt-4 w-1/2 bg-black text-white"
+                    className="w-full bg-black text-white sm:w-1/2"
                   >
                     {ButtonIsPending ? "Saving..." : "Save"}
                   </Button>
