@@ -19,9 +19,11 @@ const CompanyUpdateModel = (data: UpdateTaskProps) => {
       return res.data
     },
     onSuccess: () => {
-      toast.success("Updated Successfully")
+      toast.success("Updated Successfully", { duration: 1500 })
       queryClient.invalidateQueries({ queryKey: ["company"] })
-      data.closeModal(false)
+      setTimeout(() => {
+        data.closeModal(false)
+      }, 2000)
     },
     onError: () => {
       toast.error("Something went wrong")
@@ -130,9 +132,7 @@ const CompanyUpdateModel = (data: UpdateTaskProps) => {
                 },
               })}
             />
-            <p className="text-xs text-red-500">
-              {errors.email?.message}
-            </p>
+            <p className="text-xs text-red-500">{errors.email?.message}</p>
           </div>
 
           {/* Address */}
@@ -144,9 +144,7 @@ const CompanyUpdateModel = (data: UpdateTaskProps) => {
                 required: "Address is required",
               })}
             />
-            <p className="text-xs text-red-500">
-              {errors.Address?.message}
-            </p>
+            <p className="text-xs text-red-500">{errors.Address?.message}</p>
           </div>
 
           {/* Buttons */}

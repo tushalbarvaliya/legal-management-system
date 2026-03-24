@@ -26,9 +26,11 @@ const AddCaseModel = () => {
   const { mutate, isPending } = useMutation({
     mutationFn: postCase,
     onSuccess: () => {
-      toast.success("Case Add Successfully")
+      toast.success("Case Add Successfully", { duration: 1500 })
       queryClient.invalidateQueries({ queryKey: ["cases"] })
-      navigate("/cases")
+      setTimeout(() => {
+        navigate("/cases")
+      }, 2000)
     },
     onError: (error) => {
       toast.error(`Error ${error}`)
@@ -60,7 +62,7 @@ const AddCaseModel = () => {
 
         {/* Modal */}
         <div
-          className="relative mx-auto w-full max-w-xl rounded-2xl border border-zinc-200 bg-white p-5 shadow-2xl sm:p-6"
+          className="relative mx-auto h-[90vh] w-full max-w-xl overflow-y-scroll rounded-2xl border border-zinc-200 bg-white p-5 shadow-2xl sm:p-6"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
@@ -215,7 +217,7 @@ const AddCaseModel = () => {
                   <option value="">Select Client</option>
                   {userData?.map((item) => (
                     <option value={item.client.id} key={item.client.id}>
-                      {item.user.firstName}{" "}{item.user.lastName}
+                      {item.user.firstName} {item.user.lastName}
                     </option>
                   ))}
                 </select>
@@ -312,7 +314,6 @@ const AddCaseModel = () => {
               </button>
             </div>
           </form>
-
         </div>
       </div>
     </>

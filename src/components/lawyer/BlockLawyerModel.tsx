@@ -11,9 +11,11 @@ const BlockLawyerModel = (data: LawyerDataType) => {
   const { mutate, isPending } = useMutation({
     mutationFn: blockLawyer,
     onSuccess: () => {
-      toast.success("Delete Lawyer Successfully")
+      toast.success("Delete Lawyer Successfully", { duration: 1500 })
       queryClient.invalidateQueries({ queryKey: ["lawyer"] })
-      navigate("/lawyer")
+      setTimeout(() => {
+        navigate("/lawyer")
+      }, 2000)
     },
     onError: (error) => {
       {

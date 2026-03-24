@@ -60,9 +60,11 @@ const UpdateLawyerModel = (data: LawyerDataType) => {
   const { mutate, isPending } = useMutation({
     mutationFn: patchLawyer,
     onSuccess: () => {
-      toast.success("Lawyer updated")
+      toast.success("Lawyer updated", { duration: 1500 })
       queryClient.invalidateQueries({ queryKey: ["lawyer"] })
-      navigate("/lawyer")
+      setTimeout(() => {
+        navigate("/lawyer")
+      }, 2000)
     },
     onError: (error) => {
       toast.error(error.message)
@@ -76,17 +78,15 @@ const UpdateLawyerModel = (data: LawyerDataType) => {
   return (
     <div className="fixed inset-0 z-50">
       {/* Overlay */}
-      <div className="absolute inset-0 bg-zinc-900/50 h-screen" />
+      <div className="absolute inset-0 h-screen bg-zinc-900/50" />
 
       {/* Modal Wrapper */}
       <div className="relative flex min-h-screen items-start justify-center p-3 sm:items-center sm:p-6">
-        
         {/* Modal */}
-        <div className="w-full max-w-3xl rounded-2xl bg-white shadow-lg max-h-[90vh] flex flex-col">
-          
+        <div className="flex max-h-[90vh] w-full max-w-3xl flex-col rounded-2xl bg-white shadow-lg">
           {/* Header */}
-          <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-white px-4 py-3 sm:px-5 sm:py-4 rounded-2xl">
-            <h3 className="text-base sm:text-lg font-semibold">
+          <div className="sticky top-0 z-10 flex items-center justify-between rounded-2xl border-b bg-white px-4 py-3 sm:px-5 sm:py-4">
+            <h3 className="text-base font-semibold sm:text-lg">
               Update Lawyer
             </h3>
             <button onClick={() => navigate("/lawyer")}>
@@ -97,10 +97,9 @@ const UpdateLawyerModel = (data: LawyerDataType) => {
           {/* Form */}
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4"
+            className="flex-1 space-y-4 overflow-y-auto p-4 sm:p-5"
           >
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              
               {/* Name */}
               <label className="space-y-1.5 text-sm">
                 <span className="font-medium">User Name *</span>
@@ -121,7 +120,7 @@ const UpdateLawyerModel = (data: LawyerDataType) => {
                   <option value="">Select User</option>
                   {userData?.map((item) => (
                     <option key={item.id} value={item.id}>
-                      {item.email}
+                      {item.firstName} {item.lastName}
                     </option>
                   ))}
                 </select>
@@ -177,7 +176,7 @@ const UpdateLawyerModel = (data: LawyerDataType) => {
               </label>
 
               {/* Address */}
-              <label className="sm:col-span-2 space-y-1.5 text-sm">
+              <label className="space-y-1.5 text-sm sm:col-span-2">
                 <span className="font-medium">Address *</span>
                 <input
                   className="w-full rounded-lg border px-3 py-2.5"
@@ -186,7 +185,7 @@ const UpdateLawyerModel = (data: LawyerDataType) => {
               </label>
 
               {/* Specialization */}
-              <label className="sm:col-span-2 space-y-1.5 text-sm">
+              <label className="space-y-1.5 text-sm sm:col-span-2">
                 <span className="font-medium">Specialization *</span>
                 <input
                   className="w-full rounded-lg border px-3 py-2.5"
@@ -195,7 +194,7 @@ const UpdateLawyerModel = (data: LawyerDataType) => {
               </label>
 
               {/* Block */}
-              <label className="sm:col-span-2 space-y-1.5 text-sm">
+              <label className="space-y-1.5 text-sm sm:col-span-2">
                 <span className="font-medium">Block *</span>
                 <select
                   className="w-full rounded-lg border px-3 py-2.5"
@@ -208,11 +207,11 @@ const UpdateLawyerModel = (data: LawyerDataType) => {
             </div>
 
             {/* Footer */}
-            <div className="sticky bottom-0 bg-white pt-4 flex flex-col gap-2 sm:flex-row sm:justify-end">
+            <div className="sticky bottom-0 flex flex-col gap-2 bg-white pt-4 sm:flex-row sm:justify-end">
               <button
                 type="button"
                 onClick={() => navigate("/lawyer")}
-                className="w-full sm:w-auto rounded-lg border px-4 py-2"
+                className="w-full rounded-lg border px-4 py-2 sm:w-auto"
               >
                 Cancel
               </button>
@@ -220,7 +219,7 @@ const UpdateLawyerModel = (data: LawyerDataType) => {
               <button
                 type="submit"
                 disabled={isPending}
-                className="w-full sm:w-auto rounded-lg bg-black px-4 py-2 text-white"
+                className="w-full rounded-lg bg-black px-4 py-2 text-white sm:w-auto"
               >
                 {isPending ? "Updating..." : "Update"}
               </button>

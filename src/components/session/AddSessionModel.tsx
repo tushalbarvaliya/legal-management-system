@@ -24,9 +24,11 @@ const AddSessionModel = () => {
   const { mutate, isPending } = useMutation({
     mutationFn: addSession,
     onSuccess: () => {
-      toast.success("Session Add")
+      toast.success("Session Add", { duration: 1500 })
       queryClient.invalidateQueries({ queryKey: ["sessions"] })
-      navigate("/session")
+      setTimeout(() => {
+        navigate("/session")
+      }, 2000)
     },
     onError: (error) => {
       toast.error(`Error ${error}`)
@@ -59,7 +61,7 @@ const AddSessionModel = () => {
     <div className="fixed inset-0 z-70">
       <div className="absolute inset-0 bg-zinc-900/45"></div>
 
-      <div className="relative mx-auto flex min-h-full w-full items-center justify-center p-4 sm:p-6">
+      <div className="relative mx-auto flex h-[90vh] overflow-y-scroll w-full items-start justify-center p-4 sm:p-6">
         <div className="shadow-soft w-full max-w-2xl rounded-2xl border border-zinc-200 bg-white">
           <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-4 sm:px-6">
             <h3 className="text-lg font-semibold tracking-tight text-zinc-900">
@@ -68,7 +70,7 @@ const AddSessionModel = () => {
 
             <button
               className="rounded-lg border border-zinc-200 p-2 text-zinc-700 transition hover:bg-zinc-100"
-              onClick={() => navigate("session")}
+              onClick={() => navigate("/session")}
             >
               <X />
             </button>
@@ -128,7 +130,11 @@ const AddSessionModel = () => {
                 >
                   <option value="">Select ...</option>
                   {caseData?.map((item) => {
-                    return <option value={item.id} key={item.id}>{item.title}</option>
+                    return (
+                      <option value={item.id} key={item.id}>
+                        {item.title}
+                      </option>
+                    )
                   })}
                 </select>
                 <p className="text-xs text-red-500">{errors.caseId?.message}</p>
@@ -152,7 +158,9 @@ const AddSessionModel = () => {
                 <option value="">Select Client</option>
                 {clientData?.map((item) => (
                   <option value={item.client.id} key={item.client.id}>
-                    {item.user.firstName}{""}{item.user.lastName}
+                    {item.user.firstName}
+                    {""}
+                    {item.user.lastName}
                   </option>
                 ))}
               </select>
@@ -228,7 +236,7 @@ const AddSessionModel = () => {
               <button
                 type="button"
                 className="rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-100"
-                onClick={() => navigate("session")}
+                onClick={() => navigate("/session")}
               >
                 Cancel
               </button>

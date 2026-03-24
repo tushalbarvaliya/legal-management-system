@@ -43,9 +43,11 @@ const AddLawyerModel = () => {
   const { mutate, isPending } = useMutation({
     mutationFn: postLawyer,
     onSuccess: () => {
-      toast.success("User Become Lawyer")
+      toast.success("User Become Lawyer", { duration: 1500 })
       queryClient.invalidateQueries({ queryKey: ["lawyer"] })
-      navigate("/lawyer")
+      setTimeout(() => {
+        navigate("/lawyer")
+      }, 2000)
     },
     onError: (error) => {
       toast.error(`Error ${error.message}`)

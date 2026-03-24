@@ -21,12 +21,24 @@ const StaffPage = () => {
     queryFn: getAllStaff,
   })
 
+  if (isError) {
+    return <ErrorMessage />
+  }
+  if (isLoading) {
+    return (
+      <>
+        <StaffCardSkeleton />
+        <StaffCardSkeleton />
+        <StaffCardSkeleton />
+      </>
+    )
+  }
   return (
     <>
       {pathname === "/staff/add" && <AddStaffModel />}
       {/* Add Button */}
       <button
-        className="fixed right-6 bottom-6 z-99 h-14 w-14 rounded-full bg-zinc-900 text-white shadow-xl hover:scale-105"
+        className="fixed right-6 bottom-6 z-99 h-14 w-14 rounded-full bg-zinc-900 text-white shadow-xl hover:scale-105 justify-center items-center flex"
         onClick={() => {
           navigate("/staff/add")
         }}
@@ -64,20 +76,17 @@ const StaffPage = () => {
 
         {/* List */}
         <div className="space-y-3">
-          {!isLoading && isError && <ErrorMessage />}
-          {isLoading && (
-            <>
-              <StaffCardSkeleton />
-              <StaffCardSkeleton />
-              <StaffCardSkeleton />
-            </>
-          )}
           {!isLoading && !isError && StaffData?.length === 0 && (
             <p className="text-sm text-zinc-500">No results found</p>
           )}
-          {StaffData?.map((staff) => {
-            return staff ? <StaffCard {...staff} /> : null
-          })}
+          {!isLoading &&
+            !isError &&
+            StaffData?.map((staff) => {
+              if (!staff?.staff) return null
+              return staff ? (
+                <StaffCard {...staff} key={staff.staff.id} />
+              ) : null
+            })}
         </div>
       </div>
     </>

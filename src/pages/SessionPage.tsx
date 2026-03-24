@@ -34,6 +34,19 @@ const SessionPage = () => {
     )
   }, [sessions, search])
 
+  if (isLoading) {
+    return (
+      <>
+        <SessionCardSkeleton />
+        <SessionCardSkeleton />
+        <SessionCardSkeleton />
+      </>
+    )
+  }
+  
+  if (isError) {
+    return <ErrorMessage />
+  }
   return (
     <>
       {pathname === "/session/add" && <AddSessionModel />}
@@ -79,16 +92,6 @@ const SessionPage = () => {
 
         {/* List */}
         <div className="mt-5 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {isLoading && (
-            <>
-              <SessionCardSkeleton />
-              <SessionCardSkeleton />
-              <SessionCardSkeleton />
-            </>
-          )}
-
-          {isError && <ErrorMessage />}
-
           {!isLoading &&
             !isError &&
             (filteredSessions.length > 0 ? (
@@ -106,7 +109,7 @@ const SessionPage = () => {
 
         {/* Add Button */}
         <Link to="/session/add">
-          <button className="fixed right-6 bottom-6 h-14 w-14 rounded-full bg-black text-white">
+          <button className="fixed right-6 bottom-6 flex h-14 w-14 items-center justify-center rounded-full bg-black text-white">
             <Plus />
           </button>
         </Link>

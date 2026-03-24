@@ -65,7 +65,7 @@ const AddClientModel = () => {
       <div className="fixed inset-0 z-70">
         <div className="absolute inset-0 h-screen bg-zinc-900/45"></div>
 
-        <div className="relative mx-auto flex min-h-full w-full items-center justify-center p-4 sm:p-6">
+        <div className="relative mx-auto flex h-[95vh] w-full items-start justify-center overflow-y-scroll p-4 sm:p-6 rounded-3xl">
           <div className="shadow-soft w-full max-w-3xl rounded-2xl border border-zinc-200 bg-white">
             <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-4 sm:px-6">
               <h3 className="font-mono text-lg font-semibold text-zinc-900">
@@ -330,7 +330,7 @@ const AddClientModel = () => {
                 )}
               </div>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <label className="space-y-1.5 text-sm text-zinc-700 col-span-full">
+                <label className="col-span-full space-y-1.5 text-sm text-zinc-700">
                   <span className="font-medium">Other Phone Number</span>
                   <input
                     id="otherPhone"
@@ -447,14 +447,15 @@ const AddClientModel = () => {
               </label>
 
               <div className="flex flex-col-reverse gap-2 border-t border-zinc-200 pt-4 sm:flex-row sm:justify-end">
-                <Link to={"/client"}>
-                  <Button
-                    type="button"
-                    className="bg-black p-6 font-mono font-semibold text-white"
-                  >
-                    Cancel
-                  </Button>
-                </Link>
+                <Button
+                  type="button"
+                  className="bg-black p-6 font-mono font-semibold text-white"
+                  onClick={() => {
+                    navigate("/client")
+                  }}
+                >
+                  Cancel
+                </Button>
                 <Button
                   type="submit"
                   className="bg-black p-6 font-mono font-semibold text-white"
