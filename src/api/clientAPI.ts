@@ -1,6 +1,7 @@
 import axiosInstance from "./axiosInstance"
 import type { AddClientFormType } from "@/components/client/AddClientModel"
 import type { FormUpdateClient } from "@/components/client/UpdateClientModel"
+import type { ClientDataType } from "@/data/clientData"
 
 export const getAllClient = async () => {
   try {
@@ -44,12 +45,14 @@ export const patchClient = async (data: FormUpdateClient) => {
   }
 }
 
-export const deleteClient = async (data: ClineDataType) => {
+export const deleteClient = async (data: ClientDataType) => {
   try {
-    const response = await axiosInstance.delete(`/clients/client/${data.id}`)
+    const response = await axiosInstance.delete(
+      `/clients/client/${data.client.id}`
+    )
     return response.data
   } catch {
-    console.log(`/clients/client/${data.id}`)
+    console.log(`/clients/client/${data.client.id}`)
   }
 }
 

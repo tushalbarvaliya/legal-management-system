@@ -3,10 +3,10 @@ import { Link, useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 
 import { deleteClient } from "@/api/clientAPI"
-import type { ClineDataType } from "@/data/clientData"
+import type { ClientDataType } from "@/data/clientData"
 import { queryClient } from "@/main"
 
-const SoftDeleteModel = (data: ClineDataType) => {
+const SoftDeleteModel = (data: ClientDataType) => {
   const navigate = useNavigate()
   const { mutate } = useMutation({
     mutationFn: deleteClient,
@@ -31,7 +31,7 @@ const SoftDeleteModel = (data: ClineDataType) => {
             <p className="mt-2 text-sm text-zinc-600">
               Are you sure you want to delete this client?
               <span>
-                {data.id}
+                {data.client.id}
               </span>
             </p>
             <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
