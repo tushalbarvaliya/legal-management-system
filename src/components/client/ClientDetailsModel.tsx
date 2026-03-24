@@ -1,11 +1,11 @@
 import { X } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 
-import type { ClineDataType } from "@/data/clientData"
 import { formatDate } from "@/utils/formate"
+import type { ClientDataType } from "@/data/clientData"
 
 
-const ClientDetailsModel = (data: ClineDataType) => {
+const ClientDetailsModel = (data: ClientDataType) => {
   const navigate=useNavigate()
   return (
     <>
@@ -18,7 +18,7 @@ const ClientDetailsModel = (data: ClineDataType) => {
               <h3 className="text-lg font-semibold tracking-tight text-zinc-900">
                 Client Details
                 <p className="mt-2 text-xs text-stone-600">
-                  {formatDate(data.createdAt)}
+                  {formatDate(data.client.createdAt)}
                 </p>
               </h3>
               <button
@@ -34,23 +34,23 @@ const ClientDetailsModel = (data: ClineDataType) => {
             <div className="space-y-4 px-5 py-4 sm:px-6 sm:py-5">
               <div className="flex gap-4 rounded-xl border border-zinc-200 bg-zinc-50 p-4">
                 <p className="text-lg font-semibold text-zinc-900">
-                  {/* {data.firstName} {data.lastName} */}
+                  {data.user.firstName} {data.user.lastName}
                 </p>
-                {data.isBlocked == "\u0001" && (
+                {data.client.isBlocked == "\u0001" && (
                   <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-black">
-                    {data.isBlocked ? "Block" : ""}
+                    {data.client.isBlocked ? "Block" : ""}
                   </span>
                 )}
-                {data.isDeleted === "\u0001" && (
+                {data.client.isDeleted === "\u0001" && (
                   <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-800">
-                    {data.isDeleted ? "Delete" : ""}
+                    {data.client.isDeleted ? "Delete" : ""}
                   </span>
                 )}
               </div>
               <div className="grid grid-cols-1 gap-3 text-sm text-zinc-700 sm:grid-cols-2">
                 <p>
                   <span className="font-medium text-zinc-500">Mobile:</span>{" "}
-                  {/* <span>{data.mobileNumber}</span> */}
+                  <span>{data.user.phoneNumber}</span>
                 </p>
                 <p>
                   <span className="font-medium text-zinc-500">
@@ -60,24 +60,24 @@ const ClientDetailsModel = (data: ClineDataType) => {
                 </p>
                 <p>
                   <span className="font-medium text-zinc-500">Occupation:</span>{" "}
-                  <span>{data.occupation}</span>
+                  <span>{data.client.occupation}</span>
                 </p>
                 <p>
                   <span className="font-medium text-zinc-500">Gender:</span>{" "}
-                  {/* <span>{data.gender}</span> */}
+                  <span>{data.user.gender}</span>
                 </p>
               </div>
               <div className="rounded-xl border border-zinc-200 bg-white p-4">
                 <p className="text-xs font-semibold tracking-[0.12em] text-zinc-500 uppercase">
                   Email
                 </p>
-                {/* <p className="mt-1 text-sm text-zinc-700">{data.email}</p> */}
+                <p className="mt-1 text-sm text-zinc-700">{data.user.email}</p>
               </div>
               <div className="rounded-xl border border-zinc-200 bg-white p-4">
                 <p className="text-xs font-semibold tracking-[0.12em] text-zinc-500 uppercase">
                   Address
                 </p>
-                {/* <p className="mt-1 text-sm text-zinc-700">{data.address}</p> */}
+                <p className="mt-1 text-sm text-zinc-700">{data.user.address}</p>
               </div>
 
               <div className="flex justify-end border-t border-zinc-200 pt-4">
