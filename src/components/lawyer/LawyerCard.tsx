@@ -7,26 +7,27 @@ import {
 import { Button } from "../ui/button"
 import { MoreVertical } from "lucide-react"
 import type { LawyerDataType } from "@/data/lawyerData"
+import BlockLawyerModel from "./BlockLawyerModel"
+import { useLocation, useNavigate } from "react-router-dom"
+import DeleteLawyerModel from "./DeleteLawyerModel"
 
-// import DeleteLawyerModel from "./DeleteLawyerModel"
 // import UpdateLawyerModel from "./UpdateLawyerModel"
-// import BlockLawyerModel from "./BlockLawyerModel"
 
 const LawyerCard = (lawyer: LawyerDataType) => {
-  // const [deleteModel, setDeleteModel] = useState(false)
+  const pathname = useLocation().pathname
+  const navigate = useNavigate()
   // const [updateModel, setUpdateModel] = useState(false)
-  // const [blockModel, setBlockModel] = useState(false)
   return (
     <>
-      {/* {deleteModel && (
-        <DeleteLawyerModel closeModal={setDeleteModel} {...lawyer} />
-      )} */}
+      {pathname == `/lawyer/delete/${lawyer.lawyer.id}` && (
+        <DeleteLawyerModel {...lawyer} />
+      )}
       {/* {updateModel && (
         <UpdateLawyerModel closeModal={setUpdateModel} {...lawyer} />
       )} */}
-      {/* {blockModel && (
-        <BlockLawyerModel closeModal={setBlockModel} {...lawyer} />
-      )} */}
+      {pathname == `/lawyer/block/${lawyer.lawyer.id}` && (
+        <BlockLawyerModel {...lawyer} />
+      )}
 
       <div className="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition hover:shadow-md sm:flex-row sm:items-center sm:justify-between">
         {/* LEFT SECTION */}
@@ -91,9 +92,20 @@ const LawyerCard = (lawyer: LawyerDataType) => {
             <DropdownMenuContent align="end" className="w-40 font-medium">
               <DropdownMenuItem>Edit</DropdownMenuItem>
               {lawyer.lawyer.isBlocked === false && (
-                <DropdownMenuItem>Block</DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    navigate(`/lawyer/block/${lawyer.lawyer.id}`)
+                  }}
+                >
+                  Block
+                </DropdownMenuItem>
               )}
-              <DropdownMenuItem className="text-red-500">
+              <DropdownMenuItem
+                className="text-red-500"
+                onClick={() => {
+                  navigate(`/lawyer/delete/${lawyer.lawyer.id}`)
+                }}
+              >
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>

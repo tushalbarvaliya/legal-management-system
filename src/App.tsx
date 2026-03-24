@@ -63,6 +63,22 @@ const App = () => {
             }
           />
           <Route
+            path="/lawyer/block/:id"
+            element={
+              <>
+                <LawyerPage />
+              </>
+            }
+          />
+          <Route
+            path="/lawyer/delete/:id"
+            element={
+              <>
+                <LawyerPage />
+              </>
+            }
+          />
+          <Route
             path="/cases"
             element={
               <>
