@@ -2,7 +2,7 @@ import { getAllCases } from "@/api/caseAPI"
 import { getAllClient } from "@/api/clientAPI"
 import { addInvoice } from "@/api/invoiceAPI"
 import type { caseDataType } from "@/data/caseData"
-import type { ClineDataType } from "@/data/clientData"
+import type { ClientDataType } from "@/data/clientData"
 import { queryClient } from "@/main"
 
 import { useMutation, useQuery } from "@tanstack/react-query"
@@ -38,7 +38,7 @@ const AddInvoiceModel = () => {
     queryKey: ["cases"],
     queryFn: getAllCases,
   })
-  const { data: clientData } = useQuery<ClineDataType[]>({
+  const { data: clientData } = useQuery<ClientDataType[]>({
     queryFn: getAllClient,
     queryKey: ["client"],
   })
@@ -109,7 +109,11 @@ const AddInvoiceModel = () => {
             >
               <option value="">Select ...</option>
               {clientData?.map((item) => {
-                return <option value={item.id}>{item.id}</option>
+                return (
+                  <option value={item.client.id}>
+                    {item.user.firstName} {item.user.firstName}
+                  </option>
+                )
               })}
             </select>
             <p className="min-h-5 text-xs text-red-600">
@@ -195,9 +199,8 @@ const AddInvoiceModel = () => {
               })}
             >
               <option value="">Select Status</option>
-              <option value="Paid">Paid</option>
-              <option value="Pending">Pending</option>
-              <option value="Overdue">Overdue</option>
+              <option value="paid">Paid</option>
+              <option value="pending">Pending</option>
             </select>
             <p className="min-h-5 text-xs text-red-600">
               {errors.status?.message}

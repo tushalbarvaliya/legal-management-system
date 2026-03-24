@@ -8,7 +8,7 @@ import { toast } from "sonner"
 import type { AddInvoiceFormDataType } from "./AddInvoiceModel"
 import type { caseDataType } from "@/data/caseData"
 import { getAllCases } from "@/api/caseAPI"
-import type { ClineDataType } from "@/data/clientData"
+import type { ClientDataType } from "@/data/clientData"
 import { getAllClient } from "@/api/clientAPI"
 import { X } from "lucide-react"
 import { useEffect } from "react"
@@ -30,7 +30,7 @@ const EditInvoiceModel = (data: invoiceDataType) => {
     queryKey: ["cases"],
     queryFn: getAllCases,
   })
-  const { data: clientData } = useQuery<ClineDataType[]>({
+  const { data: clientData } = useQuery<ClientDataType[]>({
     queryFn: getAllClient,
     queryKey: ["client"],
   })
@@ -107,7 +107,7 @@ const EditInvoiceModel = (data: invoiceDataType) => {
             >
               <option value="">Select ...</option>
               {clientData?.map((item) => {
-                return <option value={item.id}>{item.id}</option>
+                return <option value={item.client.id}>{item.user.firstName}{" "}{item.user.lastName}</option>
               })}
             </select>
             <p className="min-h-5 text-xs text-red-600">

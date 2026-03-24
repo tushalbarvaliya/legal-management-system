@@ -19,7 +19,7 @@ export const updateInvoice = async (data) => {
 }
 export const deleteInvoice = async (data: invoiceDataType) => {
   try {
-    const response = await axiosInstance.delete(`/invoice/${data.id}`)
+    const response = await axiosInstance.delete(`/invoices/invoice/${data.id}`)
     return response.data
   } catch {
     console.log(`/invoice/${data.id}`)

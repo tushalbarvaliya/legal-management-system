@@ -7,7 +7,7 @@ import { X } from "lucide-react"
 import { postCase } from "@/api/caseAPI"
 import { queryClient } from "@/main"
 import { getAllClient } from "@/api/clientAPI"
-import type { ClineDataType } from "@/data/clientData"
+import type { ClientDataType } from "@/data/clientData"
 
 export type caseAddFormDataType = {
   caseNumber: number
@@ -43,7 +43,7 @@ const AddCaseModel = () => {
     mode: "onChange",
     delayError: 500,
   })
-  const { data: userData } = useQuery<ClineDataType[]>({
+  const { data: userData } = useQuery<ClientDataType[]>({
     queryFn: getAllClient,
     queryKey: ["client"],
   })
@@ -214,8 +214,8 @@ const AddCaseModel = () => {
                 >
                   <option value="">Select Client</option>
                   {userData?.map((item) => (
-                    <option value={item.id} key={item.id}>
-                      {item.id}
+                    <option value={item.client.id} key={item.client.id}>
+                      {item.user.firstName}{" "}{item.user.lastName}
                     </option>
                   ))}
                 </select>
@@ -276,7 +276,7 @@ const AddCaseModel = () => {
                   Expected Closing Data
                 </label>
                 <input
-                  type="date"
+                  type="datetime-local"
                   className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm outline-none focus:border-zinc-400"
                   {...register("caseClosedDate", {
                     required: {

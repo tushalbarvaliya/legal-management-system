@@ -9,7 +9,7 @@ import { addSession } from "@/api/sessionAPI"
 import { getAllCases } from "@/api/caseAPI"
 import { getAllClient } from "@/api/clientAPI"
 import type { caseDataType } from "@/data/caseData"
-import type { ClineDataType } from "@/data/clientData"
+import type { ClientDataType } from "@/data/clientData"
 
 export type SessionAddFormType = {
   sessionDate: string
@@ -36,7 +36,7 @@ const AddSessionModel = () => {
     queryKey: ["cases"],
     queryFn: getAllCases,
   })
-  const { data: clientData } = useQuery<ClineDataType[]>({
+  const { data: clientData } = useQuery<ClientDataType[]>({
     queryFn: getAllClient,
     queryKey: ["client"],
   })
@@ -151,8 +151,8 @@ const AddSessionModel = () => {
               >
                 <option value="">Select Client</option>
                 {clientData?.map((item) => (
-                  <option value={item.id} key={item.id}>
-                    {item.id}
+                  <option value={item.client.id} key={item.client.id}>
+                    {item.user.firstName}{""}{item.user.lastName}
                   </option>
                 ))}
               </select>

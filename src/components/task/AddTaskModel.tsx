@@ -194,8 +194,9 @@ const AddTaskModel = () => {
                   })}
                 >
                   <option value="">Select Status</option>
-                  <option value="pending">Pending</option>
-                  <option value="completed">Completed</option>
+                  <option value="today">today</option>
+                  <option value="overdue">overdue</option>
+                  <option value="completed">completed</option>
                 </select>
 
                 {errors.caseId?.message && (

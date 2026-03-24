@@ -8,8 +8,8 @@ import { useEffect } from "react"
 import { patchCase } from "@/api/caseAPI"
 import { getAllClient } from "@/api/clientAPI"
 import type { caseDataType } from "@/data/caseData"
-import type { ClineDataType } from "@/data/clientData"
 import { queryClient } from "@/main"
+import type { ClientDataType } from "@/data/clientData"
 
 const EditCaseModel = (data: caseDataType) => {
   const navigate = useNavigate()
@@ -35,7 +35,7 @@ const EditCaseModel = (data: caseDataType) => {
     delayError: 500,
     defaultValues: data,
   })
-  const { data: userData } = useQuery<ClineDataType[]>({
+  const { data: userData } = useQuery<ClientDataType[]>({
     queryFn: getAllClient,
     queryKey: ["client"],
   })
@@ -223,8 +223,8 @@ const EditCaseModel = (data: caseDataType) => {
                 >
                   <option value="">Select Client</option>
                   {userData?.map((item) => (
-                    <option value={item.id} key={item.id}>
-                      {item.id}
+                    <option value={item.client.id} key={item.client.id}>
+                      {item.user.firstName} {item.user.lastName}
                     </option>
                   ))}
                 </select>
