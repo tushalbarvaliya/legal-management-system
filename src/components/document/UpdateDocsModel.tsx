@@ -10,7 +10,7 @@ import { getAllClient } from "@/api/clientAPI"
 import { updateDocs } from "@/api/docsAPI"
 
 import type { caseDataType } from "@/data/caseData"
-import type { ClineDataType } from "@/data/clientData"
+import type { ClientDataType } from "@/data/clientData"
 import type { docsDataType } from "@/data/docsData"
 
 import { convertToBase64 } from "@/utils/convertToBase64"
@@ -29,7 +29,7 @@ const UpdateDocsModel = ({ data }: Props) => {
     queryFn: getAllCases,
   })
 
-  const { data: clientData } = useQuery<ClineDataType[]>({
+  const { data: clientData } = useQuery<ClientDataType[]>({
     queryKey: ["client"],
     queryFn: getAllClient,
   })
@@ -166,9 +166,7 @@ const UpdateDocsModel = ({ data }: Props) => {
                     const file = e.target.files?.[0]
                     if (!file) return
 
-                    const base64 = await convertToBase64(file)
-
-                    setValue("documentLink", base64, {
+                    setValue("file", file, {
                       shouldValidate: true,
                     })
                     setValue("fileType", file.type, {
@@ -199,8 +197,8 @@ const UpdateDocsModel = ({ data }: Props) => {
               >
                 <option value="">Select...</option>
                 {clientData?.map((item) => (
-                  <option key={item.id} value={String(item.id)}>
-                    {item.id}
+                  <option key={item.client.id} value={String(item.client.id)}>
+                    {item.user.firstName} {item.user.firstName}
                   </option>
                 ))}
               </select>

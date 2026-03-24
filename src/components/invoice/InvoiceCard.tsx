@@ -82,7 +82,7 @@ const InvoiceCard = (invoice: invoiceDataType) => {
 
           <div>
             <p className="text-xs text-zinc-400 uppercase">Total Hours</p>
-            <p className="font-medium text-zinc-800">${invoice.totalHours}</p>
+            <p className="font-medium text-zinc-800">{invoice.totalHours}</p>
           </div>
 
           <div>

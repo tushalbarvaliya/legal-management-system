@@ -42,6 +42,8 @@ const UpdateTaskModel = (data: taskDataType) => {
     queryKey: ["staff"],
     queryFn: getAllStaff,
   })
+  console.log(staffData);
+  
   const {
     register,
     handleSubmit,
@@ -113,7 +115,7 @@ const UpdateTaskModel = (data: taskDataType) => {
                     message: "Please Enter This value",
                   },
                   minLength: {
-                    value: 10,
+                    value: 3,
                     message: "Description should contain Minimum 10 letter",
                   },
                 })}
@@ -138,7 +140,7 @@ const UpdateTaskModel = (data: taskDataType) => {
                     message: "Please Enter This value",
                   },
                   minLength: {
-                    value: 10,
+                    value: 3,
                     message: "Description should contain Minimum 10 letter",
                   },
                 })}
@@ -216,8 +218,9 @@ const UpdateTaskModel = (data: taskDataType) => {
                   })}
                 >
                   <option value="">Select Status</option>
-                  <option value="pending">Pending</option>
-                  <option value="completed">Completed</option>
+                  <option value="today">today</option>
+                  <option value="overdue">overdue</option>
+                  <option value="completed">completed</option>
                 </select>
 
                 {errors.caseId?.message && (

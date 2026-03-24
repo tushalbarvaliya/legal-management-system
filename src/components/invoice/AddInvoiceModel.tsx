@@ -96,7 +96,7 @@ const AddInvoiceModel = () => {
             </label>
             <select
               className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-              {...register("caseId", {
+              {...register("clientId", {
                 minLength: {
                   value: 1,
                   message: "caseID length should be greater than 3",
@@ -111,7 +111,7 @@ const AddInvoiceModel = () => {
               {clientData?.map((item) => {
                 return (
                   <option value={item.client.id}>
-                    {item.user.firstName} {item.user.firstName}
+                    {item.user.firstName} {item.user.lastName}
                   </option>
                 )
               })}
@@ -129,7 +129,7 @@ const AddInvoiceModel = () => {
 
             <select
               className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-              {...register("clientId", {
+              {...register("caseId", {
                 minLength: {
                   value: 1,
                   message: "caseID length should be greater than 3",

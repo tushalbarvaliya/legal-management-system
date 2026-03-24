@@ -14,7 +14,7 @@ import type { ClientDataType } from "@/data/clientData"
 
 export type AddDocsFormData = {
   title: string
-  documentLink: string
+  file: string
   fileType: string
   description: string
   notes: string
@@ -172,30 +172,30 @@ const AddDocsModal = () => {
                       const file = e.target.files?.[0]
 
                       if (!file) {
-                        setError("documentLink", {
+                        setError("file", {
                           message: "File is required",
                         })
                         return
                       }
 
                       if (file.size > 2 * 1024 * 1024) {
-                        setError("documentLink", {
+                        setError("file", {
                           message: "Max file size is 2MB",
                         })
                         return
                       }
 
-                      clearErrors("documentLink")
+                      clearErrors("file")
 
                       const base64 = await convertToBase64(file)
 
                       setValue("fileType", file.type)
-                      setValue("documentLink", base64)
+                      setValue("file", file)
                     }}
                   />
 
                   <p className="text-xs text-red-500">
-                    {errors.documentLink?.message}
+                    {errors.file?.message}
                   </p>
                 </label>
                 <label className="space-y-1.5 text-sm text-zinc-700">

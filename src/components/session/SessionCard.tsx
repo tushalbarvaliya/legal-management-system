@@ -11,7 +11,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
-import DeleteSessionModel from "./DeleteSessionModel"
 
 const SessionCard = (data: sessionDataType) => {
   const navigate = useNavigate()
@@ -19,9 +18,7 @@ const SessionCard = (data: sessionDataType) => {
   return (
     <>
       {pathname === `/session/${data.id}` && <SessionDetailsModel {...data} />}
-      {pathname === `/session/delete/${data.id}` && (
-        <DeleteSessionModel {...data} />
-      )}
+
       <div className="sessionCard group relative cursor-pointer rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
         <div className="absolute top-0 left-0 h-1 w-full rounded-t-2xl bg-black"></div>
 
@@ -57,16 +54,7 @@ const SessionCard = (data: sessionDataType) => {
                 >
                   View
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="text-red-500"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    navigate(`/session/delete/${data.id}`)
-                  }}
-                >
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
+                  </DropdownMenuContent>
             </DropdownMenu>
           </div>
         </div>

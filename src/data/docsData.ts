@@ -1,6 +1,7 @@
+
 export type docsDataType = {
   title: string
-  documentLink: string
+  file: File
   description: string
   caseId: number
   userId: number

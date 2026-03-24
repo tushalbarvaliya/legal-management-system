@@ -13,18 +13,27 @@ export const getAllDocs = async () => {
 
 export const createDocs = async (data: AddDocsFormData) => {
   try {
-    const response = await axiosInstance.post("/documents/document", data)
+    const response = await axiosInstance.post("/documents/document", data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
     return response.data
   } catch {
     console.log(data)
   }
 }
 
-export const updateDocs = async (data:docsDataType) => {
+export const updateDocs = async (data: docsDataType) => {
   try {
     const response = await axiosInstance.patch(
       `/documents/document/${data.id}`,
-      data
+      data,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
     )
     return response.data
   } catch {
@@ -32,7 +41,7 @@ export const updateDocs = async (data:docsDataType) => {
   }
 }
 
-export const deleteDocs = async (data:docsDataType) => {
+export const deleteDocs = async (data: docsDataType) => {
   try {
     const response = await axiosInstance.delete(
       `/documents/document/${data.id}`
