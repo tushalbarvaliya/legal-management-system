@@ -32,7 +32,7 @@ const CasesCard = (data: caseDataType) => {
             {/* TITLE */}
             <div className="group/title relative inline-flex max-w-full items-center">
               <h2 className="truncate text-sm font-semibold text-zinc-900 transition duration-200 group-hover:text-zinc-950">
-                {data.title}
+                {data.id}{" "}{data.title}
               </h2>
 
               {/* TOOLTIP */}

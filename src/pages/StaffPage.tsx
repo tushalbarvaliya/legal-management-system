@@ -1,34 +1,34 @@
 import { Plus, Search } from "lucide-react"
-import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 
 import ErrorMessage from "@/components/ErrorMessage"
 import StaffCard from "@/components/staff/StaffCard"
 import StaffCardSkeleton from "@/components/staff/StaffCardSkeleton"
 import { getAllStaff } from "@/api/staffAPI"
-import type { staffDataType } from "@/data/satffData"
+import type { StaffUserMapping } from "@/data/satffData"
+import AddStaffModel from "@/components/staff/AddStaffModel"
 
 const StaffPage = () => {
-  const [addModelOpen, setAddModelOpen] = useState(false)
-  const navigate=useNavigate()
+  const navigate = useNavigate()
+  const pathname = useLocation().pathname
   const {
     data: StaffData,
     isLoading,
     isError,
-  } = useQuery<staffDataType[]>({
+  } = useQuery<StaffUserMapping[]>({
     queryKey: ["staff"],
     queryFn: getAllStaff,
   })
 
   return (
     <>
-      {/* {addModelOpen && <AddLawyerModel onClose={setAddModelOpen} />} */}
+      {pathname === "/staff/add" && <AddStaffModel />}
       {/* Add Button */}
       <button
         className="fixed right-6 bottom-6 z-99 h-14 w-14 rounded-full bg-zinc-900 text-white shadow-xl hover:scale-105"
         onClick={() => {
-          setAddModelOpen(true)
+          navigate("/staff/add")
         }}
       >
         <Plus />
