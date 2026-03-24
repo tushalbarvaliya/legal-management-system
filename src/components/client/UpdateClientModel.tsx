@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 
-import { patchClient, postClient } from "@/api/clientAPI"
+import { patchClient } from "@/api/clientAPI"
 import { queryClient } from "@/main"
 import {
   addressRegex,
@@ -86,8 +86,7 @@ const UpdateClientModel = ({ data }: { data: ClientDataType }) => {
   }, [data, reset])
   const onSubmit = (formData: EditClientType) => {
     console.log('sdfd',formData);
-    
-    mutate({ formData, id: data.client.id })
+    mutate({ data:formData, id: data.client.id })
   }
 
   return (
