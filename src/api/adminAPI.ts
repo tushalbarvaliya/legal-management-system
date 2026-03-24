@@ -1,9 +1,15 @@
+import axios from "axios"
 import axiosInstance from "./axiosInstance"
 import { userData } from "@/data/userData"
 
 export const getAllUser = async () => {
   try {
-    const response = await axiosInstance.get("/users/")
+    const response = await axios.get("/users/", {
+      headers: {
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0dXNoYWwxMjNAZ21haWwuY29tIiwiaWQiOjM0LCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3NzY5MjYyODJ9.Ko-C1XyWBuy3HQRmQAN-xhApo_LhDuxAbJ6Pusaxms8",
+      },
+    })
     return response.data
   } catch {
     return userData
