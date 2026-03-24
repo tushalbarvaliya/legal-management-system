@@ -39,6 +39,8 @@ const AddDocsModal = () => {
     register,
     handleSubmit,
     setValue,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<AddDocsFormData>({
     mode: "onChange",
@@ -96,9 +98,9 @@ const AddDocsModal = () => {
                         message: "Title length should be greater than 3 ",
                       },
                       required: {
-                      value: true,
-                      message: "Please Enter a Value",
-                    },
+                        value: true,
+                        message: "Please Enter a Value",
+                      },
                     })}
                   />
                   <p className="text-xs text-red-500">
@@ -118,9 +120,9 @@ const AddDocsModal = () => {
                         message: "caseID length should be greater than 3",
                       },
                       required: {
-                      value: true,
-                      message: "Please Enter a Value",
-                    },
+                        value: true,
+                        message: "Please Enter a Value",
+                      },
                     })}
                   >
                     <option value="">Select ...</option>
@@ -162,7 +164,7 @@ const AddDocsModal = () => {
                   <span className="font-medium">
                     File Link <span className="text-red-500">*</span>
                   </span>
-                  <input
+                  {/* <input
                     type="file"
                     className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm"
                     required
@@ -174,7 +176,39 @@ const AddDocsModal = () => {
                       setValue("fileType", mimeType)
                       setValue("documentLink", base64)
                     }}
+                  /> */}
+                  <input
+                    type="file"
+                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0]
+
+                      if (!file) {
+                        setError("documentLink", {
+                          message: "File is required",
+                        })
+                        return
+                      }
+
+                      // ✅ MAX SIZE VALIDATION (2MB)
+                      if (file.size > 2 * 1024 * 1024) {
+                        setError("documentLink", {
+                          message: "Max file size is 2MB",
+                        })
+                        return
+                      }
+
+
+                      // ✅ CLEAR ERROR IF VALID
+                      clearErrors("documentLink")
+
+                      const base64 = await convertToBase64(file)
+
+                      setValue("fileType", file.type)
+                      setValue("documentLink", base64)
+                    }}
                   />
+
                   <p className="text-xs text-red-500">
                     {errors.documentLink?.message}
                   </p>
@@ -186,7 +220,7 @@ const AddDocsModal = () => {
                   <input
                     type="text"
                     disabled
-                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
+                    className="hidden w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
                     {...register("fileType", {
                       required: {
                         value: true,
