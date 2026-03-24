@@ -25,6 +25,7 @@ type AddLawyerFormData = {
 
 const UpdateLawyerModel = (data: LawyerDataType) => {
   const navigate = useNavigate()
+
   const { data: userData } = useQuery<UserProfileType[]>({
     queryFn: getAllUser,
     queryKey: ["users"],
@@ -39,6 +40,7 @@ const UpdateLawyerModel = (data: LawyerDataType) => {
     delayError: 500,
     mode: "onChange",
   })
+
   useEffect(() => {
     if (data) {
       reset({
@@ -72,127 +74,87 @@ const UpdateLawyerModel = (data: LawyerDataType) => {
   }
 
   return (
-    <div className="fixed inset-0 z-70">
-      <div className="absolute inset-0 h-screen bg-zinc-900/45"></div>
+    <div className="fixed inset-0 z-50">
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-zinc-900/50 h-screen" />
 
-      <div className="relative flex min-h-full items-center justify-center p-4">
-        <div className="shadow-soft w-full max-w-3xl rounded-2xl bg-white">
+      {/* Modal Wrapper */}
+      <div className="relative flex min-h-screen items-start justify-center p-3 sm:items-center sm:p-6">
+        
+        {/* Modal */}
+        <div className="w-full max-w-3xl rounded-2xl bg-white shadow-lg max-h-[90vh] flex flex-col">
+          
           {/* Header */}
-          <div className="flex justify-between border-b px-5 py-4">
-            <h3 className="text-lg font-semibold">Update Lawyer</h3>
+          <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-white px-4 py-3 sm:px-5 sm:py-4 rounded-2xl">
+            <h3 className="text-base sm:text-lg font-semibold">
+              Update Lawyer
+            </h3>
             <button onClick={() => navigate("/lawyer")}>
-              <X />
+              <X size={20} />
             </button>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-5">
-            <div className="grid gap-4 sm:grid-cols-2">
-              {/* label form */}
-              <label className="space-y-1.5 text-sm text-zinc-700">
-                <span className="font-medium">
-                  User Name <span className="text-red-500">*</span>
-                </span>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4"
+          >
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              
+              {/* Name */}
+              <label className="space-y-1.5 text-sm">
+                <span className="font-medium">User Name *</span>
                 <input
-                  type="text"
-                  className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                  {...register("name", {
-                    minLength: {
-                      value: 3,
-                      message: "Title length should be greater than 10 ",
-                    },
-                    required: {
-                      value: true,
-                      message: "Please Enter a Value",
-                    },
-                  })}
+                  className="w-full rounded-lg border px-3 py-2.5"
+                  {...register("name", { required: "Required" })}
                 />
                 <p className="text-xs text-red-500">{errors.name?.message}</p>
               </label>
-              <label className="space-y-1.5 text-sm text-zinc-700">
-                <span className="font-medium">
-                  User ID <span className="text-red-500">*</span>
-                </span>
 
+              {/* User ID */}
+              <label className="space-y-1.5 text-sm">
+                <span className="font-medium">User *</span>
                 <select
-                  className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                  {...register("userId", {
-                    required: {
-                      value: true,
-                      message: "Please Enter a Value",
-                    },
-                  })}
+                  className="w-full rounded-lg border px-3 py-2.5"
+                  {...register("userId", { required: "Required" })}
                 >
                   <option value="">Select User</option>
                   {userData?.map((item) => (
-                    <option value={item.id}>{item.email}</option>
+                    <option key={item.id} value={item.id}>
+                      {item.email}
+                    </option>
                   ))}
                 </select>
-                <p className="text-xs text-red-500">{errors.name?.message}</p>
               </label>
-              <label className="space-y-1.5 text-sm text-zinc-700">
-                <span className="font-medium">
-                  First name <span className="text-red-500">*</span>
-                </span>
+
+              {/* First Name */}
+              <label className="space-y-1.5 text-sm">
+                <span className="font-medium">First Name *</span>
                 <input
-                  type="text"
-                  className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                  {...register("firstName", {
-                    minLength: {
-                      value: 3,
-                      message: "Title length should be greater than 10 ",
-                    },
-                    required: {
-                      value: true,
-                      message: "Please Enter a Value",
-                    },
-                  })}
+                  className="w-full rounded-lg border px-3 py-2.5"
+                  {...register("firstName", { required: "Required" })}
                 />
-                <p className="text-xs text-red-500">
-                  {errors.firstName?.message}
-                </p>
               </label>
-              <label className="space-y-1.5 text-sm text-zinc-700">
-                <span className="font-medium">
-                  last Name <span className="text-red-500">*</span>
-                </span>
+
+              {/* Last Name */}
+              <label className="space-y-1.5 text-sm">
+                <span className="font-medium">Last Name *</span>
                 <input
-                  type="text"
-                  className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                  {...register("lastName", {
-                    minLength: {
-                      value: 3,
-                      message: "Title length should be greater than 10 ",
-                    },
-                    required: {
-                      value: true,
-                      message: "Please Enter a Value",
-                    },
-                  })}
+                  className="w-full rounded-lg border px-3 py-2.5"
+                  {...register("lastName", { required: "Required" })}
                 />
-                <p className="text-xs text-red-500">
-                  {errors.lastName?.message}
-                </p>
               </label>
-              <label className="space-y-1.5 text-sm text-zinc-700">
-                <span className="font-medium">
-                  Phone Number <span className="text-red-500">*</span>
-                </span>
+
+              {/* Phone */}
+              <label className="space-y-1.5 text-sm">
+                <span className="font-medium">Phone *</span>
                 <input
-                  type="text"
-                  className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
+                  className="w-full rounded-lg border px-3 py-2.5"
                   {...register("phoneNumber", {
-                    minLength: {
-                      value: 3,
-                      message: "Title length should be greater than 10 ",
-                    },
+                    required: "Required",
                     pattern: {
                       value: phoneNumberRegex,
-                      message: "Please enter 10 digits only",
-                    },
-                    required: {
-                      value: true,
-                      message: "Please Enter a Value",
+                      message: "Invalid phone",
                     },
                   })}
                 />
@@ -200,106 +162,65 @@ const UpdateLawyerModel = (data: LawyerDataType) => {
                   {errors.phoneNumber?.message}
                 </p>
               </label>
-              <label className="space-y-1.5 text-sm text-zinc-700">
-                <span className="font-medium">
-                  Gender <span className="text-red-500">*</span>
-                </span>
 
+              {/* Gender */}
+              <label className="space-y-1.5 text-sm">
+                <span className="font-medium">Gender *</span>
                 <select
-                  className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                  {...register("gender", {
-                    required: {
-                      value: true,
-                      message: "Please Enter a Value",
-                    },
-                  })}
+                  className="w-full rounded-lg border px-3 py-2.5"
+                  {...register("gender", { required: "Required" })}
                 >
-                  <option value="">Select Gender</option>
+                  <option value="">Select</option>
                   <option value="male">Male</option>
                   <option value="female">Female</option>
-                  <option value="other">Other</option>
                 </select>
-                <p className="text-xs text-red-500">{errors.gender?.message}</p>
               </label>
-              <label className="col-span-full space-y-1.5 text-sm text-zinc-700">
-                <span className="font-medium">
-                  Address <span className="text-red-500">*</span>
-                </span>
+
+              {/* Address */}
+              <label className="sm:col-span-2 space-y-1.5 text-sm">
+                <span className="font-medium">Address *</span>
                 <input
-                  type="text"
-                  className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                  {...register("address", {
-                    minLength: {
-                      value: 3,
-                      message: "Title length should be greater than 10 ",
-                    },
-                    required: {
-                      value: true,
-                      message: "Please Enter a Value",
-                    },
-                  })}
+                  className="w-full rounded-lg border px-3 py-2.5"
+                  {...register("address", { required: "Required" })}
                 />
-                <p className="text-xs text-red-500">
-                  {errors.address?.message}
-                </p>
               </label>
-              <label className="col-span-full space-y-1.5 text-sm text-zinc-700">
-                <span className="font-medium">
-                  specialization <span className="text-red-500">*</span>
-                </span>
+
+              {/* Specialization */}
+              <label className="sm:col-span-2 space-y-1.5 text-sm">
+                <span className="font-medium">Specialization *</span>
                 <input
-                  type="text"
-                  className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                  {...register("specialization", {
-                    minLength: {
-                      value: 3,
-                      message: "Title length should be greater than 10 ",
-                    },
-                    required: {
-                      value: true,
-                      message: "Please Enter a Value",
-                    },
-                  })}
+                  className="w-full rounded-lg border px-3 py-2.5"
+                  {...register("specialization", { required: "Required" })}
                 />
-                <p className="text-xs text-red-500">
-                  {errors.specialization?.message}
-                </p>
               </label>
-              <label className="col-span-full space-y-1.5 text-sm text-zinc-700">
-                <span className="font-medium">
-                  Block <span className="text-red-500">*</span>
-                </span>
+
+              {/* Block */}
+              <label className="sm:col-span-2 space-y-1.5 text-sm">
+                <span className="font-medium">Block *</span>
                 <select
-                  className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                  {...register("isBlocked", {
-                    required: {
-                      value: true,
-                      message: "Please Enter a Value",
-                    },
-                  })}
+                  className="w-full rounded-lg border px-3 py-2.5"
+                  {...register("isBlocked")}
                 >
-                  <option value={1}>Block</option>
                   <option value={0}>No Block</option>
+                  <option value={1}>Block</option>
                 </select>
-                <p className="text-xs text-red-500">
-                  {errors.isBlocked?.message}
-                </p>
               </label>
             </div>
 
-            {/* Actions */}
-            <div className="flex justify-end gap-2 border-t pt-4">
+            {/* Footer */}
+            <div className="sticky bottom-0 bg-white pt-4 flex flex-col gap-2 sm:flex-row sm:justify-end">
               <button
                 type="button"
                 onClick={() => navigate("/lawyer")}
-                className="rounded-lg border px-4 py-2"
+                className="w-full sm:w-auto rounded-lg border px-4 py-2"
               >
                 Cancel
               </button>
+
               <button
                 type="submit"
                 disabled={isPending}
-                className="rounded-lg bg-black px-4 py-2 text-white"
+                className="w-full sm:w-auto rounded-lg bg-black px-4 py-2 text-white"
               >
                 {isPending ? "Updating..." : "Update"}
               </button>
