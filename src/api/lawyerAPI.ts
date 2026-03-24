@@ -44,7 +44,7 @@ export const blockLawyer = async (data: LawyerDataType) => {
 export const patchLawyer = async (data: AddLawyerFormData) => {
   try {
     const response = await axiosInstance.patch(
-      `/lawyers/lawyer/${data.userId}`,
+      `/lawyers/lawyer/${data}`,
       data
     )
     return response.data
@@ -52,3 +52,4 @@ export const patchLawyer = async (data: AddLawyerFormData) => {
     console.log(data)
   }
 }
+
