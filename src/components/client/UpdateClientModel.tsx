@@ -1,37 +1,47 @@
 import { useMutation } from "@tanstack/react-query"
-import { X } from "lucide-react"
 import { useForm } from "react-hook-form"
-import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 
-import { patchClient } from "@/api/clientAPI"
-import type { ClineDataType } from "@/data/clientData"
+import { patchClient, postClient } from "@/api/clientAPI"
 import { queryClient } from "@/main"
 import {
   addressRegex,
   emailRegex,
   nameRegex,
   phoneNumberRegex,
+  userNameRegex,
 } from "@/utils/regex"
+import { X } from "lucide-react"
+import { Button } from "../ui/button"
+import { Link, useNavigate } from "react-router-dom"
+import type { ClientDataType } from "@/data/clientData"
+import { useEffect } from "react"
 
-export type FormUpdateClient = {
+export type EditClientType = {
   firstName: string
   lastName: string
   email: string
-  mobileNumber: string
   phoneNumber: string
   occupation: string
   gender: string
   address: string
-} & ClineDataType
+  crNumber: number
+  vatNumber: number
+  vatPercentage: number
+  isDeleted: number
+  isBlocked: number
+  name: string
+  userId: number
+}
 
-const UpdateClientModel = (data: ClineDataType) => {
+const UpdateClientModel = ({ data }: { data: ClientDataType }) => {
   const navigate = useNavigate()
+
   const { mutate, isPending } = useMutation({
     mutationFn: patchClient,
     mutationKey: ["addClient"],
     onSuccess: () => {
-      toast.success("Client Updated")
+      toast.success("Client Created")
       queryClient.invalidateQueries({ queryKey: ["client"] })
       navigate("/client")
     },
@@ -43,14 +53,41 @@ const UpdateClientModel = (data: ClineDataType) => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm<FormUpdateClient>({
+  } = useForm<EditClientType>({
+    defaultValues: {} as EditClientType,
     mode: "onChange",
     delayError: 500,
-    defaultValues: data,
   })
-  const onSubmit = (data: FormUpdateClient) => {
-    mutate(data)
+
+  useEffect(() => {
+    if (data?.client && data?.user) {
+      const isBlock = data.client.isBlocked == "\u0001" ? 1 : 0
+      const isDelete = data.client.isDeleted == "\u0001" ? 1 : 0
+      reset({
+        firstName: data.user.firstName || "",
+        lastName: data.user.lastName || "",
+        email: data.user.email || "",
+        phoneNumber: data.user.phoneNumber || "",
+        occupation: data.client.occupation || "",
+        gender: data.user.gender || "",
+        address: data.user.address || "",
+        crNumber: data.client.crNumber || 0,
+        vatNumber: data.client.vatNumber || 0,
+        vatPercentage: data.client.vatPercentage || 0,
+        name: data.user.name || "",
+        userId: data.user.id || 0,
+
+        isBlocked: isBlock,
+        isDeleted: isDelete,
+      })
+    }
+  }, [data, reset])
+  const onSubmit = (formData: EditClientType) => {
+    console.log('sdfd',formData);
+    
+    mutate({ formData, id: data.client.id })
   }
 
   return (
@@ -59,25 +96,177 @@ const UpdateClientModel = (data: ClineDataType) => {
         <div className="absolute inset-0 h-screen bg-zinc-900/45"></div>
 
         <div className="relative mx-auto flex min-h-full w-full items-center justify-center p-4 sm:p-6">
-          <div className="shadow-soft w-full max-w-2xl overflow-y-scroll rounded-2xl border border-zinc-200 bg-white">
+          <div className="shadow-soft w-full max-w-3xl rounded-2xl border border-zinc-200 bg-white">
             <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-4 sm:px-6">
-              <h3 className="text-lg font-semibold tracking-tight text-zinc-900">
-                Update Client
+              <h3 className="font-mono text-lg font-semibold text-zinc-900">
+                Edit Client
               </h3>
-              <button
-                className="rounded-lg border border-zinc-200 p-2 text-zinc-700 transition duration-200 hover:bg-zinc-100"
-                onClick={() => {
-                  navigate("/client")
-                }}
-              >
-                <X />
-              </button>
+              <Link to={"/client"}>
+                <button className="rounded-lg border border-zinc-200 p-2 text-zinc-700 transition duration-200 hover:bg-zinc-100">
+                  <X />
+                </button>
+              </Link>
             </div>
             <form
               className="space-y-4 px-5 py-4 sm:px-6"
               onSubmit={handleSubmit(onSubmit)}
             >
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <label className="space-y-1.5 text-sm text-zinc-700">
+                  <span className="font-medium">
+                    Cr Number <span className="text-red-500">*</span>
+                  </span>
+                  <input
+                    type="number"
+                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
+                    {...register("crNumber", {
+                      required: {
+                        value: true,
+                        message: "Please Enter a value",
+                      },
+                    })}
+                  />
+                  {errors.crNumber?.message && (
+                    <p className="min-h-5 text-xs text-red-600">
+                      {errors.crNumber?.message}
+                    </p>
+                  )}
+                </label>
+                <label className="space-y-1.5 text-sm text-zinc-700">
+                  <span className="font-medium">
+                    vat Number <span className="text-red-500">*</span>
+                  </span>
+                  <input
+                    type="text"
+                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
+                    {...register("vatNumber", {
+                      required: {
+                        value: true,
+                        message: "Please Enter a value",
+                      },
+                    })}
+                  />
+                  {errors.vatNumber?.message && (
+                    <p className="min-h-5 text-xs text-red-600">
+                      {errors.vatNumber?.message}
+                    </p>
+                  )}
+                </label>
+                <label className="space-y-1.5 text-sm text-zinc-700">
+                  <span className="font-medium">
+                    User Id <span className="text-red-500">*</span>
+                  </span>
+                  <input
+                    type="number"
+                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
+                    {...register("userId", {
+                      required: {
+                        value: true,
+                        message: "Please Enter a value",
+                      },
+                    })}
+                  />
+                  {errors.userId?.message && (
+                    <p className="min-h-5 text-xs text-red-600">
+                      {errors.userId?.message}
+                    </p>
+                  )}
+                </label>
+                <label className="space-y-1.5 text-sm text-zinc-700">
+                  <span className="font-medium">
+                    vat Percentage <span className="text-red-500">*</span>
+                  </span>
+                  <input
+                    type="number"
+                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
+                    {...register("vatPercentage", {
+                      required: {
+                        value: true,
+                        message: "Please Enter a value",
+                      },
+                    })}
+                  />
+                  {errors.vatPercentage?.message && (
+                    <p className="min-h-5 text-xs text-red-600">
+                      {errors.vatPercentage?.message}
+                    </p>
+                  )}
+                </label>
+                <label className="space-y-1.5 text-sm text-zinc-700">
+                  <span className="font-medium">
+                    is Blocked <span className="text-red-500">*</span>
+                  </span>
+                  <select
+                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
+                    {...register("isBlocked", {
+                      required: {
+                        value: true,
+                        message: "Please Enter a value",
+                      },
+                    })}
+                  >
+                    <option value="">Set Client Block</option>
+                    <option value={1}>Block</option>
+                    <option value={0}>No Block</option>
+                  </select>
+                  {errors.isBlocked?.message && (
+                    <p className="min-h-5 text-xs text-red-600">
+                      {errors.isBlocked?.message}
+                    </p>
+                  )}
+                </label>
+                <label className="space-y-1.5 text-sm text-zinc-700">
+                  <span className="font-medium">
+                    is Delete <span className="text-red-500">*</span>
+                  </span>
+                  <select
+                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
+                    {...register("isDeleted", {
+                      required: {
+                        value: true,
+                        message: "Please Enter a value",
+                      },
+                    })}
+                  >
+                    <option value="">Set Client Delete</option>
+                    <option value={1}>Delete</option>
+                    <option value={0}>No Delete</option>
+                  </select>
+                  {errors.isDeleted?.message && (
+                    <p className="min-h-5 text-xs text-red-600">
+                      {errors.isDeleted?.message}
+                    </p>
+                  )}
+                </label>
+
+                <label className="col-span-full space-y-1.5 text-sm text-zinc-700">
+                  <span className="font-medium">
+                    Name <span className="text-red-500">*</span>
+                  </span>
+                  <input
+                    type="text"
+                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
+                    {...register("name", {
+                      minLength: {
+                        value: 3,
+                        message: "First name length should be greater than 3 ",
+                      },
+                      pattern: {
+                        value: userNameRegex,
+                        message: "Please Enter a Valid user name",
+                      },
+                      required: {
+                        value: true,
+                        message: "Please Enter a value",
+                      },
+                    })}
+                  />
+                  {errors.name?.message && (
+                    <p className="min-h-5 text-xs text-red-600">
+                      {errors.name?.message}
+                    </p>
+                  )}
+                </label>
                 <label className="space-y-1.5 text-sm text-zinc-700">
                   <span className="font-medium">
                     First Name <span className="text-red-500">*</span>
@@ -171,37 +360,11 @@ const UpdateClientModel = (data: ClineDataType) => {
                 )}
               </div>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <label className="space-y-1.5 text-sm text-zinc-700">
-                  <span className="font-medium">
-                    Mobile Number <span className="text-red-500">*</span>
-                  </span>
-                  <input
-                    id="mobile"
-                    type="tel"
-                    required
-                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                    {...register("mobileNumber", {
-                      pattern: {
-                        value: phoneNumberRegex,
-                        message: "Phone number must contain exactly 10 digits.",
-                      },
-                      required: {
-                        value: true,
-                        message: "Please Enter a value",
-                      },
-                    })}
-                  />
-                  {errors.mobileNumber?.message && (
-                    <p className="min-h-5 text-xs text-red-600">
-                      {errors.mobileNumber?.message}
-                    </p>
-                  )}
-                </label>
-                <label className="space-y-1.5 text-sm text-zinc-700">
+                <label className="col-span-full space-y-1.5 text-sm text-zinc-700">
                   <span className="font-medium">Other Phone Number</span>
                   <input
                     id="otherPhone"
-                    type="tel"
+                    type="text"
                     className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
                     {...register("phoneNumber", {
                       pattern: {
@@ -261,7 +424,7 @@ const UpdateClientModel = (data: ClineDataType) => {
                     {...register("gender", {
                       required: {
                         value: true,
-                        message: "Please Enter a value",
+                        message: "Please enter Valid Input",
                       },
                     })}
                   >
@@ -314,22 +477,21 @@ const UpdateClientModel = (data: ClineDataType) => {
               </label>
 
               <div className="flex flex-col-reverse gap-2 border-t border-zinc-200 pt-4 sm:flex-row sm:justify-end">
-                <button
-                  type="button"
-                  className="rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100"
-                  onClick={() => {
-                    navigate("/client")
-                  }}
-                >
-                  Cancel
-                </button>
-                <button
+                <Link to={"/client"}>
+                  <Button
+                    type="button"
+                    className="bg-black p-6 font-mono font-semibold text-white"
+                  >
+                    Cancel
+                  </Button>
+                </Link>
+                <Button
                   type="submit"
-                  className="rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white transition duration-200 hover:scale-[1.02] hover:bg-zinc-800"
+                  className="bg-black p-6 font-mono font-semibold text-white"
                   disabled={isPending}
                 >
-                  {isPending ? "Updating" : "Update Client"}
-                </button>
+                  {isPending ? "Editing..." : "Edit Client"}
+                </Button>
               </div>
             </form>
           </div>

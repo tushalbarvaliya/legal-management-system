@@ -40,7 +40,7 @@ const ClientCard = (data: ClientDataType) => {
         <ClientDetailsModel {...data} />
       )}
       {pathname === `/client/edit/${data.client.id}` && (
-        <UpdateClientModel {...data} />
+        <UpdateClientModel data={data} />
       )}
       {pathname === `/client/delete/${data.client.id}` && (
         <SoftDeleteModel {...data} />

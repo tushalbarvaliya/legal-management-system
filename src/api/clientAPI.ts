@@ -1,6 +1,6 @@
-import axiosInstance from "./axiosInstance"
 import type { AddClientFormType } from "@/components/client/AddClientModel"
-import type { FormUpdateClient } from "@/components/client/UpdateClientModel"
+import axiosInstance from "./axiosInstance"
+import type { EditClientType } from "@/components/client/UpdateClientModel"
 import type { ClientDataType } from "@/data/clientData"
 
 export const getAllClient = async () => {
@@ -12,11 +12,7 @@ export const getAllClient = async () => {
   }
 }
 
-type postClientProps = {
-  userId: number
-} & AddClientFormType
-
-export const postClient = async (data: postClientProps) => {
+export const postClient = async (data: AddClientFormType) => {
   const clientData = {
     ...data,
     crNumber: 0,
@@ -33,12 +29,15 @@ export const postClient = async (data: postClientProps) => {
   }
 }
 
-export const patchClient = async (data: FormUpdateClient) => {
+export const patchClient = async ({
+  data,
+  id,
+}: {
+  data: EditClientType
+  id: number
+}) => {
   try {
-    const response = await axiosInstance.patch(
-      `/clients/client/${data.id}`,
-      data
-    )
+    const response = await axiosInstance.patch(`/clients/client/${id}`, data)
     return response.data
   } catch {
     console.log(data)
