@@ -10,21 +10,19 @@ import type { LawyerDataType } from "@/data/lawyerData"
 import BlockLawyerModel from "./BlockLawyerModel"
 import { useLocation, useNavigate } from "react-router-dom"
 import DeleteLawyerModel from "./DeleteLawyerModel"
-
-// import UpdateLawyerModel from "./UpdateLawyerModel"
+import UpdateLawyerModel from "./UpdateLawyerModel"
 
 const LawyerCard = (lawyer: LawyerDataType) => {
   const pathname = useLocation().pathname
   const navigate = useNavigate()
-  // const [updateModel, setUpdateModel] = useState(false)
   return (
     <>
       {pathname == `/lawyer/delete/${lawyer.lawyer.id}` && (
         <DeleteLawyerModel {...lawyer} />
       )}
-      {/* {updateModel && (
-        <UpdateLawyerModel closeModal={setUpdateModel} {...lawyer} />
-      )} */}
+      {pathname == `/lawyer/edit/${lawyer.lawyer.id}` && (
+        <UpdateLawyerModel {...lawyer} />
+      )}
       {pathname == `/lawyer/block/${lawyer.lawyer.id}` && (
         <BlockLawyerModel {...lawyer} />
       )}
@@ -90,7 +88,13 @@ const LawyerCard = (lawyer: LawyerDataType) => {
             </DropdownMenuTrigger>
 
             <DropdownMenuContent align="end" className="w-40 font-medium">
-              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  navigate(`/lawyer/edit/${lawyer.lawyer.id}`)
+                }}
+              >
+                Edit
+              </DropdownMenuItem>
               {lawyer.lawyer.isBlocked === false && (
                 <DropdownMenuItem
                   onClick={() => {

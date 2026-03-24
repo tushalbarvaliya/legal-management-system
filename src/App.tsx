@@ -71,6 +71,14 @@ const App = () => {
             }
           />
           <Route
+            path="/lawyer/edit/:id"
+            element={
+              <>
+                <LawyerPage />
+              </>
+            }
+          />
+          <Route
             path="/lawyer/delete/:id"
             element={
               <>
