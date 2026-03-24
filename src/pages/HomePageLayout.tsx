@@ -13,7 +13,7 @@ const HomeLayout = () => {
       <div className="h-screen w-full">
         <Header />
         <div className="mt-4 flex items-center gap-2">
-          {role != "guest" && (
+          {role !== "" && (
             <div className="mx-2 hidden rounded-xl bg-white p-4 border border-black lg:block">
               <Sidebar />
             </div>

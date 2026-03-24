@@ -32,7 +32,7 @@ const App = () => {
             path=""
             element={
               <ProtectedRouteByRole
-                allowedRoles={["admin", "lawyer", "staff", "guest"]}
+                allowedRoles={["admin", "lawyer", "staff", "client","null"]}
               >
                 <HomePageContent />
               </ProtectedRouteByRole>

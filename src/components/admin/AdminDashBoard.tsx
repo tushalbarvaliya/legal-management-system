@@ -43,7 +43,12 @@ const AdminDashBoard = () => {
   const chartData = [
     { name: "Lawyer", value: company?.lawyers?.length || 0, fill: "#4f46e5" },
     { name: "Staff", value: company?.staff?.length || 0, fill: "#06b6d4" },
-    { name: "User", value: users?.length || 0, fill: "#f59e0b" },
+    {
+      name: "User",
+      value:
+        users?.length - company?.lawyers?.length - company?.staff?.length || 0,
+      fill: "#f59e0b",
+    },
   ]
 
   const chartConfig = {
@@ -111,7 +116,7 @@ const AdminDashBoard = () => {
       </div>
 
       {/* CHART SECTION */}
-      <div className="rounded-2xl border  bg-white p-6 shadow-sm border-black">
+      <div className="rounded-2xl border border-black bg-white p-6 shadow-sm">
         <h2 className="mb-4 text-lg font-semibold text-zinc-800">
           User Analytics
         </h2>

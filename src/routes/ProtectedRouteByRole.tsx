@@ -7,15 +7,21 @@ interface ProtectedRouteProps {
   children: React.ReactNode
 }
 
-const ProtectedRouteByRole = ({ allowedRoles, children }: ProtectedRouteProps) => {
+const ProtectedRouteByRole = ({
+  allowedRoles,
+  children,
+}: ProtectedRouteProps) => {
   const navigate = useNavigate()
-  const role = useAppSelector((state) => state.auth.role)
-
+  let role = useAppSelector((state) => state.auth.role)
+  const token = useAppSelector((state) => state.auth.token)
+  if (role == "") {
+    role = "client"
+  }
   useEffect(() => {
     if (!role || !allowedRoles.includes(role)) {
       navigate("/login")
     }
-  }, [role, allowedRoles, navigate])
+  }, [role, allowedRoles, navigate, token])
 
   if (!role || !allowedRoles.includes(role)) {
     return null
