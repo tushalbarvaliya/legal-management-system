@@ -55,6 +55,14 @@ const App = () => {
             }
           />
           <Route
+            path="/lawyer/:id"
+            element={
+              <>
+                <LawyerPage />
+              </>
+            }
+          />
+          <Route
             path="/cases"
             element={
               <>

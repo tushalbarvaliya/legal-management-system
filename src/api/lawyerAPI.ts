@@ -1,5 +1,6 @@
 import { lawyerData } from "@/data/lawyerData"
 import axiosInstance from "./axiosInstance"
+import type { AddLawyerFormData } from "@/components/lawyer/AddLawyerModel"
 
 export const getLawyer = async () => {
   try {
@@ -7,6 +8,15 @@ export const getLawyer = async () => {
     return response.data
   } catch {
     return lawyerData
+  }
+}
+
+export const postLawyer = async (data:AddLawyerFormData) => {
+  try {
+    const response = await axiosInstance.post("/lawyers/lawyer", data)
+    return response.data
+  } catch {
+    console.log(data)
   }
 }
 
@@ -18,11 +28,4 @@ export const blockLawyer = async (data) => {
   const response = await axiosInstance.put(`/lawyers/lawyer/${data.id}/block`)
   return response.data
 }
-export const getLawyerById = async () => {
-  try {
-    const lawyerRes = await axiosInstance.get("/lawyers")
-    return lawyerRes.data
-  } catch {
-    return lawyerData
-  }
-}
+

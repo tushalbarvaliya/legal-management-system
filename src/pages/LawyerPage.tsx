@@ -8,8 +8,12 @@ import LawyerCardSkeleton from "@/components/lawyer/LawyerCardSkeleton"
 import LawyerCard from "@/components/lawyer/LawyerCard"
 import type { LawyerDataType } from "@/data/lawyerData"
 import NoFound from "@/components/NoFound"
+import { useLocation, useNavigate } from "react-router-dom"
+import AddLawyerModel from "@/components/lawyer/AddLawyerModel"
 
 const LawyerPage = () => {
+  const navigate = useNavigate()
+  const pathname = useLocation().pathname
   const [searchTerm, setSearchTerm] = useState("")
 
   const {
@@ -42,8 +46,14 @@ const LawyerPage = () => {
 
   return (
     <>
+      {pathname == "/lawyer/add" && <AddLawyerModel />}
       {/* Add Button */}
-      <button className="fixed right-6 bottom-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-xl hover:scale-105">
+      <button
+        className="fixed right-6 bottom-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-xl hover:scale-105"
+        onClick={() => {
+          navigate("/lawyer/add")
+        }}
+      >
         <Plus />
       </button>
 
@@ -60,7 +70,6 @@ const LawyerPage = () => {
           </div>
         </section>
 
-        
         <div className="flex flex-wrap gap-4">
           <div className="relative flex-1">
             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-zinc-500" />
@@ -75,7 +84,6 @@ const LawyerPage = () => {
           </div>
         </div>
 
-        
         <div className="space-y-3">
           {/* Error */}
           {!isLoading && isError && <ErrorMessage />}
