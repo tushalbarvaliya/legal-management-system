@@ -3,7 +3,7 @@ import { useState } from "react"
 import { Search } from "lucide-react"
 
 import { getAllClient } from "@/api/clientAPI"
-import type { ClineDataType } from "@/data/clientData"
+import type { ClientDataType } from "@/data/clientData"
 
 import ClientCardSkeleton from "@/components/client/ClientCardSkeleton"
 import ClientHeader from "@/components/client/ClientHeader"
@@ -18,18 +18,18 @@ const ClientPage = () => {
     data: clients,
     isLoading,
     isError,
-  } = useQuery<ClineDataType[]>({
+  } = useQuery<ClientDataType[]>({
     queryKey: ["client"],
     queryFn: getAllClient,
   })
 
-  let filteredClients = clients?.filter((clients: ClineDataType) =>
+  let filteredClients = clients?.filter((clients: ClientDataType) =>
     Object.values(clients).some((value) =>
       String(value).toLowerCase().includes(search.toLowerCase())
     )
   )
   filteredClients = filteredClients?.filter(
-    (item) => item.isDeleted == "\u0000"
+    (item) => item.client.isDeleted == "\u0000"
   )
 
   return (
@@ -63,8 +63,8 @@ const ClientPage = () => {
           {isError && <ErrorMessage />}
           {!isLoading &&
             !isError &&
-            filteredClients?.map((item: ClineDataType) => {
-              return <ClientCard key={item.id} {...item} />
+            filteredClients?.map((item: ClientDataType) => {
+              return <ClientCard key={item.client.id} {...item} />
             })}
           {isLoading && (
             <>

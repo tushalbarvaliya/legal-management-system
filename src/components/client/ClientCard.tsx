@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 
 import { putBlockClient } from "@/api/clientAPI"
 import { queryClient } from "@/main"
-import type { ClineDataType } from "@/data/clientData"
+import type { ClientDataType } from "@/data/clientData"
 import { useAppSelector } from "@/hooks/hooks"
 import SoftDeleteModel from "./SoftDeleteModel"
 import ClientDetailsModel from "./ClientDetailsModel"
@@ -18,7 +18,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu"
 
-const ClientCard = (data: ClineDataType) => {
+const ClientCard = (data: ClientDataType) => {
   const role = useAppSelector((state) => state.auth.role)
   const pathname = useLocation().pathname
   const navigate = useNavigate()
@@ -36,11 +36,13 @@ const ClientCard = (data: ClineDataType) => {
 
   return (
     <>
-      {pathname === `/client/${data.id}` && <ClientDetailsModel {...data} />}
-      {pathname === `/client/edit/${data.id}` && (
+      {pathname === `/client/${data.client.id}` && (
+        <ClientDetailsModel {...data} />
+      )}
+      {pathname === `/client/edit/${data.client.id}` && (
         <UpdateClientModel {...data} />
       )}
-      {pathname === `/client/delete/${data.id}` && (
+      {pathname === `/client/delete/${data.client.id}` && (
         <SoftDeleteModel {...data} />
       )}
 
@@ -52,30 +54,30 @@ const ClientCard = (data: ClineDataType) => {
         >
           <div className="flex min-w-0 gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-white text-xs font-semibold text-zinc-700">
-              {/* {data.firstName[0]} */}
-              {/* {data.lastName[0]} */}
+              {data.user.firstName[0]}
+              {data.user.lastName[0]}
             </div>
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <h3 className="text-base font-semibold text-zinc-900">
-                  {/* {data.firstName} {data.lastName} */}
+                  {data.user.firstName} {data.user.lastName}
                 </h3>
-                {data.isBlocked == "\u0001" && (
+                {data.client.isBlocked == "\u0001" && (
                   <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-black">
-                    {data.isBlocked ? "Block" : ""}
+                    {data.client.isBlocked ? "Block" : ""}
                   </span>
                 )}
               </div>
               <div className="mt-3 grid grid-cols-1 gap-2 text-sm text-zinc-700 sm:grid-cols-2">
                 <p>
                   <span className="font-medium text-zinc-500">Mobile :</span>{" "}
-                  {/* {data.mobileNumber} */}
+                  {data.user.phoneNumber}
                 </p>
                 <p>
                   <span className="font-medium text-zinc-500">
                     Occupation :
                   </span>{" "}
-                  {data.occupation}
+                  {data.client.occupation}
                 </p>
               </div>
             </div>
@@ -93,7 +95,7 @@ const ClientCard = (data: ClineDataType) => {
               <DropdownMenuItem
                 onClick={(e) => {
                   e.stopPropagation()
-                  navigate(`/client/${data.id}`)
+                  navigate(`/client/${data.client.id}`)
                 }}
               >
                 View
@@ -103,27 +105,27 @@ const ClientCard = (data: ClineDataType) => {
                   <DropdownMenuItem
                     onClick={(e) => {
                       e.stopPropagation()
-                      navigate(`/client/edit/${data.id}`)
+                      navigate(`/client/edit/${data.client.id}`)
                     }}
                   >
                     Edit
                   </DropdownMenuItem>
-                  {!(data.isDeleted == "\u0001") && (
+                  {!(data.client.isDeleted == "\u0001") && (
                     <DropdownMenuItem
                       className="text-red-500"
                       onClick={(e) => {
                         e.stopPropagation()
-                        navigate(`/client/delete/${data.id}`)
+                        navigate(`/client/delete/${data.client.id}`)
                       }}
                     >
                       Delete
                     </DropdownMenuItem>
                   )}
-                  {!(data.isBlocked == "\u0001") && (
+                  {!(data.client.isBlocked == "\u0001") && (
                     <DropdownMenuItem
                       onClick={(e) => {
                         e.stopPropagation()
-                        blockMutation(data.id)
+                        blockMutation(data.client.id)
                       }}
                     >
                       Block

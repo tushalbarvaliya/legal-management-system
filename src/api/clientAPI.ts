@@ -1,4 +1,3 @@
-import { clientData, type ClineDataType } from "@/data/clientData"
 import axiosInstance from "./axiosInstance"
 import type { AddClientFormType } from "@/components/client/AddClientModel"
 import type { FormUpdateClient } from "@/components/client/UpdateClientModel"
@@ -8,7 +7,7 @@ export const getAllClient = async () => {
     const response = await axiosInstance.get("/clients")
     return response.data
   } catch {
-    return clientData
+    return []
   }
 }
 
