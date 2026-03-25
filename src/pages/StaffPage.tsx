@@ -26,7 +26,7 @@ const StaffPage = () => {
     queryFn: getAllStaff,
   })
 
-  // ✅ Filter logic
+  
   const filteredStaff = useMemo(() => {
     if (!StaffData) return []
 
@@ -82,7 +82,7 @@ const StaffPage = () => {
             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <input
               type="search"
-              placeholder="Search Staff..."
+              placeholder="Search Staff by name , phone number and email"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full rounded-xl border py-2.5 pr-3 pl-9 text-sm focus:ring-2 focus:ring-zinc-100"
