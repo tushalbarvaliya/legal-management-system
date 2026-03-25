@@ -1,14 +1,10 @@
-import { invoiceData, type invoiceDataType } from "@/data/invoiceData"
+import { type invoiceDataType } from "@/data/invoiceData"
 import axiosInstance from "./axiosInstance"
 import type { AddInvoiceFormDataType } from "@/components/invoice/AddInvoiceModel"
 
 export const addInvoice = async (data: AddInvoiceFormDataType) => {
-  try {
-    const response = await axiosInstance.post("/invoices/invoice", data)
-    return response.data
-  } catch {
-    console.log(data)
-  }
+  const response = await axiosInstance.post("/invoices/invoice", data)
+  return response.data
 }
 export const updateInvoice = async (data) => {
   const response = await axiosInstance.patch(
@@ -18,19 +14,11 @@ export const updateInvoice = async (data) => {
   return response.data
 }
 export const deleteInvoice = async (data: invoiceDataType) => {
-  try {
-    const response = await axiosInstance.delete(`/invoices/invoice/${data.id}`)
-    return response.data
-  } catch {
-    console.log(`/invoice/${data.id}`)
-  }
+  const response = await axiosInstance.delete(`/invoices/invoice/${data.id}`)
+  return response.data
 }
 
 export const getAllInvoice = async () => {
-  try {
-    const response = await axiosInstance.get("/invoices/")
-    return response.data
-  } catch {
-    return invoiceData
-  }
+  const response = await axiosInstance.get("/invoices/")
+  return response.data
 }

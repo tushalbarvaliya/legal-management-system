@@ -1,8 +1,3 @@
-import {
-  loginAdminResponse,
-  loginLawyerResponse,
-  loginStaffResponse,
-} from "@/data/loginData"
 import axiosInstance from "./axiosInstance"
 
 type loginProps = {
@@ -11,19 +6,13 @@ type loginProps = {
 }
 
 export const login = async ({ email, password }: loginProps) => {
-  try {
-    const data = { username: email, password: password }
-    const response = await axiosInstance.post("/auth/login", data, {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-    })
-    return response.data
-  } catch {
-    return loginLawyerResponse
-    return loginAdminResponse
-    return loginStaffResponse
-  }
+  const data = { username: email, password: password }
+  const response = await axiosInstance.post("/auth/login", data, {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  })
+  return response.data
 }
 
 type forgotPasswordProps = {
@@ -34,19 +23,12 @@ export const forgetPasswordAPI = async ({
   email,
   new_password,
 }: forgotPasswordProps) => {
-  try {
-    const data: forgotPasswordProps = {
-      email: email,
-      new_password: new_password,
-    }
-    const response = await axiosInstance.put("/users/forgot_password", data)
-    return response.data
-  } catch {
-    console.log({ email, new_password })
-    return {
-      message: "Password changed successfully",
-    }
+  const data: forgotPasswordProps = {
+    email: email,
+    new_password: new_password,
   }
+  const response = await axiosInstance.put("/users/forgot_password", data)
+  return response.data
 }
 
 export type SignUpFormdata = {
@@ -67,11 +49,6 @@ export const signUp = async (signUpData: {
   password: string
   companyId: number
 }) => {
-  try {
-    const response = await axiosInstance.post("/auth/register", signUpData)
-    return response.data
-  } catch {
-    console.log(signUpData)
-    return null
-  }
+  const response = await axiosInstance.post("/auth/register", signUpData)
+  return response.data
 }

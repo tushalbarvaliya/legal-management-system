@@ -1,14 +1,9 @@
-import axios from "axios"
+import type { AddLawyerFormData } from "@/components/lawyer/AddLawyerModel"
 import axiosInstance from "./axiosInstance"
-import { userData } from "@/data/userData"
 
 export const getAllUser = async () => {
-  try {
     const response = await axiosInstance.get("/users/")
     return response.data
-  } catch {
-    return userData
-  }
 }
 
 export const getCaseCount = async () => {

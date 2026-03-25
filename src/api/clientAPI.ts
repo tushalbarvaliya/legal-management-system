@@ -4,12 +4,8 @@ import type { EditClientType } from "@/components/client/UpdateClientModel"
 import type { ClientDataType } from "@/data/clientData"
 
 export const getAllClient = async () => {
-  try {
-    const response = await axiosInstance.get("/clients")
-    return response.data
-  } catch {
-    return []
-  }
+  const response = await axiosInstance.get("/clients")
+  return response.data
 }
 
 export const postClient = async (data: AddClientFormType) => {
@@ -21,12 +17,8 @@ export const postClient = async (data: AddClientFormType) => {
     isDeleted: false,
     isBlocked: false,
   }
-  try {
-    const response = await axiosInstance.post("/clients/client", clientData)
-    return response.data
-  } catch {
-    console.log(clientData)
-  }
+  const response = await axiosInstance.post("/clients/client", clientData)
+  return response.data
 }
 
 export const patchClient = async ({
@@ -36,30 +28,18 @@ export const patchClient = async ({
   data: EditClientType
   id: number
 }) => {
-  try {
-    const response = await axiosInstance.patch(`/clients/client/${id}`, data)
-    return response.data
-  } catch {
-    console.log(data)
-  }
+  const response = await axiosInstance.patch(`/clients/client/${id}`, data)
+  return response.data
 }
 
 export const deleteClient = async (data: ClientDataType) => {
-  try {
-    const response = await axiosInstance.delete(
-      `/clients/client/${data.client.id}`
-    )
-    return response.data
-  } catch {
-    console.log(`/clients/client/${data.client.id}`)
-  }
+  const response = await axiosInstance.delete(
+    `/clients/client/${data.client.id}`
+  )
+  return response.data
 }
 
 export const putBlockClient = async (id: number) => {
-  try {
-    const response = await axiosInstance.put(`/clients/client/${id}/block`)
-    return response.data
-  } catch {
-    console.log(`/clients/client/${id}/block`)
-  }
+  const response = await axiosInstance.put(`/clients/client/${id}/block`)
+  return response.data
 }
