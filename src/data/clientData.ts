@@ -12,7 +12,6 @@ export type ClientType = {
   updatedAt: string
 }
 
-// 🔹 User Type
 export type ClientUserType = {
   id: number
   email: string
