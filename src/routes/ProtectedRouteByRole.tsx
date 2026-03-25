@@ -19,7 +19,7 @@ const ProtectedRouteByRole = ({
   }
   useEffect(() => {
     if (!role || !allowedRoles.includes(role)) {
-      navigate("/login")
+      navigate("/")
     }
   }, [role, allowedRoles, navigate, token])
 

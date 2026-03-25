@@ -42,370 +42,344 @@ const App = () => {
           <Route
             path="/company"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["admin"]}>
                 <CompanyPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/lawyer"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["admin"]}>
                 <LawyerPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/lawyer/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["admin"]}>
                 <LawyerPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/lawyer/block/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["admin"]}>
                 <LawyerPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/lawyer/edit/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["admin"]}>
                 <LawyerPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/lawyer/delete/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["admin"]}>
                 <LawyerPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/cases"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
                 <CasesPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/cases/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
                 <CasesPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/cases/add"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
                 <CasesPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/cases/edit/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
                 <CasesPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/cases/delete/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
                 <CasesPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
 
           <Route
             path="/docs"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
                 <DocumentPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/docs/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
                 <DocumentPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/docs/add"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
                 <DocumentPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/docs/edit/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
                 <DocumentPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/docs/delete/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
                 <DocumentPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
 
           <Route
             path="/client"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
                 <ClientPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/client/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
                 <ClientPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/client/add"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
                 <ClientPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/client/edit/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
                 <ClientPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/client/delete/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
                 <ClientPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
 
           <Route
             path="/staff"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
                 <StaffPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/staff/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
                 <StaffPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/staff/add"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
                 <StaffPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/staff/edit/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
                 <StaffPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/staff/delete/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
                 <StaffPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
 
           <Route
             path="/session"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
                 <SessionPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/session/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
                 <SessionPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/session/add"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
                 <SessionPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/session/edit/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
                 <SessionPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/session/delete/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
                 <SessionPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
 
           <Route
             path="/task"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
                 <TaskPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/task/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
                 <TaskPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/task/add"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
                 <TaskPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/task/edit/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
                 <TaskPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/task/delete/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
                 <TaskPage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
 
           <Route
             path="/invoice"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
                 <InvoicePage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/invoice/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
                 <InvoicePage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/invoice/add"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
                 <InvoicePage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/invoice/edit/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
                 <InvoicePage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
           <Route
             path="/invoice/delete/:id"
             element={
-              <>
+              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
                 <InvoicePage />
-              </>
+              </ProtectedRouteByRole>
             }
           />
 
-          <Route
-            path="/profile"
-            element={
-              <>
-                <ProfilePage />
-              </>
-            }
-          />
-          <Route
-            path="/reset-password"
-            element={
-              <>
-                <ResetPasswordPage />
-              </>
-            }
-          />
-
-          <Route
-            path="/privacy-policy"
-            element={
-              <>
-                <PrivacyPolicyPage />
-              </>
-            }
-          />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route
             path="/terms-and-conditions"
-            element={
-              <>
-                <TermsAndConditionsPage />
-              </>
-            }
+            element={<TermsAndConditionsPage />}
           />
         </Route>
 
