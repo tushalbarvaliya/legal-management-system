@@ -70,7 +70,7 @@ const AddInvoiceModel = () => {
 
       {/* Modal */}
       <div
-        className="relative mx-auto w-full max-w-xl rounded-2xl border border-zinc-200 bg-white p-5 shadow-2xl sm:p-6"
+        className="relative mx-auto w-full max-h-[90vh] overflow-y-scroll max-w-xl rounded-2xl border border-zinc-200 bg-white p-5 shadow-2xl sm:p-6"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}

@@ -68,7 +68,7 @@ const AddStaffModel = () => {
         <div className="absolute inset-0 h-screen bg-zinc-900/45"></div>
 
         <div className="relative mx-auto flex min-h-full w-full items-center justify-center p-4 sm:p-6">
-          <div className="shadow-soft w-full max-w-3xl rounded-2xl border border-zinc-200 bg-white">
+          <div className="shadow-soft w-full max-w-3xl max-h-[90vh] overflow-y-scroll rounded-2xl border border-zinc-200 bg-white">
             {/* Header */}
             <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-4 sm:px-6">
               <h3 className="font-mono text-lg font-semibold text-zinc-900">

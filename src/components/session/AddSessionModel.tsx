@@ -61,8 +61,8 @@ const AddSessionModel = () => {
     <div className="fixed inset-0 z-70">
       <div className="absolute inset-0 bg-zinc-900/45"></div>
 
-      <div className="relative mx-auto flex h-[90vh] overflow-y-scroll w-full items-start justify-center p-4 sm:p-6">
-        <div className="shadow-soft w-full max-w-2xl rounded-2xl border border-zinc-200 bg-white">
+      <div className="relative mx-auto flex  w-full items-center justify-center p-4 sm:p-6">
+        <div className="shadow-soft w-full max-h-[90vh] overflow-y-scroll max-w-2xl rounded-2xl border border-zinc-200 bg-white">
           <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-4 sm:px-6">
             <h3 className="text-lg font-semibold tracking-tight text-zinc-900">
               Create Session

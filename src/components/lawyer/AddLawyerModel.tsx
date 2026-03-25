@@ -67,7 +67,7 @@ const AddLawyerModel = () => {
           <div className="shadow-soft w-full max-w-3xl rounded-2xl border border-zinc-200 bg-white">
             <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-4 sm:px-6">
               <h3 className="text-lg font-semibold tracking-tight text-zinc-900">
-                Give Permission Of Lawyer
+                Make Lawyer
               </h3>
               <button
                 className="rounded-lg border border-zinc-200 p-2 text-zinc-700 transition duration-200 hover:bg-zinc-100"
@@ -120,7 +120,9 @@ const AddLawyerModel = () => {
                   >
                     <option value="">Select User</option>
                     {userData?.map((item) => (
-                      <option value={item.id}>{item.email}</option>
+                      <option value={item.id} key={item.id}>
+                        {item.firstName} {item.lastName}
+                      </option>
                     ))}
                   </select>
                   <p className="text-xs text-red-500">{errors.name?.message}</p>

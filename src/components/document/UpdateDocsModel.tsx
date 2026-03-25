@@ -13,7 +13,6 @@ import type { caseDataType } from "@/data/caseData"
 import type { ClientDataType } from "@/data/clientData"
 import type { docsDataType } from "@/data/docsData"
 
-import { convertToBase64 } from "@/utils/convertToBase64"
 import { queryClient } from "@/main"
 
 type Props = {
@@ -77,8 +76,8 @@ const UpdateDocsModel = ({ data }: Props) => {
     <div className="fixed inset-0 z-70">
       <div className="absolute inset-0 bg-zinc-900/45"></div>
 
-      <div className="relative mx-auto flex min-h-full w-full items-center justify-center p-4 sm:p-6">
-        <div className="shadow-soft w-full max-w-3xl rounded-2xl border border-zinc-200 bg-white">
+      <div className="relative mx-auto flex  w-full items-center justify-center p-4 sm:p-6">
+        <div className="shadow-soft w-full max-w-3xl  rounded-2xl border border-zinc-200 bg-white">
           {/* Header */}
           <div className="flex items-center justify-between border-b px-5 py-4">
             <h3 className="text-lg font-semibold">Edit Document</h3>
