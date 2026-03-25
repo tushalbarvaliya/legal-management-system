@@ -22,3 +22,8 @@ export const getAllInvoice = async () => {
   const response = await axiosInstance.get("/invoices/")
   return response.data
 }
+
+export const pay = async (data) => {
+  const response = await axiosInstance.post(`/invoices/${data.id}/pay`, null)
+  return response.data
+}

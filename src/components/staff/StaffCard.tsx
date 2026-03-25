@@ -12,11 +12,15 @@ import type { StaffUserMapping } from "@/data/satffData"
 import { useMutation } from "@tanstack/react-query"
 import { deleteStaff } from "@/api/staffAPI"
 import { queryClient } from "@/main"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
+import StaffDetailsModel from "./StaffDetailsModel"
+import BlockStaffModel from "./BlockStaffModel"
+import UpdateStaffModel from "./UpdateStaffModel"
 
 const StaffCard = (staff: StaffUserMapping) => {
   const navigate = useNavigate()
-  const {mutate} = useMutation({
+  const pathname = useLocation().pathname
+  const { mutate } = useMutation({
     mutationFn: deleteStaff,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["staff"] })
@@ -26,6 +30,15 @@ const StaffCard = (staff: StaffUserMapping) => {
 
   return (
     <>
+      {pathname == `/staff/${staff.staff.id}` && (
+        <StaffDetailsModel {...staff} />
+      )}
+      {pathname == `/staff/block/${staff.staff.id}` && (
+        <BlockStaffModel {...staff} />
+      )}
+      {pathname == `/staff/edit/${staff.staff.id}` && (
+        <UpdateStaffModel {...staff} />
+      )}
       <div className="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition hover:shadow-md sm:flex-row sm:items-center sm:justify-between">
         {/* LEFT SECTION */}
         <div className="flex flex-1 items-start gap-4 sm:items-center">
@@ -85,8 +98,33 @@ const StaffCard = (staff: StaffUserMapping) => {
             </DropdownMenuTrigger>
 
             <DropdownMenuContent align="end" className="w-40 font-medium">
-              <DropdownMenuItem>Edit</DropdownMenuItem>
-              <DropdownMenuItem className="text-red-500" onClick={()=>{mutate(staff)}}>
+              <DropdownMenuItem
+                onClick={() => {
+                  navigate(`/staff/${staff.staff.id}`)
+                }}
+              >
+                view
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  navigate(`/staff/block/${staff.staff.id}`)
+                }}
+              >
+                Block
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  navigate(`/staff/edit/${staff.staff.id}`)
+                }}
+              >
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-red-500"
+                onClick={() => {
+                  mutate(staff)
+                }}
+              >
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>

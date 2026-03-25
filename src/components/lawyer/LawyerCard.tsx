@@ -11,6 +11,7 @@ import BlockLawyerModel from "./BlockLawyerModel"
 import { useLocation, useNavigate } from "react-router-dom"
 import DeleteLawyerModel from "./DeleteLawyerModel"
 import UpdateLawyerModel from "./UpdateLawyerModel"
+import LawyerDetailsModel from "./LawyerDetailsModel"
 
 const LawyerCard = (lawyer: LawyerDataType) => {
   const pathname = useLocation().pathname
@@ -22,6 +23,9 @@ const LawyerCard = (lawyer: LawyerDataType) => {
       )}
       {pathname == `/lawyer/edit/${lawyer.lawyer.id}` && (
         <UpdateLawyerModel {...lawyer} />
+      )}
+      {pathname == `/lawyer/${lawyer.lawyer.id}` && (
+        <LawyerDetailsModel {...lawyer} />
       )}
       {pathname == `/lawyer/block/${lawyer.lawyer.id}` && (
         <BlockLawyerModel {...lawyer} />
@@ -68,17 +72,6 @@ const LawyerCard = (lawyer: LawyerDataType) => {
 
         {/* RIGHT SECTION */}
         <div className="flex items-center justify-between gap-3 sm:justify-end">
-          {/* Status Badge */}
-          <span
-            className={`rounded-full px-3 py-1 text-xs font-medium whitespace-nowrap ${
-              lawyer.lawyer.isBlocked === false
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
-            }`}
-          >
-            {lawyer.lawyer.isBlocked === false ? "Active" : "Blocked"}
-          </span>
-
           {/* MENU */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -90,12 +83,19 @@ const LawyerCard = (lawyer: LawyerDataType) => {
             <DropdownMenuContent align="end" className="w-40 font-medium">
               <DropdownMenuItem
                 onClick={() => {
+                  navigate(`/lawyer/${lawyer.lawyer.id}`)
+                }}
+              >
+                View
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
                   navigate(`/lawyer/edit/${lawyer.lawyer.id}`)
                 }}
               >
                 Edit
               </DropdownMenuItem>
-              {lawyer.lawyer.isBlocked === false && (
+              
                 <DropdownMenuItem
                   onClick={() => {
                     navigate(`/lawyer/block/${lawyer.lawyer.id}`)
@@ -103,7 +103,6 @@ const LawyerCard = (lawyer: LawyerDataType) => {
                 >
                   Block
                 </DropdownMenuItem>
-              )}
               <DropdownMenuItem
                 className="text-red-500"
                 onClick={() => {

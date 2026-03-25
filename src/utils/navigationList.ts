@@ -68,7 +68,7 @@ export const menuList: menuListType[] = [
   {
     title: "Invoice",
     to: "/invoice",
-    role: ["lawyer"],
+    role: ["lawyer",'client'],
     icons: ReceiptIndianRupee,
   },
   {

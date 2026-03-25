@@ -8,19 +8,26 @@ import { useQuery } from "@tanstack/react-query"
 import { Pie, PieChart } from "recharts"
 import { Spinner } from "../ui/spinner"
 import {
+  caseStatusChange,
   getAllUser,
   getCaseCount,
   getCompony,
   getTaskCount,
+  invoiceStatus,
 } from "@/api/adminAPI"
 import Card from "../Card"
+import type {
+  CasesStatusChangeResponse,
+  InvoiceResponse,
+} from "@/types/invoiceStatusType"
+import type { ProfileResponse } from "@/types/types"
 
 const AdminDashBoard = () => {
   const {
     data: users,
     isLoading,
     isError,
-  } = useQuery({
+  } = useQuery<ProfileResponse[]>({
     queryFn: getAllUser,
     queryKey: ["allUser"],
   })
@@ -39,6 +46,16 @@ const AdminDashBoard = () => {
     queryFn: getCompony,
     queryKey: ["company"],
   })
+  const { data: invoice, isLoading: invoiceLoading } =
+    useQuery<InvoiceResponse>({
+      queryFn: invoiceStatus,
+      queryKey: ["invoice"],
+    })
+  const { data: caseStatusChangeData, isLoading: caseStatusChangeLoading } =
+    useQuery<CasesStatusChangeResponse>({
+      queryFn: caseStatusChange,
+      queryKey: ["caseChange"],
+    })
 
   const chartData = [
     { name: "Lawyer", value: company?.lawyers?.length || 0, fill: "#4f46e5" },
@@ -46,7 +63,7 @@ const AdminDashBoard = () => {
     {
       name: "User",
       value:
-        users?.length - company?.lawyers?.length - company?.staff?.length || 0,
+        users?.length||0 - company?.lawyers?.length - company?.staff?.length || 0,
       fill: "#f59e0b",
     },
   ]
@@ -85,6 +102,29 @@ const AdminDashBoard = () => {
               <p>Open: {caseCount?.openCases || 0}</p>
               <p>Closed: {caseCount?.closedCases || 0}</p>
               <p>Last 30 Days: {caseCount?.newCasesLast30Days || 0}</p>
+            </div>
+          )}
+        </Card>
+        {/* CASES */}
+        <Card title="Invoice Status" icon="/cases.svg">
+          {invoiceLoading ? (
+            <Spinner />
+          ) : (
+            <div className="space-y-2 text-sm text-zinc-700">
+              <p>Total Paid: {invoice?.total_paid || 0}</p>
+              <p>Total Unpaid: {invoice?.total_pending || 0}</p>
+            </div>
+          )}
+        </Card>
+        <Card title="Invoice Status" icon="/cases.svg">
+          {caseStatusChangeLoading ? (
+            <Spinner />
+          ) : (
+            <div className="space-y-2 text-sm text-zinc-700">
+              <p>
+                Total Status Chang in Last 30 Days:{" "}
+                {caseStatusChangeData?.casesStatusChangeInLast30Days || 0}
+              </p>
             </div>
           )}
         </Card>

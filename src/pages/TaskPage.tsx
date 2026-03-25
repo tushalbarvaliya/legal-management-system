@@ -4,12 +4,12 @@ import { Plus } from "lucide-react"
 import { useLocation, useNavigate } from "react-router-dom"
 
 import { getAllTask } from "@/api/taskAPI"
+import type { taskDataType } from "@/data/taskData"
 import NoFound from "@/components/NoFound"
 import TaskCardSkeleton from "@/components/task/TaskCardSkeleton"
 import ErrorMessage from "@/components/ErrorMessage"
 import { Spinner } from "@/components/ui/spinner"
 import TaskCard from "@/components/task/TaskCard"
-import type { taskDataType } from "@/data/taskData"
 import AddTaskModel from "@/components/task/AddTaskModel"
 
 

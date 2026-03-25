@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 
@@ -13,7 +13,8 @@ import {
 import { X } from "lucide-react"
 import { Button } from "../ui/button"
 import { Link, useNavigate } from "react-router-dom"
-import { useAppSelector } from "@/hooks/hooks"
+import type { caseDataType } from "@/data/caseData"
+import { getAllCases } from "@/api/caseAPI"
 
 export type AddStaffFormType = {
   name: string
@@ -24,8 +25,6 @@ export type AddStaffFormType = {
   address: string
   user_id: number
   caseId: number
-  lawyerId: number
-  isBlocked: boolean
 }
 
 const AddStaffModel = () => {
@@ -43,6 +42,10 @@ const AddStaffModel = () => {
       toast.error(`Something is Not Right ${error}`)
     },
   })
+  const { data: caseData } = useQuery<caseDataType[]>({
+    queryKey: ["cases"],
+    queryFn: getAllCases,
+  })
 
   const {
     register,
@@ -53,12 +56,9 @@ const AddStaffModel = () => {
     delayError: 500,
   })
 
-  const id = useAppSelector((state) => state.auth.id)
   const onSubmit = (data: AddStaffFormType) => {
     mutate({
       ...data,
-      isBlocked: data.isBlocked ? 1 : 0,
-      lawyerId: id!,
     })
   }
 
@@ -68,7 +68,7 @@ const AddStaffModel = () => {
         <div className="absolute inset-0 h-screen bg-zinc-900/45"></div>
 
         <div className="relative mx-auto flex min-h-full w-full items-center justify-center p-4 sm:p-6">
-          <div className="shadow-soft w-full max-w-3xl max-h-[90vh] overflow-y-scroll rounded-2xl border border-zinc-200 bg-white">
+          <div className="shadow-soft max-h-[90vh] w-full max-w-3xl overflow-y-scroll rounded-2xl border border-zinc-200 bg-white">
             {/* Header */}
             <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-4 sm:px-6">
               <h3 className="font-mono text-lg font-semibold text-zinc-900">
@@ -117,70 +117,30 @@ const AddStaffModel = () => {
                 {/* Case Id */}
                 <label className="space-y-1.5 text-sm text-zinc-700">
                   <span className="font-medium">
-                    Case Id <span className="text-red-500">*</span>
+                    Case ID <span className="text-red-500">*</span>
                   </span>
-                  <input
-                    type="number"
-                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                    {...register("caseId", {
-                      required: {
-                        value: true,
-                        message: "Please Enter a value",
-                      },
-                    })}
-                  />
-                  {errors.caseId?.message && (
-                    <p className="min-h-5 text-xs text-red-600">
-                      {errors.caseId?.message}
-                    </p>
-                  )}
-                </label>
 
-                {/* Lawyer Id */}
-                <label className="space-y-1.5 text-sm text-zinc-700">
-                  <span className="font-medium">
-                    Lawyer Id <span className="text-red-500">*</span>
-                  </span>
-                  <input
-                    type="number"
-                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                    {...register("lawyerId", {
-                      required: {
-                        value: true,
-                        message: "Please Enter a value",
-                      },
-                    })}
-                  />
-                  {errors.lawyerId?.message && (
-                    <p className="min-h-5 text-xs text-red-600">
-                      {errors.lawyerId?.message}
-                    </p>
-                  )}
-                </label>
-
-                {/* Is Blocked */}
-                <label className="space-y-1.5 text-sm text-zinc-700">
-                  <span className="font-medium">
-                    is Blocked <span className="text-red-500">*</span>
-                  </span>
                   <select
                     className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                    {...register("isBlocked", {
+                    {...register("caseId", {
+                      minLength: {
+                        value: 1,
+                        message: "caseID length should be greater than 3",
+                      },
                       required: {
                         value: true,
-                        message: "Please Enter a value",
+                        message: "Please Enter a Value",
                       },
                     })}
                   >
-                    <option value="">Set Block</option>
-                    <option value={"true"}>Block</option>
-                    <option value={"false"}>No Block</option>
+                    <option value="">Select ...</option>
+                    {caseData?.map((item) => {
+                      return <option value={item.id}>{item.title}</option>
+                    })}
                   </select>
-                  {errors.isBlocked?.message && (
-                    <p className="min-h-5 text-xs text-red-600">
-                      {errors.isBlocked?.message}
-                    </p>
-                  )}
+                  <p className="text-xs text-red-500">
+                    {errors.caseId?.message}
+                  </p>
                 </label>
 
                 {/* Name */}
@@ -274,6 +234,10 @@ const AddStaffModel = () => {
                         value: phoneNumberRegex,
                         message: "Phone number must contain exactly 10 digits.",
                       },
+                      required: {
+                        value: true,
+                        message: "Please Enter a value",
+                      },
                     })}
                   />
                   {errors.phoneNumber?.message && (
@@ -286,7 +250,7 @@ const AddStaffModel = () => {
 
               {/* Gender */}
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <label className="space-y-1.5 text-sm text-zinc-700">
+                <label className="col-span-full space-y-1.5 text-sm text-zinc-700">
                   <span className="font-medium">
                     Gender <span className="text-red-500">*</span>
                   </span>

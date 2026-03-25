@@ -1,6 +1,3 @@
-import { forgetPasswordAPI } from "@/api/authAPI"
-import { Button } from "@/components/ui/button"
-import { emailRegex, passwordRegex } from "@/utils/regex"
 import { useMutation } from "@tanstack/react-query"
 import { Eye, EyeOff } from "lucide-react"
 import { useState } from "react"
@@ -8,6 +5,10 @@ import { useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom"
 import { toast, Toaster } from "sonner"
 import { motion } from "framer-motion"
+
+import { forgetPasswordAPI } from "@/api/authAPI"
+import { Button } from "@/components/ui/button"
+import { emailRegex, passwordRegex } from "@/utils/regex"
 
 type ForgotPasswordFormData = {
   email: string

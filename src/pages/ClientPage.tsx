@@ -2,9 +2,8 @@ import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 import { Search } from "lucide-react"
 
-import { getAllClient } from "@/api/clientAPI"
 import type { ClientDataType } from "@/data/clientData"
-
+import { getAllClient } from "@/api/clientAPI"
 import ClientCardSkeleton from "@/components/client/ClientCardSkeleton"
 import ClientHeader from "@/components/client/ClientHeader"
 import ErrorMessage from "@/components/ErrorMessage"

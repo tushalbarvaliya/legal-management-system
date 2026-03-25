@@ -6,12 +6,13 @@ import { toast } from "sonner"
 import { useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
 
-import { Toaster } from "@/components/ui/sonner"
 import { login } from "@/api/authAPI"
+import { Toaster } from "@/components/ui/sonner"
 import { useAppDispatch } from "@/hooks/hooks"
 import { setAuth } from "@/store/slice/authSlice"
 import { emailRegex, passwordRegex } from "@/utils/regex"
 import { Button } from "@/components/ui/button"
+import type { loginResponseType } from "@/types/types"
 
 type loginFromTye = {
   email: string
@@ -33,7 +34,7 @@ const LoginPage = () => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: login,
-    onSuccess: (data) => {
+    onSuccess: (data: loginResponseType) => {
       const token = { token: data.access_token }
       toast.success("Success fully login", { duration: 1000 })
       dispatch(setAuth(token))
@@ -46,7 +47,6 @@ const LoginPage = () => {
     },
   })
   const onSubmit = (data: loginFromTye) => {
-    // console.log(data)
     mutate(data)
   }
   return (
@@ -131,11 +131,11 @@ const LoginPage = () => {
                       value: true,
                       message: "Please Enter a value",
                     },
-                    pattern: {
-                      value: passwordRegex,
-                      message:
-                        "Password must be at least 8 characters and include uppercase, lowercase, number, and special character.",
-                    },
+                    // pattern: {
+                    //   value: passwordRegex,
+                    //   message:
+                    //     "Password must be at least 8 characters and include uppercase, lowercase, number, and special character.",
+                    // },
                   })}
                 />
 

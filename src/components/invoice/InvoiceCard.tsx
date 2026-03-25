@@ -12,11 +12,20 @@ import { Button } from "../ui/button"
 import { MoreVertical } from "lucide-react"
 import InvoiceDetailsModal from "./InvoiceDetailsModal"
 import EditInvoiceModel from "./EditInvoiceModel"
+import { useMutation } from "@tanstack/react-query"
+import { pay } from "@/api/invoiceAPI"
+import { useAppSelector } from "@/hooks/hooks"
 
 const InvoiceCard = (invoice: invoiceDataType) => {
   const pathname = useLocation().pathname
   const navigate = useNavigate()
-
+  const role = useAppSelector((state) => state.auth.role)
+  const { mutate } = useMutation({
+    mutationFn: pay,
+    onSuccess: (data) => {
+      window.location.href = data.checkout_url
+    },
+  })
   return (
     <>
       {pathname === `/invoice/edit/${invoice.id}` && (
@@ -54,21 +63,35 @@ const InvoiceCard = (invoice: invoiceDataType) => {
                 >
                   View
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    navigate(`/invoice/edit/${invoice.id}`)
-                  }}
-                >
-                  Edit
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="text-red-500"
-                  onClick={() => {
-                    navigate(`/invoice/delete/${invoice.id}`)
-                  }}
-                >
-                  Delete
-                </DropdownMenuItem>
+                {role === "lawyer" && (
+                  <>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        navigate(`/invoice/edit/${invoice.id}`)
+                      }}
+                    >
+                      Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="text-red-500"
+                      onClick={() => {
+                        navigate(`/invoice/delete/${invoice.id}`)
+                      }}
+                    >
+                      Delete
+                    </DropdownMenuItem>
+                  </>
+                )}
+                {role === "client" && (
+                  <DropdownMenuItem
+                    className="text-green-500"
+                    onClick={() => {
+                      mutate(invoice)
+                    }}
+                  >
+                    Pay
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

@@ -2,11 +2,11 @@ import { Plus, Search } from "lucide-react"
 import { useQuery } from "@tanstack/react-query"
 import { useLocation, useNavigate } from "react-router-dom"
 
+import type { StaffUserMapping } from "@/data/satffData"
 import ErrorMessage from "@/components/ErrorMessage"
 import StaffCard from "@/components/staff/StaffCard"
 import StaffCardSkeleton from "@/components/staff/StaffCardSkeleton"
 import { getAllStaff } from "@/api/staffAPI"
-import type { StaffUserMapping } from "@/data/satffData"
 import AddStaffModel from "@/components/staff/AddStaffModel"
 
 const StaffPage = () => {

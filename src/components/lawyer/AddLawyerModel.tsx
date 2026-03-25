@@ -9,6 +9,7 @@ import { queryClient } from "@/main"
 import { getAllUser } from "@/api/adminAPI"
 import type { UserProfileType } from "@/data/userData"
 import { postLawyer } from "@/api/lawyerAPI"
+import { useEffect } from "react"
 
 export type AddLawyerFormData = {
   name: string
@@ -34,6 +35,7 @@ const AddLawyerModel = () => {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<AddLawyerFormData>({
     mode: "onChange",
@@ -117,6 +119,16 @@ const AddLawyerModel = () => {
                         message: "Please Enter a Value",
                       },
                     })}
+                    onChange={(e) => {
+                      const selectedUserData=userData?.find((e1) => String(e1.id) === e.target.value)
+                      setValue('firstName',selectedUserData?.firstName||"")
+                      setValue('lastName',selectedUserData?.lastName||"")
+                      setValue('gender',selectedUserData?.gender||"")
+                      setValue('name',selectedUserData?.name||"")
+                      setValue('phoneNumber',selectedUserData?.phoneNumber||"")
+                      setValue('gender',selectedUserData?.gender||"")
+                      setValue('address',selectedUserData?.address||"")
+                    }}
                   >
                     <option value="">Select User</option>
                     {userData?.map((item) => (

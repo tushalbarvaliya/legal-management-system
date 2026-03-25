@@ -53,7 +53,6 @@ const AddSessionModel = () => {
   })
 
   const onSubmit = (data: SessionAddFormType) => {
-    // console.log(data);
     mutate(data)
   }
 

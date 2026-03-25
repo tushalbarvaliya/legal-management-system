@@ -2,6 +2,7 @@ import { getAllCases } from "@/api/caseAPI"
 import { getAllStaff } from "@/api/staffAPI"
 import { updateTask } from "@/api/taskAPI"
 import type { caseDataType } from "@/data/caseData"
+import type { StaffUserMapping } from "@/data/satffData"
 import type { taskDataType } from "@/data/taskData"
 import { queryClient } from "@/main"
 import { useMutation, useQuery } from "@tanstack/react-query"
@@ -11,7 +12,7 @@ import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 
-type UpdateFormDataTask = {
+export type UpdateFormDataTask = {
   title: string
   description: string
   assignedTo: number
@@ -38,11 +39,7 @@ const UpdateTaskModel = (data: taskDataType) => {
     queryKey: ["cases"],
     queryFn: getAllCases,
   })
-  const { data: staffData } = useQuery<caseDataType[]>({
-    queryKey: ["staff"],
-    queryFn: getAllStaff,
-  })
-  console.log(staffData);
+
   
   const {
     register,
@@ -61,12 +58,12 @@ const UpdateTaskModel = (data: taskDataType) => {
         ...data,
         caseId: data.caseId,
         assignedTo: data.assignedTo,
+        status:data.status
       })
     }
   }, [data, reset])
 
   const onSubmit = (data: UpdateFormDataTask) => {
-    // console.log(data);
     mutate(data)
   }
 
@@ -229,31 +226,7 @@ const UpdateTaskModel = (data: taskDataType) => {
                   </p>
                 )}
               </div>
-              <div>
-                <label className="mb-1 block font-medium text-zinc-700">
-                  Assign
-                </label>
-                <select
-                  className="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm outline-none focus:border-zinc-400"
-                  {...register("assignedTo", {
-                    required: {
-                      value: true,
-                      message: "Please Enter This value",
-                    },
-                  })}
-                >
-                  <option value="">Select Staff</option>
-                  {staffData?.map((item) => {
-                    return <option value={item.id}>{item.id}</option>
-                  })}
-                </select>
-
-                {errors.assignedTo?.message && (
-                  <p className="min-h-5 text-xs text-red-600">
-                    {errors.assignedTo.message}
-                  </p>
-                )}
-              </div>
+              
             </div>
 
             <div className="mt-4 flex justify-end gap-2">

@@ -1,12 +1,13 @@
-import { company } from "@/api/adminAPI"
-import CompanyPageSkeleton from "@/components/company/CompanyPageSkeleton"
-import CompanyUpdateModel from "@/components/company/CompanyUpdateModel"
-import Error from "@/components/ErrorPage"
-import { Button } from "@/components/ui/button"
-import { formatDate } from "@/utils/formate"
 import { useQuery } from "@tanstack/react-query"
 import { Mail, Phone, Calendar, MapPin, Hospital } from "lucide-react"
 import { useState } from "react"
+
+import { company } from "@/api/adminAPI"
+import { Button } from "@/components/ui/button"
+import Error from "@/components/ErrorPage"
+import CompanyUpdateModel from "@/components/company/CompanyUpdateModel"
+import CompanyPageSkeleton from "@/components/company/CompanyPageSkeleton"
+import { formatDate } from "@/utils/formate"
 
 export type CompanyData = {
   Address?: string
@@ -25,7 +26,7 @@ const CompanyPage = () => {
     queryFn: company,
   })
 
-  const companyData = data?.find((item) => item.id === 1)
+  const companyData = data?.[0]
 
   if (isLoading) {
     return <CompanyPageSkeleton />
@@ -36,7 +37,7 @@ const CompanyPage = () => {
 
   return (
     <>
-      {updateCompanyModel && (
+      {updateCompanyModel && companyData&& (
         <CompanyUpdateModel
           closeModal={setUpdateCompanyModel}
           {...companyData}

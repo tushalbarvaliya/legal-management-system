@@ -1,44 +1,23 @@
-import type { LawyerDataType } from "@/data/lawyerData"
+import type { StaffDetailsType, UpdateStaffFormData } from "@/types/staff"
 import { queryClient } from "@/main"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 import { X } from "lucide-react"
 import { phoneNumberRegex } from "@/utils/regex"
-import type { UserProfileType } from "@/data/userData"
-import { getAllUser } from "@/api/adminAPI"
-import { patchLawyer } from "@/api/lawyerAPI"
+import { patchStaff } from "@/api/staffAPI"
 import { useEffect } from "react"
 
-type AddLawyerFormData = {
-  name: string
-  firstName: string
-  lastName: string
-  phoneNumber: string
-  gender: string
-  address: string
-  userId: number
-  specialization: string
-  isBlocked: number
-  id: number
-}
-
-const UpdateLawyerModel = (data: LawyerDataType) => {
+const UpdateStaffModel = (data: StaffDetailsType) => {
   const navigate = useNavigate()
-
-  const { data: userData } = useQuery<UserProfileType[]>({
-    queryFn: getAllUser,
-    queryKey: ["users"],
-  })
 
   const {
     register,
     handleSubmit,
-    setValue,
-    formState: { errors },
     reset,
-  } = useForm<AddLawyerFormData>({
+    formState: { errors },
+  } = useForm<UpdateStaffFormData>({
     delayError: 500,
     mode: "onChange",
   })
@@ -46,36 +25,38 @@ const UpdateLawyerModel = (data: LawyerDataType) => {
   useEffect(() => {
     if (data) {
       reset({
-        name: data.user.name,
-        firstName: data.user.firstName,
-        lastName: data.user.lastName,
-        phoneNumber: data.user.phoneNumber,
+        name: data.user.name || "",
+        firstName: data.user.firstName || "",
+        lastName: data.user.lastName || "",
+        phoneNumber: data.user.phoneNumber || "",
         gender: data.user.gender || "",
-        address: data.user.address,
-        userId: data.lawyer.userId,
-        specialization: data.lawyer.specialization,
+        address: data.user.address || "",
+
+        userId: data.staff.user_id,
+        lawyerId: data.staff.lawyerId,
+        caseId: data.staff.caseId,
+        taskId: data.staff.taskId,
+
         isBlocked: 0,
-        id: data.lawyer.id,
+        id: data.staff.id,
       })
     }
   }, [data, reset])
 
   const { mutate, isPending } = useMutation({
-    mutationFn: patchLawyer,
+    mutationFn: patchStaff,
     onSuccess: () => {
-      toast.success("Lawyer updated", { duration: 1500 })
-      queryClient.invalidateQueries({ queryKey: ["lawyer"] })
-      setTimeout(() => {
-        navigate("/lawyer")
-      }, 2000)
+      toast.success("Staff updated", { duration: 1500 })
+      queryClient.invalidateQueries({ queryKey: ["staff"] })
+      setTimeout(() => navigate("/staff"), 1500)
     },
     onError: (error) => {
-      toast.error(error.message)
+      const message = error?.message || "Something went wrong"
+      toast.error(message)
     },
   })
 
-  const onSubmit = (formData: AddLawyerFormData) => {
-    // console.log(formData)
+  const onSubmit = (formData: UpdateStaffFormData) => {
     mutate(formData)
   }
 
@@ -84,16 +65,13 @@ const UpdateLawyerModel = (data: LawyerDataType) => {
       {/* Overlay */}
       <div className="absolute inset-0 h-screen bg-zinc-900/50" />
 
-      {/* Modal Wrapper */}
+      {/* Wrapper */}
       <div className="relative flex min-h-screen items-start justify-center p-3 sm:items-center sm:p-6">
-        {/* Modal */}
         <div className="flex max-h-[90vh] w-full max-w-3xl flex-col rounded-2xl bg-white shadow-lg">
           {/* Header */}
-          <div className="sticky top-0 z-10 flex items-center justify-between rounded-2xl border-b bg-white px-4 py-3 sm:px-5 sm:py-4">
-            <h3 className="text-base font-semibold sm:text-lg">
-              Update Lawyer
-            </h3>
-            <button onClick={() => navigate("/lawyer")}>
+          <div className="sticky top-0 flex items-center justify-between border-b bg-white px-4 py-3 sm:px-5 sm:py-4">
+            <h3 className="text-base font-semibold sm:text-lg">Update Staff</h3>
+            <button onClick={() => navigate("/staff")}>
               <X size={20} />
             </button>
           </div>
@@ -114,34 +92,6 @@ const UpdateLawyerModel = (data: LawyerDataType) => {
                 <p className="text-xs text-red-500">{errors.name?.message}</p>
               </label>
 
-              {/* User ID */}
-              <label className="space-y-1.5 text-sm">
-                <span className="font-medium">User *</span>
-                <select
-                  className="w-full rounded-lg border px-3 py-2.5"
-                  {...register("userId", { required: "Required" })}
-                  onChange={(e) => {
-                    const selectedUserData = userData?.find(
-                      (e1) => String(e1.id) === e.target.value
-                    )
-                    setValue("firstName", selectedUserData?.firstName || "")
-                    setValue("lastName", selectedUserData?.lastName || "")
-                    setValue("gender", selectedUserData?.gender || "")
-                    setValue("name", selectedUserData?.name || "")
-                    setValue("phoneNumber", selectedUserData?.phoneNumber || "")
-                    setValue("gender", selectedUserData?.gender || "")
-                    setValue("address", selectedUserData?.address || "")
-                  }}
-                >
-                  <option value="">Select User</option>
-                  {userData?.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.firstName} {item.lastName}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
               {/* First Name */}
               <label className="space-y-1.5 text-sm">
                 <span className="font-medium">First Name *</span>
@@ -149,6 +99,9 @@ const UpdateLawyerModel = (data: LawyerDataType) => {
                   className="w-full rounded-lg border px-3 py-2.5"
                   {...register("firstName", { required: "Required" })}
                 />
+                <p className="text-xs text-red-500">
+                  {errors.firstName?.message}
+                </p>
               </label>
 
               {/* Last Name */}
@@ -158,6 +111,9 @@ const UpdateLawyerModel = (data: LawyerDataType) => {
                   className="w-full rounded-lg border px-3 py-2.5"
                   {...register("lastName", { required: "Required" })}
                 />
+                <p className="text-xs text-red-500">
+                  {errors.lastName?.message}
+                </p>
               </label>
 
               {/* Phone */}
@@ -179,16 +135,17 @@ const UpdateLawyerModel = (data: LawyerDataType) => {
               </label>
 
               {/* Gender */}
-              <label className="space-y-1.5 text-sm">
+              <label className="space-y-1.5 text-sm col-span-full">
                 <span className="font-medium">Gender *</span>
                 <select
-                  className="w-full rounded-lg border px-3 py-2.5"
+                  className="w-full rounded-lg border px-3 py-2.5 col-span-full"
                   {...register("gender", { required: "Required" })}
                 >
-                  <option value="">Select</option>
+                  <option value="">Select Gender</option>
                   <option value="male">Male</option>
                   <option value="female">Female</option>
                 </select>
+                <p className="text-xs text-red-500">{errors.gender?.message}</p>
               </label>
 
               {/* Address */}
@@ -198,23 +155,35 @@ const UpdateLawyerModel = (data: LawyerDataType) => {
                   className="w-full rounded-lg border px-3 py-2.5"
                   {...register("address", { required: "Required" })}
                 />
+                <p className="text-xs text-red-500">
+                  {errors.address?.message}
+                </p>
               </label>
 
-              {/* Specialization */}
-              <label className="space-y-1.5 text-sm sm:col-span-2">
-                <span className="font-medium">Specialization *</span>
+
+
+              {/* Case ID */}
+              <label className="space-y-1.5 text-sm">
+                <span className="font-medium">Case ID *</span>
                 <input
+                  type="number"
                   className="w-full rounded-lg border px-3 py-2.5"
-                  {...register("specialization", { required: "Required" })}
+                  {...register("caseId", {
+                    required: "Required",
+                    valueAsNumber: true,
+                  })}
                 />
+                <p className="text-xs text-red-500">{errors.caseId?.message}</p>
               </label>
+
+
 
               {/* Block */}
-              <label className="space-y-1.5 text-sm sm:col-span-2">
+              <label className="space-y-1.5 text-sm ">
                 <span className="font-medium">Block *</span>
                 <select
                   className="w-full rounded-lg border px-3 py-2.5"
-                  {...register("isBlocked")}
+                  {...register("isBlocked", { valueAsNumber: true })}
                 >
                   <option value={0}>No Block</option>
                   <option value={1}>Block</option>
@@ -226,7 +195,7 @@ const UpdateLawyerModel = (data: LawyerDataType) => {
             <div className="sticky bottom-0 flex flex-col gap-2 bg-white pt-4 sm:flex-row sm:justify-end">
               <button
                 type="button"
-                onClick={() => navigate("/lawyer")}
+                onClick={() => navigate("/staff")}
                 className="w-full rounded-lg border px-4 py-2 sm:w-auto"
               >
                 Cancel
@@ -247,4 +216,4 @@ const UpdateLawyerModel = (data: LawyerDataType) => {
   )
 }
 
-export default UpdateLawyerModel
+export default UpdateStaffModel

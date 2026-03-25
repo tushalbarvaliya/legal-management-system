@@ -2,8 +2,8 @@ import type { AddLawyerFormData } from "@/components/lawyer/AddLawyerModel"
 import axiosInstance from "./axiosInstance"
 
 export const getAllUser = async () => {
-    const response = await axiosInstance.get("/users/")
-    return response.data
+  const response = await axiosInstance.get("/users/")
+  return response.data
 }
 
 export const getCaseCount = async () => {
@@ -30,5 +30,14 @@ export const makeItLawyer = async (data: AddLawyerFormData) => {
 
 export const company = async () => {
   const response = await axiosInstance.get("/companies/")
+  return response.data
+}
+
+export const invoiceStatus = async() => {
+  const response = await axiosInstance.get("/invoices/invoice/")
+  return response.data
+}
+export const caseStatusChange = async() => {
+  const response = await axiosInstance.get("/admins/dashboard/status_counts")
   return response.data
 }
