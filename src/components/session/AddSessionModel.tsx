@@ -28,7 +28,7 @@ const AddSessionModel = () => {
       queryClient.invalidateQueries({ queryKey: ["sessions"] })
       setTimeout(() => {
         navigate("/session")
-      }, 2000)
+      }, 1550)
     },
     onError: (error) => {
       toast.error(`Error ${error}`)
@@ -60,8 +60,8 @@ const AddSessionModel = () => {
     <div className="fixed inset-0 z-70">
       <div className="absolute inset-0 bg-zinc-900/45"></div>
 
-      <div className="relative mx-auto flex  w-full items-center justify-center p-4 sm:p-6">
-        <div className="shadow-soft w-full max-h-[90vh] overflow-y-scroll max-w-2xl rounded-2xl border border-zinc-200 bg-white">
+      <div className="relative mx-auto flex w-full items-center justify-center p-4 sm:p-6">
+        <div className="shadow-soft max-h-[90vh] w-full max-w-2xl overflow-y-scroll rounded-2xl border border-zinc-200 bg-white">
           <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-4 sm:px-6">
             <h3 className="text-lg font-semibold tracking-tight text-zinc-900">
               Create Session
@@ -157,9 +157,7 @@ const AddSessionModel = () => {
                 <option value="">Select Client</option>
                 {clientData?.map((item) => (
                   <option value={item.client.id} key={item.client.id}>
-                    {item.user.firstName}
-                    {""}
-                    {item.user.lastName}
+                    {item.user.firstName} {" "}{item.user.lastName}
                   </option>
                 ))}
               </select>

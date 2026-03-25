@@ -159,7 +159,7 @@ const AddDocsModal = () => {
                 </p>
               </label>
 
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-4 ">
                 <label className="space-y-1.5 text-sm text-zinc-700">
                   <span className="font-medium">
                     File Link <span className="text-red-500">*</span>
@@ -198,7 +198,7 @@ const AddDocsModal = () => {
                     {errors.file?.message}
                   </p>
                 </label>
-                <label className="space-y-1.5 text-sm text-zinc-700">
+                <label className="space-y-1.5 text-sm text-zinc-700 hidden">
                   <span className="font-medium">
                     fileType <span className="text-red-500">*</span>
                   </span>

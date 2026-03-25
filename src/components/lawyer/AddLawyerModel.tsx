@@ -137,7 +137,7 @@ const AddLawyerModel = () => {
                       </option>
                     ))}
                   </select>
-                  <p className="text-xs text-red-500">{errors.name?.message}</p>
+                  <p className="text-xs text-red-500">{errors.userId?.message}</p>
                 </label>
                 <label className="space-y-1.5 text-sm text-zinc-700">
                   <span className="font-medium">

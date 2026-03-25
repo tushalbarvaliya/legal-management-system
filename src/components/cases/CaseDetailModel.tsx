@@ -81,6 +81,12 @@ const CaseDetailModel = (data: caseDataType) => {
                     {formatDate(data.caseClosedDate)}
                   </p>
                 </div>
+                <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-3">
+                  <p className="text-xs text-zinc-500">Case ID</p>
+                  <p className="mt-1 font-semibold text-zinc-900">
+                    {data.id}
+                  </p>
+                </div>
               </div>
             </div>
 

@@ -18,7 +18,6 @@ import { Link, useNavigate } from "react-router-dom"
 export type AddClientFormType = {
   firstName: string
   lastName: string
-  email: string
   phoneNumber: string
   occupation: string
   gender: string
@@ -298,40 +297,10 @@ const AddClientModel = () => {
                   )}
                 </label>
               </div>
-              <div className="flex flex-col gap-2 sm:col-span-2">
-                <label
-                  htmlFor="email"
-                  className="text-sm font-medium text-zinc-800"
-                >
-                  Email
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  autoComplete="off"
-                  className="block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 transition outline-none placeholder:text-zinc-400 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                  {...register("email", {
-                    required: {
-                      value: true,
-                      message: "Please Enter a value",
-                    },
-                    pattern: {
-                      value: emailRegex,
-                      message:
-                        "Please enter a valid email address (e.g., user@example.com).",
-                    },
-                  })}
-                />
-                {errors.email && (
-                  <p className="min-h-5 text-xs text-red-600">
-                    {errors.email?.message}
-                  </p>
-                )}
-              </div>
+              
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <label className="col-span-full space-y-1.5 text-sm text-zinc-700">
-                  <span className="font-medium">Other Phone Number</span>
+                  <span className="font-medium"> Phone Number</span>
                   <input
                     id="otherPhone"
                     type="text"

@@ -1,8 +1,6 @@
 import { getAllCases } from "@/api/caseAPI"
-import { getAllStaff } from "@/api/staffAPI"
 import { updateTask } from "@/api/taskAPI"
 import type { caseDataType } from "@/data/caseData"
-import type { StaffUserMapping } from "@/data/satffData"
 import type { taskDataType } from "@/data/taskData"
 import { queryClient } from "@/main"
 import { useMutation, useQuery } from "@tanstack/react-query"
@@ -23,7 +21,7 @@ export type UpdateFormDataTask = {
 
 const UpdateTaskModel = (data: taskDataType) => {
   const navigate = useNavigate()
-  const { mutate } = useMutation({
+  const { mutate ,isPending} = useMutation({
     mutationFn: updateTask,
     onSuccess: () => {
       toast.success("Task Edited")
@@ -242,8 +240,9 @@ const UpdateTaskModel = (data: taskDataType) => {
               <button
                 type="submit"
                 className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white transition duration-200 hover:scale-[1.02] hover:bg-zinc-800"
+                disabled={isPending}
               >
-                Update Task
+                {isPending?"Updating Task...":"Update Task"}
               </button>
             </div>
           </form>
