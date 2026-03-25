@@ -1,7 +1,4 @@
-type motivationalQuotesType = {
-  quote: string
-  author: string
-}
+import type { motivationalQuotesType } from "@/types/types";
 
 export const motivationalQuotes: motivationalQuotesType[] = [
   {

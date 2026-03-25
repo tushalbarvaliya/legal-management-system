@@ -1,9 +1,7 @@
-export type privacyPolicyPageData = {
-  title: string
-  paragraph: string
-}
+import type { PolicyType } from "@/types/types"
 
-export const privacyPolicyPage: privacyPolicyPageData[] = [
+
+export const privacyPolicyPage: PolicyType[] = [
   {
     title: "1. Information We Collect",
     paragraph:
@@ -46,12 +44,8 @@ export const privacyPolicyPage: privacyPolicyPageData[] = [
   },
 ]
 
-export type termsAndConditionsListType = {
-  title: string
-  paragraph: string
-}
 
-export const termsAndConditionsList: termsAndConditionsListType[] = [
+export const termsAndConditionsList: PolicyType[] = [
   {
     title: "1. Acceptance of Terms",
     paragraph:

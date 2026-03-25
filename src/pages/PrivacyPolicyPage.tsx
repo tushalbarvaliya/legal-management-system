@@ -1,10 +1,8 @@
 import { Link } from "react-router"
 import { motion } from "framer-motion"
 
-import {
-  privacyPolicyPage,
-  type privacyPolicyPageData,
-} from "@/utils/policyConstant"
+import { privacyPolicyPage } from "@/utils/policyConstant"
+import type { PolicyType } from "@/types/types"
 
 const PrivacyPolicyPage = () => {
   return (
@@ -24,7 +22,7 @@ const PrivacyPolicyPage = () => {
       </section>
 
       <section className="shadow-soft flex flex-col gap-2 rounded-2xl border border-zinc-200 bg-white p-5 sm:p-6">
-        {privacyPolicyPage.map((item: privacyPolicyPageData) => (
+        {privacyPolicyPage.map((item: PolicyType) => (
           <div key={item.title}>
             <h2 className="text-lg font-semibold text-zinc-900">
               {item.title}

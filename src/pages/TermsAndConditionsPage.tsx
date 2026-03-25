@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
 
-import { termsAndConditionsList, type termsAndConditionsListType } from "@/utils/policyConstant"
+import type { PolicyType } from "@/types/types"
+import { termsAndConditionsList } from "@/utils/policyConstant"
 
 const TermsAndConditionsPage = () => {
   return (
@@ -15,7 +16,7 @@ const TermsAndConditionsPage = () => {
         </p>
       </section>
       <section className="shadow-soft  flex flex-col gap-2 rounded-2xl border border-zinc-200 bg-white p-5 sm:p-6">
-        {termsAndConditionsList.map((item: termsAndConditionsListType) => (
+        {termsAndConditionsList.map((item: PolicyType) => (
           <div key={item.title}>
             <h2 className="text-lg font-semibold text-zinc-900">
               {item.title}
