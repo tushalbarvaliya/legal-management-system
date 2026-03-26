@@ -20,8 +20,10 @@ export const postStaff = async (data: AddStaffData) => {
   const response = await axiosInstance.post("/staff/staff/", data)
   return response.data
 }
-export const deleteStaff = async (data) => {
-  const response = await axiosInstance.delete(`/staff/staff/${data.staff.id}`)
+
+
+export const deleteStaff = async (id:number) => {
+  const response = await axiosInstance.delete(`/staff/staff/${id}`)
   return response.data
 }
 

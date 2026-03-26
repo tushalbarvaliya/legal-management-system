@@ -8,28 +8,27 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
-import type { StaffUserMapping } from "@/data/satffData"
-import { useMutation } from "@tanstack/react-query"
-import { deleteStaff } from "@/api/staffAPI"
-import { queryClient } from "@/main"
+import type { StaffUserMapping } from "@/types/staffType"
 import { useLocation, useNavigate } from "react-router-dom"
 import StaffDetailsModel from "./StaffDetailsModel"
 import BlockStaffModel from "./BlockStaffModel"
 import UpdateStaffModel from "./UpdateStaffModel"
-
+import { useState } from "react"
+import { Dialog } from "../ui/dialog"
+import DeleteStaff from "./DeleteStaff"
 const StaffCard = (staff: StaffUserMapping) => {
+  const [openDelete, setOpenDelete] = useState<boolean>(false)
   const navigate = useNavigate()
   const pathname = useLocation().pathname
-  const { mutate } = useMutation({
-    mutationFn: deleteStaff,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["staff"] })
-      navigate("/staff")
-    },
-  })
 
   return (
-    <>
+    <Dialog
+      open={openDelete}
+      onOpenChange={(open) => {
+        setOpenDelete(false)
+        if (!open) navigate("/staff")
+      }}
+    >
       {pathname == `/staff/${staff.staff.id}` && (
         <StaffDetailsModel {...staff} />
       )}
@@ -39,6 +38,7 @@ const StaffCard = (staff: StaffUserMapping) => {
       {pathname == `/staff/edit/${staff.staff.id}` && (
         <UpdateStaffModel {...staff} />
       )}
+      {openDelete && <DeleteStaff staff={staff} setOpenDelete={setOpenDelete}/>}
       <div className="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition hover:shadow-md sm:flex-row sm:items-center sm:justify-between">
         {/* LEFT SECTION */}
         <div className="flex flex-1 items-start gap-4 sm:items-center">
@@ -122,7 +122,7 @@ const StaffCard = (staff: StaffUserMapping) => {
               <DropdownMenuItem
                 className="text-red-500"
                 onClick={() => {
-                  mutate(staff)
+                  setOpenDelete(true)
                 }}
               >
                 Delete
@@ -131,7 +131,7 @@ const StaffCard = (staff: StaffUserMapping) => {
           </DropdownMenu>
         </div>
       </div>
-    </>
+    </Dialog>
   )
 }
 

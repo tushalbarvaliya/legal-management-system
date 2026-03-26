@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { Button } from "../ui/button"
 import { useNavigate } from "react-router-dom"
-import type { StaffUserMapping } from "@/data/satffData"
+import type { StaffUserMapping } from "@/types/staffType"
 import { blockStaff } from "@/api/staffAPI"
 
 const BlockStaffModel = (data: StaffUserMapping) => {

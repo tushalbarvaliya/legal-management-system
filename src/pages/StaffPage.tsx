@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useMemo, useState } from "react"
 
-import type { StaffUserMapping } from "@/data/satffData"
+import type { StaffUserMapping } from "@/types/staffType"
 import ErrorMessage from "@/components/ErrorMessage"
 import StaffCard from "@/components/staff/StaffCard"
 import StaffCardSkeleton from "@/components/staff/StaffCardSkeleton"
