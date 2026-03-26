@@ -23,16 +23,15 @@ export const postLawyer = async (data: AddDataMutate) => {
   return response.data
 }
 
-export const deleteLawyer = async (data: LawyerDataType) => {
-  const response = await axiosInstance.delete(
-    `/lawyers/lawyer/${data.lawyer.id}`
-  )
+export const deleteLawyer = async (id: number) => {
+  const response = await axiosInstance.delete(`/lawyers/lawyer/${id}`)
   return response.data
 }
 export const blockLawyer = async (id: number) => {
   const response = await axiosInstance.put(`/lawyers/lawyer/${id}/block`)
   return response.data
 }
+
 
 export const patchLawyer = async (data) => {
   const response = await axiosInstance.patch(`/lawyers/lawyer/${data.id}`, data)

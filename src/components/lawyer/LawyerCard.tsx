@@ -8,11 +8,11 @@ import { Button } from "../ui/button"
 import { MoreVertical } from "lucide-react"
 import type { LawyerDataType } from "@/data/lawyerData"
 import { useLocation, useNavigate } from "react-router-dom"
-import DeleteLawyerModel from "./DeleteLawyerModel"
 import UpdateLawyerModel from "./UpdateLawyerModel"
 import LawyerDetailsModel from "./LawyerDetailsModel"
 import { Dialog } from "../ui/dialog"
 import BlockLawyer from "./BlockLawyer"
+import DeleteLawyer from "./DeleteLawyer"
 
 const LawyerCard = (lawyer: LawyerDataType) => {
   const pathname = useLocation().pathname
@@ -30,7 +30,7 @@ const LawyerCard = (lawyer: LawyerDataType) => {
       }}
     >
       {pathname == `/lawyer/delete/${lawyer.lawyer.id}` && (
-        <DeleteLawyerModel {...lawyer} />
+        <DeleteLawyer lawyer={lawyer} />
       )}
       {pathname == `/lawyer/edit/${lawyer.lawyer.id}` && (
         <UpdateLawyerModel {...lawyer} />
@@ -39,7 +39,7 @@ const LawyerCard = (lawyer: LawyerDataType) => {
         <LawyerDetailsModel {...lawyer} />
       )}
       {pathname == `/lawyer/block/${lawyer.lawyer.id}` && (
-        <BlockLawyer lawyer={lawyer}/>
+        <BlockLawyer lawyer={lawyer} />
       )}
 
       <div className="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition hover:shadow-md sm:flex-row sm:items-center sm:justify-between">
@@ -54,7 +54,17 @@ const LawyerCard = (lawyer: LawyerDataType) => {
           <div className="flex w-full flex-col gap-2">
             {/* Name */}
             <p className="text-base font-semibold text-zinc-900">
-              {lawyer.user.firstName} {lawyer.user.lastName}
+              {lawyer.user.firstName} {lawyer.user.lastName}{" "}
+              {lawyer.lawyer.isDeleted === "\u0001" && (
+                <span className="rounded-full bg-red-200 px-2 py-1 text-xs text-red-500">
+                  {"Delete"}
+                </span>
+              )}{" "}
+              {lawyer.lawyer.isBlocked === "\u0001" && (
+                <span className="rounded-full bg-stone-200 px-2 py-1 text-xs text-stone-500">
+                  {"Blocked"}
+                </span>
+              )}
             </p>
 
             {/* Details */}
@@ -107,21 +117,26 @@ const LawyerCard = (lawyer: LawyerDataType) => {
                 Edit
               </DropdownMenuItem>
 
-              <DropdownMenuItem
-                onClick={() => {
-                  navigate(`/lawyer/block/${lawyer.lawyer.id}`)
-                }}
-              >
-                Block
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="text-red-500"
-                onClick={() => {
-                  navigate(`/lawyer/delete/${lawyer.lawyer.id}`)
-                }}
-              >
-                Delete
-              </DropdownMenuItem>
+              {lawyer.lawyer.isBlocked === "\u0000" && (
+                <DropdownMenuItem
+                  onClick={() => {
+                    navigate(`/lawyer/block/${lawyer.lawyer.id}`)
+                  }}
+                >
+                  Block
+                </DropdownMenuItem>
+              )}
+
+              {lawyer.lawyer.isDeleted === "\u0000" && (
+                <DropdownMenuItem
+                  className="text-red-500"
+                  onClick={() => {
+                    navigate(`/lawyer/delete/${lawyer.lawyer.id}`)
+                  }}
+                >
+                  Delete
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
