@@ -148,7 +148,7 @@ const LoginPageForm = () => {
                         <Button
                           type="button"
                           variant={"ghost"}
-                          className="text-zinc-500 hover:text-zinc-700"
+                          className="text-zinc-500 hover:text-zinc-700 hover:cursor-pointer"
                           onClick={() => setPasswordShow((prev) => !prev)}
                         >
                           {passwordShow ? <EyeOff /> : <Eye />}
@@ -181,10 +181,16 @@ const LoginPageForm = () => {
                   type="button"
                   variant="outline"
                   onClick={() => form.reset()}
+                  className="hover:cursor-pointer"
                 >
                   Reset
                 </Button>
-                <Button type="submit" form="loginForm" disabled={isPending}>
+                <Button
+                  type="submit"
+                  form="loginForm"
+                  disabled={isPending}
+                  className="hover:cursor-pointer"
+                >
                   {isPending ? "Logging.." : "Login"}
                 </Button>
               </Field>
