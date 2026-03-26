@@ -8,11 +8,11 @@ import { Button } from "../ui/button"
 import { MoreVertical } from "lucide-react"
 import type { LawyerDataType } from "@/data/lawyerData"
 import { useLocation, useNavigate } from "react-router-dom"
-import UpdateLawyerModel from "./UpdateLawyerModel"
 import LawyerDetailsModel from "./LawyerDetailsModel"
 import { Dialog } from "../ui/dialog"
 import BlockLawyer from "./BlockLawyer"
 import DeleteLawyer from "./DeleteLawyer"
+import UpdateLawyer from "./UpdateLawyer"
 
 const LawyerCard = (lawyer: LawyerDataType) => {
   const pathname = useLocation().pathname
@@ -33,7 +33,7 @@ const LawyerCard = (lawyer: LawyerDataType) => {
         <DeleteLawyer lawyer={lawyer} />
       )}
       {pathname == `/lawyer/edit/${lawyer.lawyer.id}` && (
-        <UpdateLawyerModel {...lawyer} />
+        <UpdateLawyer lawyer={lawyer} />
       )}
       {pathname == `/lawyer/${lawyer.lawyer.id}` && (
         <LawyerDetailsModel {...lawyer} />
