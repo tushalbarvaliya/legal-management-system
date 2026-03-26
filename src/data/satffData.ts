@@ -2,10 +2,10 @@ export interface Staff {
   user_id: number;
   caseId: number;
   taskId: number | null;
-  createdAt: string; // ISO date string
+  createdAt: string; 
   lawyerId: number;
   id: number;
-  isBlocked: string; // "\u0000"
+  isBlocked: string; 
   updatedAt: string;
 }
 
@@ -21,7 +21,7 @@ export interface User {
   address: string;
   role: string;
   companyId: number;
-  isBlocked: string; // "\u0000"
+  isBlocked: string; 
   isDeleted: boolean;
   createdAt: string;
   updatedAt: string;

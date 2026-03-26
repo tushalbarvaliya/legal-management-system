@@ -8,8 +8,9 @@ import ErrorMessage from "@/components/ErrorMessage"
 import StaffCard from "@/components/staff/StaffCard"
 import StaffCardSkeleton from "@/components/staff/StaffCardSkeleton"
 import { getAllStaff } from "@/api/staffAPI"
-import AddStaffModel from "@/components/staff/AddStaffModel"
 import NoFound from "@/components/NoFound"
+import AddStaff from "@/components/staff/AddStaff"
+import { Dialog } from "@/components/ui/dialog"
 
 const StaffPage = () => {
   const navigate = useNavigate()
@@ -58,8 +59,8 @@ const StaffPage = () => {
   }
 
   return (
-    <>
-      {pathname === "/staff/add" && <AddStaffModel />}
+    <Dialog open={pathname === "/staff/add"} onOpenChange={(open)=>{if(!open) navigate('/staff')}}>
+      {pathname === "/staff/add" && <AddStaff />}
 
       {/* Add Button */}
       <button
@@ -100,7 +101,7 @@ const StaffPage = () => {
           })}
         </div>
       </div>
-    </>
+    </Dialog>
   )
 }
 
