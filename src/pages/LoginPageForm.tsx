@@ -5,7 +5,7 @@ import { Controller, useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom"
 import { toast, Toaster } from "sonner"
 import { motion } from "framer-motion"
-import z from "zod"
+import * as z from "zod"
 import { Eye, EyeOff } from "lucide-react"
 
 import type { loginResponseType } from "@/types/types"
@@ -130,8 +130,6 @@ const LoginPageForm = () => {
                     </Field>
                   )}
                 />
-              </FieldGroup>
-              <FieldGroup>
                 <Controller
                   name="password"
                   control={form.control}
