@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog"
-import type { LawyerDataType } from "@/data/lawyerData"
+import type { LawyerDataType } from "@/types/lawyerType"
 import { Field } from "../ui/field"
 import { Button } from "../ui/button"
 

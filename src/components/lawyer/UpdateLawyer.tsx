@@ -25,7 +25,7 @@ import { useMutation } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { queryClient } from "@/main"
 import { patchLawyer } from "@/api/lawyerAPI"
-import type { LawyerDataType } from "@/data/lawyerData"
+import type { LawyerDataType } from "@/types/lawyerType"
 
 const UpdateLawyer = ({ lawyer }: { lawyer: LawyerDataType }) => {
   const navigate = useNavigate()

@@ -6,26 +6,31 @@ import {
 } from "../ui/dropdown-menu"
 import { Button } from "../ui/button"
 import { MoreVertical } from "lucide-react"
-import type { LawyerDataType } from "@/data/lawyerData"
+import type { LawyerDataType } from "@/types/lawyerType"
 import { useLocation, useNavigate } from "react-router-dom"
 import LawyerDetailsModel from "./LawyerDetailsModel"
 import { Dialog } from "../ui/dialog"
 import BlockLawyer from "./BlockLawyer"
 import DeleteLawyer from "./DeleteLawyer"
 import UpdateLawyer from "./UpdateLawyer"
+import { useState } from "react"
+import UnblockLawyer from "./UnblockLawyer"
 
 const LawyerCard = (lawyer: LawyerDataType) => {
   const pathname = useLocation().pathname
   const navigate = useNavigate()
+  const [openUnblock, setOpenUnblock] = useState<boolean>(false)
   return (
     <Dialog
       open={
         pathname == `/lawyer/delete/${lawyer.lawyer.id}` ||
         pathname == `/lawyer/edit/${lawyer.lawyer.id}` ||
         pathname == `/lawyer/${lawyer.lawyer.id}` ||
-        pathname == `/lawyer/block/${lawyer.lawyer.id}`
+        pathname == `/lawyer/block/${lawyer.lawyer.id}` ||
+        openUnblock
       }
       onOpenChange={(open) => {
+        setOpenUnblock(false)
         if (!open) navigate("/lawyer")
       }}
     >
@@ -40,6 +45,9 @@ const LawyerCard = (lawyer: LawyerDataType) => {
       )}
       {pathname == `/lawyer/block/${lawyer.lawyer.id}` && (
         <BlockLawyer lawyer={lawyer} />
+      )}
+      {openUnblock && (
+        <UnblockLawyer lawyer={lawyer} setOpenUnblock={setOpenUnblock} />
       )}
 
       <div className="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition hover:shadow-md sm:flex-row sm:items-center sm:justify-between">
@@ -124,6 +132,15 @@ const LawyerCard = (lawyer: LawyerDataType) => {
                   }}
                 >
                   Block
+                </DropdownMenuItem>
+              )}
+              {lawyer.lawyer.isBlocked === "\u0001" && (
+                <DropdownMenuItem
+                  onClick={() => {
+                    setOpenUnblock(true)
+                  }}
+                >
+                  Unblock
                 </DropdownMenuItem>
               )}
 

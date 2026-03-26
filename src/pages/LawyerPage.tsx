@@ -2,7 +2,7 @@ import { useState, useMemo } from "react"
 import { Plus, Search } from "lucide-react"
 import { useQuery } from "@tanstack/react-query"
 
-import type { LawyerDataType } from "@/data/lawyerData"
+import type { LawyerDataType } from "@/types/lawyerType"
 import { getLawyer } from "@/api/lawyerAPI"
 import ErrorMessage from "@/components/ErrorMessage"
 import LawyerCardSkeleton from "@/components/lawyer/LawyerCardSkeleton"

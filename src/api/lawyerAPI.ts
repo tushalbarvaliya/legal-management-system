@@ -1,4 +1,3 @@
-import { type LawyerDataType } from "@/data/lawyerData"
 import axiosInstance from "./axiosInstance"
 import type { UpdateLawyerFormSchemaType } from "@/schemas/UpdateLawyerSchema"
 
@@ -41,5 +40,11 @@ export const patchLawyer = async ({
   id: number
 }) => {
   const response = await axiosInstance.patch(`/lawyers/lawyer/${id}`, data)
+  return response.data
+}
+export const patchUnblockLawyer = async ({ id }: { id: number }) => {
+  const response = await axiosInstance.patch(`/lawyers/lawyer/${id}`, {
+    isBlocked: 0,
+  })
   return response.data
 }

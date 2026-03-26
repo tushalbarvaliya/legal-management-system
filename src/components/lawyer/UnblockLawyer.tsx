@@ -8,22 +8,24 @@ import {
 import type { LawyerDataType } from "@/types/lawyerType"
 import { Field } from "../ui/field"
 import { Button } from "../ui/button"
-import { useNavigate } from "react-router-dom"
-import { blockLawyer } from "@/api/lawyerAPI"
+import { patchUnblockLawyer } from "@/api/lawyerAPI"
 import { useMutation } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { queryClient } from "@/main"
 
-const BlockLawyer = ({ lawyer }: { lawyer: LawyerDataType }) => {
-  const navigate = useNavigate()
+const UnblockLawyer = ({
+  lawyer,
+  setOpenUnblock,
+}: {
+  lawyer: LawyerDataType
+  setOpenUnblock: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
   const { mutate, isPending } = useMutation({
-    mutationFn: blockLawyer,
+    mutationFn: patchUnblockLawyer,
     onSuccess: () => {
-      toast.success("Block Lawyer Successfully", { duration: 1500 })
+      toast.success("Unblock Lawyer Successfully", { duration: 1500 })
       queryClient.invalidateQueries({ queryKey: ["lawyer"] })
-      setTimeout(() => {
-        navigate("/lawyer")
-      }, 2000)
+      setOpenUnblock(false)
     },
     onError: (error) => {
       toast.error(`Error ${error.message}`)
@@ -33,7 +35,7 @@ const BlockLawyer = ({ lawyer }: { lawyer: LawyerDataType }) => {
     <>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Block Lawyer</DialogTitle>
+          <DialogTitle>Unblock Lawyer</DialogTitle>
         </DialogHeader>
         <DialogDescription>
           <h1 className="capitalize">
@@ -46,20 +48,21 @@ const BlockLawyer = ({ lawyer }: { lawyer: LawyerDataType }) => {
         <DialogFooter>
           <Field orientation={"horizontal"}>
             <Button
-            variant={"outline"}
+              variant={"outline"}
               onClick={() => {
-                navigate("/lawyer")
+                setOpenUnblock(false)
               }}
             >
               close
             </Button>
             <Button
               disabled={isPending}
+              className="bg-green-500"
               onClick={() => {
-                mutate(lawyer.lawyer.id)
+                mutate({ id: lawyer.lawyer.id })
               }}
             >
-              {isPending ? "Blocking" : "Block"}
+              {isPending ? "Unblocking..." : "Unblock"}
             </Button>
           </Field>
         </DialogFooter>
@@ -68,4 +71,4 @@ const BlockLawyer = ({ lawyer }: { lawyer: LawyerDataType }) => {
   )
 }
 
-export default BlockLawyer
+export default UnblockLawyer

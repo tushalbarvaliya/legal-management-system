@@ -2,9 +2,9 @@ import { X } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 
 import { formatDate } from "@/utils/formate"
-import type { LawyerDetailsType } from "@/types/lawyer"
+import type { LawyerDataType } from "@/types/lawyerType"
 
-const LawyerDetailsModel = (data: LawyerDetailsType) => {
+const LawyerDetailsModel = (data: LawyerDataType) => {
   const navigate = useNavigate()
 
   return (
