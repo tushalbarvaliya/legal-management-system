@@ -3,7 +3,7 @@ import { toast } from "sonner"
 import { MoreVertical } from "lucide-react"
 import { useLocation, useNavigate } from "react-router-dom"
 
-import { deleteClient, putBlockClient } from "@/api/clientAPI"
+import { putBlockClient } from "@/api/clientAPI"
 import { queryClient } from "@/main"
 import type { ClientDataType } from "@/data/clientData"
 import { useAppSelector } from "@/hooks/hooks"
@@ -41,7 +41,7 @@ const ClientCard = (data: ClientDataType) => {
       toast.error(`Client Block Error ${error}`)
     },
   })
-  
+
   return (
     <Dialog
       open={
@@ -59,7 +59,6 @@ const ClientCard = (data: ClientDataType) => {
       {pathname === `/client/edit/${data.client.id}` && (
         <UpdateClientModel data={data} />
       )}
-
 
       {pathname === `/client/delete/${data.client.id}` && (
         <DeleteClientModel id={data.client.id} />
