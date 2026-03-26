@@ -3,11 +3,10 @@ import { toast } from "sonner"
 import { MoreVertical } from "lucide-react"
 import { useLocation, useNavigate } from "react-router-dom"
 
-import { putBlockClient } from "@/api/clientAPI"
+import { deleteClient, putBlockClient } from "@/api/clientAPI"
 import { queryClient } from "@/main"
 import type { ClientDataType } from "@/data/clientData"
 import { useAppSelector } from "@/hooks/hooks"
-import SoftDeleteModel from "./SoftDeleteModel"
 import ClientDetailsModel from "./ClientDetailsModel"
 import UpdateClientModel from "./UpdateClientModel"
 import { Button } from "@/components/ui/button"
@@ -17,6 +16,15 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog"
+import { Field } from "../ui/field"
+import DeleteClientModel from "./DeleteClientModel"
 
 const ClientCard = (data: ClientDataType) => {
   const role = useAppSelector((state) => state.auth.role)
@@ -33,17 +41,28 @@ const ClientCard = (data: ClientDataType) => {
       toast.error(`Client Block Error ${error}`)
     },
   })
-
+  
   return (
-    <>
+    <Dialog
+      open={
+        pathname === `/client/${data.client.id}` ||
+        pathname === `/client/edit/${data.client.id}` ||
+        pathname === `/client/delete/${data.client.id}`
+      }
+      onOpenChange={(open) => {
+        if (!open) navigate("/client")
+      }}
+    >
       {pathname === `/client/${data.client.id}` && (
         <ClientDetailsModel {...data} />
       )}
       {pathname === `/client/edit/${data.client.id}` && (
         <UpdateClientModel data={data} />
       )}
+
+
       {pathname === `/client/delete/${data.client.id}` && (
-        <SoftDeleteModel {...data} />
+        <DeleteClientModel id={data.client.id} />
       )}
 
       <article
@@ -137,7 +156,7 @@ const ClientCard = (data: ClientDataType) => {
           </DropdownMenu>
         </div>
       </article>
-    </>
+    </Dialog>
   )
 }
 

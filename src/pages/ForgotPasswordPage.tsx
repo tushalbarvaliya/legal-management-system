@@ -153,7 +153,7 @@ const ForgotPasswordPage = () => {
                       <Button
                         type="button"
                         variant={"ghost"}
-                        className="text-zinc-500 hover:text-zinc-700 hover:cursor-pointer"
+                        className="text-zinc-500 hover:cursor-pointer hover:text-zinc-700"
                         onClick={() => setPasswordShow((prev) => !prev)}
                       >
                         {passwordShow ? <EyeOff /> : <Eye />}
@@ -186,7 +186,7 @@ const ForgotPasswordPage = () => {
                       <Button
                         type="button"
                         variant={"ghost"}
-                        className="text-zinc-500 hover:text-zinc-700 hover:cursor-pointer"
+                        className="text-zinc-500 hover:cursor-pointer hover:text-zinc-700"
                         onClick={() => setConfirmPasswordShow((prev) => !prev)}
                       >
                         {confirmPasswordShow ? <EyeOff /> : <Eye />}

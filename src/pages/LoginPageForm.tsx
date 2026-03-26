@@ -130,6 +130,7 @@ const LoginPageForm = () => {
                     </Field>
                   )}
                 />
+                {/* password */}
                 <Controller
                   name="password"
                   control={form.control}
@@ -148,7 +149,7 @@ const LoginPageForm = () => {
                         <Button
                           type="button"
                           variant={"ghost"}
-                          className="text-zinc-500 hover:text-zinc-700 hover:cursor-pointer"
+                          className="text-zinc-500 hover:cursor-pointer hover:text-zinc-700"
                           onClick={() => setPasswordShow((prev) => !prev)}
                         >
                           {passwordShow ? <EyeOff /> : <Eye />}
@@ -177,14 +178,6 @@ const LoginPageForm = () => {
 
               {/* Submit button */}
               <Field orientation="vertical">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => form.reset()}
-                  className="hover:cursor-pointer"
-                >
-                  Reset
-                </Button>
                 <Button
                   type="submit"
                   form="loginForm"

@@ -32,10 +32,8 @@ export const patchClient = async ({
   return response.data
 }
 
-export const deleteClient = async (data: ClientDataType) => {
-  const response = await axiosInstance.delete(
-    `/clients/client/${data.client.id}`
-  )
+export const deleteClient = async (id: number) => {
+  const response = await axiosInstance.delete(`/clients/client/${id}`)
   return response.data
 }
 
