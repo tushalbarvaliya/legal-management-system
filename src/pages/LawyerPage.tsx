@@ -9,7 +9,8 @@ import LawyerCardSkeleton from "@/components/lawyer/LawyerCardSkeleton"
 import LawyerCard from "@/components/lawyer/LawyerCard"
 import NoFound from "@/components/NoFound"
 import { useLocation, useNavigate } from "react-router-dom"
-import AddLawyerModel from "@/components/lawyer/AddLawyerModel"
+import { Dialog } from "@/components/ui/dialog"
+import AddLawyer from "@/components/lawyer/AddLawyer"
 
 const LawyerPage = () => {
   const navigate = useNavigate()
@@ -45,8 +46,14 @@ const LawyerPage = () => {
   }, [lawyerData, searchTerm])
 
   return (
-    <>
-      {pathname == "/lawyer/add" && <AddLawyerModel />}
+    <Dialog
+      open={pathname == "/lawyer/add"}
+      onOpenChange={(open) => {
+        if (!open) navigate("/lawyer")
+      }}
+    >
+      {pathname == "/lawyer/add" && <AddLawyer />}
+
       {/* Add Button */}
       <button
         className="fixed right-6 bottom-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-xl hover:scale-105"
@@ -110,7 +117,7 @@ const LawyerPage = () => {
             ))}
         </div>
       </div>
-    </>
+    </Dialog>
   )
 }
 

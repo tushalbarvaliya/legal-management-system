@@ -1,13 +1,24 @@
 import { type LawyerDataType } from "@/data/lawyerData"
 import axiosInstance from "./axiosInstance"
-import type { AddLawyerFormData } from "@/components/lawyer/AddLawyerModel"
 
 export const getLawyer = async () => {
   const response = await axiosInstance.get("/lawyers/")
   return response.data
 }
 
-export const postLawyer = async (data: AddLawyerFormData) => {
+type AddDataMutate = {
+  email: string
+  password: string
+  name: string
+  firstName: string
+  lastName: string
+  phoneNumber: string
+  gender: string
+  address: string
+  specialization: string
+}
+
+export const postLawyer = async (data:AddDataMutate) => {
   const response = await axiosInstance.post("/lawyers/lawyer", data)
   return response.data
 }
