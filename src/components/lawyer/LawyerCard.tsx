@@ -7,17 +7,28 @@ import {
 import { Button } from "../ui/button"
 import { MoreVertical } from "lucide-react"
 import type { LawyerDataType } from "@/data/lawyerData"
-import BlockLawyerModel from "./BlockLawyerModel"
 import { useLocation, useNavigate } from "react-router-dom"
 import DeleteLawyerModel from "./DeleteLawyerModel"
 import UpdateLawyerModel from "./UpdateLawyerModel"
 import LawyerDetailsModel from "./LawyerDetailsModel"
+import { Dialog } from "../ui/dialog"
+import BlockLawyer from "./BlockLawyer"
 
 const LawyerCard = (lawyer: LawyerDataType) => {
   const pathname = useLocation().pathname
   const navigate = useNavigate()
   return (
-    <>
+    <Dialog
+      open={
+        pathname == `/lawyer/delete/${lawyer.lawyer.id}` ||
+        pathname == `/lawyer/edit/${lawyer.lawyer.id}` ||
+        pathname == `/lawyer/${lawyer.lawyer.id}` ||
+        pathname == `/lawyer/block/${lawyer.lawyer.id}`
+      }
+      onOpenChange={(open) => {
+        if (!open) navigate("/lawyer")
+      }}
+    >
       {pathname == `/lawyer/delete/${lawyer.lawyer.id}` && (
         <DeleteLawyerModel {...lawyer} />
       )}
@@ -28,7 +39,7 @@ const LawyerCard = (lawyer: LawyerDataType) => {
         <LawyerDetailsModel {...lawyer} />
       )}
       {pathname == `/lawyer/block/${lawyer.lawyer.id}` && (
-        <BlockLawyerModel {...lawyer} />
+        <BlockLawyer lawyer={lawyer}/>
       )}
 
       <div className="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition hover:shadow-md sm:flex-row sm:items-center sm:justify-between">
@@ -95,14 +106,14 @@ const LawyerCard = (lawyer: LawyerDataType) => {
               >
                 Edit
               </DropdownMenuItem>
-              
-                <DropdownMenuItem
-                  onClick={() => {
-                    navigate(`/lawyer/block/${lawyer.lawyer.id}`)
-                  }}
-                >
-                  Block
-                </DropdownMenuItem>
+
+              <DropdownMenuItem
+                onClick={() => {
+                  navigate(`/lawyer/block/${lawyer.lawyer.id}`)
+                }}
+              >
+                Block
+              </DropdownMenuItem>
               <DropdownMenuItem
                 className="text-red-500"
                 onClick={() => {
@@ -115,7 +126,7 @@ const LawyerCard = (lawyer: LawyerDataType) => {
           </DropdownMenu>
         </div>
       </div>
-    </>
+    </Dialog>
   )
 }
 

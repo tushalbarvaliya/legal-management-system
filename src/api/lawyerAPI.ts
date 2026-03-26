@@ -18,7 +18,7 @@ type AddDataMutate = {
   specialization: string
 }
 
-export const postLawyer = async (data:AddDataMutate) => {
+export const postLawyer = async (data: AddDataMutate) => {
   const response = await axiosInstance.post("/lawyers/lawyer", data)
   return response.data
 }
@@ -29,10 +29,8 @@ export const deleteLawyer = async (data: LawyerDataType) => {
   )
   return response.data
 }
-export const blockLawyer = async (data: LawyerDataType) => {
-  const response = await axiosInstance.put(
-    `/lawyers/lawyer/${data.lawyer.id}/block`
-  )
+export const blockLawyer = async (id: number) => {
+  const response = await axiosInstance.put(`/lawyers/lawyer/${id}/block`)
   return response.data
 }
 
