@@ -12,7 +12,6 @@ import ProfilePage from "./pages/ProfilePage"
 import ResetPasswordPage from "./pages/ResetPasswordPage"
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage"
 import TermsAndConditionsPage from "./pages/TermsAndConditionsPage"
-import LoginPage from "./pages/LoginPage"
 import SignUpPage from "./pages/SignUpPage"
 import ForgotPasswordPage from "./pages/ForgotPasswordPage"
 import { AnimatePresence } from "framer-motion"
@@ -22,6 +21,7 @@ import HomePageContent from "./pages/HomePageContent"
 import CompanyPage from "./pages/CompanyPage"
 import LawyerPage from "./pages/LawyerPage"
 import Error from "./components/ErrorPage"
+import LoginPageForm from "./pages/LoginPageForm"
 
 const App = () => {
   const location = useLocation()
@@ -391,7 +391,7 @@ const App = () => {
           />
         </Route>
 
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPageForm />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/logout" element={<LogoutPage />} />
