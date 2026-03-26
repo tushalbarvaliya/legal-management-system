@@ -43,7 +43,7 @@ const DeleteStaff = ({
         </DialogHeader>
         <DialogDescription>
           <h1 className="capitalize">
-            Are You Sure You Want to Block This Staff?
+            Are You Sure You Want to Delete This Staff?
           </h1>
           <p>
             {staff.user.firstName} {staff.user.lastName}

@@ -1,8 +1,3 @@
-import { deleteLawyer } from "@/api/lawyerAPI"
-import { queryClient } from "@/main"
-import { useMutation } from "@tanstack/react-query"
-import { useNavigate } from "react-router-dom"
-import { toast } from "sonner"
 import {
   DialogContent,
   DialogDescription,
@@ -10,20 +5,25 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog"
-import type { LawyerDataType } from "@/types/lawyerType"
 import { Field } from "../ui/field"
 import { Button } from "../ui/button"
+import { useNavigate } from "react-router-dom"
+import { useMutation } from "@tanstack/react-query"
+import { toast } from "sonner"
+import { queryClient } from "@/main"
+import type { StaffUserMapping } from "@/types/staffType"
+import { blockStaff } from "@/api/staffAPI"
 
-const DeleteLawyer = ({ lawyer }: { lawyer: LawyerDataType }) => {
+const BlockStaff = ({ staff }: { staff: StaffUserMapping }) => {
   const navigate = useNavigate()
   const { mutate, isPending } = useMutation({
-    mutationFn: deleteLawyer,
+    mutationFn: blockStaff,
     onSuccess: () => {
-      toast.success("Delete Lawyer Successfully", { duration: 1500 })
-      queryClient.invalidateQueries({ queryKey: ["lawyer"] })
+      toast.success("Block Staff Successfully", { duration: 1500 })
+      queryClient.invalidateQueries({ queryKey: ["staff"] })
       setTimeout(() => {
-        navigate("/lawyer")
-      }, 1500)
+        navigate("/staff")
+      }, 2000)
     },
     onError: (error) => {
       toast.error(`Error ${error.message}`)
@@ -33,14 +33,14 @@ const DeleteLawyer = ({ lawyer }: { lawyer: LawyerDataType }) => {
     <>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete Lawyer</DialogTitle>
+          <DialogTitle>Block Staff</DialogTitle>
         </DialogHeader>
         <DialogDescription>
           <h1 className="capitalize">
-            Are You Sure You Want to Delete This Lawyer?
+            Are You Sure You Want to Block This Staff?
           </h1>
           <p>
-            {lawyer.user.firstName} {lawyer.user.lastName}
+            {staff.user.firstName} {staff.user.lastName}
           </p>
         </DialogDescription>
         <DialogFooter>
@@ -48,19 +48,18 @@ const DeleteLawyer = ({ lawyer }: { lawyer: LawyerDataType }) => {
             <Button
               variant={"outline"}
               onClick={() => {
-                navigate("/lawyer")
+                navigate("/staff")
               }}
             >
               close
             </Button>
             <Button
-              variant={"destructive"}
               disabled={isPending}
               onClick={() => {
-                mutate(lawyer.lawyer.id)
+                mutate(staff.staff.id)
               }}
             >
-              {isPending ? "Deleting..." : "Delete"}
+              {isPending ? "Blocking" : "Block"}
             </Button>
           </Field>
         </DialogFooter>
@@ -69,4 +68,4 @@ const DeleteLawyer = ({ lawyer }: { lawyer: LawyerDataType }) => {
   )
 }
 
-export default DeleteLawyer
+export default BlockStaff

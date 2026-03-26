@@ -21,16 +21,13 @@ export const postStaff = async (data: AddStaffData) => {
   return response.data
 }
 
-
-export const deleteStaff = async (id:number) => {
+export const deleteStaff = async (id: number) => {
   const response = await axiosInstance.delete(`/staff/staff/${id}`)
   return response.data
 }
 
-export const blockStaff = async (data) => {
-  const response = await axiosInstance.put(
-    `/staff/staff/${data.staff.id}/block`
-  )
+export const blockStaff = async (id: number) => {
+  const response = await axiosInstance.put(`/staff/staff/${id}/block`)
   return response.data
 }
 

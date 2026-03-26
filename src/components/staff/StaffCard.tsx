@@ -11,11 +11,11 @@ import {
 import type { StaffUserMapping } from "@/types/staffType"
 import { useLocation, useNavigate } from "react-router-dom"
 import StaffDetailsModel from "./StaffDetailsModel"
-import BlockStaffModel from "./BlockStaffModel"
 import UpdateStaffModel from "./UpdateStaffModel"
 import { useState } from "react"
 import { Dialog } from "../ui/dialog"
 import DeleteStaff from "./DeleteStaff"
+import BlockStaff from "./BlockStaff"
 const StaffCard = (staff: StaffUserMapping) => {
   const [openDelete, setOpenDelete] = useState<boolean>(false)
   const navigate = useNavigate()
@@ -23,7 +23,7 @@ const StaffCard = (staff: StaffUserMapping) => {
 
   return (
     <Dialog
-      open={openDelete}
+      open={openDelete || pathname == `/staff/block/${staff.staff.id}`}
       onOpenChange={(open) => {
         setOpenDelete(false)
         if (!open) navigate("/staff")
@@ -33,12 +33,14 @@ const StaffCard = (staff: StaffUserMapping) => {
         <StaffDetailsModel {...staff} />
       )}
       {pathname == `/staff/block/${staff.staff.id}` && (
-        <BlockStaffModel {...staff} />
+        <BlockStaff staff={staff} />
       )}
       {pathname == `/staff/edit/${staff.staff.id}` && (
         <UpdateStaffModel {...staff} />
       )}
-      {openDelete && <DeleteStaff staff={staff} setOpenDelete={setOpenDelete}/>}
+      {openDelete && (
+        <DeleteStaff staff={staff} setOpenDelete={setOpenDelete} />
+      )}
       <div className="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition hover:shadow-md sm:flex-row sm:items-center sm:justify-between">
         {/* LEFT SECTION */}
         <div className="flex flex-1 items-start gap-4 sm:items-center">
