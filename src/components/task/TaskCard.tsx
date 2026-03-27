@@ -9,12 +9,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
-import DeleteTaskModel from "./DeleteTaskModel"
 import TaskDetailsModel from "./TaskDetailsModel"
-import UpdateTaskModel from "./UpdateTaskModel"
 import type { Task } from "@/types/taskType"
 import UpdateTask from "./UpdateTask"
 import { Dialog } from "../ui/dialog"
+import DeleteTask from "./DeleteTask"
 
 const getPriorityColor = (priority: string) => {
   if (priority == "low") {
@@ -37,11 +36,18 @@ const TaskCard = (data: Task) => {
   const navigate = useNavigate()
   const pathname = useLocation().pathname
   return (
-    <Dialog open={pathname === `/task/edit/${data.id}`} onOpenChange={(open)=>{if(!open) navigate('/task')}}>
+    <Dialog
+      open={
+        pathname === `/task/edit/${data.id}` ||
+        pathname === `/task/delete/${data.id}`
+      }
+      onOpenChange={(open) => {
+        if (!open) navigate("/task")
+      }}
+    >
       {pathname === `/task/${data.id}` && <TaskDetailsModel {...data} />}
-      {/* {pathname === `/task/edit/${data.id}` && <UpdateTaskModel {...data} />} */}
       {pathname === `/task/edit/${data.id}` && <UpdateTask task={data} />}
-      {pathname === `/task/delete/${data.id}` && <DeleteTaskModel {...data} />}
+      {pathname === `/task/delete/${data.id}` && <DeleteTask task={data} />}
       <article className="group hover:shadow-soft relative cursor-pointer rounded-xl border border-zinc-200 bg-zinc-50/40 p-4 shadow-sm transition duration-200 hover:bg-zinc-100/80">
         <div className="flex items-start gap-3">
           <div className="min-w-0 flex-1">

@@ -16,7 +16,7 @@ export const getAllTask = async () => {
   return response.data
 }
 
-export const deleteTask = async (data) => {
-  const response = await axiosInstance.delete(`/tasks/task/${data.id}`)
+export const deleteTask = async (id:number) => {
+  const response = await axiosInstance.delete(`/tasks/task/${id}`)
   return response.data
 }
