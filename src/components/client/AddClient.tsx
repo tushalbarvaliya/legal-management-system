@@ -38,9 +38,9 @@ const AddClient = () => {
     mutationFn: postClient,
     onSuccess: () => {
       toast.success("User Become Lawyer", { duration: 1500 })
-      queryClient.invalidateQueries({ queryKey: ["staff"] })
+      queryClient.invalidateQueries({ queryKey: ["client"] })
       setTimeout(() => {
-        navigate("/staff")
+        navigate("/client")
       }, 1510)
     },
     onError: (error) => {

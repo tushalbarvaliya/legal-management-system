@@ -7,7 +7,7 @@ import { X } from "lucide-react"
 import { postCase } from "@/api/caseAPI"
 import { queryClient } from "@/main"
 import { getAllClient } from "@/api/clientAPI"
-import type { ClientDataType } from "@/data/clientData"
+import type { ClientDataType } from "@/types/clientType"
 
 export type caseAddFormDataType = {
   caseNumber: number

@@ -9,7 +9,7 @@ import { patchCase } from "@/api/caseAPI"
 import { getAllClient } from "@/api/clientAPI"
 import type { caseDataType } from "@/data/caseData"
 import { queryClient } from "@/main"
-import type { ClientDataType } from "@/data/clientData"
+import type { ClientDataType } from "@/types/clientType"
 
 const EditCaseModel = (data: caseDataType) => {
   const navigate = useNavigate()

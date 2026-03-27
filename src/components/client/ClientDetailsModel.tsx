@@ -2,7 +2,7 @@ import { X } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 
 import { formatDate } from "@/utils/formate"
-import type { ClientDataType } from "@/data/clientData"
+import type { ClientDataType } from "@/types/clientType"
 
 
 const ClientDetailsModel = (data: ClientDataType) => {

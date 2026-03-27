@@ -14,7 +14,7 @@ import {
 import { X } from "lucide-react"
 import { Button } from "../ui/button"
 import { Link, useNavigate } from "react-router-dom"
-import type { ClientDataType } from "@/data/clientData"
+import type { ClientDataType } from "@/types/clientType"
 import { useEffect } from "react"
 
 export type EditClientType = {

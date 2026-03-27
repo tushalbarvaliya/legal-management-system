@@ -9,7 +9,7 @@ import { addSession } from "@/api/sessionAPI"
 import { getAllCases } from "@/api/caseAPI"
 import { getAllClient } from "@/api/clientAPI"
 import type { caseDataType } from "@/data/caseData"
-import type { ClientDataType } from "@/data/clientData"
+import type { ClientDataType } from "@/types/clientType"
 
 export type SessionAddFormType = {
   sessionDate: string

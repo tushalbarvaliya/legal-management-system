@@ -10,7 +10,7 @@ import type { caseDataType } from "@/data/caseData"
 import { queryClient } from "@/main"
 import { convertToBase64 } from "@/utils/convertToBase64"
 import { getAllClient } from "@/api/clientAPI"
-import type { ClientDataType } from "@/data/clientData"
+import type { ClientDataType } from "@/types/clientType"
 
 export type AddDocsFormData = {
   title: string

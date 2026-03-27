@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 
 import { putBlockClient } from "@/api/clientAPI"
 import { queryClient } from "@/main"
-import type { ClientDataType } from "@/data/clientData"
+import type { ClientDataType } from "@/types/clientType"
 import { useAppSelector } from "@/hooks/hooks"
 import ClientDetailsModel from "./ClientDetailsModel"
 import UpdateClientModel from "./UpdateClientModel"
@@ -16,14 +16,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "../ui/dialog"
-import { Field } from "../ui/field"
+import { Dialog } from "../ui/dialog"
 import DeleteClientModel from "./DeleteClientModel"
 
 const ClientCard = (data: ClientDataType) => {
@@ -61,7 +54,7 @@ const ClientCard = (data: ClientDataType) => {
       )}
 
       {pathname === `/client/delete/${data.client.id}` && (
-        <DeleteClientModel id={data.client.id} />
+        <DeleteClientModel data={data} />
       )}
 
       <article

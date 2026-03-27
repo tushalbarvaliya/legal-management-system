@@ -12,8 +12,9 @@ import { useMutation } from "@tanstack/react-query"
 import { deleteClient } from "@/api/clientAPI"
 import { toast } from "sonner"
 import { queryClient } from "@/main"
+import type { ClientDataType } from "@/types/clientType"
 
-const DeleteClientModel = ({ id }: { id: number }) => {
+const DeleteClientModel = ({ data }: { data: ClientDataType }) => {
   const navigate = useNavigate()
   const { mutate } = useMutation({
     mutationFn: deleteClient,
@@ -23,7 +24,7 @@ const DeleteClientModel = ({ id }: { id: number }) => {
       navigate("/client")
     },
     onError: (error) => {
-      toast.success(`Error ${error}`)
+      toast.error(`Error ${error}`)
     },
   })
   return (
@@ -35,7 +36,9 @@ const DeleteClientModel = ({ id }: { id: number }) => {
         <DialogDescription className="mt-2 text-sm text-black">
           Are you sure you want to delete this client?
         </DialogDescription>
-        <span>{id}</span>
+        <span>
+          {data.user.firstName} {data.user.lastName}
+        </span>
 
         <Field orientation={"horizontal"}>
           <Button
@@ -49,7 +52,7 @@ const DeleteClientModel = ({ id }: { id: number }) => {
           <Button
             variant={"destructive"}
             onClick={() => {
-              mutate(id)
+              mutate(data.client.id)
             }}
           >
             Delete

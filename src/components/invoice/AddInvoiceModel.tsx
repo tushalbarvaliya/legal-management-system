@@ -2,7 +2,7 @@ import { getAllCases } from "@/api/caseAPI"
 import { getAllClient } from "@/api/clientAPI"
 import { addInvoice } from "@/api/invoiceAPI"
 import type { caseDataType } from "@/data/caseData"
-import type { ClientDataType } from "@/data/clientData"
+import type { ClientDataType } from "@/types/clientType"
 import { queryClient } from "@/main"
 
 import { useMutation, useQuery } from "@tanstack/react-query"

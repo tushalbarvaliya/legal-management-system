@@ -10,7 +10,7 @@ import { getAllClient } from "@/api/clientAPI"
 import { updateDocs } from "@/api/docsAPI"
 
 import type { caseDataType } from "@/data/caseData"
-import type { ClientDataType } from "@/data/clientData"
+import type { ClientDataType } from "@/types/clientType"
 import type { docsDataType } from "@/data/docsData"
 
 import { queryClient } from "@/main"
