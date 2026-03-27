@@ -56,4 +56,4 @@ export const UpdateClientSchema = z.object({
     .min(0, "Vat Percentage cannot be negative"),
 })
 
-export type AddClientFormSchemaType = z.infer<typeof UpdateClientSchema>
+export type UpdateClientFormSchemaType = z.infer<typeof UpdateClientSchema>

@@ -1,23 +1,27 @@
-import type { AddClientFormType } from "@/components/client/AddClientModel"
 import axiosInstance from "./axiosInstance"
 import type { EditClientType } from "@/components/client/UpdateClientModel"
-import type { ClientDataType } from "@/data/clientData"
 
 export const getAllClient = async () => {
   const response = await axiosInstance.get("/clients")
   return response.data
 }
 
-export const postClient = async (data: AddClientFormType) => {
-  const clientData = {
-    ...data,
-    crNumber: 0,
-    vatNumber: 0,
-    vatPercentage: 0,
-    isDeleted: false,
-    isBlocked: false,
-  }
-  const response = await axiosInstance.post("/clients/client", clientData)
+type AddClientDataType = {
+  email: string
+  password: string
+  name: string
+  firstName: string
+  lastName: string
+  phoneNumber: string
+  gender: string
+  address: string
+  occupation: string
+  crNumber: unknown
+  vatNumber: unknown
+  vatPercentage: unknown
+}
+export const postClient = async (data: AddClientDataType) => {
+  const response = await axiosInstance.post("/clients/client", data)
   return response.data
 }
 

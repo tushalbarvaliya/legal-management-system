@@ -2,8 +2,9 @@ import { Plus } from "lucide-react"
 
 import { useAppSelector } from "@/hooks/hooks"
 import { useLocation, useNavigate } from "react-router-dom"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog"
+import { Dialog, } from "../ui/dialog"
 import { Button } from "../ui/button"
+import AddClient from "./AddClient"
 
 const ClientHeader = () => {
   const role = useAppSelector((state) => state.auth.role)
@@ -18,14 +19,7 @@ const ClientHeader = () => {
       }}
     >
       {pathname === "/client/add" && (
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Create Client</DialogTitle>
-          </DialogHeader>
-            <form id="addClientForm">
-              {/* form remain */}
-            </form>
-        </DialogContent>
+        <AddClient />
       )}
       <section className="shadow-soft rounded-2xl border border-zinc-200 bg-linear-to-br from-white to-zinc-50 p-5 sm:p-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
