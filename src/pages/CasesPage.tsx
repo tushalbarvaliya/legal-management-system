@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query"
 import { Plus, Search } from "lucide-react"
 import { useLocation, useNavigate } from "react-router-dom"
 
-import type { caseDataType } from "@/data/caseData"
+import type { CaseDataType } from "@/types/caseType"
 import { useAppSelector } from "@/hooks/hooks"
 import { getAllCases } from "@/api/caseAPI"
 import ErrorMessage from "@/components/ErrorMessage"
@@ -22,13 +22,13 @@ const CasesPage = () => {
     data: cases,
     isLoading,
     isError,
-  } = useQuery<caseDataType[]>({
+  } = useQuery<CaseDataType[]>({
     queryKey: ["cases"],
     queryFn: getAllCases,
   })
 
-  const filteredCases: caseDataType[] | undefined = useMemo(() => {
-    return cases?.filter((item: caseDataType) => {
+  const filteredCases: CaseDataType[] | undefined = useMemo(() => {
+    return cases?.filter((item: CaseDataType) => {
       const matchesSearch =
         item.title.toLowerCase().includes(search.toLowerCase()) ||
         item.description.toLowerCase().includes(search.toLowerCase())
@@ -96,7 +96,7 @@ const CasesPage = () => {
           {!isLoading &&
             !isError &&
             (filteredCases && filteredCases?.length > 0 ? (
-              filteredCases.map((item: caseDataType) => (
+              filteredCases.map((item: CaseDataType) => (
                 <div key={item.id}>
                   <CasesCard {...item} />
                 </div>

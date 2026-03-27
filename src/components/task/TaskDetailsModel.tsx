@@ -1,9 +1,9 @@
-import type { taskDataType } from "@/data/taskData"
+import type { TaskDataType } from "@/types/taskType"
 import { formatDate } from "@/utils/formate"
 import { X } from "lucide-react"
 import { Link, useNavigate } from "react-router-dom"
 
-const TaskDetailsModel = (data: taskDataType) => {
+const TaskDetailsModel = (data: TaskDataType) => {
   const navigate = useNavigate()
   return (
     <>

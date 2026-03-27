@@ -1,11 +1,11 @@
 import { deleteTask } from "@/api/taskAPI"
-import type { taskDataType } from "@/data/taskData"
+import type { TaskDataType } from "@/types/taskType"
 import { queryClient } from "@/main"
 import { useMutation } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 
-const DeleteTaskModel = (data: taskDataType) => {
+const DeleteTaskModel = (data: TaskDataType) => {
   const navigate = useNavigate()
   const { mutate } = useMutation({
     mutationFn: deleteTask,

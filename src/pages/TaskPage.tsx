@@ -4,15 +4,14 @@ import { Plus } from "lucide-react"
 import { useLocation, useNavigate } from "react-router-dom"
 
 import { getAllTask } from "@/api/taskAPI"
-import type { taskDataType } from "@/data/taskData"
+import type { Task, TaskResponse } from "@/types/taskType"
 import NoFound from "@/components/NoFound"
 import TaskCardSkeleton from "@/components/task/TaskCardSkeleton"
 import ErrorMessage from "@/components/ErrorMessage"
 import { Spinner } from "@/components/ui/spinner"
 import TaskCard from "@/components/task/TaskCard"
-import AddTaskModel from "@/components/task/AddTaskModel"
-
-
+import AddTask from "@/components/task/AddTask"
+import { Dialog } from "@/components/ui/dialog"
 
 const TaskPage = () => {
   const navigate = useNavigate()
@@ -23,42 +22,42 @@ const TaskPage = () => {
   const [statusFilter, setStatusFilter] = useState("all")
 
   const {
-    data: tasks = [],
+    data: tasks,
     isLoading,
     isError,
-  } = useQuery<taskDataType[]>({
+  } = useQuery<TaskResponse>({
     queryKey: ["tasks"],
     queryFn: getAllTask,
   })
 
   const filteredTasks = useMemo(() => {
-    return tasks.filter((task: taskDataType) => {
+    return tasks?.tasks.filter((task: Task) => {
       const title = task.title?.toLowerCase() || ""
       const description = task.description?.toLowerCase() || ""
-
       const matchesSearch =
         title.includes(search.toLowerCase()) ||
         description.includes(search.toLowerCase())
-
       const matchesPriority =
         priorityFilter === "all" || task.priority === priorityFilter
-
       const matchesStatus =
         statusFilter === "all" || task.status === statusFilter
-
       return matchesSearch && matchesPriority && matchesStatus
     })
   }, [search, priorityFilter, statusFilter, tasks])
 
-  const total = filteredTasks.length
-  const completed = filteredTasks.filter((t) => t.status === "completed").length
-  const inProgress = filteredTasks.filter(
-    (t) => t.status === "inProgress"
-  ).length
+  const total = tasks?.tasks.length
+  const pending = tasks?.summary.pending
+  const completed = tasks?.summary.completed
+  const overdue = tasks?.summary.overdue
 
   return (
-    <>
-      {pathname === "/task/add" && <AddTaskModel />}
+    <Dialog
+      open={pathname === "/task/add"}
+      onOpenChange={(open) => {
+        if (!open) navigate("/task")
+      }}
+    >
+      {pathname === "/task/add" && <AddTask />}
       <section className="shadow-soft rounded-2xl border border-zinc-200 bg-white p-4 sm:p-6">
         {/* header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -118,7 +117,10 @@ const TaskPage = () => {
             Completed: {isLoading ? <Spinner /> : completed}
           </p>
           <p className="flex gap-2 rounded-full bg-amber-100 px-2 text-amber-800">
-            In Process: {isLoading ? <Spinner /> : inProgress}
+            Pending: {isLoading ? <Spinner /> : pending}
+          </p>
+          <p className="flex gap-2 rounded-full bg-red-100 px-2 text-red-800">
+            Over Due: {isLoading ? <Spinner /> : overdue}
           </p>
         </div>
 
@@ -144,8 +146,9 @@ const TaskPage = () => {
 
           {!isLoading &&
             !isError &&
+            filteredTasks &&
             (filteredTasks.length > 0 ? (
-              filteredTasks.map((item) => (
+              filteredTasks?.map((item) => (
                 <div key={item.id}>
                   <TaskCard {...item} />
                 </div>
@@ -155,7 +158,7 @@ const TaskPage = () => {
             ))}
         </div>
       </section>
-    </>
+    </Dialog>
   )
 }
 

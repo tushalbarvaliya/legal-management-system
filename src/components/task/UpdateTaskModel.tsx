@@ -1,7 +1,7 @@
 import { getAllCases } from "@/api/caseAPI"
 import { updateTask } from "@/api/taskAPI"
-import type { caseDataType } from "@/data/caseData"
-import type { taskDataType } from "@/data/taskData"
+import type { CaseDataType } from "@/types/caseType"
+import type { TaskDataType } from "@/types/taskType"
 import { queryClient } from "@/main"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { X } from "lucide-react"
@@ -19,7 +19,7 @@ export type UpdateFormDataTask = {
   priority: string
 }
 
-const UpdateTaskModel = (data: taskDataType) => {
+const UpdateTaskModel = (data: TaskDataType) => {
   const navigate = useNavigate()
   const { mutate ,isPending} = useMutation({
     mutationFn: updateTask,
@@ -33,7 +33,7 @@ const UpdateTaskModel = (data: taskDataType) => {
     },
   })
 
-  const { data: caseData } = useQuery<caseDataType[]>({
+  const { data: caseData } = useQuery<CaseDataType[]>({
     queryKey: ["cases"],
     queryFn: getAllCases,
   })

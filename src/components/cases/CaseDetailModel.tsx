@@ -1,11 +1,11 @@
 import { X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
-import type { caseDataType } from "@/data/caseData";
+import type { CaseDataType } from "@/types/caseType";
 import { formatDate } from "@/utils/formate";
 
 
-const CaseDetailModel = (data: caseDataType) => {
+const CaseDetailModel = (data: CaseDataType) => {
   const navigate=useNavigate()
   return (
     <>

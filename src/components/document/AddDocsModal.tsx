@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom"
 
 import { getAllCases } from "@/api/caseAPI"
 import { createDocs } from "@/api/docsAPI"
-import type { caseDataType } from "@/data/caseData"
+import type { CaseDataType } from "@/types/caseType"
 import { queryClient } from "@/main"
 import { convertToBase64 } from "@/utils/convertToBase64"
 import { getAllClient } from "@/api/clientAPI"
@@ -47,7 +47,7 @@ const AddDocsModal = () => {
     delayError: 500,
   })
 
-  const { data: caseData } = useQuery<caseDataType[]>({
+  const { data: caseData } = useQuery<CaseDataType[]>({
     queryKey: ["cases"],
     queryFn: getAllCases,
   })

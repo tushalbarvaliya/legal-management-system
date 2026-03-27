@@ -1,4 +1,4 @@
-import { type caseDataType } from "@/data/caseData"
+import { type CaseDataType } from "@/types/caseType"
 import axiosInstance from "./axiosInstance"
 import type { caseAddFormDataType } from "@/components/cases/AddCaseModel"
 
@@ -12,12 +12,12 @@ export const postCase = async (data: caseAddFormDataType) => {
     return response.data
 }
 
-export const patchCase = async (data: caseDataType) => {
+export const patchCase = async (data: CaseDataType) => {
     const response = await axiosInstance.patch(`/cases/case/${data.id}`, data)
     return response.data
 }
 
-export const deleteCase = async (data: caseDataType) => {
+export const deleteCase = async (data: CaseDataType) => {
     const response = await axiosInstance.delete(`/cases/${data.id}`)
     return response.data
 }

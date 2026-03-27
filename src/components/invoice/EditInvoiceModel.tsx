@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 import type { AddInvoiceFormDataType } from "./AddInvoiceModel"
-import type { caseDataType } from "@/data/caseData"
+import type { CaseDataType } from "@/types/caseType"
 import { getAllCases } from "@/api/caseAPI"
 import type { ClientDataType } from "@/types/clientType"
 import { getAllClient } from "@/api/clientAPI"
@@ -26,7 +26,7 @@ const EditInvoiceModel = (data: invoiceDataType) => {
       toast.error(`Error ${error}`)
     },
   })
-  const { data: caseData } = useQuery<caseDataType[]>({
+  const { data: caseData } = useQuery<CaseDataType[]>({
     queryKey: ["cases"],
     queryFn: getAllCases,
   })

@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
-import type { taskDataType } from "@/data/taskData"
+import type { TaskDataType } from "@/types/taskType"
 import DeleteTaskModel from "./DeleteTaskModel"
 import TaskDetailsModel from "./TaskDetailsModel"
 import UpdateTaskModel from "./UpdateTaskModel"
@@ -27,13 +27,11 @@ const getPriorityColor = (priority: string) => {
 const getStatusColor = (status: string) => {
   if (status === "pending") {
     return "bg-zinc-100 text-zinc-700"
-  } else if (status === "inProgress") {
-    return "bg-blue-100 text-blue-700"
   } else if (status === "completed") {
     return "bg-emerald-100 text-emerald-700"
   }
 }
-const TaskCard = (data: taskDataType) => {
+const TaskCard = (data: TaskDataType) => {
   const navigate = useNavigate()
   const pathname = useLocation().pathname
   return (
@@ -74,7 +72,7 @@ const TaskCard = (data: taskDataType) => {
 
               <p>
                 <span className="font-semibold text-zinc-700">Due:</span>{" "}
-                {formatDate(data.createdAt)}
+                {data.dueDate ? formatDate(data.dueDate!) : "No Deadline"}
               </p>
 
               <p>
@@ -82,7 +80,12 @@ const TaskCard = (data: taskDataType) => {
                 <span
                   className={`ml-1 inline-flex rounded-full px-2 py-0.5 font-medium ${getStatusColor(data.status)}`}
                 >
-                  {data.status}
+                  {/* {data.dueDate == null
+                    ? data.status
+                    : new Date(data.dueDate) < new Date()
+                      ? "overDue"
+                      : data.status} */}
+                      {data.status}
                 </span>
               </p>
             </div>

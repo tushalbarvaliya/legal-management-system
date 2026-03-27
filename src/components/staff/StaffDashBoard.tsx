@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 
 import { getAllTask } from "@/api/taskAPI"
-import type { taskDataType } from "@/data/taskData"
+import type { TaskDataType } from "@/types/taskType"
 import ErrorMessage from "../ErrorMessage"
 import LawyerBoardSkeleton from "../lawyer/LawyerBoardSkeleton"
 
@@ -10,7 +10,7 @@ const StaffDashboard = () => {
     data: tasks = [],
     isLoading,
     isError,
-  } = useQuery<taskDataType[]>({
+  } = useQuery<TaskDataType[]>({
     queryKey: ["tasks"],
     queryFn: getAllTask,
   })

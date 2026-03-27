@@ -9,7 +9,7 @@ import { getAllCases } from "@/api/caseAPI"
 import { getAllClient } from "@/api/clientAPI"
 import { updateDocs } from "@/api/docsAPI"
 
-import type { caseDataType } from "@/data/caseData"
+import type { CaseDataType } from "@/types/caseType"
 import type { ClientDataType } from "@/types/clientType"
 import type { docsDataType } from "@/data/docsData"
 
@@ -23,7 +23,7 @@ const UpdateDocsModel = ({ data }: Props) => {
   const navigate = useNavigate()
   const [replaceFile, setReplaceFile] = useState(false)
 
-  const { data: caseData } = useQuery<caseDataType[]>({
+  const { data: caseData } = useQuery<CaseDataType[]>({
     queryKey: ["cases"],
     queryFn: getAllCases,
   })

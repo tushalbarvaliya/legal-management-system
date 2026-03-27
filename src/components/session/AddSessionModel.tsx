@@ -8,7 +8,7 @@ import { queryClient } from "@/main"
 import { addSession } from "@/api/sessionAPI"
 import { getAllCases } from "@/api/caseAPI"
 import { getAllClient } from "@/api/clientAPI"
-import type { caseDataType } from "@/data/caseData"
+import type { CaseDataType } from "@/types/caseType"
 import type { ClientDataType } from "@/types/clientType"
 
 export type SessionAddFormType = {
@@ -34,7 +34,7 @@ const AddSessionModel = () => {
       toast.error(`Error ${error}`)
     },
   })
-  const { data: caseData } = useQuery<caseDataType[]>({
+  const { data: caseData } = useQuery<CaseDataType[]>({
     queryKey: ["cases"],
     queryFn: getAllCases,
   })
