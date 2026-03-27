@@ -10,7 +10,7 @@ import type { CaseDataType } from "@/types/caseType"
 import { queryClient } from "@/main"
 import { convertToBase64 } from "@/utils/convertToBase64"
 import { getAllClient } from "@/api/clientAPI"
-import type { ClientDataType } from "@/types/clientType"
+import type { ClientResponse } from "@/types/clientType"
 
 export type AddDocsFormData = {
   title: string
@@ -51,7 +51,7 @@ const AddDocsModal = () => {
     queryKey: ["cases"],
     queryFn: getAllCases,
   })
-  const { data: clientData } = useQuery<ClientDataType[]>({
+  const { data: clientData } = useQuery<ClientResponse[]>({
     queryFn: getAllClient,
     queryKey: ["client"],
   })

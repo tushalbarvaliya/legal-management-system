@@ -1,7 +1,7 @@
 import { MoreVertical } from "lucide-react"
 import { useLocation, useNavigate } from "react-router-dom"
 
-import type { ClientDataType } from "@/types/clientType"
+import type {  ClientUserMapping } from "@/types/clientType"
 import { useAppSelector } from "@/hooks/hooks"
 import ClientDetailsModel from "./ClientDetails"
 import { Button } from "@/components/ui/button"
@@ -18,7 +18,7 @@ import BlockClient from "./BlockClient"
 import UnblockClient from "./UnblockClient"
 import UpdateClient from "./UpdateClient"
 
-const ClientCard = (client: ClientDataType) => {
+const ClientCard = (client: ClientUserMapping) => {
   const role = useAppSelector((state) => state.auth.role)
   const pathname = useLocation().pathname
   const navigate = useNavigate()

@@ -9,7 +9,7 @@ import { addSession } from "@/api/sessionAPI"
 import { getAllCases } from "@/api/caseAPI"
 import { getAllClient } from "@/api/clientAPI"
 import type { CaseDataType } from "@/types/caseType"
-import type { ClientDataType } from "@/types/clientType"
+import type { ClientResponse } from "@/types/clientType"
 
 export type SessionAddFormType = {
   sessionDate: string
@@ -38,7 +38,7 @@ const AddSessionModel = () => {
     queryKey: ["cases"],
     queryFn: getAllCases,
   })
-  const { data: clientData } = useQuery<ClientDataType[]>({
+  const { data: clientData } = useQuery<ClientResponse[]>({
     queryFn: getAllClient,
     queryKey: ["client"],
   })

@@ -7,10 +7,10 @@ import {
 } from "@/components/ui/dialog"
 
 import { formatDate } from "@/utils/formate"
-import type { ClientDataType } from "@/types/clientType"
+import type {  ClientUserMapping } from "@/types/clientType"
 
 type Props = {
-  data: ClientDataType
+  data: ClientUserMapping
 }
 
 const ClientDetails = ({ data }: Props) => {

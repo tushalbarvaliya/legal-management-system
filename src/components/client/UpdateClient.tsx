@@ -20,14 +20,14 @@ import { useNavigate } from "react-router-dom"
 import { useMutation } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { queryClient } from "@/main"
-import type { ClientDataType } from "@/types/clientType"
+import type {  ClientUserMapping } from "@/types/clientType"
 import {
   UpdateClientSchema,
   type UpdateClientFormSchemaType,
 } from "@/schemas/UpdateClientSchema"
 import { patchClient } from "@/api/clientAPI"
 
-const UpdateClient = ({ client }: { client: ClientDataType }) => {
+const UpdateClient = ({ client }: { client: ClientUserMapping }) => {
   const navigate = useNavigate()
   const { mutate, isPending } = useMutation({
     mutationFn: patchClient,

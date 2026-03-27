@@ -9,7 +9,7 @@ import { patchCase } from "@/api/caseAPI"
 import { getAllClient } from "@/api/clientAPI"
 import type { CaseDataType } from "@/types/caseType"
 import { queryClient } from "@/main"
-import type { ClientDataType } from "@/types/clientType"
+import type { ClientResponse } from "@/types/clientType"
 
 const EditCaseModel = (data: CaseDataType) => {
   const navigate = useNavigate()
@@ -35,7 +35,7 @@ const EditCaseModel = (data: CaseDataType) => {
     delayError: 500,
     defaultValues: data,
   })
-  const { data: userData } = useQuery<ClientDataType[]>({
+  const { data: userData } = useQuery<ClientResponse[]>({
     queryFn: getAllClient,
     queryKey: ["client"],
   })

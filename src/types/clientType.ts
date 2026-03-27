@@ -1,36 +1,51 @@
-export type ClientType = {
+// change
+export type Client = {
   id: number
-  vatNumber: number
-  crNumber: number
-  vatPercentage: number
-  occupation: string
   userId: number
   lawyerId: number
-  isBlocked: string
-  isDeleted: string
+
+  crNumber: number
+  vatNumber: number
+  vatPercentage: number
+
+  occupation: string
+
+  isBlocked: "\u0000" | "\u0001"
+  isDeleted: "\u0000" | "\u0001"
+
   createdAt: string
   updatedAt: string
 }
 
-export type ClientUserType = {
+export type User = {
   id: number
-  email: string
-  password: string
   firstName: string
   lastName: string
   name: string
-  gender: string | null
+
+  email: string
+  password: string
+
   phoneNumber: string
   address: string
-  role: string
-  companyId: number
-  isBlocked: string
+
+  gender: string
+  role: "client" | "admin" | "staff"
+
+  companyId: number | null
+
   isDeleted: boolean
+  isBlocked: "\u0000" | "\u0001"
+
   createdAt: string
   updatedAt: string
 }
 
-export type ClientDataType = {
-  client: ClientType
-  user: ClientUserType
+export type ClientUserMapping = {
+  client: Client
+  user: User
+}
+export type ClientResponse = {
+  data: ClientUserMapping[]
+  message: string
 }

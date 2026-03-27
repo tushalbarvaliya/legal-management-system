@@ -2,7 +2,7 @@ import { getAllCases } from "@/api/caseAPI"
 import { getAllClient } from "@/api/clientAPI"
 import { addInvoice } from "@/api/invoiceAPI"
 import type { CaseDataType } from "@/types/caseType"
-import type { ClientDataType } from "@/types/clientType"
+import type { ClientResponse } from "@/types/clientType"
 import { queryClient } from "@/main"
 
 import { useMutation, useQuery } from "@tanstack/react-query"
@@ -38,7 +38,7 @@ const AddInvoiceModel = () => {
     queryKey: ["cases"],
     queryFn: getAllCases,
   })
-  const { data: clientData } = useQuery<ClientDataType[]>({
+  const { data: clientData } = useQuery<ClientResponse[]>({
     queryFn: getAllClient,
     queryKey: ["client"],
   })

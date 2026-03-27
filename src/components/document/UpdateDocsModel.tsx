@@ -10,7 +10,7 @@ import { getAllClient } from "@/api/clientAPI"
 import { updateDocs } from "@/api/docsAPI"
 
 import type { CaseDataType } from "@/types/caseType"
-import type { ClientDataType } from "@/types/clientType"
+import type { ClientResponse } from "@/types/clientType"
 import type { docsDataType } from "@/data/docsData"
 
 import { queryClient } from "@/main"
@@ -28,7 +28,7 @@ const UpdateDocsModel = ({ data }: Props) => {
     queryFn: getAllCases,
   })
 
-  const { data: clientData } = useQuery<ClientDataType[]>({
+  const { data: clientData } = useQuery<ClientResponse[]>({
     queryKey: ["client"],
     queryFn: getAllClient,
   })

@@ -8,7 +8,7 @@ import { toast } from "sonner"
 import type { AddInvoiceFormDataType } from "./AddInvoiceModel"
 import type { CaseDataType } from "@/types/caseType"
 import { getAllCases } from "@/api/caseAPI"
-import type { ClientDataType } from "@/types/clientType"
+import type { ClientResponse } from "@/types/clientType"
 import { getAllClient } from "@/api/clientAPI"
 import { X } from "lucide-react"
 import { useEffect } from "react"
@@ -30,7 +30,7 @@ const EditInvoiceModel = (data: invoiceDataType) => {
     queryKey: ["cases"],
     queryFn: getAllCases,
   })
-  const { data: clientData } = useQuery<ClientDataType[]>({
+  const { data: clientData } = useQuery<ClientResponse[]>({
     queryFn: getAllClient,
     queryKey: ["client"],
   })

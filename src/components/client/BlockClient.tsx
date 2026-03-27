@@ -11,13 +11,13 @@ import { useMutation } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { queryClient } from "@/main"
 import { putBlockClient } from "@/api/clientAPI"
-import type { ClientDataType } from "@/types/clientType"
+import type {  ClientUserMapping } from "@/types/clientType"
 
 const BlockClient = ({
   client,
   setOpenBlock,
 }: {
-  client: ClientDataType
+  client: ClientUserMapping
   setOpenBlock: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
   const { mutate, isPending } = useMutation({

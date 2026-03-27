@@ -7,7 +7,7 @@ import { X } from "lucide-react"
 import { postCase } from "@/api/caseAPI"
 import { queryClient } from "@/main"
 import { getAllClient } from "@/api/clientAPI"
-import type { ClientDataType } from "@/types/clientType"
+import type { ClientResponse } from "@/types/clientType"
 
 export type caseAddFormDataType = {
   caseNumber: number
@@ -45,7 +45,7 @@ const AddCaseModel = () => {
     mode: "onChange",
     delayError: 500,
   })
-  const { data: userData } = useQuery<ClientDataType[]>({
+  const { data: userData } = useQuery<ClientResponse[]>({
     queryFn: getAllClient,
     queryKey: ["client"],
   })

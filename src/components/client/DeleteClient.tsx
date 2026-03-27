@@ -12,9 +12,9 @@ import { useMutation } from "@tanstack/react-query"
 import { deleteClient } from "@/api/clientAPI"
 import { toast } from "sonner"
 import { queryClient } from "@/main"
-import type { ClientDataType } from "@/types/clientType"
+import type { ClientUserMapping } from "@/types/clientType"
 
-const DeleteClient = ({ data }: { data: ClientDataType }) => {
+const DeleteClient = ({ data }: { data: ClientUserMapping }) => {
   const navigate = useNavigate()
   const { mutate } = useMutation({
     mutationFn: deleteClient,
