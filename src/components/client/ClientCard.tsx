@@ -1,14 +1,10 @@
-import { useMutation } from "@tanstack/react-query"
-import { toast } from "sonner"
 import { MoreVertical } from "lucide-react"
 import { useLocation, useNavigate } from "react-router-dom"
 
-import { putBlockClient } from "@/api/clientAPI"
-import { queryClient } from "@/main"
 import type { ClientDataType } from "@/types/clientType"
 import { useAppSelector } from "@/hooks/hooks"
 import ClientDetailsModel from "./ClientDetailsModel"
-import UpdateClientModel from "./UpdateClientModel"
+import UpdateClient from "./UpdateClient"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -17,44 +13,46 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu"
 import { Dialog } from "../ui/dialog"
-import DeleteClientModel from "./DeleteClientModel"
+import DeleteClient from "./DeleteClient"
+import { useState } from "react"
+import BlockClient from "./BlockClient"
+import UnblockClient from "./UnblockClinet"
 
-const ClientCard = (data: ClientDataType) => {
+const ClientCard = (client: ClientDataType) => {
   const role = useAppSelector((state) => state.auth.role)
   const pathname = useLocation().pathname
   const navigate = useNavigate()
-
-  const { mutate: blockMutation } = useMutation({
-    mutationFn: putBlockClient,
-    onSuccess: () => {
-      toast.success("client Block Successfully")
-      queryClient.invalidateQueries({ queryKey: ["client"] })
-    },
-    onError: (error) => {
-      toast.error(`Client Block Error ${error}`)
-    },
-  })
+  const [openBlock, setOpenBlock] = useState<boolean>(false)
+  const [openUnblock, setOpenUnblock] = useState<boolean>(false)
 
   return (
     <Dialog
       open={
-        pathname === `/client/${data.client.id}` ||
-        pathname === `/client/edit/${data.client.id}` ||
-        pathname === `/client/delete/${data.client.id}`
+        pathname === `/client/${client.client.id}` ||
+        pathname === `/client/edit/${client.client.id}` ||
+        pathname === `/client/delete/${client.client.id}` ||
+        openBlock ||
+        openUnblock
       }
       onOpenChange={(open) => {
+        setOpenBlock(false)
+        setOpenUnblock(false)
         if (!open) navigate("/client")
       }}
     >
-      {pathname === `/client/${data.client.id}` && (
-        <ClientDetailsModel {...data} />
+      {pathname === `/client/${client.client.id}` && (
+        <ClientDetailsModel {...client} />
       )}
-      {pathname === `/client/edit/${data.client.id}` && (
-        <UpdateClientModel data={data} />
+      {pathname === `/client/edit/${client.client.id}` && (
+        <UpdateClient data={client} />
       )}
 
-      {pathname === `/client/delete/${data.client.id}` && (
-        <DeleteClientModel data={data} />
+      {pathname === `/client/delete/${client.client.id}` && (
+        <DeleteClient data={client} />
+      )}
+      {openBlock && <BlockClient client={client} setOpenBlock={setOpenBlock} />}
+      {openUnblock && (
+        <UnblockClient client={client} setOpenUnblock={setOpenUnblock} />
       )}
 
       <article
@@ -65,30 +63,30 @@ const ClientCard = (data: ClientDataType) => {
         >
           <div className="flex min-w-0 gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-white text-xs font-semibold text-zinc-700">
-              {data.user.firstName[0]}
-              {data.user.lastName[0]}
+              {client.user.firstName[0]}
+              {client.user.lastName[0]}
             </div>
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
                 <h3 className="text-base font-semibold text-zinc-900">
-                  {data.user.firstName} {data.user.lastName}
+                  {client.user.firstName} {client.user.lastName}
                 </h3>
-                {data.client.isBlocked == "\u0001" && (
+                {client.client.isBlocked == "\u0001" && (
                   <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-black">
-                    {data.client.isBlocked ? "Block" : ""}
+                    {client.client.isBlocked ? "Block" : ""}
                   </span>
                 )}
               </div>
               <div className="mt-3 grid grid-cols-1 gap-2 text-sm text-zinc-700 sm:grid-cols-2">
                 <p>
                   <span className="font-medium text-zinc-500">Mobile :</span>{" "}
-                  {data.user.phoneNumber}
+                  {client.user.phoneNumber}
                 </p>
                 <p>
                   <span className="font-medium text-zinc-500">
                     Occupation :
                   </span>{" "}
-                  {data.client.occupation}
+                  {client.client.occupation}
                 </p>
               </div>
             </div>
@@ -106,7 +104,7 @@ const ClientCard = (data: ClientDataType) => {
               <DropdownMenuItem
                 onClick={(e) => {
                   e.stopPropagation()
-                  navigate(`/client/${data.client.id}`)
+                  navigate(`/client/${client.client.id}`)
                 }}
               >
                 View
@@ -116,30 +114,38 @@ const ClientCard = (data: ClientDataType) => {
                   <DropdownMenuItem
                     onClick={(e) => {
                       e.stopPropagation()
-                      navigate(`/client/edit/${data.client.id}`)
+                      navigate(`/client/edit/${client.client.id}`)
                     }}
                   >
                     Edit
                   </DropdownMenuItem>
-                  {!(data.client.isDeleted == "\u0001") && (
+                  {!(client.client.isDeleted == "\u0001") && (
                     <DropdownMenuItem
                       className="text-red-500"
                       onClick={(e) => {
                         e.stopPropagation()
-                        navigate(`/client/delete/${data.client.id}`)
+                        navigate(`/client/delete/${client.client.id}`)
                       }}
                     >
                       Delete
                     </DropdownMenuItem>
                   )}
-                  {!(data.client.isBlocked == "\u0001") && (
+                  {!(client.client.isBlocked == "\u0001") && (
                     <DropdownMenuItem
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        blockMutation(data.client.id)
+                      onClick={() => {
+                        setOpenBlock(true)
                       }}
                     >
                       Block
+                    </DropdownMenuItem>
+                  )}
+                  {client.client.isBlocked == "\u0001" && (
+                    <DropdownMenuItem
+                      onClick={() => {
+                        setOpenUnblock(true)
+                      }}
+                    >
+                      Unblock
                     </DropdownMenuItem>
                   )}
                 </>

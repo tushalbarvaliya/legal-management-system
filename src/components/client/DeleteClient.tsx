@@ -14,7 +14,7 @@ import { toast } from "sonner"
 import { queryClient } from "@/main"
 import type { ClientDataType } from "@/types/clientType"
 
-const DeleteClientModel = ({ data }: { data: ClientDataType }) => {
+const DeleteClient = ({ data }: { data: ClientDataType }) => {
   const navigate = useNavigate()
   const { mutate } = useMutation({
     mutationFn: deleteClient,
@@ -63,4 +63,4 @@ const DeleteClientModel = ({ data }: { data: ClientDataType }) => {
   )
 }
 
-export default DeleteClientModel
+export default DeleteClient

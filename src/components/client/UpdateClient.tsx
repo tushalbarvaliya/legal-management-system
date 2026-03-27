@@ -34,7 +34,7 @@ export type EditClientType = {
   userId: number
 }
 
-const UpdateClientModel = ({ data }: { data: ClientDataType }) => {
+const UpdateClient = ({ data }: { data: ClientDataType }) => {
   const navigate = useNavigate()
 
   const { mutate, isPending } = useMutation({
@@ -499,4 +499,4 @@ const UpdateClientModel = ({ data }: { data: ClientDataType }) => {
   )
 }
 
-export default UpdateClientModel
+export default UpdateClient

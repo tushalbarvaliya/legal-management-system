@@ -1,5 +1,5 @@
 import axiosInstance from "./axiosInstance"
-import type { EditClientType } from "@/components/client/UpdateClientModel"
+import type { EditClientType } from "@/components/client/UpdateClient"
 
 export const getAllClient = async () => {
   const response = await axiosInstance.get("/clients")
@@ -43,5 +43,11 @@ export const deleteClient = async (id: number) => {
 
 export const putBlockClient = async (id: number) => {
   const response = await axiosInstance.put(`/clients/client/${id}/block`)
+  return response.data
+}
+export const putUnblockClient = async (id: number) => {
+  const response = await axiosInstance.patch(`/clients/client/${id}`, {
+    isBlocked: 0,
+  })
   return response.data
 }
