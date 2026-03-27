@@ -1,3 +1,4 @@
+import type { UpdateStaffFormSchemaType } from "@/schemas/updateStaffSchema"
 import axiosInstance from "./axiosInstance"
 
 export const getAllStaff = async () => {
@@ -31,7 +32,13 @@ export const blockStaff = async (id: number) => {
   return response.data
 }
 
-export const patchStaff = async (data) => {
-  const response = await axiosInstance.patch(`/staff/staff/${data.id}`, data)
+export const patchStaff = async ({
+  data,
+  id,
+}: {
+  data: UpdateStaffFormSchemaType
+  id: number
+}) => {
+  const response = await axiosInstance.patch(`/staff/staff/${id}`, data)
   return response.data
 }

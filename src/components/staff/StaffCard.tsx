@@ -11,11 +11,12 @@ import {
 import type { StaffUserMapping } from "@/types/staffType"
 import { useLocation, useNavigate } from "react-router-dom"
 import StaffDetailsModel from "./StaffDetailsModel"
-import UpdateStaffModel from "./UpdateStaffModel"
 import { useState } from "react"
 import { Dialog } from "../ui/dialog"
 import DeleteStaff from "./DeleteStaff"
 import BlockStaff from "./BlockStaff"
+import UpdateStaff from "./UpdateStaff"
+
 const StaffCard = (staff: StaffUserMapping) => {
   const [openDelete, setOpenDelete] = useState<boolean>(false)
   const navigate = useNavigate()
@@ -23,7 +24,11 @@ const StaffCard = (staff: StaffUserMapping) => {
 
   return (
     <Dialog
-      open={openDelete || pathname == `/staff/block/${staff.staff.id}`}
+      open={
+        openDelete ||
+        pathname == `/staff/block/${staff.staff.id}` ||
+        pathname == `/staff/edit/${staff.staff.id}`
+      }
       onOpenChange={(open) => {
         setOpenDelete(false)
         if (!open) navigate("/staff")
@@ -36,7 +41,7 @@ const StaffCard = (staff: StaffUserMapping) => {
         <BlockStaff staff={staff} />
       )}
       {pathname == `/staff/edit/${staff.staff.id}` && (
-        <UpdateStaffModel {...staff} />
+        <UpdateStaff staff={staff} />
       )}
       {openDelete && (
         <DeleteStaff staff={staff} setOpenDelete={setOpenDelete} />

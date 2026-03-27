@@ -12,7 +12,7 @@ import {
 } from "@/utils/regex"
 import { X } from "lucide-react"
 import { Button } from "../ui/button"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { DialogClose } from "../ui/dialog"
 
 export type AddClientFormType = {
