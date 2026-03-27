@@ -62,7 +62,7 @@ export const menuList: menuListType[] = [
   {
     title: "Staff",
     to: "/staff",
-    role: ["lawyer"],
+    role: ["lawyer",'admin'],
     icons:IdCardLanyard
   },
   {
