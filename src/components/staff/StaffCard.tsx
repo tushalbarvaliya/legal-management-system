@@ -10,15 +10,17 @@ import {
 } from "../ui/dropdown-menu"
 import type { StaffUserMapping } from "@/types/staffType"
 import { useLocation, useNavigate } from "react-router-dom"
-import StaffDetailsModel from "./StaffDetailsModel"
 import { useState } from "react"
 import { Dialog } from "../ui/dialog"
 import DeleteStaff from "./DeleteStaff"
 import BlockStaff from "./BlockStaff"
 import UpdateStaff from "./UpdateStaff"
+import UnblockStaff from "./UnblockStaff"
+import StaffDetailsDialog from "./StaffDetailsModel"
 
 const StaffCard = (staff: StaffUserMapping) => {
   const [openDelete, setOpenDelete] = useState<boolean>(false)
+  const [openUnblock, setOpenUnblock] = useState<boolean>(false)
   const navigate = useNavigate()
   const pathname = useLocation().pathname
 
@@ -26,16 +28,19 @@ const StaffCard = (staff: StaffUserMapping) => {
     <Dialog
       open={
         openDelete ||
+        openUnblock ||
         pathname == `/staff/block/${staff.staff.id}` ||
-        pathname == `/staff/edit/${staff.staff.id}`
+        pathname == `/staff/edit/${staff.staff.id}` ||
+        pathname == `/staff/${staff.staff.id}`
       }
       onOpenChange={(open) => {
         setOpenDelete(false)
+        setOpenUnblock(false)
         if (!open) navigate("/staff")
       }}
     >
       {pathname == `/staff/${staff.staff.id}` && (
-        <StaffDetailsModel {...staff} />
+        <StaffDetailsDialog staff={staff} />
       )}
       {pathname == `/staff/block/${staff.staff.id}` && (
         <BlockStaff staff={staff} />
@@ -45,6 +50,9 @@ const StaffCard = (staff: StaffUserMapping) => {
       )}
       {openDelete && (
         <DeleteStaff staff={staff} setOpenDelete={setOpenDelete} />
+      )}
+      {openUnblock && (
+        <UnblockStaff staff={staff} setOpenUnblock={setOpenDelete} />
       )}
       <div className="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition hover:shadow-md sm:flex-row sm:items-center sm:justify-between">
         {/* LEFT SECTION */}
@@ -112,13 +120,24 @@ const StaffCard = (staff: StaffUserMapping) => {
               >
                 view
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  navigate(`/staff/block/${staff.staff.id}`)
-                }}
-              >
-                Block
-              </DropdownMenuItem>
+              {staff.user.isBlocked === "\u0000" && (
+                <DropdownMenuItem
+                  onClick={() => {
+                    navigate(`/staff/block/${staff.staff.id}`)
+                  }}
+                >
+                  Block
+                </DropdownMenuItem>
+              )}
+              {staff.user.isBlocked === "\u0001" && (
+                <DropdownMenuItem
+                  onClick={() => {
+                    setOpenUnblock(true)
+                  }}
+                >
+                  Unblock
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem
                 onClick={() => {
                   navigate(`/staff/edit/${staff.staff.id}`)
