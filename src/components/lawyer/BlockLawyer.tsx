@@ -46,7 +46,7 @@ const BlockLawyer = ({ lawyer }: { lawyer: LawyerDataType }) => {
         <DialogFooter>
           <Field orientation={"horizontal"}>
             <Button
-            variant={"outline"}
+              variant={"outline"}
               onClick={() => {
                 navigate("/lawyer")
               }}

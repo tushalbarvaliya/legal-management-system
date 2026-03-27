@@ -3,8 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 
 import type { ClientDataType } from "@/types/clientType"
 import { useAppSelector } from "@/hooks/hooks"
-import ClientDetailsModel from "./ClientDetailsModel"
-import UpdateClient from "./UpdateClient"
+import ClientDetailsModel from "./ClientDetails"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -16,7 +15,8 @@ import { Dialog } from "../ui/dialog"
 import DeleteClient from "./DeleteClient"
 import { useState } from "react"
 import BlockClient from "./BlockClient"
-import UnblockClient from "./UnblockClinet"
+import UnblockClient from "./UnblockClient"
+import UpdateClient from "./UpdateClient"
 
 const ClientCard = (client: ClientDataType) => {
   const role = useAppSelector((state) => state.auth.role)
@@ -41,10 +41,10 @@ const ClientCard = (client: ClientDataType) => {
       }}
     >
       {pathname === `/client/${client.client.id}` && (
-        <ClientDetailsModel {...client} />
+        <ClientDetailsModel data={client} />
       )}
       {pathname === `/client/edit/${client.client.id}` && (
-        <UpdateClient data={client} />
+        <UpdateClient client={client} />
       )}
 
       {pathname === `/client/delete/${client.client.id}` && (
@@ -59,7 +59,7 @@ const ClientCard = (client: ClientDataType) => {
         className={`group hover:shadow-soft relative rounded-xl border border-zinc-200 bg-zinc-50/40 p-4 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-zinc-100/80 sm:p-5`}
       >
         <div
-          className={`flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between`}
+          className={`flex flex-row gap-4 sm:items-start justify-between`}
         >
           <div className="flex min-w-0 gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-white text-xs font-semibold text-zinc-700">
@@ -77,7 +77,7 @@ const ClientCard = (client: ClientDataType) => {
                   </span>
                 )}
               </div>
-              <div className="mt-3 grid grid-cols-1 gap-2 text-sm text-zinc-700 sm:grid-cols-2">
+              <div className="mt-3 grid grid-cols-1 gap-2 text-sm text-zinc-700 sm:grid-cols-3">
                 <p>
                   <span className="font-medium text-zinc-500">Mobile :</span>{" "}
                   {client.user.phoneNumber}
@@ -87,6 +87,10 @@ const ClientCard = (client: ClientDataType) => {
                     Occupation :
                   </span>{" "}
                   {client.client.occupation}
+                </p>
+                <p>
+                  <span className="font-medium text-zinc-500">Email :</span>{" "}
+                  {client.user.email}
                 </p>
               </div>
             </div>

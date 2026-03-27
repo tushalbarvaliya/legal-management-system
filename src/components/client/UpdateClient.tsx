@@ -1,500 +1,322 @@
-import { useMutation } from "@tanstack/react-query"
-import { useForm } from "react-hook-form"
-import { toast } from "sonner"
-
-import { patchClient } from "@/api/clientAPI"
-import { queryClient } from "@/main"
+import { Controller, useForm } from "react-hook-form"
 import {
-  addressRegex,
-  emailRegex,
-  nameRegex,
-  phoneNumberRegex,
-  userNameRegex,
-} from "@/utils/regex"
-import { X } from "lucide-react"
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog"
+import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Input } from "../ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select"
 import { Button } from "../ui/button"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
+import { useMutation } from "@tanstack/react-query"
+import { toast } from "sonner"
+import { queryClient } from "@/main"
 import type { ClientDataType } from "@/types/clientType"
-import { useEffect } from "react"
+import {
+  UpdateClientSchema,
+  type UpdateClientFormSchemaType,
+} from "@/schemas/UpdateClientSchema"
+import { patchClient } from "@/api/clientAPI"
 
-export type EditClientType = {
-  firstName: string
-  lastName: string
-  email: string
-  phoneNumber: string
-  occupation: string
-  gender: string
-  address: string
-  crNumber: number
-  vatNumber: number
-  vatPercentage: number
-  isDeleted: number
-  isBlocked: number
-  name: string
-  userId: number
-}
-
-const UpdateClient = ({ data }: { data: ClientDataType }) => {
+const UpdateClient = ({ client }: { client: ClientDataType }) => {
   const navigate = useNavigate()
-
   const { mutate, isPending } = useMutation({
     mutationFn: patchClient,
-    mutationKey: ["addClient"],
     onSuccess: () => {
-      toast.success("Client Created")
+      toast.success("Client Update Done.", { duration: 1500 })
       queryClient.invalidateQueries({ queryKey: ["client"] })
-      navigate("/client")
+      setTimeout(() => {
+        navigate("/client")
+      }, 1510)
     },
     onError: (error) => {
-      toast.error(`Something is Not Right ${error}`)
+      toast.error(`Error ${error.message}`)
     },
   })
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<EditClientType>({
-    defaultValues: {} as EditClientType,
+  const form = useForm<UpdateClientFormSchemaType>({
+    resolver: zodResolver(UpdateClientSchema),
     mode: "onChange",
     delayError: 500,
+    defaultValues: {
+      address: client.user.address,
+      firstName: client.user.firstName,
+      lastName: client.user.lastName,
+      phoneNumber: client.user.phoneNumber,
+      gender: client.user.gender || "",
+      crNumber: client.client.crNumber,
+      vatNumber: client.client.vatNumber,
+      vatPercentage: client.client.vatPercentage,
+      occupation: client.client.occupation,
+    },
   })
 
-  useEffect(() => {
-    if (data?.client && data?.user) {
-      const isBlock = data.client.isBlocked == "\u0001" ? 1 : 0
-      const isDelete = data.client.isDeleted == "\u0001" ? 1 : 0
-      reset({
-        firstName: data.user.firstName || "",
-        lastName: data.user.lastName || "",
-        email: data.user.email || "",
-        phoneNumber: data.user.phoneNumber || "",
-        occupation: data.client.occupation || "",
-        gender: data.user.gender || "",
-        address: data.user.address || "",
-        crNumber: data.client.crNumber || 0,
-        vatNumber: data.client.vatNumber || 0,
-        vatPercentage: data.client.vatPercentage || 0,
-        name: data.user.name || "",
-        userId: data.user.id || 0,
-
-        isBlocked: isBlock,
-        isDeleted: isDelete,
-      })
-    }
-  }, [data, reset])
-  const onSubmit = (formData: EditClientType) => {
-    mutate({ data:formData, id: data.client.id })
+  const onSubmit = (data: UpdateClientFormSchemaType) => {
+    // console.log(data)
+    mutate({ data: data, id: client.client.id })
   }
-
   return (
     <>
-      <div className="fixed inset-0 z-70">
-        <div className="absolute inset-0 h-screen bg-zinc-900/45"></div>
-
-        <div className="relative mx-auto flex min-h-full w-full items-center justify-center p-4 sm:p-6">
-          <div className="shadow-soft w-full max-w-3xl rounded-2xl border border-zinc-200 bg-white">
-            <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-4 sm:px-6">
-              <h3 className="font-mono text-lg font-semibold text-zinc-900">
-                Edit Client
-              </h3>
-              <Link to={"/client"}>
-                <button className="rounded-lg border border-zinc-200 p-2 text-zinc-700 transition duration-200 hover:bg-zinc-100">
-                  <X />
-                </button>
-              </Link>
-            </div>
-            <form
-              className="space-y-4 px-5 py-4 sm:px-6"
-              onSubmit={handleSubmit(onSubmit)}
-            >
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <label className="space-y-1.5 text-sm text-zinc-700">
-                  <span className="font-medium">
-                    Cr Number <span className="text-red-500">*</span>
-                  </span>
-                  <input
-                    type="number"
-                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                    {...register("crNumber", {
-                      required: {
-                        value: true,
-                        message: "Please Enter a value",
-                      },
-                    })}
-                  />
-                  {errors.crNumber?.message && (
-                    <p className="min-h-5 text-xs text-red-600">
-                      {errors.crNumber?.message}
-                    </p>
-                  )}
-                </label>
-                <label className="space-y-1.5 text-sm text-zinc-700">
-                  <span className="font-medium">
-                    vat Number <span className="text-red-500">*</span>
-                  </span>
-                  <input
-                    type="text"
-                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                    {...register("vatNumber", {
-                      required: {
-                        value: true,
-                        message: "Please Enter a value",
-                      },
-                    })}
-                  />
-                  {errors.vatNumber?.message && (
-                    <p className="min-h-5 text-xs text-red-600">
-                      {errors.vatNumber?.message}
-                    </p>
-                  )}
-                </label>
-                <label className="space-y-1.5 text-sm text-zinc-700">
-                  <span className="font-medium">
-                    User Id <span className="text-red-500">*</span>
-                  </span>
-                  <input
-                    type="number"
-                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                    {...register("userId", {
-                      required: {
-                        value: true,
-                        message: "Please Enter a value",
-                      },
-                    })}
-                  />
-                  {errors.userId?.message && (
-                    <p className="min-h-5 text-xs text-red-600">
-                      {errors.userId?.message}
-                    </p>
-                  )}
-                </label>
-                <label className="space-y-1.5 text-sm text-zinc-700">
-                  <span className="font-medium">
-                    vat Percentage <span className="text-red-500">*</span>
-                  </span>
-                  <input
-                    type="number"
-                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                    {...register("vatPercentage", {
-                      required: {
-                        value: true,
-                        message: "Please Enter a value",
-                      },
-                    })}
-                  />
-                  {errors.vatPercentage?.message && (
-                    <p className="min-h-5 text-xs text-red-600">
-                      {errors.vatPercentage?.message}
-                    </p>
-                  )}
-                </label>
-                <label className="space-y-1.5 text-sm text-zinc-700">
-                  <span className="font-medium">
-                    is Blocked <span className="text-red-500">*</span>
-                  </span>
-                  <select
-                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                    {...register("isBlocked", {
-                      required: {
-                        value: true,
-                        message: "Please Enter a value",
-                      },
-                    })}
-                  >
-                    <option value="">Set Client Block</option>
-                    <option value={1}>Block</option>
-                    <option value={0}>No Block</option>
-                  </select>
-                  {errors.isBlocked?.message && (
-                    <p className="min-h-5 text-xs text-red-600">
-                      {errors.isBlocked?.message}
-                    </p>
-                  )}
-                </label>
-                <label className="space-y-1.5 text-sm text-zinc-700">
-                  <span className="font-medium">
-                    is Delete <span className="text-red-500">*</span>
-                  </span>
-                  <select
-                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                    {...register("isDeleted", {
-                      required: {
-                        value: true,
-                        message: "Please Enter a value",
-                      },
-                    })}
-                  >
-                    <option value="">Set Client Delete</option>
-                    <option value={1}>Delete</option>
-                    <option value={0}>No Delete</option>
-                  </select>
-                  {errors.isDeleted?.message && (
-                    <p className="min-h-5 text-xs text-red-600">
-                      {errors.isDeleted?.message}
-                    </p>
-                  )}
-                </label>
-
-                <label className="col-span-full space-y-1.5 text-sm text-zinc-700">
-                  <span className="font-medium">
-                    Name <span className="text-red-500">*</span>
-                  </span>
-                  <input
-                    type="text"
-                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                    {...register("name", {
-                      minLength: {
-                        value: 3,
-                        message: "First name length should be greater than 3 ",
-                      },
-                      pattern: {
-                        value: userNameRegex,
-                        message: "Please Enter a Valid user name",
-                      },
-                      required: {
-                        value: true,
-                        message: "Please Enter a value",
-                      },
-                    })}
-                  />
-                  {errors.name?.message && (
-                    <p className="min-h-5 text-xs text-red-600">
-                      {errors.name?.message}
-                    </p>
-                  )}
-                </label>
-                <label className="space-y-1.5 text-sm text-zinc-700">
-                  <span className="font-medium">
-                    First Name <span className="text-red-500">*</span>
-                  </span>
-                  <input
+      <DialogContent className="no-scrollbar max-h-[99vh] min-w-[50vw] overflow-y-scroll">
+        <DialogHeader className="my-4 text-sm">
+          <DialogTitle>Add Lawyer</DialogTitle>
+        </DialogHeader>
+        <form id="addLawyer" onSubmit={form.handleSubmit(onSubmit)}>
+          <FieldGroup className="grid sm:grid-cols-2">
+            <Controller
+              name="firstName"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="firstName">First Name</FieldLabel>
+                  <Input
+                    {...field}
                     id="firstName"
-                    type="text"
-                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                    {...register("firstName", {
-                      minLength: {
-                        value: 3,
-                        message: "First name length should be greater than 3 ",
-                      },
-                      pattern: {
-                        value: nameRegex,
-                        message:
-                          "Only letters are allowed. No numbers, spaces, or special characters.",
-                      },
-                      required: {
-                        value: true,
-                        message: "Please Enter a value",
-                      },
-                    })}
+                    placeholder="Enter Your First Name"
+                    autoComplete="off"
+                    className="w-full"
                   />
-                  {errors.firstName?.message && (
-                    <p className="min-h-5 text-xs text-red-600">
-                      {errors.firstName?.message}
-                    </p>
+
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-xs"
+                    />
                   )}
-                </label>
-                <label className="space-y-1.5 text-sm text-zinc-700">
-                  <span className="font-medium">
-                    Last Name <span className="text-red-500">*</span>
-                  </span>
-                  <input
+                </Field>
+              )}
+            />
+            <Controller
+              name="lastName"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="lastName">Last Name</FieldLabel>
+                  <Input
+                    {...field}
                     id="lastName"
-                    type="text"
-                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                    {...register("lastName", {
-                      minLength: {
-                        value: 3,
-                        message: "Last name length should be greater than 3 ",
-                      },
-                      pattern: {
-                        value: nameRegex,
-                        message:
-                          "Only letters are allowed. No numbers, spaces, or special characters.",
-                      },
-                      required: {
-                        value: true,
-                        message: "Please Enter a value",
-                      },
-                    })}
+                    placeholder="Enter Your Last Name"
+                    autoComplete="off"
+                    className="w-full"
                   />
-                  {errors.lastName?.message && (
-                    <p className="min-h-5 text-xs text-red-600">
-                      {errors.lastName?.message}
-                    </p>
-                  )}
-                </label>
-              </div>
-              <div className="flex flex-col gap-2 sm:col-span-2">
-                <label
-                  htmlFor="email"
-                  className="text-sm font-medium text-zinc-800"
-                >
-                  Email
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  autoComplete="off"
-                  className="block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 transition outline-none placeholder:text-zinc-400 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                  {...register("email", {
-                    required: {
-                      value: true,
-                      message: "Please Enter a value",
-                    },
-                    pattern: {
-                      value: emailRegex,
-                      message:
-                        "Please enter a valid email address (e.g., user@example.com).",
-                    },
-                  })}
-                />
-                {errors.email && (
-                  <p className="min-h-5 text-xs text-red-600">
-                    {errors.email?.message}
-                  </p>
-                )}
-              </div>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <label className="col-span-full space-y-1.5 text-sm text-zinc-700">
-                  <span className="font-medium"> Phone Number</span>
-                  <input
-                    id="otherPhone"
-                    type="text"
-                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                    {...register("phoneNumber", {
-                      pattern: {
-                        value: phoneNumberRegex,
-                        message: "Phone number must contain exactly 10 digits.",
-                      },
-                    })}
-                  />
-                  {errors.phoneNumber?.message && (
-                    <p className="min-h-5 text-xs text-red-600">
-                      {errors.phoneNumber?.message}
-                    </p>
-                  )}
-                </label>
-              </div>
 
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <label className="space-y-1.5 text-sm text-zinc-700">
-                  <span className="font-medium">
-                    Occupation <span className="text-red-500">*</span>
-                  </span>
-                  <input
-                    id="occupation"
-                    type="text"
-                    required
-                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                    {...register("occupation", {
-                      minLength: {
-                        value: 3,
-                        message: "Last name length should be greater than 3 ",
-                      },
-                      pattern: {
-                        value: nameRegex,
-                        message:
-                          "Only letters are allowed. No numbers, spaces, or special characters.",
-                      },
-                      required: {
-                        value: true,
-                        message: "Please Enter a value",
-                      },
-                    })}
-                  />
-                  {errors.occupation?.message && (
-                    <p className="min-h-5 text-xs text-red-600">
-                      {errors.occupation?.message}
-                    </p>
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-xs"
+                    />
                   )}
-                </label>
-                <label className="space-y-1.5 text-sm text-zinc-700">
-                  <span className="font-medium">
-                    Gender <span className="text-red-500">*</span>
-                  </span>
-                  <select
-                    id="gender"
-                    required
-                    className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                    {...register("gender", {
-                      required: {
-                        value: true,
-                        message: "Please enter Valid Input",
-                      },
-                    })}
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="phoneNumber"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="phoneNumber">Phone Number</FieldLabel>
+                  <Input
+                    {...field}
+                    id="phoneNumber"
+                    placeholder="1234567890"
+                    autoComplete="off"
+                    className="w-full"
+                    type="tel"
+                    inputMode="numeric"
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, "")
+                      field.onChange(value)
+                    }}
+                  />
+
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-xs"
+                    />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              name="address"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="address">Address</FieldLabel>
+                  <Input
+                    {...field}
+                    id="address"
+                    placeholder="Enter an address"
+                    autoComplete="off"
+                    className="w-full"
+                  />
+
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-xs"
+                    />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              name="occupation"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="Occupation">Occupation</FieldLabel>
+                  <Input
+                    {...field}
+                    id="Occupation"
+                    placeholder="Occupation"
+                    autoComplete="off"
+                    className="w-full"
+                  />
+
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-xs"
+                    />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              name="gender"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field className="space-y-2">
+                  <FieldLabel>Gender</FieldLabel>
+
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
                   >
-                    <option value="">Select Gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                  </select>
-                  {errors.gender?.message && (
-                    <p className="min-h-5 text-xs text-red-600">
-                      {errors.gender?.message}
-                    </p>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select gender" />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      <SelectItem value="male">Male</SelectItem>
+                      <SelectItem value="female">Female</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  {fieldState.error && (
+                    <FieldError errors={[fieldState.error]} />
                   )}
-                </label>
-              </div>
+                </Field>
+              )}
+            />
+            <Controller
+              name="crNumber"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="crNumber">Cr Number</FieldLabel>
+                  <Input
+                    {...field}
+                    id="crNumber"
+                    type="number"
+                    placeholder="Enter an Cr Number"
+                    autoComplete="off"
+                    className="w-full"
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, "")
+                      field.onChange(value)
+                    }}
+                  />
 
-              <label className="space-y-1.5 text-sm text-zinc-700">
-                <span className="font-medium">
-                  Address <span className="text-red-500">*</span>
-                </span>
-                <input
-                  id="address"
-                  type="text"
-                  required
-                  className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                  {...register("address", {
-                    minLength: {
-                      value: 3,
-                      message: "Minimum 3 characters required.",
-                    },
-                    maxLength: {
-                      value: 50,
-                      message: "Maximum 20 characters allowed.",
-                    },
-                    pattern: {
-                      value: addressRegex,
-                      message: "Only letters, numbers, and spaces are allowed.",
-                    },
-                    required: {
-                      value: true,
-                      message: "Please Enter a value",
-                    },
-                  })}
-                />
-                {errors.address?.message && (
-                  <p className="min-h-5 text-xs text-red-600">
-                    {errors.address?.message}
-                  </p>
-                )}
-              </label>
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-xs"
+                    />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              name="vatNumber"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="vatNumber">Vat Number</FieldLabel>
+                  <Input
+                    {...field}
+                    id="vatNumber"
+                    type="number"
+                    placeholder="Enter an Vat Number"
+                    autoComplete="off"
+                    className="w-full"
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, "")
+                      field.onChange(value)
+                    }}
+                  />
 
-              <div className="flex flex-col-reverse gap-2 border-t border-zinc-200 pt-4 sm:flex-row sm:justify-end">
-                <Link to={"/client"}>
-                  <Button
-                    type="button"
-                    className="bg-black p-6 font-mono font-semibold text-white"
-                  >
-                    Cancel
-                  </Button>
-                </Link>
-                <Button
-                  type="submit"
-                  className="bg-black p-6 font-mono font-semibold text-white"
-                  disabled={isPending}
-                >
-                  {isPending ? "Editing..." : "Edit Client"}
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-xs"
+                    />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              name="vatPercentage"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="vatPercentage">
+                    Vat Percentage
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="vatPercentage"
+                    type="number"
+                    placeholder="Enter an Vat Percentage"
+                    autoComplete="off"
+                    className="w-full"
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, "")
+                      field.onChange(value)
+                    }}
+                  />
+
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-xs"
+                    />
+                  )}
+                </Field>
+              )}
+            />
+          </FieldGroup>
+        </form>
+        <DialogFooter>
+          <Field>
+            <Button type="submit" form="addLawyer" disabled={isPending}>
+              {isPending ? "Updating..." : "Update Client"}
+            </Button>
+          </Field>
+        </DialogFooter>
+      </DialogContent>
     </>
   )
 }

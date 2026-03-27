@@ -1,5 +1,5 @@
+import type { UpdateClientFormSchemaType } from "@/schemas/UpdateClientSchema"
 import axiosInstance from "./axiosInstance"
-import type { EditClientType } from "@/components/client/UpdateClient"
 
 export const getAllClient = async () => {
   const response = await axiosInstance.get("/clients")
@@ -29,7 +29,7 @@ export const patchClient = async ({
   data,
   id,
 }: {
-  data: EditClientType
+  data: UpdateClientFormSchemaType
   id: number
 }) => {
   const response = await axiosInstance.patch(`/clients/client/${id}`, data)

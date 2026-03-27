@@ -35,25 +35,25 @@ export const UpdateClientSchema = z.object({
     .trim()
     .min(3, "occupation must be at least 3 characters"),
 
-  crNumber: z
-    .number()
+  crNumber: z.coerce
+    .number<number>()
     .refine((val) => !isNaN(val), {
       message: "CR Number is required",
     })
     .min(0, "CR Number cannot be negative"),
 
-  vatNumber: z
-    .number()
+  vatNumber: z.coerce
+    .number<number>()
     .refine((val) => !isNaN(val), {
       message: "Vat Number is required",
     })
     .min(0, "Var Number cannot be negative"),
-  vatPercentage: z
-    .number()
+  vatPercentage: z.coerce
+    .number<number>()
     .refine((val) => !isNaN(val), {
       message: "Vat Percentage is required",
     })
     .min(0, "Vat Percentage cannot be negative"),
 })
 
-export type UpdateClientFormSchemaType = z.infer<typeof UpdateClientSchema>
+export type UpdateClientFormSchemaType = z.input<typeof UpdateClientSchema>
