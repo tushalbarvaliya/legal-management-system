@@ -1,17 +1,25 @@
-export type CaseDataType = {
+export type Case = {
+  id: number
+  title: string
   description: string
   caseNumber: number
-  title: string
   caseCity: string
-  caseClosedDate: string
+  caseClosedDate: string 
   lawyerId: number
+  clientId: number
+  type: string
+  caseStage: string
+  status: "open" | "closed" 
   createdAt: string
   updatedAt: string
-  type: string
-  id: number
-  caseStage: string
-  status: string
-  clientId: number
   isDeleted: "\u0000" | "\u0001"
 }
 
+export type CaseData = {
+  cases: Case[]
+}
+
+export type CaseResponse = {
+  data: CaseData
+  message: string
+}

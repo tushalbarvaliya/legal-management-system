@@ -9,10 +9,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
-import type { TaskDataType } from "@/types/taskType"
 import DeleteTaskModel from "./DeleteTaskModel"
 import TaskDetailsModel from "./TaskDetailsModel"
 import UpdateTaskModel from "./UpdateTaskModel"
+import type { Task } from "@/types/taskType"
+import UpdateTask from "./UpdateTask"
+import { Dialog } from "../ui/dialog"
 
 const getPriorityColor = (priority: string) => {
   if (priority == "low") {
@@ -31,13 +33,14 @@ const getStatusColor = (status: string) => {
     return "bg-emerald-100 text-emerald-700"
   }
 }
-const TaskCard = (data: TaskDataType) => {
+const TaskCard = (data: Task) => {
   const navigate = useNavigate()
   const pathname = useLocation().pathname
   return (
-    <>
+    <Dialog open={pathname === `/task/edit/${data.id}`} onOpenChange={(open)=>{if(!open) navigate('/task')}}>
       {pathname === `/task/${data.id}` && <TaskDetailsModel {...data} />}
-      {pathname === `/task/edit/${data.id}` && <UpdateTaskModel {...data} />}
+      {/* {pathname === `/task/edit/${data.id}` && <UpdateTaskModel {...data} />} */}
+      {pathname === `/task/edit/${data.id}` && <UpdateTask task={data} />}
       {pathname === `/task/delete/${data.id}` && <DeleteTaskModel {...data} />}
       <article className="group hover:shadow-soft relative cursor-pointer rounded-xl border border-zinc-200 bg-zinc-50/40 p-4 shadow-sm transition duration-200 hover:bg-zinc-100/80">
         <div className="flex items-start gap-3">
@@ -80,12 +83,11 @@ const TaskCard = (data: TaskDataType) => {
                 <span
                   className={`ml-1 inline-flex rounded-full px-2 py-0.5 font-medium ${getStatusColor(data.status)}`}
                 >
-                  {/* {data.dueDate == null
+                  {data.dueDate == null
                     ? data.status
                     : new Date(data.dueDate) < new Date()
                       ? "overDue"
-                      : data.status} */}
-                      {data.status}
+                      : data.status}
                 </span>
               </p>
             </div>
@@ -134,7 +136,7 @@ const TaskCard = (data: TaskDataType) => {
           </div>
         </div>
       </article>
-    </>
+    </Dialog>
   )
 }
 
