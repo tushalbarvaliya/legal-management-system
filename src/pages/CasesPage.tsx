@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query"
 import { Plus, Search } from "lucide-react"
 import { useLocation, useNavigate } from "react-router-dom"
 
-import type { CaseDataType } from "@/types/caseType"
 import { useAppSelector } from "@/hooks/hooks"
 import { getAllCases } from "@/api/caseAPI"
 import ErrorMessage from "@/components/ErrorMessage"
@@ -11,6 +10,7 @@ import AddCaseModel from "@/components/cases/AddCaseModel"
 import CasesCardSkeleton from "@/components/cases/CasesCardSkeleton"
 import CasesCard from "@/components/cases/CasesCard"
 import NoFound from "@/components/NoFound"
+import type { Case, CaseResponse } from "@/types/caseType"
 
 const CasesPage = () => {
   const role = useAppSelector((state) => state.auth.role)
@@ -22,13 +22,13 @@ const CasesPage = () => {
     data: cases,
     isLoading,
     isError,
-  } = useQuery<CaseDataType[]>({
+  } = useQuery<CaseResponse>({
     queryKey: ["cases"],
     queryFn: getAllCases,
   })
 
-  const filteredCases: CaseDataType[] | undefined = useMemo(() => {
-    return cases?.filter((item: CaseDataType) => {
+  const filteredCases: Case[] | undefined = useMemo(() => {
+    return cases?.data.cases.filter((item: Case) => {
       const matchesSearch =
         item.title.toLowerCase().includes(search.toLowerCase()) ||
         item.description.toLowerCase().includes(search.toLowerCase())
@@ -96,7 +96,7 @@ const CasesPage = () => {
           {!isLoading &&
             !isError &&
             (filteredCases && filteredCases?.length > 0 ? (
-              filteredCases.map((item: CaseDataType) => (
+              filteredCases.map((item:Case) => (
                 <div key={item.id}>
                   <CasesCard {...item} />
                 </div>

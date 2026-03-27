@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { useAppSelector } from "@/hooks/hooks"
 import { formatDate } from "@/utils/formate"
-import type { CaseDataType } from "@/types/caseType"
+import type { Case } from "@/types/caseType"
 import DeleteCaseModel from "./DeleteCaseModel"
 import CaseDetailModel from "./CaseDetailModel"
 import EditCaseModel from "./EditCaseModel"
@@ -15,7 +15,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu"
 
-const CasesCard = (data: CaseDataType) => {
+const CasesCard = (data: Case) => {
   const pathname = useLocation().pathname
   const navigate = useNavigate()
   const role = useAppSelector((state) => state.auth.role)

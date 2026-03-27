@@ -7,11 +7,11 @@ import { useEffect } from "react"
 
 import { patchCase } from "@/api/caseAPI"
 import { getAllClient } from "@/api/clientAPI"
-import type { CaseDataType } from "@/types/caseType"
+import type { caseDataType } from "@/data/caseType"
 import { queryClient } from "@/main"
-import type { ClientResponse } from "@/types/clientType"
+import type { Case } from "@/types/caseType"
 
-const EditCaseModel = (data: CaseDataType) => {
+const EditCaseModel = (data: Case) => {
   const navigate = useNavigate()
   const { mutate, isPending } = useMutation({
     mutationFn: patchCase,
@@ -30,12 +30,12 @@ const EditCaseModel = (data: CaseDataType) => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<CaseDataType>({
+  } = useForm<caseDataType>({
     mode: "onChange",
     delayError: 500,
     defaultValues: data,
   })
-  const { data: userData } = useQuery<ClientResponse[]>({
+  const { data: userData } = useQuery<ClientDataType[]>({
     queryFn: getAllClient,
     queryKey: ["client"],
   })
@@ -57,7 +57,7 @@ const EditCaseModel = (data: CaseDataType) => {
     }
   }, [data, userData, reset])
 
-  const onSubmit = (formData: CaseDataType) => {
+  const onSubmit = (formData: caseDataType) => {
     mutate(formData)
   }
 

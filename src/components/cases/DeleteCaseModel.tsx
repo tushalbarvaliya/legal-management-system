@@ -2,11 +2,11 @@ import { useMutation } from "@tanstack/react-query"
 import { toast } from "sonner"
 
 import { queryClient } from "@/main"
-import type { CaseDataType } from "@/types/caseType"
+import type { Case } from "@/types/caseType"
 import { deleteCase } from "@/api/caseAPI"
 import { useNavigate } from "react-router-dom"
 
-const DeleteCaseModel = (data: CaseDataType) => {
+const DeleteCaseModel = (data: Case) => {
   const navigate = useNavigate()
   const { mutate, isPending } = useMutation({
     mutationFn: deleteCase,
