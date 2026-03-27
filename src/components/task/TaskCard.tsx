@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
-import TaskDetailsModel from "./TaskDetailsModel"
+import TaskDetailsModel from "./TaskDetails"
 import type { Task } from "@/types/taskType"
 import UpdateTask from "./UpdateTask"
 import { Dialog } from "../ui/dialog"
@@ -39,13 +39,14 @@ const TaskCard = (data: Task) => {
     <Dialog
       open={
         pathname === `/task/edit/${data.id}` ||
-        pathname === `/task/delete/${data.id}`
+        pathname === `/task/delete/${data.id}` ||
+        pathname === `/task/${data.id}`
       }
       onOpenChange={(open) => {
         if (!open) navigate("/task")
       }}
     >
-      {pathname === `/task/${data.id}` && <TaskDetailsModel {...data} />}
+      {pathname === `/task/${data.id}` && <TaskDetailsModel data={data} />}
       {pathname === `/task/edit/${data.id}` && <UpdateTask task={data} />}
       {pathname === `/task/delete/${data.id}` && <DeleteTask task={data} />}
       <article className="group hover:shadow-soft relative cursor-pointer rounded-xl border border-zinc-200 bg-zinc-50/40 p-4 shadow-sm transition duration-200 hover:bg-zinc-100/80">
