@@ -23,9 +23,9 @@ const UnblockStaff = ({
   const { mutate, isPending } = useMutation({
     mutationFn: patchUnblockStaff,
     onSuccess: () => {
+      setOpenUnblock(false)
       toast.success("Unblock Staff Successfully", { duration: 1500 })
       queryClient.invalidateQueries({ queryKey: ["staff"] })
-      setOpenUnblock(false)
     },
     onError: (error) => {
       toast.error(`Error ${error.message}`)

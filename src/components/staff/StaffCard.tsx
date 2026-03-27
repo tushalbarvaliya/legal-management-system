@@ -52,7 +52,7 @@ const StaffCard = (staff: StaffUserMapping) => {
         <DeleteStaff staff={staff} setOpenDelete={setOpenDelete} />
       )}
       {openUnblock && (
-        <UnblockStaff staff={staff} setOpenUnblock={setOpenDelete} />
+        <UnblockStaff staff={staff} setOpenUnblock={setOpenUnblock} />
       )}
       <div className="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition hover:shadow-md sm:flex-row sm:items-center sm:justify-between">
         {/* LEFT SECTION */}
@@ -96,12 +96,12 @@ const StaffCard = (staff: StaffUserMapping) => {
           {/* Status Badge */}
           <span
             className={`rounded-full px-3 py-1 text-xs font-medium whitespace-nowrap ${
-              staff.user.isBlocked === "\u0000"
+              staff.staff.isBlocked === "\u0000"
                 ? "bg-green-100 text-green-700"
                 : "bg-red-100 text-red-700"
             }`}
           >
-            {staff.user.isBlocked === "\u0000" ? "Active" : "Blocked"}
+            {staff.staff.isBlocked === "\u0000" ? "Active" : "Blocked"}
           </span>
 
           {/* MENU */}
@@ -118,9 +118,9 @@ const StaffCard = (staff: StaffUserMapping) => {
                   navigate(`/staff/${staff.staff.id}`)
                 }}
               >
-                view
+                View
               </DropdownMenuItem>
-              {staff.user.isBlocked === "\u0000" && (
+              {staff.staff.isBlocked === "\u0000" && (
                 <DropdownMenuItem
                   onClick={() => {
                     navigate(`/staff/block/${staff.staff.id}`)
@@ -129,7 +129,7 @@ const StaffCard = (staff: StaffUserMapping) => {
                   Block
                 </DropdownMenuItem>
               )}
-              {staff.user.isBlocked === "\u0001" && (
+              {staff.staff.isBlocked === "\u0001" && (
                 <DropdownMenuItem
                   onClick={() => {
                     setOpenUnblock(true)
