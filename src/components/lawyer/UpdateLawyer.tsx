@@ -20,23 +20,25 @@ import {
   SelectValue,
 } from "../ui/select"
 import { Button } from "../ui/button"
-import { useNavigate } from "react-router-dom"
 import { useMutation } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { queryClient } from "@/main"
 import { patchLawyer } from "@/api/lawyerAPI"
 import type { LawyerDataType } from "@/types/lawyerType"
 
-const UpdateLawyer = ({ lawyer }: { lawyer: LawyerDataType }) => {
-  const navigate = useNavigate()
+const UpdateLawyer = ({
+  lawyer,
+  setOpenUpdate,
+}: {
+  lawyer: LawyerDataType
+  setOpenUpdate: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
   const { mutate, isPending } = useMutation({
     mutationFn: patchLawyer,
     onSuccess: () => {
       toast.success("User Become Lawyer", { duration: 1500 })
       queryClient.invalidateQueries({ queryKey: ["lawyer"] })
-      setTimeout(() => {
-        navigate("/lawyer")
-      }, 1510)
+      setOpenUpdate(false)
     },
     onError: (error) => {
       toast.error(`Error ${error.message}`)
@@ -131,7 +133,9 @@ const UpdateLawyer = ({ lawyer }: { lawyer: LawyerDataType }) => {
                     type="tel"
                     inputMode="numeric"
                     onChange={(e) => {
-                      const value = e.target.value.replace(/\D/g, "").slice(0, 10)
+                      const value = e.target.value
+                        .replace(/\D/g, "")
+                        .slice(0, 10)
                       field.onChange(value)
                     }}
                   />

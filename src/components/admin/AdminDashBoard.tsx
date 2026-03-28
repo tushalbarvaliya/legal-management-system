@@ -28,12 +28,20 @@ const AdminDashBoard = () => {
   const staffs = users?.filter((item) => item.role === "staff")
   const clients = users?.filter((item) => item.role === "client")
 
-  const { data: caseCount, isLoading: caseLoading } = useQuery({
+  const { data: caseCount, isLoading: caseLoading } = useQuery<{
+    openCases: number
+    closedCases: number
+    newCasesLast30Days: number
+  }>({
     queryFn: getCaseCount,
     queryKey: ["casesCount"],
   })
 
-  const { data: taskCount, isLoading: taskLoading } = useQuery({
+  const { data: taskCount, isLoading: taskLoading } = useQuery<{
+    pending: number
+    overdue: number
+    completed: number
+  }>({
     queryFn: getTaskCount,
     queryKey: ["taskCount"],
   })
@@ -91,13 +99,13 @@ const AdminDashBoard = () => {
             </div>
           )}
         </Card>
-        <Card title="Invoice Status" icon="/cases.svg">
+        <Card title="Case Status" icon="/cases.svg">
           {caseStatusChangeLoading ? (
             <Spinner />
           ) : (
             <div className="space-y-2 text-sm text-zinc-700">
               <p>
-                Total Status Chang in Last 30 Days:{" "}
+                Total Case Status change in Last 30 Days:{" "}
                 {caseStatusChangeData?.casesStatusChangeInLast30Days || 0}
               </p>
             </div>
@@ -110,9 +118,9 @@ const AdminDashBoard = () => {
             <Spinner />
           ) : (
             <div className="space-y-2 text-sm text-zinc-700">
-              <p>Due Today: {taskCount?.dueToday || 0}</p>
-              <p>Overdue: {taskCount?.overdue || 0}</p>
               <p>Completed: {taskCount?.completed || 0}</p>
+              <p>Overdue: {taskCount?.overdue || 0}</p>
+              <p>Pending: {taskCount?.pending || 0}</p>
             </div>
           )}
         </Card>

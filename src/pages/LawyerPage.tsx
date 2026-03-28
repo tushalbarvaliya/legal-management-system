@@ -8,13 +8,11 @@ import ErrorMessage from "@/components/ErrorMessage"
 import LawyerCardSkeleton from "@/components/lawyer/LawyerCardSkeleton"
 import LawyerCard from "@/components/lawyer/LawyerCard"
 import NoFound from "@/components/NoFound"
-import { useLocation, useNavigate } from "react-router-dom"
 import { Dialog } from "@/components/ui/dialog"
 import AddLawyer from "@/components/lawyer/AddLawyer"
 
 const LawyerPage = () => {
-  const navigate = useNavigate()
-  const pathname = useLocation().pathname
+  const [openAdd, setOpenAdd] = useState<boolean>(false)
   const [searchTerm, setSearchTerm] = useState("")
 
   const {
@@ -47,18 +45,18 @@ const LawyerPage = () => {
 
   return (
     <Dialog
-      open={pathname == "/lawyer/add"}
+      open={openAdd}
       onOpenChange={(open) => {
-        if (!open) navigate("/lawyer")
+        if (!open) setOpenAdd(false)
       }}
     >
-      {pathname == "/lawyer/add" && <AddLawyer />}
+      {openAdd && <AddLawyer setOpenAdd={setOpenAdd}/>}
 
       {/* Add Button */}
       <button
         className="fixed right-6 bottom-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-xl hover:scale-105"
         onClick={() => {
-          navigate("/lawyer/add")
+          setOpenAdd(true)
         }}
       >
         <Plus />

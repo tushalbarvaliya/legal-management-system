@@ -40,7 +40,7 @@ const CompanyPage = () => {
       <section className="p-4 md:p-6">
         <div className="mx-auto max-w-4xl space-y-6">
           {/* Header Card */}
-          <div className="flex items-center gap-4 rounded-2xl border bg-white p-6 shadow-sm">
+          <div className="flex items-center gap-4 rounded-2xl border border-black bg-white p-6 shadow-sm">
             {/* left side  header */}
             <div className="flex flex-1 items-center gap-4">
               <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600">
@@ -69,9 +69,9 @@ const CompanyPage = () => {
           </div>
 
           {/* Details Grid */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 ">
             {/* Address */}
-            <div className="flex items-center gap-3 rounded-xl border bg-white p-4">
+            <div className="flex items-center gap-3 rounded-xl border bg-white p-4  border-black">
               <MapPin />
               <div>
                 <p className="text-xs text-gray-500">Address</p>
@@ -82,7 +82,7 @@ const CompanyPage = () => {
             </div>
 
             {/* Email */}
-            <div className="flex items-center gap-3 rounded-xl border bg-white p-4">
+            <div className="flex items-center gap-3 rounded-xl border bg-white p-4 border-black">
               <Mail className="text-black" size={18} />
               <div>
                 <p className="text-xs text-gray-500">Email</p>
@@ -93,7 +93,7 @@ const CompanyPage = () => {
             </div>
 
             {/* Phone */}
-            <div className="flex items-center gap-3 rounded-xl border bg-white p-4">
+            <div className="flex items-center gap-3 rounded-xl border bg-white p-4 border-black">
               <Phone className="text-black" size={18} />
               <div>
                 <p className="text-xs text-gray-500">Phone</p>
@@ -104,26 +104,26 @@ const CompanyPage = () => {
             </div>
 
             {/* Created At */}
-            <div className="flex items-center gap-3 rounded-xl border bg-white p-4">
+            <div className="flex items-center gap-3 rounded-xl border bg-white p-4 border-black">
               <Calendar className="text-black" size={18} />
               <div>
                 <p className="text-xs text-gray-500">Founded On</p>
                 <p className="text-sm font-medium text-gray-800">
                   {companyData?.createdAt
                     ? formatDate(companyData.createdAt)
-                    : "N/A"}
+                    : "---"}
                 </p>
               </div>
             </div>
           </div>
 
           {/* Footer Info */}
-          <div className="flex justify-between rounded-xl border bg-white p-4 text-sm text-black">
+          <div className="flex justify-between rounded-xl border bg-white p-4 text-sm text-black border-black">
             <span>
               Last Updated:{" "}
               {companyData?.updatedAt
                 ? formatDate(companyData.updatedAt)
-                : "N/A"}
+                : "---"}
             </span>
           </div>
         </div>

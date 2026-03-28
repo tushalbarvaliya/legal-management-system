@@ -56,38 +56,6 @@ const App = () => {
             }
           />
           <Route
-            path="/lawyer/:id"
-            element={
-              <ProtectedRouteByRole allowedRoles={["admin"]}>
-                <LawyerPage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
-            path="/lawyer/block/:id"
-            element={
-              <ProtectedRouteByRole allowedRoles={["admin"]}>
-                <LawyerPage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
-            path="/lawyer/edit/:id"
-            element={
-              <ProtectedRouteByRole allowedRoles={["admin"]}>
-                <LawyerPage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
-            path="/lawyer/delete/:id"
-            element={
-              <ProtectedRouteByRole allowedRoles={["admin"]}>
-                <LawyerPage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
             path="/cases"
             element={
               <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
@@ -213,7 +181,7 @@ const App = () => {
           <Route
             path="/staff"
             element={
-              <ProtectedRouteByRole allowedRoles={["lawyer",'admin']}>
+              <ProtectedRouteByRole allowedRoles={["lawyer", "admin"]}>
                 <StaffPage />
               </ProtectedRouteByRole>
             }
@@ -221,7 +189,7 @@ const App = () => {
           <Route
             path="/staff/:id"
             element={
-              <ProtectedRouteByRole allowedRoles={["lawyer",'admin']}>
+              <ProtectedRouteByRole allowedRoles={["lawyer", "admin"]}>
                 <StaffPage />
               </ProtectedRouteByRole>
             }
@@ -237,7 +205,7 @@ const App = () => {
           <Route
             path="/staff/edit/:id"
             element={
-              <ProtectedRouteByRole allowedRoles={["lawyer",'admin']}>
+              <ProtectedRouteByRole allowedRoles={["lawyer", "admin"]}>
                 <StaffPage />
               </ProtectedRouteByRole>
             }
@@ -344,7 +312,7 @@ const App = () => {
           <Route
             path="/invoice"
             element={
-              <ProtectedRouteByRole allowedRoles={["lawyer",'client']}>
+              <ProtectedRouteByRole allowedRoles={["lawyer", "client"]}>
                 <InvoicePage />
               </ProtectedRouteByRole>
             }
@@ -352,7 +320,7 @@ const App = () => {
           <Route
             path="/invoice/:id"
             element={
-              <ProtectedRouteByRole allowedRoles={["lawyer",'client']}>
+              <ProtectedRouteByRole allowedRoles={["lawyer", "client"]}>
                 <InvoicePage />
               </ProtectedRouteByRole>
             }

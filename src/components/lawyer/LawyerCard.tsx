@@ -8,49 +8,78 @@ import { Button } from "../ui/button"
 import { MoreVertical } from "lucide-react"
 import type { LawyerDataType } from "@/types/lawyerType"
 import { useLocation, useNavigate } from "react-router-dom"
-import LawyerDetailsModel from "./LawyerDetailsModel"
+import LawyerDetails from "./LawyerDetails"
 import { Dialog } from "../ui/dialog"
-import BlockLawyer from "./BlockLawyer"
 import DeleteLawyer from "./DeleteLawyer"
 import UpdateLawyer from "./UpdateLawyer"
 import { useState } from "react"
 import UnblockLawyer from "./UnblockLawyer"
+import BlockModel from "../BlockModel"
+import { useMutation } from "@tanstack/react-query"
+import { blockLawyer } from "@/api/lawyerAPI"
+import { toast } from "sonner"
+import { queryClient } from "@/main"
 
 const LawyerCard = (lawyer: LawyerDataType) => {
   const pathname = useLocation().pathname
   const navigate = useNavigate()
   const [openUnblock, setOpenUnblock] = useState<boolean>(false)
+  const [openDetails, setOpenDetails] = useState<boolean>(false)
+  const [openUpdate, setOpenUpdate] = useState<boolean>(false)
+  const [openBlock, setOpenBlock] = useState<boolean>(false)
+  const { mutate: mutateBlock, isPending: isPendingBlock } = useMutation({
+    mutationFn: blockLawyer,
+    onSuccess: () => {
+      toast.success("Block Lawyer Successfully", { duration: 1500 })
+      queryClient.invalidateQueries({ queryKey: ["lawyer"] })
+      setOpenBlock(false)
+    },
+    onError: (error) => {
+      toast.error(`Error ${error.message}`)
+    },
+  })
   return (
     <Dialog
       open={
         pathname == `/lawyer/delete/${lawyer.lawyer.id}` ||
-        pathname == `/lawyer/edit/${lawyer.lawyer.id}` ||
-        pathname == `/lawyer/${lawyer.lawyer.id}` ||
-        pathname == `/lawyer/block/${lawyer.lawyer.id}` ||
+        openUpdate ||
+        openDetails ||
+        openBlock ||
         openUnblock
       }
       onOpenChange={(open) => {
         setOpenUnblock(false)
+        setOpenDetails(false)
+        setOpenUpdate(false)
+        setOpenBlock(false)
         if (!open) navigate("/lawyer")
       }}
     >
       {pathname == `/lawyer/delete/${lawyer.lawyer.id}` && (
         <DeleteLawyer lawyer={lawyer} />
       )}
-      {pathname == `/lawyer/edit/${lawyer.lawyer.id}` && (
-        <UpdateLawyer lawyer={lawyer} />
+      {openBlock && (
+        <BlockModel
+          id={lawyer.lawyer.id}
+          title="Block Lawyer"
+          detailsTitle={`${lawyer.user.firstName} ${lawyer.user.lastName}`}
+          subTitle="Are you Sure You Want to Block This Lawyer?"
+          isPending={isPendingBlock}
+          mutate={mutateBlock}
+          onClosed={setOpenBlock}
+        />
       )}
-      {pathname == `/lawyer/${lawyer.lawyer.id}` && (
-        <LawyerDetailsModel {...lawyer} />
+      {openUpdate && (
+        <UpdateLawyer lawyer={lawyer} setOpenUpdate={setOpenUpdate} />
       )}
-      {pathname == `/lawyer/block/${lawyer.lawyer.id}` && (
-        <BlockLawyer lawyer={lawyer} />
+      {openDetails && (
+        <LawyerDetails lawyer={lawyer} setOpenDetails={setOpenDetails} />
       )}
       {openUnblock && (
         <UnblockLawyer lawyer={lawyer} setOpenUnblock={setOpenUnblock} />
       )}
 
-      <div className="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition hover:shadow-md sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex gap-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition hover:shadow-md sm:flex-row sm:items-center sm:justify-between">
         {/* LEFT SECTION */}
         <div className="flex flex-1 items-start gap-4 sm:items-center">
           {/* Avatar */}
@@ -63,12 +92,12 @@ const LawyerCard = (lawyer: LawyerDataType) => {
             {/* Name */}
             <p className="text-base font-semibold text-zinc-900">
               {lawyer.user.firstName} {lawyer.user.lastName}{" "}
-              {lawyer.lawyer.isDeleted === "\u0001" && (
+              {lawyer.lawyer.isDeleted === 1 && (
                 <span className="rounded-full bg-red-200 px-2 py-1 text-xs text-red-500">
                   {"Delete"}
                 </span>
               )}{" "}
-              {lawyer.lawyer.isBlocked === "\u0001" && (
+              {lawyer.lawyer.isBlocked === 1 && (
                 <span className="rounded-full bg-stone-200 px-2 py-1 text-xs text-stone-500">
                   {"Blocked"}
                 </span>
@@ -112,29 +141,29 @@ const LawyerCard = (lawyer: LawyerDataType) => {
             <DropdownMenuContent align="end" className="w-40 font-medium">
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(`/lawyer/${lawyer.lawyer.id}`)
+                  setOpenDetails(true)
                 }}
               >
                 View
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(`/lawyer/edit/${lawyer.lawyer.id}`)
+                  setOpenUpdate(true)
                 }}
               >
                 Edit
               </DropdownMenuItem>
 
-              {lawyer.lawyer.isBlocked === "\u0000" && (
+              {lawyer.lawyer.isBlocked === 0 && (
                 <DropdownMenuItem
                   onClick={() => {
-                    navigate(`/lawyer/block/${lawyer.lawyer.id}`)
+                    setOpenBlock(true)
                   }}
                 >
                   Block
                 </DropdownMenuItem>
               )}
-              {lawyer.lawyer.isBlocked === "\u0001" && (
+              {lawyer.lawyer.isBlocked === 1 && (
                 <DropdownMenuItem
                   onClick={() => {
                     setOpenUnblock(true)
@@ -144,7 +173,7 @@ const LawyerCard = (lawyer: LawyerDataType) => {
                 </DropdownMenuItem>
               )}
 
-              {lawyer.lawyer.isDeleted === "\u0000" && (
+              {lawyer.lawyer.isDeleted === 0 && (
                 <DropdownMenuItem
                   className="text-red-500"
                   onClick={() => {

@@ -17,12 +17,12 @@ type user = {
 }
 
 type lawyer = {
-  isDeleted: string
+  isDeleted: 0 | 1
   userId: number
   specialization: string
   createdAt: string
   id: number
-  isBlocked: string
+  isBlocked: 0 | 1
   updatedAt: string
 }
 
@@ -30,4 +30,3 @@ export type LawyerDataType = {
   lawyer: lawyer
   user: user
 }
-
