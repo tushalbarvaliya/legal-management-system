@@ -124,7 +124,7 @@ const AddInvoiceModel = () => {
           {/* Case ID */}
           <div>
             <label className="mb-1 block font-medium text-zinc-700">
-              Client ID
+              Case ID
             </label>
 
             <select

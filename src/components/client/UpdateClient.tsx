@@ -134,7 +134,7 @@ const UpdateClient = ({ client }: { client: ClientUserMapping }) => {
                     type="tel"
                     inputMode="numeric"
                     onChange={(e) => {
-                      const value = e.target.value.replace(/\D/g, "")
+                      const value = e.target.value.replace(/\D/g, "").slice(0, 10)
                       field.onChange(value)
                     }}
                   />

@@ -7,12 +7,9 @@ export type Client = {
   crNumber: number
   vatNumber: number
   vatPercentage: number
-
   occupation: string
-
   isBlocked: "\u0000" | "\u0001"
   isDeleted: "\u0000" | "\u0001"
-
   createdAt: string
   updatedAt: string
 }
@@ -22,21 +19,15 @@ export type User = {
   firstName: string
   lastName: string
   name: string
-
   email: string
   password: string
-
   phoneNumber: string
   address: string
-
   gender: string
   role: "client" | "admin" | "staff"
-
   companyId: number | null
-
   isDeleted: boolean
   isBlocked: "\u0000" | "\u0001"
-
   createdAt: string
   updatedAt: string
 }

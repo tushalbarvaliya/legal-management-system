@@ -199,6 +199,7 @@ const ProfilePage = () => {
                     <option value="admin">Admin</option>
                     <option value="lawyer">Lawyer</option>
                     <option value="staff">Staff</option>
+                    <option value="client">Client</option>
                   </select>
                 </div>
 
