@@ -42,7 +42,7 @@ export const patchLawyer = async ({
   const response = await axiosInstance.patch(`/lawyers/lawyer/${id}`, data)
   return response.data
 }
-export const patchUnblockLawyer = async ({ id }: { id: number }) => {
+export const patchUnblockLawyer = async (id: number) => {
   const response = await axiosInstance.patch(`/lawyers/lawyer/${id}`, {
     isBlocked: 0,
   })

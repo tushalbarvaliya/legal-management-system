@@ -7,26 +7,25 @@ import {
 import { Button } from "../ui/button"
 import { MoreVertical } from "lucide-react"
 import type { LawyerDataType } from "@/types/lawyerType"
-import { useLocation, useNavigate } from "react-router-dom"
 import LawyerDetails from "./LawyerDetails"
 import { Dialog } from "../ui/dialog"
-import DeleteLawyer from "./DeleteLawyer"
 import UpdateLawyer from "./UpdateLawyer"
 import { useState } from "react"
-import UnblockLawyer from "./UnblockLawyer"
 import BlockModel from "../BlockModel"
 import { useMutation } from "@tanstack/react-query"
-import { blockLawyer } from "@/api/lawyerAPI"
+import { blockLawyer, deleteLawyer, patchUnblockLawyer } from "@/api/lawyerAPI"
 import { toast } from "sonner"
 import { queryClient } from "@/main"
+import UnblockModel from "../UnblockModel"
+import DeleteModel from "../DeleteModel"
 
 const LawyerCard = (lawyer: LawyerDataType) => {
-  const pathname = useLocation().pathname
-  const navigate = useNavigate()
-  const [openUnblock, setOpenUnblock] = useState<boolean>(false)
   const [openDetails, setOpenDetails] = useState<boolean>(false)
   const [openUpdate, setOpenUpdate] = useState<boolean>(false)
+  const [openUnblock, setOpenUnblock] = useState<boolean>(false)
   const [openBlock, setOpenBlock] = useState<boolean>(false)
+  const [openDelete, setOpenDelete] = useState<boolean>(false)
+
   const { mutate: mutateBlock, isPending: isPendingBlock } = useMutation({
     mutationFn: blockLawyer,
     onSuccess: () => {
@@ -38,25 +37,55 @@ const LawyerCard = (lawyer: LawyerDataType) => {
       toast.error(`Error ${error.message}`)
     },
   })
+
+  const { mutate: mutateUnblock, isPending: isPendingUnblock } = useMutation({
+    mutationFn: patchUnblockLawyer,
+    onSuccess: () => {
+      toast.success("Unblock Lawyer Successfully", { duration: 1500 })
+      queryClient.invalidateQueries({ queryKey: ["lawyer"] })
+      setOpenUnblock(false)
+    },
+    onError: (error) => {
+      toast.error(`Error ${error.message}`)
+    },
+  })
+
+  const { mutate: deleteMutate, isPending: deleteIsPending } = useMutation({
+    mutationFn: deleteLawyer,
+    onSuccess: () => {
+      toast.success("Delete Lawyer Successfully", { duration: 1500 })
+      queryClient.invalidateQueries({ queryKey: ["lawyer"] })
+      setOpenDelete(false)
+    },
+    onError: (error) => {
+      toast.error(`Error ${error.message}`)
+    },
+  })
+
   return (
     <Dialog
-      open={
-        pathname == `/lawyer/delete/${lawyer.lawyer.id}` ||
-        openUpdate ||
-        openDetails ||
-        openBlock ||
-        openUnblock
-      }
+      open={openDelete || openUpdate || openDetails || openBlock || openUnblock}
       onOpenChange={(open) => {
-        setOpenUnblock(false)
-        setOpenDetails(false)
-        setOpenUpdate(false)
-        setOpenBlock(false)
-        if (!open) navigate("/lawyer")
+        if (!open) {
+          setOpenUnblock(false)
+          setOpenDetails(false)
+          setOpenUpdate(false)
+          setOpenBlock(false)
+          setOpenDelete(false)
+        }
       }}
     >
-      {pathname == `/lawyer/delete/${lawyer.lawyer.id}` && (
-        <DeleteLawyer lawyer={lawyer} />
+      {openDelete && (
+        // <DeleteLawyer lawyer={lawyer} />
+        <DeleteModel
+          title="Delete Lawyer"
+          subTitle="Are you sure you want to delete this user?"
+          detailsTitle={`${lawyer.user.firstName} ${lawyer.user.lastName}`}
+          id={lawyer.lawyer.id}
+          mutate={deleteMutate}
+          isPending={deleteIsPending}
+          setOpenDelete={setOpenDelete}
+        />
       )}
       {openBlock && (
         <BlockModel
@@ -76,7 +105,15 @@ const LawyerCard = (lawyer: LawyerDataType) => {
         <LawyerDetails lawyer={lawyer} setOpenDetails={setOpenDetails} />
       )}
       {openUnblock && (
-        <UnblockLawyer lawyer={lawyer} setOpenUnblock={setOpenUnblock} />
+        <UnblockModel
+          title="Unblock Lawyer"
+          subTitle="Are you sure you want to Unblock this user?"
+          detailsTitle={`${lawyer.user.firstName} ${lawyer.user.lastName}`}
+          id={lawyer.lawyer.id}
+          mutate={mutateUnblock}
+          isPending={isPendingUnblock}
+          setOpenUnblock={setOpenUnblock}
+        />
       )}
 
       <div className="flex gap-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition hover:shadow-md sm:flex-row sm:items-center sm:justify-between">
@@ -177,7 +214,7 @@ const LawyerCard = (lawyer: LawyerDataType) => {
                 <DropdownMenuItem
                   className="text-red-500"
                   onClick={() => {
-                    navigate(`/lawyer/delete/${lawyer.lawyer.id}`)
+                    setOpenDelete(true)
                   }}
                 >
                   Delete
