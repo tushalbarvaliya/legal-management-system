@@ -5,19 +5,11 @@ import { useState } from "react"
 import { company } from "@/api/adminAPI"
 import { Button } from "@/components/ui/button"
 import Error from "@/components/ErrorPage"
-import CompanyUpdateModel from "@/components/company/CompanyUpdateModel"
 import CompanyPageSkeleton from "@/components/company/CompanyPageSkeleton"
 import { formatDate } from "@/utils/formate"
-
-export type CompanyData = {
-  Address?: string
-  createdAt?: string
-  email?: string
-  id?: number
-  name?: string
-  phoneNumber?: string
-  updatedAt?: string
-}
+import type { CompanyData } from "@/types/companyType"
+import { Dialog } from "@/components/ui/dialog"
+import UpdateCompany from "@/components/company/UpdateCompany"
 
 const CompanyPage = () => {
   const [updateCompanyModel, setUpdateCompanyModel] = useState(false)
@@ -36,12 +28,14 @@ const CompanyPage = () => {
   }
 
   return (
-    <>
-      {updateCompanyModel && companyData&& (
-        <CompanyUpdateModel
-          closeModal={setUpdateCompanyModel}
-          {...companyData}
-        />
+    <Dialog
+      open={updateCompanyModel}
+      onOpenChange={(open) => {
+        if (!open) setUpdateCompanyModel(false)
+      }}
+    >
+      {updateCompanyModel && companyData && (
+        <UpdateCompany closeModal={setUpdateCompanyModel} data={companyData} />
       )}
       <section className="p-4 md:p-6">
         <div className="mx-auto max-w-4xl space-y-6">
@@ -134,7 +128,7 @@ const CompanyPage = () => {
           </div>
         </div>
       </section>
-    </>
+    </Dialog>
   )
 }
 
