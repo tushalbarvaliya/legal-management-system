@@ -1,18 +1,12 @@
-import {  type sessionDataType } from "@/data/sessionData"
 import axiosInstance from "./axiosInstance"
-import type { SessionAddFormType } from "@/components/session/AddSessionModel"
+import type { AddSessionFormSchemaType } from "@/schemas/AddSessionSchema"
 
-export const addSession = async (data: SessionAddFormType) => {
+export const addSession = async (data: AddSessionFormSchemaType) => {
     const response = await axiosInstance.post("/sessions/session", data)
     return response.data
 }
 
 export const getAllSession = async () => {
     const response = await axiosInstance.get("/sessions/")
-    return response.data
-}
-
-export const deleteSession = async (data: sessionDataType) => {
-    const response = await axiosInstance.delete(`/sessions/session/${data.id}`)
     return response.data
 }

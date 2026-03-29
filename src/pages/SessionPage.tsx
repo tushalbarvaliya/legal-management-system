@@ -1,26 +1,25 @@
 import { useQuery } from "@tanstack/react-query"
 import { Plus, Search } from "lucide-react"
 import { useMemo, useState } from "react"
-import { Link, useLocation } from "react-router-dom"
-
-import type { sessionDataType } from "@/data/sessionData"
 import { getAllSession } from "@/api/sessionAPI"
 import ErrorMessage from "@/components/ErrorMessage"
 import NoFound from "@/components/NoFound"
-import AddSessionModel from "@/components/session/AddSessionModel"
 import SessionCard from "@/components/session/SessionCard"
 import SessionCardSkeleton from "@/components/session/SessionCardSkeleton"
 import { Spinner } from "@/components/ui/spinner"
+import { Dialog } from "@/components/ui/dialog"
+import AddSession from "@/components/session/AddSession"
+import type { SessionWithCaseResponse } from "@/types/sessionType"
 
 const SessionPage = () => {
-  const pathname = useLocation().pathname
   const [search, setSearch] = useState("")
+  const [openAdd, setOpenAdd] = useState<boolean>(false)
 
   const {
     data: sessions = [],
     isLoading,
     isError,
-  } = useQuery<sessionDataType[]>({
+  } = useQuery<SessionWithCaseResponse[]>({
     queryKey: ["sessions"],
     queryFn: getAllSession,
   })
@@ -31,7 +30,7 @@ const SessionPage = () => {
 
   const filteredSessions = useMemo(() => {
     return sessions.filter((session) =>
-      session.courtName?.toLowerCase().includes(search.toLowerCase())
+      session.session.courtName?.toLowerCase().includes(search.toLowerCase())
     )
   }, [sessions, search])
 
@@ -44,13 +43,13 @@ const SessionPage = () => {
       </>
     )
   }
-  
+
   if (isError) {
     return <ErrorMessage />
   }
   return (
-    <>
-      {pathname === "/session/add" && <AddSessionModel />}
+    <Dialog open={openAdd} onOpenChange={(open)=>{if(!open) setOpenAdd(false)}}>
+      {openAdd && <AddSession setOpenAdd={setOpenAdd} />}
 
       <section className="shadow-soft rounded-2xl border bg-white p-4 sm:p-6">
         {/* Header */}
@@ -97,8 +96,8 @@ const SessionPage = () => {
             !isError &&
             (filteredSessions.length > 0 ? (
               filteredSessions.map((item) => (
-                <div key={item.id}>
-                  <SessionCard {...item} />
+                <div key={item.session.id}>
+                  <SessionCard data={item} />
                 </div>
               ))
             ) : (
@@ -109,13 +108,16 @@ const SessionPage = () => {
         </div>
 
         {/* Add Button */}
-        <Link to="/session/add">
-          <button className="fixed right-6 bottom-6 flex h-14 w-14 items-center justify-center rounded-full bg-black text-white">
-            <Plus />
-          </button>
-        </Link>
+        <button
+          className="fixed right-6 bottom-6 flex h-14 w-14 items-center justify-center rounded-full bg-black text-white"
+          onClick={() => {
+            setOpenAdd(true)
+          }}
+        >
+          <Plus />
+        </button>
       </section>
-    </>
+    </Dialog>
   )
 }
 
