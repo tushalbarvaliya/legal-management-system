@@ -22,7 +22,6 @@ import {
 import { useMutation } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { queryClient } from "@/main"
-import { useNavigate } from "react-router-dom"
 
 import {
   AddClientFormSchema,
@@ -30,18 +29,19 @@ import {
 } from "@/schemas/AddClientSchema"
 import { postClient } from "@/api/clientAPI"
 
-const AddClient = () => {
+const AddClient = ({
+  setOpenAdd,
+}: {
+  setOpenAdd: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
   const [passwordShow, setPasswordShow] = useState<boolean>(false)
   const [confirmPasswordShow, setConfirmPasswordShow] = useState<boolean>(false)
-  const navigate = useNavigate()
   const { mutate, isPending } = useMutation({
     mutationFn: postClient,
     onSuccess: () => {
       toast.success("User Become Lawyer", { duration: 1500 })
       queryClient.invalidateQueries({ queryKey: ["client"] })
-      setTimeout(() => {
-        navigate("/client")
-      }, 1510)
+      setOpenAdd(false)
     },
     onError: (error) => {
       toast.error(`Error ${error.message}`)

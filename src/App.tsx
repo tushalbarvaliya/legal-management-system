@@ -154,31 +154,6 @@ const App = () => {
             }
           />
           <Route
-            path="/client/add"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
-                <ClientPage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
-            path="/client/edit/:id"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
-                <ClientPage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
-            path="/client/delete/:id"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
-                <ClientPage />
-              </ProtectedRouteByRole>
-            }
-          />
-
-          <Route
             path="/staff"
             element={
               <ProtectedRouteByRole allowedRoles={["lawyer", "admin"]}>

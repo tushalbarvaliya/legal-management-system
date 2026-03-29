@@ -76,7 +76,6 @@ const LawyerCard = (lawyer: LawyerDataType) => {
       }}
     >
       {openDelete && (
-        // <DeleteLawyer lawyer={lawyer} />
         <DeleteModel
           title="Delete Lawyer"
           subTitle="Are you sure you want to delete this user?"

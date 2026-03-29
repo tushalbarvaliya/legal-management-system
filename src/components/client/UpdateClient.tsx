@@ -16,27 +16,29 @@ import {
   SelectValue,
 } from "../ui/select"
 import { Button } from "../ui/button"
-import { useNavigate } from "react-router-dom"
 import { useMutation } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { queryClient } from "@/main"
-import type {  ClientUserMapping } from "@/types/clientType"
+import type { ClientUserMapping } from "@/types/clientType"
 import {
   UpdateClientSchema,
   type UpdateClientFormSchemaType,
 } from "@/schemas/UpdateClientSchema"
 import { patchClient } from "@/api/clientAPI"
 
-const UpdateClient = ({ client }: { client: ClientUserMapping }) => {
-  const navigate = useNavigate()
+const UpdateClient = ({
+  client,
+  setOpenEdit,
+}: {
+  client: ClientUserMapping
+  setOpenEdit: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
   const { mutate, isPending } = useMutation({
     mutationFn: patchClient,
     onSuccess: () => {
       toast.success("Client Update Done.", { duration: 1500 })
       queryClient.invalidateQueries({ queryKey: ["client"] })
-      setTimeout(() => {
-        navigate("/client")
-      }, 1510)
+      setOpenEdit(false)
     },
     onError: (error) => {
       toast.error(`Error ${error.message}`)
@@ -134,7 +136,9 @@ const UpdateClient = ({ client }: { client: ClientUserMapping }) => {
                     type="tel"
                     inputMode="numeric"
                     onChange={(e) => {
-                      const value = e.target.value.replace(/\D/g, "").slice(0, 10)
+                      const value = e.target.value
+                        .replace(/\D/g, "")
+                        .slice(0, 10)
                       field.onChange(value)
                     }}
                   />

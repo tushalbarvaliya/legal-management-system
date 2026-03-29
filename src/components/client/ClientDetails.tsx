@@ -21,7 +21,7 @@ const ClientDetails = ({ data }: Props) => {
   }
 
   return (
-    <DialogContent className="max-w-2xl p-0">
+    <DialogContent className="lg:min-w-200">
       {/* Header */}
       <DialogHeader className="border-b px-5 py-4 sm:px-6">
         <div className="flex items-center justify-between">
@@ -44,13 +44,13 @@ const ClientDetails = ({ data }: Props) => {
             {data.user.firstName} {data.user.lastName}
           </p>
 
-          {data.client.isBlocked === "\u0001" && (
+          {data.client.isBlocked === 1 && (
             <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-black">
               Block
             </span>
           )}
 
-          {data.client.isDeleted === "\u0001" && (
+          {data.client.isDeleted === 1 && (
             <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-800">
               Deleted
             </span>

@@ -1,26 +1,23 @@
 import { Plus } from "lucide-react"
 
 import { useAppSelector } from "@/hooks/hooks"
-import { useLocation, useNavigate } from "react-router-dom"
-import { Dialog, } from "../ui/dialog"
+import { Dialog } from "../ui/dialog"
 import { Button } from "../ui/button"
 import AddClient from "./AddClient"
+import { useState } from "react"
 
 const ClientHeader = () => {
   const role = useAppSelector((state) => state.auth.role)
-  const pathname = useLocation().pathname
-  const navigate = useNavigate()
+  const [openAdd, setOpenAdd] = useState<boolean>(false)
 
   return (
     <Dialog
-      open={pathname === "/client/add"}
+      open={openAdd}
       onOpenChange={(open) => {
-        if (!open) navigate("/client")
+        if (!open) setOpenAdd(false)
       }}
     >
-      {pathname === "/client/add" && (
-        <AddClient />
-      )}
+      {openAdd && <AddClient setOpenAdd={setOpenAdd}/>}
       <section className="shadow-soft rounded-2xl border border-zinc-200 bg-linear-to-br from-white to-zinc-50 p-5 sm:p-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div>
@@ -39,7 +36,7 @@ const ClientHeader = () => {
             <Button
               className="fixed right-6 bottom-6 z-20 h-14 w-14 rounded-full p-6 hover:cursor-pointer"
               onClick={() => {
-                navigate("/client/add")
+                setOpenAdd(true)
               }}
             >
               <Plus className="dark:stroke-black" />

@@ -1,4 +1,3 @@
-// change
 export type Client = {
   id: number
   userId: number
@@ -8,8 +7,8 @@ export type Client = {
   vatNumber: number
   vatPercentage: number
   occupation: string
-  isBlocked: "\u0000" | "\u0001"
-  isDeleted: "\u0000" | "\u0001"
+  isBlocked: 0 | 1
+  isDeleted: 0 | 1
   createdAt: string
   updatedAt: string
 }
@@ -23,11 +22,11 @@ export type User = {
   password: string
   phoneNumber: string
   address: string
-  gender: string
-  role: "client" | "admin" | "staff"
+  gender: "male" | "female" | "other"
+  role: "client" | "admin" | "staff" | "lawyer"
   companyId: number | null
-  isDeleted: boolean
-  isBlocked: "\u0000" | "\u0001"
+  isDeleted: 0 | 1
+  isBlocked: 0 | 1
   createdAt: string
   updatedAt: string
 }
@@ -38,5 +37,4 @@ export type ClientUserMapping = {
 }
 export type ClientResponse = {
   data: ClientUserMapping[]
-  message: string
 }

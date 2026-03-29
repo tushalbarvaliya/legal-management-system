@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 import { Search } from "lucide-react"
 
-import type { ClientResponse, ClientUserMapping } from "@/types/clientType"
+import type { ClientUserMapping } from "@/types/clientType"
 import { getAllClient } from "@/api/clientAPI"
 import ClientCardSkeleton from "@/components/client/ClientCardSkeleton"
 import ClientHeader from "@/components/client/ClientHeader"
@@ -17,18 +17,15 @@ const ClientPage = () => {
     data: clients,
     isLoading,
     isError,
-  } = useQuery<ClientResponse>({
+  } = useQuery<ClientUserMapping[]>({
     queryKey: ["client"],
     queryFn: getAllClient,
   })
-
-  let filteredClients = clients?.data?.filter((clients: ClientUserMapping) =>
-    Object.values(clients).some((value) =>
+  
+  const filteredClients = clients?.filter((item: ClientUserMapping) =>
+    [...Object.values(item.client), ...Object.values(item.user)].some((value) =>
       String(value).toLowerCase().includes(search.toLowerCase())
     )
-  )
-  filteredClients = filteredClients?.filter(
-    (item) => item.client.isDeleted == "\u0000"
   )
 
   return (
@@ -63,7 +60,7 @@ const ClientPage = () => {
           {!isLoading &&
             !isError &&
             filteredClients?.map((item: ClientUserMapping) => {
-              return <ClientCard key={item.client.id} {...item} />
+              return <ClientCard key={item.client.id} client={item} />
             })}
           {isLoading && (
             <>
