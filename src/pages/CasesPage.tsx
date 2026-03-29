@@ -1,51 +1,55 @@
 import { useMemo, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { Plus, Search } from "lucide-react"
-import { useLocation, useNavigate } from "react-router-dom"
 
 import { useAppSelector } from "@/hooks/hooks"
 import { getAllCases } from "@/api/caseAPI"
 import ErrorMessage from "@/components/ErrorMessage"
-import AddCaseModel from "@/components/cases/AddCaseModel"
 import CasesCardSkeleton from "@/components/cases/CasesCardSkeleton"
 import CasesCard from "@/components/cases/CasesCard"
 import NoFound from "@/components/NoFound"
-import type { Case, CaseResponse } from "@/types/caseType"
+import type { CaseWithClientUser } from "@/types/caseType"
+import { Dialog } from "@/components/ui/dialog"
+import AddCase from "@/components/cases/AddCase"
 
 const CasesPage = () => {
   const role = useAppSelector((state) => state.auth.role)
-  const navigate = useNavigate()
-  const pathname = useLocation().pathname
+  const [openAdd, setOpenAdd] = useState<boolean>(false)
   const [search, setSearch] = useState("")
 
   const {
     data: cases,
     isLoading,
     isError,
-  } = useQuery<CaseResponse>({
+  } = useQuery<CaseWithClientUser[]>({
     queryKey: ["cases"],
     queryFn: getAllCases,
   })
 
-  const filteredCases: Case[] | undefined = useMemo(() => {
-    return cases?.data.cases.filter((item: Case) => {
+  const filteredCases: CaseWithClientUser[] | undefined = useMemo(() => {
+    return cases?.filter((item: CaseWithClientUser) => {
       const matchesSearch =
-        item.title.toLowerCase().includes(search.toLowerCase()) ||
-        item.description.toLowerCase().includes(search.toLowerCase())
+        item.case.title.toLowerCase().includes(search.toLowerCase()) ||
+        item.case.description.toLowerCase().includes(search.toLowerCase())
 
       return matchesSearch
     })
   }, [search, cases])
 
   return (
-    <>
-      {pathname == "/cases/add" && <AddCaseModel />}
+    <Dialog
+      open={openAdd}
+      onOpenChange={(open) => {
+        if (!open) setOpenAdd(false)
+      }}
+    >
+      {openAdd && <AddCase setOpenAdd={setOpenAdd} />}
       {/* ADD TASK BUTTON */}
       {role == "lawyer" && (
         <button
           className="fixed right-6 bottom-6 z-20 inline-flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-xl transition duration-300 hover:scale-105 hover:bg-zinc-800 focus:ring-2 focus:ring-zinc-400 focus:ring-offset-2 focus:outline-none lg:right-8 lg:bottom-8 dark:bg-white"
           onClick={() => {
-            navigate("/cases/add")
+            setOpenAdd(true)
           }}
         >
           <Plus className="dark:stroke-black" />
@@ -96,9 +100,9 @@ const CasesPage = () => {
           {!isLoading &&
             !isError &&
             (filteredCases && filteredCases?.length > 0 ? (
-              filteredCases.map((item:Case) => (
-                <div key={item.id}>
-                  <CasesCard {...item} />
+              filteredCases.map((item: CaseWithClientUser) => (
+                <div key={item.case.id}>
+                  <CasesCard data={item} />
                 </div>
               ))
             ) : (
@@ -106,7 +110,7 @@ const CasesPage = () => {
             ))}
         </div>
       </section>
-    </>
+    </Dialog>
   )
 }
 

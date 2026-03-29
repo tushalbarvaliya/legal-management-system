@@ -4,26 +4,68 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { useAppSelector } from "@/hooks/hooks"
 import { formatDate } from "@/utils/formate"
-import type { Case } from "@/types/caseType"
-import DeleteCaseModel from "./DeleteCaseModel"
+import type { CaseWithClientUser } from "@/types/caseType"
 import CaseDetailModel from "./CaseDetailModel"
-import EditCaseModel from "./EditCaseModel"
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu"
+import { Dialog } from "../ui/dialog"
+import { useState } from "react"
+import DeleteModel from "../DeleteModel"
+import { useMutation } from "@tanstack/react-query"
+import { deleteCase } from "@/api/caseAPI"
+import { queryClient } from "@/main"
+import { toast } from "sonner"
+import UpdateCase from "./UpdateCase"
 
-const CasesCard = (data: Case) => {
+const CasesCard = ({ data }: { data: CaseWithClientUser }) => {
   const pathname = useLocation().pathname
   const navigate = useNavigate()
   const role = useAppSelector((state) => state.auth.role)
+  const [openDelete, setOpenDelete] = useState<boolean>(false)
+  const [openEdit, setOpenEdit] = useState<boolean>(false)
+
+  const { mutate: DeleteMutate, isPending: DeleteIsPending } = useMutation({
+    mutationFn: deleteCase,
+    onSuccess: () => {
+      toast.success("Delete Successfully")
+      queryClient.invalidateQueries({ queryKey: ["cases"] })
+      setOpenDelete(false)
+    },
+    onError: (error) => {
+      toast.error(`Error ${error}`)
+    },
+  })
+
   return (
-    <>
-      {pathname === `/cases/delete/${data.id}` && <DeleteCaseModel {...data} />}
-      {pathname === `/cases/${data.id}` && <CaseDetailModel {...data} />}
-      {pathname === `/cases/edit/${data.id}` && <EditCaseModel {...data} />}
+    <Dialog
+      open={openDelete || openEdit || pathname === `/cases/${data.case.id}`}
+      onOpenChange={(open) => {
+        setOpenDelete(false)
+        setOpenEdit(false)
+        if (!open) {
+          navigate("/cases")
+        }
+      }}
+    >
+      {openDelete && (
+        <DeleteModel
+          title="Delete Case"
+          subTitle="Are you sure you want to delete this case?"
+          detailsTitle={`${data.case.title}`}
+          id={data.case.id}
+          isPending={DeleteIsPending}
+          mutate={DeleteMutate}
+          setOpenDelete={setOpenDelete}
+        />
+      )}
+      {pathname === `/cases/${data.case.id}` && <CaseDetailModel data={data} />}
+      {openEdit && (
+        <UpdateCase data={data} setOpenAdd={setOpenEdit} />
+      )}
 
       {/* TASK CARD */}
       <article className="group hover:shadow-soft relative cursor-pointer rounded-xl border border-zinc-200 bg-zinc-50/40 p-4 shadow-sm transition duration-200 hover:bg-zinc-100/80">
@@ -32,12 +74,12 @@ const CasesCard = (data: Case) => {
             {/* TITLE */}
             <div className="group/title relative inline-flex max-w-full items-center">
               <h2 className="truncate text-sm font-semibold text-zinc-900 transition duration-200 group-hover:text-zinc-950">
-                {data.id}{" "}{data.title}
+                {data.case.title}
               </h2>
 
               {/* TOOLTIP */}
               <div className="pointer-events-none absolute top-full left-0 z-10 mt-2 hidden w-70 max-w-[70vw] rounded-lg bg-zinc-900/95 p-3 text-xs leading-relaxed text-zinc-100 opacity-0 shadow-lg backdrop-blur-sm transition duration-200 group-hover/title:block group-hover/title:opacity-100">
-                {data.description}
+                {data.case.description}
               </div>
             </div>
 
@@ -45,7 +87,7 @@ const CasesCard = (data: Case) => {
             <div className="mt-3 grid grid-cols-1 gap-2 text-xs text-zinc-600 sm:grid-cols-2 lg:grid-cols-4">
               <p>
                 <span className="font-semibold text-zinc-700">Created:</span>{" "}
-                {formatDate(data.createdAt)}
+                {formatDate(data.case.createdAt)}
               </p>
 
               <p>
@@ -53,7 +95,7 @@ const CasesCard = (data: Case) => {
                 <span
                   className={`ml-1 inline-flex rounded-full px-2 py-0.5 font-medium`}
                 >
-                  {data.caseStage}
+                  {data.case.caseStage}
                 </span>
               </p>
 
@@ -61,13 +103,13 @@ const CasesCard = (data: Case) => {
                 <span className="font-semibold text-zinc-700">
                   Client Name :
                 </span>{" "}
-                {data.clientId}
+                {data.user.firstName} {data.user.lastName}
               </p>
               <p>
                 <span className="font-semibold text-zinc-700">
                   Case Type :{" "}
                 </span>{" "}
-                {data.type}
+                {data.case.type}
               </p>
             </div>
           </div>
@@ -82,14 +124,14 @@ const CasesCard = (data: Case) => {
             <DropdownMenuContent align="end" className="w-40">
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(`/cases/${data.id}`)
+                  navigate(`/cases/${data.case.id}`)
                 }}
               >
                 View
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(`/cases/edit/${data.id}`)
+                  setOpenEdit(true)
                 }}
               >
                 Edit
@@ -99,7 +141,7 @@ const CasesCard = (data: Case) => {
                   <DropdownMenuItem
                     className="text-red-500"
                     onClick={() => {
-                      navigate(`/cases/delete/${data.id}`)
+                      setOpenDelete(true)
                     }}
                   >
                     Delete
@@ -110,7 +152,7 @@ const CasesCard = (data: Case) => {
           </DropdownMenu>
         </div>
       </article>
-    </>
+    </Dialog>
   )
 }
 

@@ -72,31 +72,6 @@ const App = () => {
             }
           />
           <Route
-            path="/cases/add"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
-                <CasesPage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
-            path="/cases/edit/:id"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
-                <CasesPage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
-            path="/cases/delete/:id"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
-                <CasesPage />
-              </ProtectedRouteByRole>
-            }
-          />
-
-          <Route
             path="/docs"
             element={
               <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
