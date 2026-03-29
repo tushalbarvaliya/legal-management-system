@@ -43,7 +43,7 @@ export const patchStaff = async ({
   return response.data
 }
 
-export const patchUnblockStaff = async ({ id }: { id: number }) => {
+export const patchUnblockStaff = async (id: number) => {
   const response = await axiosInstance.patch(`/staff/staff/${id}`, {
     isBlocked: 0,
   })

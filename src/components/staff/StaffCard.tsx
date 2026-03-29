@@ -12,47 +12,114 @@ import type { StaffUserMapping } from "@/types/staffType"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { Dialog } from "../ui/dialog"
-import DeleteStaff from "./DeleteStaff"
-import BlockStaff from "./BlockStaff"
 import UpdateStaff from "./UpdateStaff"
-import UnblockStaff from "./UnblockStaff"
 import StaffDetailsDialog from "./StaffDetailsModel"
+import { useMutation } from "@tanstack/react-query"
+import { blockStaff, deleteStaff, patchUnblockStaff } from "@/api/staffAPI"
+import { toast } from "sonner"
+import { queryClient } from "@/main"
+import DeleteModel from "../DeleteModel"
+import BlockModel from "../BlockModel"
+import UnblockModel from "../UnblockModel"
 
 const StaffCard = (staff: StaffUserMapping) => {
   const [openDelete, setOpenDelete] = useState<boolean>(false)
   const [openUnblock, setOpenUnblock] = useState<boolean>(false)
+  const [openBlock, setOpenBlock] = useState<boolean>(false)
   const navigate = useNavigate()
   const pathname = useLocation().pathname
+
+  const { mutate: DeleteMutate, isPending: DeleteIsPending } = useMutation({
+    mutationFn: deleteStaff,
+    onSuccess: () => {
+      toast.success("Delete Lawyer Successfully", { duration: 1500 })
+      queryClient.invalidateQueries({ queryKey: ["staff"] })
+      setOpenDelete(false)
+    },
+    onError: (error) => {
+      toast.error(`Error ${error.message}`)
+    },
+  })
+
+  const { mutate: BlockMutate, isPending: BlockIsPending } = useMutation({
+    mutationFn: blockStaff,
+    onSuccess: () => {
+      toast.success("Block Staff Successfully", { duration: 1500 })
+      queryClient.invalidateQueries({ queryKey: ["staff"] })
+      setOpenBlock(false)
+    },
+    onError: (error) => {
+      toast.error(`Error ${error.message}`)
+    },
+  })
+
+  const { mutate: UnblockMutate, isPending: UnblockIsPending } = useMutation({
+    mutationFn: patchUnblockStaff,
+    onSuccess: () => {
+      setOpenUnblock(false)
+      toast.success("Unblock Staff Successfully", { duration: 1500 })
+      queryClient.invalidateQueries({ queryKey: ["staff"] })
+    },
+    onError: (error) => {
+      toast.error(`Error ${error.message}`)
+    },
+  })
 
   return (
     <Dialog
       open={
         openDelete ||
         openUnblock ||
-        pathname == `/staff/block/${staff.staff.id}` ||
+        openBlock ||
         pathname == `/staff/edit/${staff.staff.id}` ||
         pathname == `/staff/${staff.staff.id}`
       }
       onOpenChange={(open) => {
         setOpenDelete(false)
         setOpenUnblock(false)
+        setOpenBlock(false)
         if (!open) navigate("/staff")
       }}
     >
       {pathname == `/staff/${staff.staff.id}` && (
         <StaffDetailsDialog staff={staff} />
       )}
-      {pathname == `/staff/block/${staff.staff.id}` && (
-        <BlockStaff staff={staff} />
+      {openBlock && (
+        <BlockModel
+          title="Block Staff"
+          subTitle="Are you sure you want to block this staff?"
+          detailsTitle={`${staff.user.firstName}  ${staff.user.lastName}`}
+          id={staff.staff.id}
+          isPending={BlockIsPending}
+          mutate={BlockMutate}
+          onClosed={setOpenBlock}
+        />
       )}
+
       {pathname == `/staff/edit/${staff.staff.id}` && (
         <UpdateStaff staff={staff} />
       )}
       {openDelete && (
-        <DeleteStaff staff={staff} setOpenDelete={setOpenDelete} />
+        <DeleteModel
+          title="Delete Staff"
+          subTitle="Are you sure you want to delete this staff?"
+          detailsTitle={`${staff.user.firstName}  ${staff.user.lastName}`}
+          id={staff.staff.id}
+          isPending={DeleteIsPending}
+          mutate={DeleteMutate}
+          setOpenDelete={setOpenDelete}
+        />
       )}
       {openUnblock && (
-        <UnblockStaff staff={staff} setOpenUnblock={setOpenUnblock} />
+        <UnblockModel
+          title="Unblock Staff"
+          subTitle="Are you sure you want to unblock this staff?"
+          detailsTitle={`${staff.user.firstName}  ${staff.user.lastName}`}
+          id={staff.staff.id}
+          isPending={UnblockIsPending}
+          mutate={UnblockMutate}
+          setOpenUnblock={setOpenUnblock}
+        />
       )}
       <div className="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition hover:shadow-md sm:flex-row sm:items-center sm:justify-between">
         {/* LEFT SECTION */}
@@ -96,12 +163,12 @@ const StaffCard = (staff: StaffUserMapping) => {
           {/* Status Badge */}
           <span
             className={`rounded-full px-3 py-1 text-xs font-medium whitespace-nowrap ${
-              staff.staff.isBlocked === "\u0000"
+              staff.staff.isBlocked === 0
                 ? "bg-green-100 text-green-700"
                 : "bg-red-100 text-red-700"
             }`}
           >
-            {staff.staff.isBlocked === "\u0000" ? "Active" : "Blocked"}
+            {staff.staff.isBlocked === 0 ? "Active" : "Blocked"}
           </span>
 
           {/* MENU */}
@@ -120,16 +187,16 @@ const StaffCard = (staff: StaffUserMapping) => {
               >
                 View
               </DropdownMenuItem>
-              {staff.staff.isBlocked === "\u0000" && (
+              {staff.staff.isBlocked === 0 && (
                 <DropdownMenuItem
                   onClick={() => {
-                    navigate(`/staff/block/${staff.staff.id}`)
+                    setOpenBlock(true)
                   }}
                 >
                   Block
                 </DropdownMenuItem>
               )}
-              {staff.staff.isBlocked === "\u0001" && (
+              {staff.staff.isBlocked === 1 && (
                 <DropdownMenuItem
                   onClick={() => {
                     setOpenUnblock(true)
@@ -145,14 +212,16 @@ const StaffCard = (staff: StaffUserMapping) => {
               >
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuItem
-                className="text-red-500"
-                onClick={() => {
-                  setOpenDelete(true)
-                }}
-              >
-                Delete
-              </DropdownMenuItem>
+              {staff.staff.isBlocked == 0 && (
+                <DropdownMenuItem
+                  className="text-red-500"
+                  onClick={() => {
+                    setOpenDelete(true)
+                  }}
+                >
+                  Delete
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
