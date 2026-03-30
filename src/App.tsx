@@ -185,38 +185,6 @@ const App = () => {
               </ProtectedRouteByRole>
             }
           />
-          <Route
-            path="/session/:id"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
-                <SessionPage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
-            path="/session/add"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
-                <SessionPage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
-            path="/session/edit/:id"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
-                <SessionPage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
-            path="/session/delete/:id"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
-                <SessionPage />
-              </ProtectedRouteByRole>
-            }
-          />
 
           <Route
             path="/task"

@@ -18,7 +18,28 @@ export type TaskSummary = {
   completed: number
 }
 
-export type TaskResponse = {
-  tasks: Task[]
-  summary: TaskSummary
+// export type TaskResponse = {
+//   tasks: Task[]
+//   summary: TaskSummary
+// }
+
+
+export type TaskStatus = "pending" | "in_progress" | "completed";
+export type TaskPriority = "low" | "medium" | "high";
+
+export interface TaskResponse {
+  id: number;
+  title: string;
+  description: string;
+  assignedTo: number;
+  caseId: number;
+
+  status: TaskStatus;
+  priority: TaskPriority;
+
+  isDeleted: boolean;
+
+  dueDate: string;
+  createdAt: string;
+  updatedAt: string;
 }

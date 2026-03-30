@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "../ui/select"
 import { Button } from "../ui/button"
-import type { CaseResponse } from "@/types/caseType"
+import type { CaseWithClientUser } from "@/types/caseType"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { getAllCases } from "@/api/caseAPI"
 import { useNavigate } from "react-router-dom"
@@ -29,10 +29,10 @@ import {
 import type { StaffUserMapping } from "@/types/staffType"
 import { updateTask } from "@/api/taskAPI"
 import { useAppSelector } from "@/hooks/hooks"
-import type { Task } from "@/types/taskType"
+import type {  TaskResponse } from "@/types/taskType"
 import { getAllStaff } from "@/api/staffAPI"
 
-const UpdateTask = ({ task }: { task: Task }) => {
+const UpdateTask = ({ task }: { task: TaskResponse }) => {
   const id = useAppSelector((state) => state.auth.id)
   const navigate = useNavigate()
   const { mutate, isPending } = useMutation({
@@ -46,7 +46,7 @@ const UpdateTask = ({ task }: { task: Task }) => {
       toast.error(`Error ${error}`)
     },
   })
-  const { data: caseData } = useQuery<CaseResponse>({
+  const { data: caseData } = useQuery<CaseWithClientUser[]>({
     queryKey: ["cases"],
     queryFn: getAllCases,
   })
@@ -167,10 +167,10 @@ const UpdateTask = ({ task }: { task: Task }) => {
                     </SelectTrigger>
 
                     <SelectContent>
-                      {caseData?.data &&
-                        caseData.data.cases.map((item) => (
-                          <SelectItem value={String(item.id)} key={item.id}>
-                            {item.title}
+                      {caseData &&
+                        caseData.map((item) => (
+                          <SelectItem value={String(item.case.id)} key={item.case.id}>
+                            {item.case.title}
                           </SelectItem>
                         ))}
                     </SelectContent>

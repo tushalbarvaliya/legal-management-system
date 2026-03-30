@@ -12,9 +12,9 @@ import { useMutation } from "@tanstack/react-query"
 import { deleteTask } from "@/api/taskAPI"
 import { toast } from "sonner"
 import { queryClient } from "@/main"
-import type { Task } from "@/types/taskType"
+import type {  TaskResponse } from "@/types/taskType"
 
-const DeleteTask = ({ task }: { task: Task }) => {
+const DeleteTask = ({ task }: { task: TaskResponse }) => {
   const navigate = useNavigate()
   const { mutate ,isPending} = useMutation({
     mutationFn: deleteTask,

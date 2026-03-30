@@ -7,10 +7,10 @@ import {
 } from "@/components/ui/dialog"
 
 import { formatDate } from "@/utils/formate"
-import type { Task } from "@/types/taskType"
+import type {  TaskResponse } from "@/types/taskType"
 
 type Props = {
-  data: Task
+  data: TaskResponse
 }
 
 const TaskDetails = ({ data }: Props) => {
@@ -69,7 +69,7 @@ const TaskDetails = ({ data }: Props) => {
 
           <Link to={`/cases/${data.caseId}`}>
             <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-3 transition hover:bg-zinc-100">
-              <p className="text-xs text-zinc-500">Case ID</p>
+              <p className="text-xs text-zinc-500">Case </p>
               <p className="mt-1 font-semibold text-zinc-900">{data.caseId}</p>
             </div>
           </Link>

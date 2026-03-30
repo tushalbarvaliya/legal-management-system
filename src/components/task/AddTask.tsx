@@ -17,13 +17,13 @@ import {
   SelectValue,
 } from "../ui/select"
 import { Button } from "../ui/button"
-import type { CaseDataType } from "@/types/caseType"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { getAllCases } from "@/api/caseAPI"
 import { useNavigate } from "react-router-dom"
 import { addTask } from "@/api/taskAPI"
 import { toast } from "sonner"
 import { queryClient } from "@/main"
+import type { CaseWithClientUser } from "@/types/caseType"
 
 const AddTask = () => {
   const navigate = useNavigate()
@@ -38,7 +38,7 @@ const AddTask = () => {
       toast.error(`Error ${error}`)
     },
   })
-  const { data: caseData } = useQuery<CaseDataType[]>({
+  const { data: caseData } = useQuery<CaseWithClientUser[]>({
     queryKey: ["cases"],
     queryFn: getAllCases,
   })
@@ -149,8 +149,8 @@ const AddTask = () => {
 
                     <SelectContent>
                       {caseData?.map((item) => (
-                        <SelectItem value={String(item.id)}>
-                          {item.title}
+                        <SelectItem value={String(item.case.id)}>
+                          {`${item.user.firstName} ${item.user.lastName}`}
                         </SelectItem>
                       ))}
                     </SelectContent>

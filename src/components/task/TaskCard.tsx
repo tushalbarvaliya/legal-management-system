@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
 import TaskDetailsModel from "./TaskDetails"
-import type { Task } from "@/types/taskType"
+import type { TaskResponse } from "@/types/taskType"
 import UpdateTask from "./UpdateTask"
 import { Dialog } from "../ui/dialog"
 import DeleteTask from "./DeleteTask"
@@ -32,7 +32,7 @@ const getStatusColor = (status: string) => {
     return "bg-emerald-100 text-emerald-700"
   }
 }
-const TaskCard = (data: Task) => {
+const TaskCard = (data: TaskResponse) => {
   const navigate = useNavigate()
   const pathname = useLocation().pathname
   return (
