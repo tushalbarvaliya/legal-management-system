@@ -96,30 +96,6 @@ const App = () => {
               </ProtectedRouteByRole>
             }
           />
-          <Route
-            path="/staff/:id"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer", "admin"]}>
-                <StaffPage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
-            path="/staff/add"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
-                <StaffPage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
-            path="/staff/edit/:id"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer", "admin"]}>
-                <StaffPage />
-              </ProtectedRouteByRole>
-            }
-          />
 
           <Route
             path="/session"

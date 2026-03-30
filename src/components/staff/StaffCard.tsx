@@ -1,5 +1,4 @@
 import { useMutation } from "@tanstack/react-query"
-import { useLocation, useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 import { MoreVertical } from "lucide-react"
 import { useState } from "react"
@@ -26,8 +25,8 @@ const StaffCard = (staff: StaffUserMapping) => {
   const [openDelete, setOpenDelete] = useState<boolean>(false)
   const [openUnblock, setOpenUnblock] = useState<boolean>(false)
   const [openBlock, setOpenBlock] = useState<boolean>(false)
-  const navigate = useNavigate()
-  const pathname = useLocation().pathname
+  const [openEdit, setOpenEdit] = useState<boolean>(false)
+  const [openView, setOpenView] = useState<boolean>(false)
 
   const { mutate: DeleteMutate, isPending: DeleteIsPending } = useMutation({
     mutationFn: deleteStaff,
@@ -67,22 +66,17 @@ const StaffCard = (staff: StaffUserMapping) => {
 
   return (
     <Dialog
-      open={
-        openDelete ||
-        openUnblock ||
-        openBlock ||
-        pathname == `/staff/edit/${staff.staff.id}` ||
-        pathname == `/staff/${staff.staff.id}`
-      }
-      onOpenChange={(open) => {
+      open={openDelete || openUnblock || openBlock || openEdit || openView}
+      onOpenChange={() => {
         setOpenDelete(false)
         setOpenUnblock(false)
         setOpenBlock(false)
-        if (!open) navigate("/staff")
+        setOpenEdit(false)
+        setOpenView(false)
       }}
     >
-      {pathname == `/staff/${staff.staff.id}` && (
-        <StaffDetailsDialog staff={staff} />
+      {openView && (
+        <StaffDetailsDialog staff={staff} setOpenView={setOpenView} />
       )}
       {openBlock && (
         <BlockModel
@@ -96,9 +90,7 @@ const StaffCard = (staff: StaffUserMapping) => {
         />
       )}
 
-      {pathname == `/staff/edit/${staff.staff.id}` && (
-        <UpdateStaff staff={staff} />
-      )}
+      {openEdit && <UpdateStaff staff={staff} setOpenEdit={setOpenEdit} />}
       {openDelete && (
         <DeleteModel
           title="Delete Staff"
@@ -182,7 +174,7 @@ const StaffCard = (staff: StaffUserMapping) => {
             <DropdownMenuContent align="end" className="w-40 font-medium">
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(`/staff/${staff.staff.id}`)
+                  setOpenView(true)
                 }}
               >
                 View
@@ -207,7 +199,7 @@ const StaffCard = (staff: StaffUserMapping) => {
               )}
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(`/staff/edit/${staff.staff.id}`)
+                  setOpenEdit(true)
                 }}
               >
                 Edit

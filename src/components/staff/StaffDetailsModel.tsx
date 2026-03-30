@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom"
 
 import { formatDate } from "@/utils/formate"
 import type { StaffUserMapping } from "@/types/staffType"
@@ -8,16 +7,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 
-
 type Props = {
   staff: StaffUserMapping
+  setOpenView: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const StaffDetailsDialog = ({ staff }: Props) => {
-  const navigate = useNavigate()
-
+const StaffDetailsDialog = ({ staff, setOpenView }: Props) => {
   const handleClose = () => {
-    navigate("/staff")
+    setOpenView(false)
   }
 
   return (

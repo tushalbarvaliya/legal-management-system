@@ -1,6 +1,5 @@
 import { Plus, Search } from "lucide-react"
 import { useQuery } from "@tanstack/react-query"
-import { useLocation, useNavigate } from "react-router-dom"
 import { useMemo, useState } from "react"
 
 import type { StaffUserMapping } from "@/types/staffType"
@@ -13,9 +12,7 @@ import AddStaff from "@/components/staff/AddStaff"
 import { Dialog } from "@/components/ui/dialog"
 
 const StaffPage = () => {
-  const navigate = useNavigate()
-  const pathname = useLocation().pathname
-
+  const [openAdd,setOpenAdd]=useState<boolean>(false)
   const [search, setSearch] = useState("")
 
   const {
@@ -59,13 +56,13 @@ const StaffPage = () => {
   }
 
   return (
-    <Dialog open={pathname === "/staff/add"} onOpenChange={(open)=>{if(!open) navigate('/staff')}}>
-      {pathname === "/staff/add" && <AddStaff />}
+    <Dialog open={openAdd} onOpenChange={(open)=>{if(!open) setOpenAdd(false)}}>
+      {openAdd && <AddStaff />}
 
       {/* Add Button */}
       <button
         className="fixed right-6 bottom-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-xl hover:scale-105"
-        onClick={() => navigate("/staff/add")}
+        onClick={() => setOpenAdd(true)}
       >
         <Plus />
       </button>

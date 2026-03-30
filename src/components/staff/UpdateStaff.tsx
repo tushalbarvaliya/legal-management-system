@@ -1,6 +1,5 @@
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useNavigate } from "react-router-dom"
 import { useMutation } from "@tanstack/react-query"
 import { toast } from "sonner"
 
@@ -28,16 +27,19 @@ import {
   SelectValue,
 } from "../ui/select"
 
-const UpdateStaff = ({ staff }: { staff: StaffUserMapping }) => {
-  const navigate = useNavigate()
+const UpdateStaff = ({
+  staff,
+  setOpenEdit,
+}: {
+  staff: StaffUserMapping
+  setOpenEdit: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
   const { mutate, isPending } = useMutation({
     mutationFn: patchStaff,
     onSuccess: () => {
       toast.success("Update Staff ", { duration: 1500 })
       queryClient.invalidateQueries({ queryKey: ["staff"] })
-      setTimeout(() => {
-        navigate("/staff")
-      }, 1510)
+      setOpenEdit(false)
     },
     onError: (error) => {
       toast.error(`Error ${error.message}`)
@@ -65,9 +67,7 @@ const UpdateStaff = ({ staff }: { staff: StaffUserMapping }) => {
       mutate({ data: data, id: staff.staff.id })
     } else {
       toast.success("No Changes Found", { duration: 700 })
-      setTimeout(() => {
-        navigate("/staff")
-      }, 700)
+      setOpenEdit(false)
     }
   }
   return (
