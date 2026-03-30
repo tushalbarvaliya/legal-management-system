@@ -9,7 +9,7 @@ import { queryClient } from "@/main"
 import { patchLawyer } from "@/api/lawyerAPI"
 import type { LawyerDataType } from "@/types/lawyerType"
 import {
-UpdateLawyerFormSchema,
+  UpdateLawyerFormSchema,
   type UpdateLawyerFormSchemaType,
 } from "@/schemas/UpdateLawyerSchema"
 import {
@@ -46,7 +46,10 @@ const UpdateLawyer = ({
     },
   })
 
-  const form = useForm<UpdateLawyerFormSchemaType>({
+  const {
+    formState: { isDirty },
+    ...form
+  } = useForm<UpdateLawyerFormSchemaType>({
     resolver: zodResolver(UpdateLawyerFormSchema),
     mode: "onChange",
     delayError: 500,
@@ -61,8 +64,12 @@ const UpdateLawyer = ({
   })
 
   const onSubmit = (data: UpdateLawyerFormSchemaType) => {
-    // console.log(data)
-    mutate({ data: data, id: lawyer.lawyer.id })
+    if (isDirty) {
+      mutate({ data: data, id: lawyer.lawyer.id })
+    } else {
+      toast.success("No changes Found")
+      setOpenUpdate(false)
+    }
   }
   return (
     <>
