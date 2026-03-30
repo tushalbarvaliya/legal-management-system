@@ -1,6 +1,5 @@
 import type { invoiceDataType } from "@/types/invoiceType"
 import { formatDate } from "@/utils/formate"
-import { useLocation, useNavigate } from "react-router-dom"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,16 +11,30 @@ import { MoreVertical } from "lucide-react"
 import InvoiceDetailsModal from "./InvoiceDetailsModal"
 import EditInvoiceModel from "./EditInvoiceModel"
 import { useMutation } from "@tanstack/react-query"
-import { pay } from "@/api/invoiceAPI"
+import { deleteInvoice, pay } from "@/api/invoiceAPI"
 import { useAppSelector } from "@/hooks/hooks"
 import { useState } from "react"
 import { Dialog } from "../ui/dialog"
+import DeleteModel from "../DeleteModel"
+import { toast } from "sonner"
+import { queryClient } from "@/main"
 
 const InvoiceCard = (invoice: invoiceDataType) => {
   const [openView, setOpenView] = useState<boolean>(false)
-  const pathname = useLocation().pathname
-  const navigate = useNavigate()
+  const [openDelete, setOpenDelete] = useState<boolean>(false)
+  const [openEdit, setOpenEdit] = useState<boolean>(false)
   const role = useAppSelector((state) => state.auth.role)
+  const { mutate: DeleteMutate, isPending: DeleteIsPending } = useMutation({
+    mutationFn: deleteInvoice,
+    onSuccess: () => {
+      toast.success("Invoice Deleted")
+      queryClient.invalidateQueries({ queryKey: ["invoices"] })
+      setOpenDelete(false)
+    },
+    onError: (error) => {
+      toast.error(`Error ${error}`)
+    },
+  })
   const { mutate } = useMutation({
     mutationFn: pay,
     onSuccess: (data) => {
@@ -30,19 +43,27 @@ const InvoiceCard = (invoice: invoiceDataType) => {
   })
   return (
     <Dialog
-      open={openView}
+      open={openView || openDelete || openEdit}
       onOpenChange={(open) => {
         if (!open) {
           setOpenView(false)
+          setOpenEdit(false)
+          setOpenDelete(false)
         }
       }}
     >
-      {pathname === `/invoice/edit/${invoice.id}` && (
-        <EditInvoiceModel {...invoice} />
+      {openEdit && <EditInvoiceModel data={invoice} setOpen={setOpenEdit} />}
+      {openDelete && (
+        <DeleteModel
+          title="Delete Invoice"
+          subTitle="Are you sure you want to delete This invoice?"
+          detailsTitle={`${invoice.totalAmount}`}
+          id={invoice.id}
+          isPending={DeleteIsPending}
+          mutate={DeleteMutate}
+          setOpenDelete={setOpenDelete}
+        />
       )}
-      {/* {openView && ( */}
-      {/* <DeleteInvoiceModel data={invoice} setOpenView={setOpenView}/> */}
-      {/* )} */}
       {openView && (
         <InvoiceDetailsModal data={invoice} setOpenView={setOpenView} />
       )}
@@ -72,11 +93,11 @@ const InvoiceCard = (invoice: invoiceDataType) => {
                 >
                   View
                 </DropdownMenuItem>
-                {role === "lawyer" && (
+                {role === "lawyer" && invoice.paymentStatus == "pending" && (
                   <>
                     <DropdownMenuItem
                       onClick={() => {
-                        navigate(`/invoice/edit/${invoice.id}`)
+                        setOpenEdit(true)
                       }}
                     >
                       Edit
@@ -84,7 +105,7 @@ const InvoiceCard = (invoice: invoiceDataType) => {
                     <DropdownMenuItem
                       className="text-red-500"
                       onClick={() => {
-                        navigate(`/invoice/delete/${invoice.id}`)
+                        setOpenDelete(true)
                       }}
                     >
                       Delete
@@ -95,7 +116,7 @@ const InvoiceCard = (invoice: invoiceDataType) => {
                   <DropdownMenuItem
                     className="text-green-500"
                     onClick={() => {
-                      mutate(invoice)
+                      mutate(invoice.id)
                     }}
                   >
                     Pay
