@@ -1,4 +1,3 @@
-import type { AddLawyerFormData } from "@/components/lawyer/AddLawyerModel"
 import axiosInstance from "./axiosInstance"
 
 export const getAllUser = async () => {
@@ -20,13 +19,7 @@ export const getCompony = async () => {
   return response.data
 }
 
-export const makeItLawyer = async (data: AddLawyerFormData) => {
-  const response = await axiosInstance.post("/lawyers/lawyer", {
-    ...data,
-    isBlocked: 0,
-  })
-  return response.data
-}
+
 
 export const company = async () => {
   const response = await axiosInstance.get("/companies/")
