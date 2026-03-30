@@ -5,14 +5,19 @@ import { useMutation } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 
-const DeleteInvoiceModel = (data: invoiceDataType) => {
-  const navigate=useNavigate()
+const DeleteInvoiceModel = ({
+  data,
+  setOpenView,
+}: {
+  data: invoiceDataType
+  setOpenView: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
   const { mutate } = useMutation({
     mutationFn: deleteInvoice,
     onSuccess: () => {
       toast.success("Invoice Deleted")
       queryClient.invalidateQueries({ queryKey: ["invoices"] })
-      navigate('/invoice')
+      setOpenView(false)
     },
     onError: (error) => {
       toast.error(`Error ${error}`)
@@ -36,7 +41,7 @@ const DeleteInvoiceModel = (data: invoiceDataType) => {
               <button
                 className="rounded-lg border border-zinc-200 px-4 py-2 text-sm font-medium text-zinc-700 transition duration-200 hover:bg-zinc-100"
                 onClick={() => {
-                  navigate('/invoice')
+                  setOpenView(false)
                 }}
               >
                 Cancel

@@ -1,7 +1,6 @@
 import type { invoiceDataType } from "@/types/invoiceType"
 import { formatDate } from "@/utils/formate"
 import { useLocation, useNavigate } from "react-router-dom"
-import DeleteInvoiceModel from "./DeleteInvoiceModel"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,8 +14,11 @@ import EditInvoiceModel from "./EditInvoiceModel"
 import { useMutation } from "@tanstack/react-query"
 import { pay } from "@/api/invoiceAPI"
 import { useAppSelector } from "@/hooks/hooks"
+import { useState } from "react"
+import { Dialog } from "../ui/dialog"
 
 const InvoiceCard = (invoice: invoiceDataType) => {
+  const [openView, setOpenView] = useState<boolean>(false)
   const pathname = useLocation().pathname
   const navigate = useNavigate()
   const role = useAppSelector((state) => state.auth.role)
@@ -27,15 +29,22 @@ const InvoiceCard = (invoice: invoiceDataType) => {
     },
   })
   return (
-    <>
+    <Dialog
+      open={openView}
+      onOpenChange={(open) => {
+        if (!open) {
+          setOpenView(false)
+        }
+      }}
+    >
       {pathname === `/invoice/edit/${invoice.id}` && (
         <EditInvoiceModel {...invoice} />
       )}
-      {pathname === `/invoice/delete/${invoice.id}` && (
-        <DeleteInvoiceModel {...invoice} />
-      )}
-      {pathname === `/invoice/${invoice.id}` && (
-        <InvoiceDetailsModal {...invoice} />
+      {/* {openView && ( */}
+      {/* <DeleteInvoiceModel data={invoice} setOpenView={setOpenView}/> */}
+      {/* )} */}
+      {openView && (
+        <InvoiceDetailsModal data={invoice} setOpenView={setOpenView} />
       )}
       <div className="shadow-soft rounded-2xl border border-zinc-200 bg-white p-5 transition duration-200 hover:-translate-y-0.5 hover:border-zinc-300">
         <div className="flex items-start justify-between">
@@ -58,7 +67,7 @@ const InvoiceCard = (invoice: invoiceDataType) => {
               <DropdownMenuContent align="end" className="w-40">
                 <DropdownMenuItem
                   onClick={() => {
-                    navigate(`/invoice/${invoice.id}`)
+                    setOpenView(true)
                   }}
                 >
                   View
@@ -110,7 +119,7 @@ const InvoiceCard = (invoice: invoiceDataType) => {
 
           <div>
             <p className="text-xs text-zinc-400 uppercase">Status</p>
-            <span className="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+            <span className="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold">
               {invoice.status}
             </span>
           </div>
@@ -123,7 +132,7 @@ const InvoiceCard = (invoice: invoiceDataType) => {
           </div>
         </div>
       </div>
-    </>
+    </Dialog>
   )
 }
 
