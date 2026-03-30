@@ -8,7 +8,15 @@ import DocsCardSkeleton from "@/components/document/DocsCardSkeleton"
 import NoFound from "@/components/NoFound"
 import DocsHeader from "@/components/document/DocsHeader"
 import DocsCard from "@/components/document/DocsCard"
-import type {  DocumentDataResponse } from "@/types/docsType"
+import type { DocumentDataResponse } from "@/types/docsType"
+import { Input } from "@/components/ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 const DocsPage = () => {
   const [search, setSearch] = useState("")
@@ -42,11 +50,7 @@ const DocsPage = () => {
   }, [search, fileType, caseId, documents])
 
   const fileTypes = useMemo(() => {
-    return [
-      ...new Set(
-        documents.map((item) => item.document).filter(Boolean)
-      ),
-    ]
+    return [...new Set(documents.map((item) => item.document).filter(Boolean))]
   }, [documents])
 
   const caseIds = useMemo(() => {
@@ -75,7 +79,7 @@ const DocsPage = () => {
           {/* Search */}
           <div className="relative flex-1">
             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
-            <input
+            <Input
               type="search"
               placeholder="Search documents By title and description..."
               value={search}
@@ -86,34 +90,45 @@ const DocsPage = () => {
           </div>
 
           {/* File Type */}
-          <select
-            value={fileType}
-            onChange={(e) => setFileType(e.target.value)}
-            className="rounded-xl border border-zinc-200 px-3 py-2.5 text-sm"
+          <Select
+            value={fileType || "all"}
+            onValueChange={(value) => setFileType(value === "all" ? "" : value)}
             disabled={isLoading || isError}
           >
-            <option value="all">All Types</option>
-            {fileTypes.map((type) => (
-              <option key={type.id} value={type.fileType}>
-                {type.fileType}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger className="w-50">
+              <SelectValue placeholder="All Types" />
+            </SelectTrigger>
+
+            <SelectContent>
+              <SelectItem value="all">All Types</SelectItem>
+              {fileTypes.map((type) => (
+                <SelectItem key={type.id} value={type.fileType}>
+                  {type.fileType}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
           {/* Case */}
-          <select
-            value={caseId}
-            onChange={(e) => setCaseId(e.target.value)}
-            className="rounded-xl border border-zinc-200 px-3 py-2.5 text-sm"
+          <Select
+            value={caseId || "all"}
+            onValueChange={(value) => setCaseId(value === "all" ? "" : value)}
             disabled={isLoading || isError}
           >
-            <option value="all">All Cases</option>
-            {caseIds.map((id) => (
-              <option key={id.id} value={String(id.id)}>
-                {id.title}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger className="w-55">
+              <SelectValue placeholder="All Cases" />
+            </SelectTrigger>
+
+            <SelectContent>
+              <SelectItem value="all">All Cases</SelectItem>
+
+              {caseIds.map((item) => (
+                <SelectItem key={item.id} value={String(item.id)}>
+                  {item.title}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* List */}

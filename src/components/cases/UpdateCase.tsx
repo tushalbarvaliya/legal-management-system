@@ -161,12 +161,32 @@ const UpdateCase = ({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="type">Type</FieldLabel>
-                  <Input
-                    {...field}
-                    id="type"
-                    placeholder="Enter Type"
-                    className="w-full"
-                  />
+
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select Case Type" />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      <SelectItem value="civil">Civil</SelectItem>
+                      <SelectItem value="criminal">Criminal</SelectItem>
+                      <SelectItem value="family">Family</SelectItem>
+                      <SelectItem value="corporate">Corporate</SelectItem>
+                      <SelectItem value="labor">Labor</SelectItem>
+                      <SelectItem value="property">Property</SelectItem>
+                      <SelectItem value="tax">Tax</SelectItem>
+                      <SelectItem value="consumer">Consumer</SelectItem>
+                      <SelectItem value="immigration">Immigration</SelectItem>
+                      <SelectItem value="intellectual_property">
+                        Intellectual Property
+                      </SelectItem>
+                      <SelectItem value="bankruptcy">Bankruptcy</SelectItem>
+                      <SelectItem value="environmental">
+                        Environmental
+                      </SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
 
                   {fieldState.error && (
                     <FieldError

@@ -68,7 +68,12 @@ const ProfilePage = () => {
     onError: (error) => toast.error(error?.message || "Something went wrong"),
   })
 
-  const { control, handleSubmit, reset, formState } = useForm<ProfileFormData>({
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isDirty },
+  } = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     mode: "onChange",
     defaultValues: {
@@ -94,7 +99,7 @@ const ProfilePage = () => {
   }, [data, reset, isEdit])
 
   const onSubmit = (formData: ProfileFormData) => {
-    if (formState.isDirty) {
+    if (isDirty) {
       mutate(formData)
     } else {
       setIsEdit(false)

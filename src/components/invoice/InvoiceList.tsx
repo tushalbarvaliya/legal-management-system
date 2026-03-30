@@ -8,6 +8,13 @@ import { Button } from "../ui/button"
 import { getAllInvoice } from "@/api/invoiceAPI"
 import type { invoiceDataType } from "@/types/invoiceType"
 import NoFound from "../NoFound"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select"
 
 const InvoiceList = () => {
   const {
@@ -60,36 +67,49 @@ const InvoiceList = () => {
         {/* Filters */}
         <div className="flex flex-wrap items-center gap-2">
           {/* Status */}
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-400"
+          <Select
+            value={status || "all"}
+            onValueChange={(value) => setStatus(value === "all" ? "" : value)}
             disabled={isLoading || isError}
           >
-            <option value="">All Statuses</option>
-            <option value="Paid">Paid</option>
-            <option value="Pending">Pending</option>
-            <option value="Overdue">Overdue</option>
-          </select>
+            <SelectTrigger className="w-50">
+              <SelectValue placeholder="All Statuses" />
+            </SelectTrigger>
+
+            <SelectContent>
+              <SelectItem value="all">All Statuses</SelectItem>
+              <SelectItem value="Paid">Paid</SelectItem>
+              <SelectItem value="Pending">Pending</SelectItem>
+              <SelectItem value="Overdue">Overdue</SelectItem>
+            </SelectContent>
+          </Select>
 
           {/* Client */}
-          <select
+          <Select
             value={client}
-            onChange={(e) => setClient(e.target.value)}
-            className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-400"
+            onValueChange={(value) => setClient(value)}
             disabled={isLoading || isError}
           >
-            <option value="">All Clients</option>
-            {clientOptions.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger className="w-50">
+              <SelectValue placeholder="All Clients" />
+            </SelectTrigger>
+
+            <SelectContent>
+              {clientOptions.map((c) => (
+                <SelectItem key={c} value={String(c)}>
+                  {c}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
           {/* Date */}
 
-          <Button onClick={clearFilters} disabled={isLoading || isError} className="p-4">
+          <Button
+            onClick={clearFilters}
+            disabled={isLoading || isError}
+            className="p-4"
+          >
             Clear
           </Button>
         </div>

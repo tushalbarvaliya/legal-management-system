@@ -4,7 +4,7 @@ import { Plus } from "lucide-react"
 import { useLocation, useNavigate } from "react-router-dom"
 
 import { getAllTask } from "@/api/taskAPI"
-import type {  TaskResponse, TaskType } from "@/types/taskType"
+import type { TaskResponse, TaskType } from "@/types/taskType"
 import NoFound from "@/components/NoFound"
 import TaskCardSkeleton from "@/components/task/TaskCardSkeleton"
 import ErrorMessage from "@/components/ErrorMessage"
@@ -12,6 +12,15 @@ import { Spinner } from "@/components/ui/spinner"
 import TaskCard from "@/components/task/TaskCard"
 import AddTask from "@/components/task/AddTask"
 import { Dialog } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Input } from "@/components/ui/input"
 
 const TaskPage = () => {
   const navigate = useNavigate()
@@ -21,6 +30,11 @@ const TaskPage = () => {
   const [priorityFilter, setPriorityFilter] = useState("all")
   const [statusFilter, setStatusFilter] = useState("all")
 
+  const clearSearch = () => {
+    setSearch("")
+    setPriorityFilter("all")
+    setStatusFilter("all")
+  }
   const {
     data: tasks,
     isLoading,
@@ -72,39 +86,50 @@ const TaskPage = () => {
 
           <div className="flex w-full flex-col gap-3 sm:flex-row md:w-auto">
             {/* Search */}
-            <input
+            <Input
               type="search"
               placeholder="Search by title or description"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm"
               disabled={isLoading || isError}
+              className="w-full"
             />
 
             {/* Priority */}
-            <select
+            <Select
               value={priorityFilter}
-              onChange={(e) => setPriorityFilter(e.target.value)}
-              className="rounded-xl border border-zinc-200 px-3 py-2.5 text-sm"
+              onValueChange={(value) => setPriorityFilter(value)}
               disabled={isLoading || isError}
             >
-              <option value="all">All Priorities</option>
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
-            </select>
+              <SelectTrigger className="w-45">
+                <SelectValue placeholder="Select Priority" />
+              </SelectTrigger>
+
+              <SelectContent>
+                <SelectItem value="all">All Priorities</SelectItem>
+                <SelectItem value="low">Low</SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="high">High</SelectItem>
+              </SelectContent>
+            </Select>
 
             {/* Status */}
-            <select
+            <Select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="rounded-xl border border-zinc-200 px-3 py-2.5 text-sm"
+              onValueChange={(value) => setStatusFilter(value)}
               disabled={isLoading || isError}
             >
-              <option value="all">All Statuses</option>
-              <option value="inProgress">In Progress</option>
-              <option value="completed">Completed</option>
-            </select>
+              <SelectTrigger className="w-45">
+                <SelectValue placeholder="Select Status" />
+              </SelectTrigger>
+
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                <SelectItem value="inProgress">In Progress</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button onClick={() => clearSearch()}>Clear</Button>
           </div>
         </div>
 

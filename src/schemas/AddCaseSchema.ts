@@ -10,7 +10,21 @@ export const AddCaseFormSchema = z.object({
 
   title: z.string().min(3, "Title is required"),
   description: z.string().min(3, "Description is required"),
-  type: z.string().min(1, "Type is required"),
+  type: z.enum([
+    "civil",
+    "criminal",
+    "family",
+    "corporate",
+    "labor",
+    "property",
+    "tax",
+    "consumer",
+    "immigration",
+    "intellectual_property",
+    "bankruptcy",
+    "environmental",
+    "other",
+  ]),
   status: z.enum(["open", "closed"]),
   caseClosedDate: z.string().refine(
     (date) => {

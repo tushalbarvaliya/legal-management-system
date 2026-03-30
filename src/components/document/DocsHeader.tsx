@@ -10,7 +10,7 @@ const DocsHeader = () => {
     <Dialog
       open={openAdd}
       onOpenChange={(open) => {
-        if (open) setOpenAdd(true)
+        if (!open) setOpenAdd(false)
       }}
     >
       {openAdd && <AddDocsModal setOpenAdd={setOpenAdd}/>}

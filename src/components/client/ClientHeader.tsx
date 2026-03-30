@@ -14,7 +14,7 @@ const ClientHeader = () => {
     <Dialog
       open={openAdd}
       onOpenChange={(open) => {
-        if (!open) setOpenAdd(false)
+        if (!open) {setOpenAdd(false)}
       }}
     >
       {openAdd && <AddClient setOpenAdd={setOpenAdd}/>}
