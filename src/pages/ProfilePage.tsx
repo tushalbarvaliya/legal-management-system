@@ -205,7 +205,16 @@ const ProfilePage = () => {
                   render={({ field, fieldState }) => (
                     <div className="sm:col-span-2">
                       <label className="text-sm font-medium">Phone</label>
-                      <Input disabled={!isEdit} {...field} />
+                      <Input
+                        disabled={!isEdit}
+                        {...field}
+                        onChange={(e) => {
+                          const value = e.target.value
+                            .replace(/\D/g, "")
+                            .slice(0, 10)
+                          field.onChange(value)
+                        }}
+                      />
                       {fieldState.error && (
                         <p className="text-xs text-red-600">
                           {fieldState.error.message}
