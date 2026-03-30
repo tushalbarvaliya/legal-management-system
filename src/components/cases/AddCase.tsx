@@ -28,6 +28,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
+import { format, isValid,parse } from "date-fns"
+import { CalendarIcon } from "lucide-react"
+import { Calendar } from "../ui/calendar"
 
 const AddCase = ({
   setOpenAdd,
@@ -193,21 +197,56 @@ const AddCase = ({
             <Controller
               name="caseClosedDate"
               control={form.control}
-              render={({ field, fieldState }) => (
-                <Field className="space-y-2">
-                  <FieldLabel>Expected Closed Date</FieldLabel>
+              render={({ field, fieldState }) => {
+                const selectedDate = (() => {
+                  if (!field.value) return undefined
+                  let parsed = parse(field.value, "yyyy-MM-dd", new Date())
+                  if (isValid(parsed)) return parsed
 
-                  <Input
-                    type="date"
-                    value={field.value ?? ""}
-                    onChange={(e) => field.onChange(e.target.value || null)}
-                  />
+                  parsed = new Date(field.value)
+                  return isValid(parsed) ? parsed : undefined
+                })()
 
-                  {fieldState.error && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
+                return (
+                  <Field className="space-y-2">
+                    <FieldLabel>Expected Closed Date</FieldLabel>
+
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-full justify-between"
+                        >
+                          {selectedDate
+                            ? format(selectedDate, "dd-MM-yyyy")
+                            : "Select date"}
+
+                          <CalendarIcon className="ml-2 h-4 w-4" />
+                        </Button>
+                      </PopoverTrigger>
+
+                      <PopoverContent className="w-auto p-0">
+                        <Calendar
+                          mode="single"
+                          selected={selectedDate}
+                          onSelect={(date) => {
+                            if (date) {
+                              field.onChange(format(date, "yyyy-MM-dd"))
+                            } else {
+                              field.onChange(null)
+                            }
+                          }}
+                        />
+                      </PopoverContent>
+                    </Popover>
+
+                    {fieldState.error && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )
+              }}
             />
             <Controller
               name="caseStage"

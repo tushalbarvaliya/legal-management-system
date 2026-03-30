@@ -22,9 +22,9 @@ const AdminDashBoard = () => {
     queryKey: ["allUser"],
   })
 
-  const lawyers = users?.data.filter((item) => item.role === "lawyer")
-  const staffs = users?.data.filter((item) => item.role === "staff")
-  const clients = users?.data.filter((item) => item.role === "client")
+  const lawyers = users?.data.filter((item) => item.data.role === "lawyer")
+  const staffs = users?.data.filter((item) => item.data.role === "staff")
+  const clients = users?.data.filter((item) => item.data.role === "client")
 
   const { data: caseCount, isLoading: caseLoading } = useQuery<{
     data: {

@@ -113,7 +113,7 @@ const InvoiceCard = (invoice: Payment) => {
                     </DropdownMenuItem>
                   </>
                 )}
-                {role === "client" && (
+                {role === "client" && invoice.status!='paid' && (
                   <DropdownMenuItem
                     className="text-green-500"
                     onClick={() => {
