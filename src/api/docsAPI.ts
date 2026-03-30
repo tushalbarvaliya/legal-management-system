@@ -1,6 +1,7 @@
 import { type docsDataType } from "@/data/docsData"
 import axiosInstance from "./axiosInstance"
 import type { AddDocsFormData } from "@/components/document/AddDocsModal"
+import type { FormData } from "@/components/document/UpdateDocsModel"
 
 export const getAllDocs = async () => {
   const response = await axiosInstance.get("/documents/")
@@ -16,9 +17,15 @@ export const createDocs = async (data: AddDocsFormData) => {
   return response.data
 }
 
-export const updateDocs = async (data: docsDataType) => {
+export const updateDocs = async ({
+  data,
+  id,
+}: {
+  data: FormData
+  id: number
+}) => {
   const response = await axiosInstance.patch(
-    `/documents/document/${data.id}`,
+    `/documents/document/${id}`,
     data,
     {
       headers: {

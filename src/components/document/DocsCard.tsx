@@ -3,7 +3,6 @@ import { Link, useLocation, useNavigate } from "react-router"
 
 import { Button } from "../ui/button"
 import { downloadBase64File } from "@/utils/downloadBase64File"
-import type { docsDataType } from "@/data/docsData"
 import DeleteDocsModel from "./DeleteDocsModel"
 import DocsDetailsModal from "./DocsDetailsModal"
 import UpdateDocsModel from "./UpdateDocsModel"
@@ -14,15 +13,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import type { DocumentResponse } from "@/types/docsType"
+import { useState } from "react"
+import { Dialog } from "../ui/dialog"
 
 const DocsCard = ({ docs: items }: { docs: DocumentResponse }) => {
+  const [openEdit, setOpenEdit] = useState<boolean>(false)
   const pathname = useLocation().pathname
   const navigate = useNavigate()
   return (
-    <>
-      {pathname === `/docs/edit/${items.id}` && (
-        <UpdateDocsModel data={items} />
-      )}
+    <Dialog
+      open={openEdit}
+      onOpenChange={(open) => {
+        if (!open) setOpenEdit(false)
+      }}
+    >
+      {openEdit && <UpdateDocsModel data={items} setOpen={setOpenEdit} />}
       {pathname === `/docs/${items.id}` && <DocsDetailsModal {...items} />}
       {pathname === `/docs/delete/${items.id}` && (
         <DeleteDocsModel {...items} />
@@ -94,7 +99,7 @@ const DocsCard = ({ docs: items }: { docs: DocumentResponse }) => {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(`/docs/edit/${items.document.id}`)
+                  setOpenEdit(true)
                 }}
               >
                 Edit
@@ -122,7 +127,7 @@ const DocsCard = ({ docs: items }: { docs: DocumentResponse }) => {
           </DropdownMenu>
         </div>
       </div>
-    </>
+    </Dialog>
   )
 }
 
