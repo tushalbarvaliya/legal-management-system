@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Eye, EyeOff } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom"
 import { toast, Toaster } from "sonner"
@@ -18,6 +18,7 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field"
+import { useAppSelector } from "@/hooks/hooks"
 
 const formSchema = z.object({
   email: z
@@ -44,10 +45,15 @@ const formSchema = z.object({
 type FormType = z.infer<typeof formSchema>
 
 const ForgotPasswordPage = () => {
+  const navigate = useNavigate()
+  const token = useAppSelector((state) => state.auth.token)
+  useEffect(() => {
+    if (token) {
+      navigate("/")
+    }
+  }, [navigate, token])
   const [passwordShow, setPasswordShow] = useState(false)
   const [confirmPasswordShow, setConfirmPasswordShow] = useState(false)
-
-  const navigate = useNavigate()
 
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),

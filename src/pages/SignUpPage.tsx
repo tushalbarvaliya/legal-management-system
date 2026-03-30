@@ -1,6 +1,6 @@
 import { motion } from "framer-motion"
 import { useMutation } from "@tanstack/react-query"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom"
 import { toast, Toaster } from "sonner"
@@ -9,6 +9,7 @@ import { Eye, EyeOff } from "lucide-react"
 import { signUp } from "@/api/authAPI"
 import { Button } from "@/components/ui/button"
 import { emailRegex, passwordRegex } from "@/utils/regex"
+import { useAppSelector } from "@/hooks/hooks"
 
 type formDataType = {
   confirmPassword: string
@@ -17,10 +18,15 @@ type formDataType = {
 }
 
 const SignUpPage = () => {
+  const navigate = useNavigate()
+  const token = useAppSelector((state) => state.auth.token)
+  useEffect(() => {
+    if (token) {
+      navigate("/")
+    }
+  }, [navigate, token])
   const [passwordShow, setPasswordShow] = useState(false)
   const [confirmPasswordShow, setConfirmPasswordShow] = useState(false)
-
-  const navigate = useNavigate()
 
   const {
     register,

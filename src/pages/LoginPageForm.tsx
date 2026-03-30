@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom"
 import { toast, Toaster } from "sonner"
@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { emailRegex, passwordRegex } from "@/utils/regex"
 import { login } from "@/api/authAPI"
-import { useAppDispatch } from "@/hooks/hooks"
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks"
 
 const formSchema = z.object({
   email: z
@@ -41,9 +41,16 @@ const formSchema = z.object({
 type FormType = z.infer<typeof formSchema>
 
 const LoginPageForm = () => {
+  const token = useAppSelector((state) => state.auth.token)
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (token) {
+      navigate("/")
+    }
+  }, [navigate, token])
+
   const [passwordShow, setPasswordShow] = useState<boolean>(false)
   const dispatch = useAppDispatch()
-  const navigate = useNavigate()
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     mode: "onChange",
