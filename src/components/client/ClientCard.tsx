@@ -1,26 +1,26 @@
+import { useState } from "react"
+import { useMutation } from "@tanstack/react-query"
 import { MoreVertical } from "lucide-react"
 import { useLocation, useNavigate } from "react-router-dom"
+import { toast } from "sonner"
 
 import type { ClientUserMapping } from "@/types/clientType"
-import { useAppSelector } from "@/hooks/hooks"
 import ClientDetailsModel from "./ClientDetails"
+import { useAppSelector } from "@/hooks/hooks"
 import { Button } from "@/components/ui/button"
+import UpdateClient from "./UpdateClient"
+import { Dialog } from "../ui/dialog"
+import BlockModel from "../BlockModel"
+import { deleteClient, putBlockClient, putUnblockClient } from "@/api/clientAPI"
+import { queryClient } from "@/main"
+import UnblockModel from "../UnblockModel"
+import DeleteModel from "../DeleteModel"
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu"
-import { Dialog } from "../ui/dialog"
-import { useState } from "react"
-import UpdateClient from "./UpdateClient"
-import BlockModel from "../BlockModel"
-import { deleteClient, putBlockClient, putUnblockClient } from "@/api/clientAPI"
-import { toast } from "sonner"
-import { queryClient } from "@/main"
-import { useMutation } from "@tanstack/react-query"
-import UnblockModel from "../UnblockModel"
-import DeleteModel from "../DeleteModel"
 
 const ClientCard = ({ client }: { client: ClientUserMapping }) => {
   const role = useAppSelector((state) => state.auth.role)
@@ -138,7 +138,7 @@ const ClientCard = ({ client }: { client: ClientUserMapping }) => {
                 <h3 className="text-base font-semibold text-zinc-900">
                   {client.user.firstName} {client.user.lastName}
                 </h3>
-                {client.client.isBlocked == 1 && (
+                {client.client.isBlocked == '\u0001' && (
                   <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-black">
                     {client.client.isBlocked ? "Block" : ""}
                   </span>
@@ -190,7 +190,7 @@ const ClientCard = ({ client }: { client: ClientUserMapping }) => {
                   >
                     Edit
                   </DropdownMenuItem>
-                  {client.client.isDeleted == 0 && (
+                  {client.client.isDeleted == "\u0000" && (
                     <DropdownMenuItem
                       className="text-red-500"
                       onClick={(e) => {
@@ -201,7 +201,7 @@ const ClientCard = ({ client }: { client: ClientUserMapping }) => {
                       Delete
                     </DropdownMenuItem>
                   )}
-                  {client.client.isBlocked == 0 && (
+                  {client.client.isBlocked == "\u0000" && (
                     <DropdownMenuItem
                       onClick={() => {
                         setOpenBlock(true)
@@ -210,7 +210,7 @@ const ClientCard = ({ client }: { client: ClientUserMapping }) => {
                       Block
                     </DropdownMenuItem>
                   )}
-                  {client.client.isBlocked == 1 && (
+                  {client.client.isBlocked == "\u0001" && (
                     <DropdownMenuItem
                       onClick={() => {
                         setOpenUnblock(true)

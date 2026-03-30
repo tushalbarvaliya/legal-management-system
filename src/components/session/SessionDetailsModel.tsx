@@ -1,13 +1,13 @@
 import { Calendar, Clock8 } from "lucide-react"
-import { formatDate, formatTime } from "@/utils/formate"
 
+import { formatDate, formatTime } from "@/utils/formate"
+import { Button } from "@/components/ui/button"
+import type { SessionWithCaseResponse } from "@/types/sessionType"
 import {
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import type { SessionWithCaseResponse } from "@/types/sessionType"
 
 type Props = {
   data: SessionWithCaseResponse

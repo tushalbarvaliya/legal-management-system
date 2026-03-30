@@ -1,13 +1,20 @@
 import { Controller, useForm } from "react-hook-form"
-import {
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "../ui/dialog"
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { toast } from "sonner"
+import { zodResolver } from "@hookform/resolvers/zod"
+
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
 import { Input } from "../ui/input"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { Button } from "../ui/button"
+import type { ClientResponse } from "@/types/clientType"
+import { getAllClient } from "@/api/clientAPI"
+import { patchCase } from "@/api/caseAPI"
+import { queryClient } from "@/main"
+import type { Case } from "@/types/caseType"
+import {
+  UpdateCaseFormSchema,
+  type UpdateCaseFormSchemaType,
+} from "@/schemas/UpdateCaseSchema"
 import {
   Select,
   SelectContent,
@@ -15,26 +22,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
-import { Button } from "../ui/button"
-import type { ClientUserMapping } from "@/types/clientType"
-import { getAllClient } from "@/api/clientAPI"
-import { useMutation, useQuery } from "@tanstack/react-query"
-import { patchCase } from "@/api/caseAPI"
-import { toast } from "sonner"
-import { queryClient } from "@/main"
-import type { CaseWithClientUser } from "@/types/caseType"
-import { UpdateCaseFormSchema, type UpdateCaseFormSchemaType } from "@/schemas/UpdateCaseSchema"
+import {
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog"
 
 const UpdateCase = ({
   data,
   setOpenAdd,
 }: {
-  data: CaseWithClientUser
+  data: Case
   setOpenAdd: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
-  console.log(data.case.caseClosedDate);
-  
-  const { data: clients } = useQuery<ClientUserMapping[]>({
+
+  const { data: clients } = useQuery<ClientResponse>({
     queryKey: ["client"],
     queryFn: getAllClient,
   })
@@ -55,20 +58,20 @@ const UpdateCase = ({
     mode: "onChange",
     delayError: 500,
     defaultValues: {
-      caseCity: data.case.caseCity,
-      caseClosedDate: new Date(data.case.caseClosedDate).toISOString().split("T")[0],
-      caseNumber: data.case.caseNumber,
-      caseStage: data.case.caseStage,
-      clientId: data.case.clientId,
-      description: data.case.description,
-      status: data.case.status,
-      title: data.case.title,
-      type: data.case.type,
+      caseCity: data.caseCity,
+      caseClosedDate: new Date(data.caseClosedDate).toISOString().split("T")[0],
+      caseNumber: data.caseNumber,
+      caseStage: data.caseStage,
+      clientId: data.clientId,
+      description: data.description,
+      status: data.status,
+      title: data.title,
+      type: data.type,
     },
   })
 
   const onSubmit = (FormData: UpdateCaseFormSchemaType) => {
-    mutate({data:FormData,id:data.case.id})
+    mutate({ data: FormData, id: data.id })
   }
   return (
     <>
@@ -274,7 +277,7 @@ const UpdateCase = ({
                     </SelectTrigger>
 
                     <SelectContent>
-                      {clients?.map((item) => (
+                      {clients?.data?.map((item) => (
                         <SelectItem
                           value={String(item.client.id)}
                           key={item.client.id}

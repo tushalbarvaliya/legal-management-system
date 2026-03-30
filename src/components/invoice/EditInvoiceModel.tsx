@@ -4,20 +4,20 @@ import { Controller, useForm } from "react-hook-form"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { toast } from "sonner"
 
+import { Button } from "@/components/ui/button"
+import { getAllCases } from "@/api/caseAPI"
+import { getAllClient } from "@/api/clientAPI"
+import { updateInvoice } from "@/api/invoiceAPI"
+import type { Payment } from "@/types/invoiceType"
+import type { CasesResponse } from "@/types/caseType"
+import type { ClientResponse } from "@/types/clientType"
+import { queryClient } from "@/main"
 import {
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { getAllCases } from "@/api/caseAPI"
-import { getAllClient } from "@/api/clientAPI"
-import { updateInvoice } from "@/api/invoiceAPI"
-import type { invoiceDataType } from "@/types/invoiceType"
-import type { CaseWithClientUser } from "@/types/caseType"
-import type { ClientUserMapping } from "@/types/clientType"
-import { queryClient } from "@/main"
 
 const editInvoiceSchema = z.object({
   clientId: z.coerce
@@ -38,15 +38,15 @@ const EditInvoiceModel = ({
   data,
   setOpen,
 }: {
-  data: invoiceDataType
+  data: Payment
   setOpen: (val: boolean) => void
 }) => {
-  const { data: caseData } = useQuery<CaseWithClientUser[]>({
+  const { data: caseData } = useQuery<CasesResponse>({
     queryKey: ["cases"],
     queryFn: getAllCases,
   })
 
-  const { data: clientData } = useQuery<ClientUserMapping[]>({
+  const { data: clientData } = useQuery<ClientResponse>({
     queryKey: ["client"],
     queryFn: getAllClient,
   })
@@ -104,7 +104,7 @@ const EditInvoiceModel = ({
                   className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
                 >
                   <option value="">Select ...</option>
-                  {clientData?.map((item) => (
+                  {clientData?.data.map((item) => (
                     <option value={item.client.id} key={item.client.id}>
                       {item.user.firstName} {item.user.lastName}
                     </option>
@@ -133,9 +133,9 @@ const EditInvoiceModel = ({
                   className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
                 >
                   <option value="">Select ...</option>
-                  {caseData?.map((item) => (
-                    <option value={item.case.id} key={item.case.id}>
-                      {item.case.title}
+                  {caseData?.data.cases.map((item) => (
+                    <option value={item.id} key={item.id}>
+                      {item.title}
                     </option>
                   ))}
                 </select>

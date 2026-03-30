@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
+
 import InvoiceCard from "./InvoiceCard"
 import InvoiceCardSkeleton from "./InvoiceCardSkeleton"
-import { useQuery } from "@tanstack/react-query"
 import ErrorMessage from "../ErrorMessage"
 import { Button } from "../ui/button"
 import { getAllInvoice } from "@/api/invoiceAPI"
@@ -13,7 +14,7 @@ const InvoiceList = () => {
     data: invoices,
     isLoading,
     isError,
-  } = useQuery<invoiceDataType[] | undefined>({
+  } = useQuery<invoiceDataType | undefined>({
     queryKey: ["invoices"],
     queryFn: getAllInvoice,
   })
@@ -28,13 +29,13 @@ const InvoiceList = () => {
 
   const clientOptions = useMemo(() => {
     if (!invoices) return []
-    return [...new Set(invoices.map((i) => i.clientId))]
+    return [...new Set(invoices.data.map((i) => i.clientId))]
   }, [invoices])
 
   const filteredInvoices = useMemo(() => {
     if (!invoices) return []
 
-    return invoices.filter((invoice) => {
+    return invoices.data.filter((invoice) => {
       const matchesStatus =
         !status || invoice.status?.toLowerCase() === status.toLowerCase()
 

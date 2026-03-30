@@ -1,10 +1,10 @@
+import { useState } from "react"
 import { Plus } from "lucide-react"
 
 import { useAppSelector } from "@/hooks/hooks"
 import { Dialog } from "../ui/dialog"
 import { Button } from "../ui/button"
 import AddClient from "./AddClient"
-import { useState } from "react"
 
 const ClientHeader = () => {
   const role = useAppSelector((state) => state.auth.role)

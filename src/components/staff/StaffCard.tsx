@@ -1,26 +1,26 @@
+import { useMutation } from "@tanstack/react-query"
+import { useLocation, useNavigate } from "react-router-dom"
+import { toast } from "sonner"
 import { MoreVertical } from "lucide-react"
+import { useState } from "react"
 
-import { Button } from "../ui/button"
 import { formatDate } from "@/utils/formate"
+import { Button } from "../ui/button"
+import type { StaffUserMapping } from "@/types/staffType"
+import UpdateStaff from "./UpdateStaff"
+import { Dialog } from "../ui/dialog"
+import StaffDetailsDialog from "./StaffDetailsModel"
+import { blockStaff, deleteStaff, patchUnblockStaff } from "@/api/staffAPI"
+import { queryClient } from "@/main"
+import DeleteModel from "../DeleteModel"
+import BlockModel from "../BlockModel"
+import UnblockModel from "../UnblockModel"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
-import type { StaffUserMapping } from "@/types/staffType"
-import { useLocation, useNavigate } from "react-router-dom"
-import { useState } from "react"
-import { Dialog } from "../ui/dialog"
-import UpdateStaff from "./UpdateStaff"
-import StaffDetailsDialog from "./StaffDetailsModel"
-import { useMutation } from "@tanstack/react-query"
-import { blockStaff, deleteStaff, patchUnblockStaff } from "@/api/staffAPI"
-import { toast } from "sonner"
-import { queryClient } from "@/main"
-import DeleteModel from "../DeleteModel"
-import BlockModel from "../BlockModel"
-import UnblockModel from "../UnblockModel"
 
 const StaffCard = (staff: StaffUserMapping) => {
   const [openDelete, setOpenDelete] = useState<boolean>(false)

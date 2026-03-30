@@ -1,27 +1,27 @@
 import { MoreVertical } from "lucide-react"
 import { useLocation, useNavigate } from "react-router-dom"
+import { toast } from "sonner"
+import { useState } from "react"
+import { useMutation } from "@tanstack/react-query"
 
 import { Button } from "@/components/ui/button"
 import { useAppSelector } from "@/hooks/hooks"
 import { formatDate } from "@/utils/formate"
-import type { CaseWithClientUser } from "@/types/caseType"
+import type { Case } from "@/types/caseType"
 import CaseDetailModel from "./CaseDetailModel"
+import { Dialog } from "../ui/dialog"
+import DeleteModel from "../DeleteModel"
+import { deleteCase } from "@/api/caseAPI"
+import { queryClient } from "@/main"
+import UpdateCase from "./UpdateCase"
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu"
-import { Dialog } from "../ui/dialog"
-import { useState } from "react"
-import DeleteModel from "../DeleteModel"
-import { useMutation } from "@tanstack/react-query"
-import { deleteCase } from "@/api/caseAPI"
-import { queryClient } from "@/main"
-import { toast } from "sonner"
-import UpdateCase from "./UpdateCase"
 
-const CasesCard = ({ data }: { data: CaseWithClientUser }) => {
+const CasesCard = ({ data }: { data: Case }) => {
   const pathname = useLocation().pathname
   const navigate = useNavigate()
   const role = useAppSelector((state) => state.auth.role)
@@ -42,7 +42,7 @@ const CasesCard = ({ data }: { data: CaseWithClientUser }) => {
 
   return (
     <Dialog
-      open={openDelete || openEdit || pathname === `/cases/${data.case.id}`}
+      open={openDelete || openEdit || pathname === `/cases/${data.id}`}
       onOpenChange={(open) => {
         setOpenDelete(false)
         setOpenEdit(false)
@@ -55,14 +55,14 @@ const CasesCard = ({ data }: { data: CaseWithClientUser }) => {
         <DeleteModel
           title="Delete Case"
           subTitle="Are you sure you want to delete this case?"
-          detailsTitle={`${data.case.title}`}
-          id={data.case.id}
+          detailsTitle={`${data.title}`}
+          id={data.id}
           isPending={DeleteIsPending}
           mutate={DeleteMutate}
           setOpenDelete={setOpenDelete}
         />
       )}
-      {pathname === `/cases/${data.case.id}` && <CaseDetailModel data={data} />}
+      {pathname === `/cases/${data.id}` && <CaseDetailModel data={data} />}
       {openEdit && (
         <UpdateCase data={data} setOpenAdd={setOpenEdit} />
       )}
@@ -74,12 +74,12 @@ const CasesCard = ({ data }: { data: CaseWithClientUser }) => {
             {/* TITLE */}
             <div className="group/title relative inline-flex max-w-full items-center">
               <h2 className="truncate text-sm font-semibold text-zinc-900 transition duration-200 group-hover:text-zinc-950">
-                {data.case.title}
+                {data.title}
               </h2>
 
               {/* TOOLTIP */}
               <div className="pointer-events-none absolute top-full left-0 z-10 mt-2 hidden w-70 max-w-[70vw] rounded-lg bg-zinc-900/95 p-3 text-xs leading-relaxed text-zinc-100 opacity-0 shadow-lg backdrop-blur-sm transition duration-200 group-hover/title:block group-hover/title:opacity-100">
-                {data.case.description}
+                {data.description}
               </div>
             </div>
 
@@ -87,7 +87,7 @@ const CasesCard = ({ data }: { data: CaseWithClientUser }) => {
             <div className="mt-3 grid grid-cols-1 gap-2 text-xs text-zinc-600 sm:grid-cols-2 lg:grid-cols-4">
               <p>
                 <span className="font-semibold text-zinc-700">Created:</span>{" "}
-                {formatDate(data.case.createdAt)}
+                {formatDate(data.createdAt)}
               </p>
 
               <p>
@@ -95,7 +95,7 @@ const CasesCard = ({ data }: { data: CaseWithClientUser }) => {
                 <span
                   className={`ml-1 inline-flex rounded-full px-2 py-0.5 font-medium`}
                 >
-                  {data.case.caseStage}
+                  {data.caseStage}
                 </span>
               </p>
 
@@ -103,13 +103,13 @@ const CasesCard = ({ data }: { data: CaseWithClientUser }) => {
                 <span className="font-semibold text-zinc-700">
                   Client Name :
                 </span>{" "}
-                {data.user.firstName} {data.user.lastName}
+                {data.clientId} 
               </p>
               <p>
                 <span className="font-semibold text-zinc-700">
                   Case Type :{" "}
                 </span>{" "}
-                {data.case.type}
+                {data.type}
               </p>
             </div>
           </div>
@@ -124,7 +124,7 @@ const CasesCard = ({ data }: { data: CaseWithClientUser }) => {
             <DropdownMenuContent align="end" className="w-40">
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(`/cases/${data.case.id}`)
+                  navigate(`/cases/${data.id}`)
                 }}
               >
                 View

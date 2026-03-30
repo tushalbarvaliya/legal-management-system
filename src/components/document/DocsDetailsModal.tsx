@@ -1,15 +1,15 @@
 import { Button } from "@/components/ui/button"
+import { downloadBase64File } from "@/utils/downloadBase64File"
+import type { CaseDocumentItem } from "@/types/docsType"
 import {
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { downloadBase64File } from "@/utils/downloadBase64File"
-import type { DocumentResponse } from "@/types/docsType"
 
 interface Props {
-  data: DocumentResponse
+  data: CaseDocumentItem
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 

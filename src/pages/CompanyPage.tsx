@@ -13,12 +13,15 @@ import UpdateCompany from "@/components/company/UpdateCompany"
 
 const CompanyPage = () => {
   const [updateCompanyModel, setUpdateCompanyModel] = useState(false)
-  const { data, isLoading, isError } = useQuery<CompanyData[]>({
+  const { data, isLoading, isError } = useQuery<{
+    data: { company: CompanyData[] }
+    message: string
+  }>({
     queryKey: ["company"],
     queryFn: company,
   })
 
-  const companyData = data?.[0]
+  const companyData = data?.data.company?.[0]
 
   if (isLoading) {
     return <CompanyPageSkeleton />
@@ -69,9 +72,9 @@ const CompanyPage = () => {
           </div>
 
           {/* Details Grid */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 ">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {/* Address */}
-            <div className="flex items-center gap-3 rounded-xl border bg-white p-4  border-black">
+            <div className="flex items-center gap-3 rounded-xl border border-black bg-white p-4">
               <MapPin />
               <div>
                 <p className="text-xs text-gray-500">Address</p>
@@ -82,7 +85,7 @@ const CompanyPage = () => {
             </div>
 
             {/* Email */}
-            <div className="flex items-center gap-3 rounded-xl border bg-white p-4 border-black">
+            <div className="flex items-center gap-3 rounded-xl border border-black bg-white p-4">
               <Mail className="text-black" size={18} />
               <div>
                 <p className="text-xs text-gray-500">Email</p>
@@ -93,7 +96,7 @@ const CompanyPage = () => {
             </div>
 
             {/* Phone */}
-            <div className="flex items-center gap-3 rounded-xl border bg-white p-4 border-black">
+            <div className="flex items-center gap-3 rounded-xl border border-black bg-white p-4">
               <Phone className="text-black" size={18} />
               <div>
                 <p className="text-xs text-gray-500">Phone</p>
@@ -104,7 +107,7 @@ const CompanyPage = () => {
             </div>
 
             {/* Created At */}
-            <div className="flex items-center gap-3 rounded-xl border bg-white p-4 border-black">
+            <div className="flex items-center gap-3 rounded-xl border border-black bg-white p-4">
               <Calendar className="text-black" size={18} />
               <div>
                 <p className="text-xs text-gray-500">Founded On</p>
@@ -118,7 +121,7 @@ const CompanyPage = () => {
           </div>
 
           {/* Footer Info */}
-          <div className="flex justify-between rounded-xl border bg-white p-4 text-sm text-black border-black">
+          <div className="flex justify-between rounded-xl border border-black bg-white p-4 text-sm text-black">
             <span>
               Last Updated:{" "}
               {companyData?.updatedAt

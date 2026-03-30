@@ -8,19 +8,19 @@ import DocsCardSkeleton from "@/components/document/DocsCardSkeleton"
 import NoFound from "@/components/NoFound"
 import DocsHeader from "@/components/document/DocsHeader"
 import DocsCard from "@/components/document/DocsCard"
-import type { DocumentResponse } from "@/types/docsType"
+import type {  DocumentDataResponse } from "@/types/docsType"
 
 const DocsPage = () => {
   const [search, setSearch] = useState("")
   const [fileType, setFileType] = useState("all")
   const [caseId, setCaseId] = useState("all")
 
-  const { data, isLoading, isError } = useQuery<DocumentResponse[]>({
+  const { data, isLoading, isError } = useQuery<DocumentDataResponse>({
     queryKey: ["docs"],
     queryFn: getAllDocs,
   })
 
-  const documents = useMemo(() => data ?? [], [data])
+  const documents = useMemo(() => data?.data ?? [], [data])
 
   const filteredDocs = useMemo(() => {
     return documents.filter((doc) => {

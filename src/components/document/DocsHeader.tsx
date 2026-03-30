@@ -1,7 +1,7 @@
 import { Plus } from "lucide-react"
+import { useState } from "react"
 
 import AddDocsModal from "./AddDocsModal"
-import { useState } from "react"
 import { Dialog } from "../ui/dialog"
 
 const DocsHeader = () => {

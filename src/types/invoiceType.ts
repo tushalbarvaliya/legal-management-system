@@ -1,4 +1,4 @@
-export type invoiceDataType = {
+export type Payment = {
   id: number
   totalAmount: number
   totalHours: number
@@ -15,4 +15,9 @@ export type invoiceDataType = {
   paymentMethod: string | null
   createdAt: string
   isDeleted: number
+}
+
+export type invoiceDataType = {
+  data: Payment[]
+  message: string
 }

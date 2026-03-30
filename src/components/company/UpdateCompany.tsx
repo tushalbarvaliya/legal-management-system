@@ -1,4 +1,18 @@
 import { Controller, useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query"
+
+import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
+import { Input } from "../ui/input"
+import { Button } from "../ui/button"
+import axiosInstance from "@/api/axiosInstance"
+import { queryClient } from "@/main"
+import type { CompanyData } from "@/types/companyType"
+import {
+  UpdateCompanyFormSchema,
+  type UpdateCompanyFormSchemaType,
+} from "@/schemas/UpdateCompanySchema"
 import {
   DialogContent,
   DialogDescription,
@@ -6,19 +20,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog"
-import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
-import { Input } from "../ui/input"
-import { Button } from "../ui/button"
-import {
-  UpdateCompanyFormSchema,
-  type UpdateCompanyFormSchemaType,
-} from "@/schemas/UpdateCompanySchema"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation } from "@tanstack/react-query"
-import axiosInstance from "@/api/axiosInstance"
-import { toast } from "sonner"
-import { queryClient } from "@/main"
-import type { CompanyData } from "@/types/companyType"
 
 type UpdateTaskProps = {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>
@@ -54,11 +55,7 @@ const UpdateCompany = ({ closeModal, data }: UpdateTaskProps) => {
   })
 
   const onSubmit = (formData: UpdateCompanyFormSchemaType) => {
-    if (form.formState.isDirty) {
-      mutate(formData)
-    } else {
-      closeModal(false)
-    }
+    mutate(formData)
   }
 
   return (

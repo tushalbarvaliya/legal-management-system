@@ -1,22 +1,27 @@
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { Controller, useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { zodResolver } from "@hookform/resolvers/zod"
+
 import { getAllCases } from "@/api/caseAPI"
 import { getAllClient } from "@/api/clientAPI"
-import type { CaseWithClientUser } from "@/types/caseType"
-import type { ClientUserMapping } from "@/types/clientType"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import type { CasesResponse } from "@/types/caseType"
+import type { ClientResponse } from "@/types/clientType"
+import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
+import { Input } from "../ui/input"
+import { Button } from "../ui/button"
+import { addSession } from "@/api/sessionAPI"
+import { queryClient } from "@/main"
+import {
+  AddSessionFormSchema,
+  type AddSessionFormSchemaType,
+} from "@/schemas/AddSessionSchema"
 import {
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog"
-import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
-import { Controller, useForm } from "react-hook-form"
-import { Input } from "../ui/input"
-import {
-  AddSessionFormSchema,
-  type AddSessionFormSchemaType,
-} from "@/schemas/AddSessionSchema"
-import { zodResolver } from "@hookform/resolvers/zod"
 import {
   Select,
   SelectContent,
@@ -24,21 +29,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
-import { Button } from "../ui/button"
-import { addSession } from "@/api/sessionAPI"
-import { toast } from "sonner"
-import { queryClient } from "@/main"
 
 const AddSession = ({
   setOpenAdd,
 }: {
   setOpenAdd: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
-  const { data: clients } = useQuery<ClientUserMapping[]>({
+  const { data: clients } = useQuery<ClientResponse>({
     queryKey: ["client"],
     queryFn: getAllClient,
   })
-  const { data: cases } = useQuery<CaseWithClientUser[]>({
+  const { data: cases } = useQuery<CasesResponse>({
     queryKey: ["cases"],
     queryFn: getAllCases,
   })
@@ -112,12 +113,12 @@ const AddSession = ({
                     </SelectTrigger>
 
                     <SelectContent>
-                      {cases?.map((item) => (
+                      {cases?.data.cases.map((item) => (
                         <SelectItem
-                          value={String(item.case.id)}
-                          key={item.case.id}
+                          value={String(item.id)}
+                          key={item.id}
                         >
-                          {`${item.case.title} `}
+                          {`${item.title} `}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -145,7 +146,7 @@ const AddSession = ({
                     </SelectTrigger>
 
                     <SelectContent>
-                      {clients?.map((item) => (
+                      {clients?.data.map((item) => (
                         <SelectItem
                           value={String(item.client.id)}
                           key={item.client.id}

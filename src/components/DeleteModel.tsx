@@ -1,3 +1,7 @@
+import type { UseMutateFunction } from "@tanstack/react-query"
+
+import { Field } from "./ui/field"
+import { Button } from "./ui/button"
 import {
   DialogContent,
   DialogDescription,
@@ -5,9 +9,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "./ui/dialog"
-import { Field } from "./ui/field"
-import { Button } from "./ui/button"
-import type { UseMutateFunction } from "@tanstack/react-query"
 
 const DeleteModel = ({
   setOpenDelete,

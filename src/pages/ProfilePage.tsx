@@ -16,7 +16,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-
 import { getProfile, patchProfileUpdate } from "@/api/userAPI"
 import type { ProfileResponse } from "@/types/types"
 import { queryClient } from "@/main"
@@ -73,31 +72,31 @@ const ProfilePage = () => {
     resolver: zodResolver(profileSchema),
     mode: "onChange",
     defaultValues: {
-      firstName: data?.firstName ?? "",
-      lastName: data?.lastName ?? "",
-      address: data?.address ?? "",
-      phoneNumber: data?.phoneNumber ?? "",
-      gender: data?.gender ?? "",
-      role: data?.role ?? "",
+      firstName: data?.data.firstName ?? "",
+      lastName: data?.data.lastName ?? "",
+      address: data?.data.address ?? "",
+      phoneNumber: data?.data.phoneNumber ?? "",
+      gender: data?.data.gender ?? "",
+      role: data?.data.role ?? "",
     },
   })
 
   useEffect(() => {
     if (data && !isEdit)
       reset({
-        firstName: data?.firstName ?? "",
-        lastName: data?.lastName ?? "",
-        address: data?.address ?? "",
-        phoneNumber: data?.phoneNumber ?? "",
-        gender: data?.gender ?? "",
-        role: data?.role ?? "",
+        firstName: data?.data.firstName ?? "",
+        lastName: data?.data.lastName ?? "",
+        address: data?.data.address ?? "",
+        phoneNumber: data?.data.phoneNumber ?? "",
+        gender: data?.data.gender ?? "",
+        role: data?.data.role ?? "",
       })
   }, [data, reset, isEdit])
 
   const onSubmit = (formData: ProfileFormData) => {
-    if(formState.isDirty){
+    if (formState.isDirty) {
       mutate(formData)
-    }else{
+    } else {
       setIsEdit(false)
     }
   }
@@ -115,18 +114,18 @@ const ProfilePage = () => {
               <div className="flex items-center gap-3">
                 <div className="grid h-14 w-14 place-items-center rounded-xl bg-zinc-900 text-white">
                   <span className="uppercase">
-                    {data.firstName?.[0] ?? "N"}
-                    {data.lastName?.[0] ?? "N"}
+                    {data.data.firstName?.[0] ?? "N"}
+                    {data.data.lastName?.[0] ?? "N"}
                   </span>
                 </div>
 
                 <div>
                   <h1 className="text-lg font-semibold">Profile</h1>
                   <p className="text-sm text-zinc-500">
-                    {data.name} • ID: {data.id}
+                    {data.data.name} • ID: {data.data.id}
                   </p>
                   <p className="text-xs break-all text-zinc-500">
-                    {data.email}
+                    {data.data.email}
                   </p>
                 </div>
               </div>
@@ -229,23 +228,29 @@ const ProfilePage = () => {
                   )}
                 />
 
-                {/* Gender */}
                 <Controller
                   name="gender"
                   control={control}
                   render={({ field, fieldState }) => (
                     <div>
                       <label className="text-sm font-medium">Gender</label>
-                      <Select disabled={!isEdit} {...field}>
+
+                      <Select
+                        disabled={!isEdit}
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select" />
+                          <SelectValue placeholder="Select Gender" />
                         </SelectTrigger>
+
                         <SelectContent>
                           <SelectItem value="male">Male</SelectItem>
                           <SelectItem value="female">Female</SelectItem>
                           <SelectItem value="other">Other</SelectItem>
                         </SelectContent>
                       </Select>
+
                       {fieldState.error && (
                         <p className="text-xs text-red-600">
                           {fieldState.error.message}

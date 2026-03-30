@@ -1,5 +1,12 @@
+import { toast } from "sonner"
 import { useNavigate } from "react-router-dom"
+
+import { Field } from "../ui/field"
 import { Button } from "../ui/button"
+import { useMutation } from "@tanstack/react-query"
+import { deleteTask } from "@/api/taskAPI"
+import { queryClient } from "@/main"
+import type {  TaskResponse } from "@/types/taskType"
 import {
   DialogContent,
   DialogDescription,
@@ -7,12 +14,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog"
-import { Field } from "../ui/field"
-import { useMutation } from "@tanstack/react-query"
-import { deleteTask } from "@/api/taskAPI"
-import { toast } from "sonner"
-import { queryClient } from "@/main"
-import type {  TaskResponse } from "@/types/taskType"
 
 const DeleteTask = ({ task }: { task: TaskResponse }) => {
   const navigate = useNavigate()

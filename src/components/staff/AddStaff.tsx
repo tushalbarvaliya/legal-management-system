@@ -1,30 +1,30 @@
+import { Controller, useForm } from "react-hook-form"
+import { Eye, EyeOff } from "lucide-react" 
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { useMutation } from "@tanstack/react-query"
+import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod"
+
+import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
+import { Input } from "../ui/input"
+import { Button } from "../ui/button"
+import { queryClient } from "@/main"
+import { AddStaffFormSchema, type AddStaffFormSchemaType } from "@/schemas/AddStaffSchema"
+import { postStaff } from "@/api/staffAPI"
 import {
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog"
-
-import { Controller, useForm } from "react-hook-form"
-import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
-import { Input } from "../ui/input"
-import { Button } from "../ui/button"
-import { Eye, EyeOff } from "lucide-react"
-import { useState } from "react"
 import {
-  Select,
+Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
-import { useMutation } from "@tanstack/react-query"
-import { toast } from "sonner"
-import { queryClient } from "@/main"
-import { useNavigate } from "react-router-dom"
-import { AddStaffFormSchema, type AddStaffFormSchemaType } from "@/schemas/AddStaffSchema"
-import { postStaff } from "@/api/staffAPI"
 
 
 const AddStaff = () => {

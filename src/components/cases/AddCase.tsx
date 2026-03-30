@@ -1,17 +1,26 @@
+import { toast } from "sonner"
+import axios from "axios"
 import { Controller, useForm } from "react-hook-form"
+
+import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
+import { Input } from "../ui/input"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Button } from "../ui/button"
+import type { ClientResponse } from "@/types/clientType"
+import { getAllClient } from "@/api/clientAPI"
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { postCase } from "@/api/caseAPI"
+import { queryClient } from "@/main"
+import {
+  AddCaseFormSchema,
+  type AddCaseFormSchemaType,
+} from "@/schemas/AddCaseSchema"
 import {
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog"
-import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
-import { Input } from "../ui/input"
-import {
-  AddCaseFormSchema,
-  type AddCaseFormSchemaType,
-} from "@/schemas/AddCaseSchema"
-import { zodResolver } from "@hookform/resolvers/zod"
 import {
   Select,
   SelectContent,
@@ -19,21 +28,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
-import { Button } from "../ui/button"
-import type { ClientUserMapping } from "@/types/clientType"
-import { getAllClient } from "@/api/clientAPI"
-import { useMutation, useQuery } from "@tanstack/react-query"
-import { postCase } from "@/api/caseAPI"
-import { toast } from "sonner"
-import { queryClient } from "@/main"
-import axios from "axios"
 
 const AddCase = ({
   setOpenAdd,
 }: {
   setOpenAdd: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
-  const { data: clients } = useQuery<ClientUserMapping[]>({
+  const { data: clients } = useQuery<ClientResponse>({
     queryKey: ["client"],
     queryFn: getAllClient,
   })
@@ -268,7 +269,7 @@ const AddCase = ({
                     </SelectTrigger>
 
                     <SelectContent>
-                      {clients?.map((item) => (
+                      {clients?.data.map((item) => (
                         <SelectItem
                           value={String(item.client.id)}
                           key={item.client.id}

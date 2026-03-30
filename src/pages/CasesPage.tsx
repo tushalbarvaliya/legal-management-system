@@ -8,7 +8,7 @@ import ErrorMessage from "@/components/ErrorMessage"
 import CasesCardSkeleton from "@/components/cases/CasesCardSkeleton"
 import CasesCard from "@/components/cases/CasesCard"
 import NoFound from "@/components/NoFound"
-import type { CaseWithClientUser } from "@/types/caseType"
+import type { Case, CasesResponse } from "@/types/caseType"
 import { Dialog } from "@/components/ui/dialog"
 import AddCase from "@/components/cases/AddCase"
 
@@ -21,16 +21,16 @@ const CasesPage = () => {
     data: cases,
     isLoading,
     isError,
-  } = useQuery<CaseWithClientUser[]>({
+  } = useQuery<CasesResponse>({
     queryKey: ["cases"],
     queryFn: getAllCases,
   })
 
-  const filteredCases: CaseWithClientUser[] | undefined = useMemo(() => {
-    return cases?.filter((item: CaseWithClientUser) => {
+  const filteredCases: Case[] | undefined = useMemo(() => {
+    return cases?.data.cases.filter((item: Case) => {
       const matchesSearch =
-        item.case.title.toLowerCase().includes(search.toLowerCase()) ||
-        item.case.description.toLowerCase().includes(search.toLowerCase())
+        item.title.toLowerCase().includes(search.toLowerCase()) ||
+        item.description.toLowerCase().includes(search.toLowerCase())
 
       return matchesSearch
     })
@@ -100,8 +100,8 @@ const CasesPage = () => {
           {!isLoading &&
             !isError &&
             (filteredCases && filteredCases?.length > 0 ? (
-              filteredCases.map((item: CaseWithClientUser) => (
-                <div key={item.case.id}>
+              filteredCases.map((item: Case) => (
+                <div key={item.id}>
                   <CasesCard data={item} />
                 </div>
               ))

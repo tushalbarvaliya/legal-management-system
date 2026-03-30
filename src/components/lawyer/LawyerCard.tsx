@@ -128,12 +128,12 @@ const LawyerCard = (lawyer: LawyerDataType) => {
             {/* Name */}
             <p className="text-base font-semibold text-zinc-900">
               {lawyer.user.firstName} {lawyer.user.lastName}{" "}
-              {lawyer.lawyer.isDeleted === 1 && (
+              {lawyer.lawyer.isDeleted === "\u0001" && (
                 <span className="rounded-full bg-red-200 px-2 py-1 text-xs text-red-500">
                   {"Delete"}
                 </span>
               )}{" "}
-              {lawyer.lawyer.isBlocked === 1 && (
+              {lawyer.lawyer.isBlocked === "\u0001" && (
                 <span className="rounded-full bg-stone-200 px-2 py-1 text-xs text-stone-500">
                   {"Blocked"}
                 </span>
@@ -190,7 +190,7 @@ const LawyerCard = (lawyer: LawyerDataType) => {
                 Edit
               </DropdownMenuItem>
 
-              {lawyer.lawyer.isBlocked === 0 && (
+              {lawyer.lawyer.isBlocked === "\u0000" && (
                 <DropdownMenuItem
                   onClick={() => {
                     setOpenBlock(true)
@@ -199,7 +199,7 @@ const LawyerCard = (lawyer: LawyerDataType) => {
                   Block
                 </DropdownMenuItem>
               )}
-              {lawyer.lawyer.isBlocked === 1 && (
+              {lawyer.lawyer.isBlocked === "\u0001" && (
                 <DropdownMenuItem
                   onClick={() => {
                     setOpenUnblock(true)
@@ -209,7 +209,7 @@ const LawyerCard = (lawyer: LawyerDataType) => {
                 </DropdownMenuItem>
               )}
 
-              {lawyer.lawyer.isDeleted === 0 && (
+              {lawyer.lawyer.isDeleted === "\u0000" && (
                 <DropdownMenuItem
                   className="text-red-500"
                   onClick={() => {

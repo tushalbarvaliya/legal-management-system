@@ -19,7 +19,7 @@ const LawyerPage = () => {
     data: lawyerData,
     isLoading,
     isError,
-  } = useQuery<LawyerDataType[]>({
+  } = useQuery<{ data: LawyerDataType[] }>({
     queryKey: ["lawyer"],
     queryFn: getLawyer,
   })
@@ -29,7 +29,7 @@ const LawyerPage = () => {
 
     const term = searchTerm.toLowerCase()
 
-    return lawyerData.filter((item) => {
+    return lawyerData.data.filter((item) => {
       const { user, lawyer } = item
 
       return (
@@ -50,7 +50,7 @@ const LawyerPage = () => {
         if (!open) setOpenAdd(false)
       }}
     >
-      {openAdd && <AddLawyer setOpenAdd={setOpenAdd}/>}
+      {openAdd && <AddLawyer setOpenAdd={setOpenAdd} />}
 
       {/* Add Button */}
       <button

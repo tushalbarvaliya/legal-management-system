@@ -1,17 +1,19 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import {
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "../ui/dialog"
-
 import { Controller, useForm } from "react-hook-form"
-import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
-import { Input } from "../ui/input"
-import { Button } from "../ui/button"
 import { Eye, EyeOff } from "lucide-react"
 import { useState } from "react"
+import { toast } from "sonner"
+
+import { Input } from "../ui/input"
+import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
+import { Button } from "../ui/button"
+import { useMutation } from "@tanstack/react-query"
+import { queryClient } from "@/main"
+import { postClient } from "@/api/clientAPI"
+import {
+  AddClientFormSchema,
+  type AddClientFormSchemaType,
+} from "@/schemas/AddClientSchema"
 import {
   Select,
   SelectContent,
@@ -19,15 +21,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
-import { useMutation } from "@tanstack/react-query"
-import { toast } from "sonner"
-import { queryClient } from "@/main"
-
 import {
-  AddClientFormSchema,
-  type AddClientFormSchemaType,
-} from "@/schemas/AddClientSchema"
-import { postClient } from "@/api/clientAPI"
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog"
+
 
 const AddClient = ({
   setOpenAdd,

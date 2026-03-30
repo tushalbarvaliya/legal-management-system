@@ -1,13 +1,25 @@
 import { Controller, useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useNavigate } from "react-router-dom"
+import { useMutation } from "@tanstack/react-query"
+import { toast } from "sonner"
+
+import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
+import { Input } from "../ui/input"
+import { Button } from "../ui/button"
+import { queryClient } from "@/main"
+import type { StaffUserMapping } from "@/types/staffType"
+import { patchStaff } from "@/api/staffAPI"
+import {
+  updateStaffFormSchema,
+  type UpdateStaffFormSchemaType,
+} from "@/schemas/updateStaffSchema"
 import {
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog"
-import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Input } from "../ui/input"
 import {
   Select,
   SelectContent,
@@ -15,17 +27,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
-import { Button } from "../ui/button"
-import { useNavigate } from "react-router-dom"
-import { useMutation } from "@tanstack/react-query"
-import { toast } from "sonner"
-import { queryClient } from "@/main"
-import type { StaffUserMapping } from "@/types/staffType"
-import {
-  updateStaffFormSchema,
-  type UpdateStaffFormSchemaType,
-} from "@/schemas/updateStaffSchema"
-import { patchStaff } from "@/api/staffAPI"
 
 const UpdateStaff = ({ staff }: { staff: StaffUserMapping }) => {
   const navigate = useNavigate()

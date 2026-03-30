@@ -13,7 +13,7 @@ export type loginResponseType = {
   token_type: string
 }
 
-export type ProfileResponse = {
+export type ProfileData = {
   id: number
   email: string
   password: string
@@ -31,4 +31,7 @@ export type ProfileResponse = {
   updatedAt: string
 }
 
-
+export type ProfileResponse = {
+  data: ProfileData
+  message: string
+}

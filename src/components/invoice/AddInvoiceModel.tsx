@@ -5,14 +5,20 @@ import { useMutation, useQuery } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { useNavigate } from "react-router-dom"
 
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { getAllCases } from "@/api/caseAPI"
+import { getAllClient } from "@/api/clientAPI"
+import { addInvoice } from "@/api/invoiceAPI"
+import { queryClient } from "@/main"
+import type { CasesResponse } from "@/types/caseType"
+import type { ClientResponse } from "@/types/clientType"
 import {
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectTrigger,
@@ -20,13 +26,6 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select"
-
-import { getAllCases } from "@/api/caseAPI"
-import { getAllClient } from "@/api/clientAPI"
-import { addInvoice } from "@/api/invoiceAPI"
-import { queryClient } from "@/main"
-import type { CaseWithClientUser } from "@/types/caseType"
-import type { ClientUserMapping } from "@/types/clientType"
 
 const addInvoiceSchema = z.object({
   clientId: z.coerce.number<number>().min(1, { message: "Client is required" }),
@@ -45,12 +44,12 @@ export type AddInvoiceFormDataType = z.input<typeof addInvoiceSchema>
 const AddInvoiceModel = ({ setOpen }: { setOpen: (val: boolean) => void }) => {
   const navigate = useNavigate()
 
-  const { data: caseData } = useQuery<CaseWithClientUser[]>({
+  const { data: caseData } = useQuery<CasesResponse>({
     queryKey: ["cases"],
     queryFn: getAllCases,
   })
 
-  const { data: clientData } = useQuery<ClientUserMapping[]>({
+  const { data: clientData } = useQuery<ClientResponse>({
     queryKey: ["client"],
     queryFn: getAllClient,
   })
@@ -79,9 +78,7 @@ const AddInvoiceModel = ({ setOpen }: { setOpen: (val: boolean) => void }) => {
     <>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>
-            Add New Invoice
-          </DialogTitle>
+          <DialogTitle>Add New Invoice</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -100,7 +97,7 @@ const AddInvoiceModel = ({ setOpen }: { setOpen: (val: boolean) => void }) => {
                     <SelectValue placeholder="Select Client" />
                   </SelectTrigger>
                   <SelectContent>
-                    {clientData?.map((item) => (
+                    {clientData?.data.map((item) => (
                       <SelectItem
                         key={item.client.id}
                         value={String(item.client.id)}
@@ -134,12 +131,9 @@ const AddInvoiceModel = ({ setOpen }: { setOpen: (val: boolean) => void }) => {
                     <SelectValue placeholder="Select Case" />
                   </SelectTrigger>
                   <SelectContent>
-                    {caseData?.map((item) => (
-                      <SelectItem
-                        key={item.case.id}
-                        value={String(item.case.id)}
-                      >
-                        {item.case.title}
+                    {caseData?.data.cases.map((item) => (
+                      <SelectItem key={item.id} value={String(item.id)}>
+                        {item.title}
                       </SelectItem>
                     ))}
                   </SelectContent>

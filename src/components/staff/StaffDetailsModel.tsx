@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom"
 
+import { formatDate } from "@/utils/formate"
+import type { StaffUserMapping } from "@/types/staffType"
 import {
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
 
-import { formatDate } from "@/utils/formate"
-import type { StaffUserMapping } from "@/types/staffType"
 
 type Props = {
   staff: StaffUserMapping

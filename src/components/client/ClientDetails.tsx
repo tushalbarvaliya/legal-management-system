@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom"
 
+import { formatDate } from "@/utils/formate"
+import type {  ClientUserMapping } from "@/types/clientType"
 import {
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
 
-import { formatDate } from "@/utils/formate"
-import type {  ClientUserMapping } from "@/types/clientType"
 
 type Props = {
   data: ClientUserMapping
@@ -44,13 +44,13 @@ const ClientDetails = ({ data }: Props) => {
             {data.user.firstName} {data.user.lastName}
           </p>
 
-          {data.client.isBlocked === 1 && (
+          {data.client.isBlocked === "\u0001" && (
             <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-black">
               Block
             </span>
           )}
 
-          {data.client.isDeleted === 1 && (
+          {data.client.isDeleted === "\u0001" && (
             <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-800">
               Deleted
             </span>

@@ -1,14 +1,23 @@
-import { AddTaskSchema, type AddTaskType } from "@/schemas/AddTaskSchema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
+import { useNavigate } from "react-router-dom"
+import { toast } from "sonner"
+import { useMutation, useQuery } from "@tanstack/react-query"
+
+import { AddTaskSchema, type AddTaskType } from "@/schemas/AddTaskSchema"
+import { Button } from "../ui/button"
+import { addTask } from "@/api/taskAPI"
+import { getAllCases } from "@/api/caseAPI"
+import { queryClient } from "@/main"
+import type { CasesResponse } from "@/types/caseType"
+import { Input } from "../ui/input"
+import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
 import {
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog"
-import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
-import { Input } from "../ui/input"
 import {
   Select,
   SelectContent,
@@ -16,14 +25,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
-import { Button } from "../ui/button"
-import { useMutation, useQuery } from "@tanstack/react-query"
-import { getAllCases } from "@/api/caseAPI"
-import { useNavigate } from "react-router-dom"
-import { addTask } from "@/api/taskAPI"
-import { toast } from "sonner"
-import { queryClient } from "@/main"
-import type { CaseWithClientUser } from "@/types/caseType"
 
 const AddTask = () => {
   const navigate = useNavigate()
@@ -38,7 +39,7 @@ const AddTask = () => {
       toast.error(`Error ${error}`)
     },
   })
-  const { data: caseData } = useQuery<CaseWithClientUser[]>({
+  const { data: caseData } = useQuery<CasesResponse>({
     queryKey: ["cases"],
     queryFn: getAllCases,
   })
@@ -148,9 +149,9 @@ const AddTask = () => {
                     </SelectTrigger>
 
                     <SelectContent>
-                      {caseData?.map((item) => (
-                        <SelectItem value={String(item.case.id)}>
-                          {`${item.user.firstName} ${item.user.lastName}`}
+                      {caseData?.data.cases.map((item) => (
+                        <SelectItem value={String(item.id)}>
+                          {`${item.title}`}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -171,10 +172,8 @@ const AddTask = () => {
 
                   <Input
                     type="date"
-                    value={field.value ?? ""} 
-                    onChange={
-                      (e) => field.onChange(e.target.value || null) 
-                    }
+                    value={field.value ?? ""}
+                    onChange={(e) => field.onChange(e.target.value || null)}
                   />
 
                   {fieldState.error && (

@@ -1,4 +1,17 @@
 import { Controller, useForm } from "react-hook-form"
+import { useMutation } from "@tanstack/react-query"
+import { toast } from "sonner"
+import { zodResolver } from "@hookform/resolvers/zod"
+
+import { Input } from "../ui/input"
+import { Button } from "../ui/button"
+import { queryClient } from "@/main"
+import { patchLawyer } from "@/api/lawyerAPI"
+import type { LawyerDataType } from "@/types/lawyerType"
+import {
+UpdateLawyerFormSchema,
+  type UpdateLawyerFormSchemaType,
+} from "@/schemas/UpdateLawyerSchema"
 import {
   DialogContent,
   DialogFooter,
@@ -7,24 +20,12 @@ import {
 } from "../ui/dialog"
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
 import {
-  UpdateLawyerFormSchema,
-  type UpdateLawyerFormSchemaType,
-} from "@/schemas/UpdateLawyerSchema"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Input } from "../ui/input"
-import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
-import { Button } from "../ui/button"
-import { useMutation } from "@tanstack/react-query"
-import { toast } from "sonner"
-import { queryClient } from "@/main"
-import { patchLawyer } from "@/api/lawyerAPI"
-import type { LawyerDataType } from "@/types/lawyerType"
 
 const UpdateLawyer = ({
   lawyer,

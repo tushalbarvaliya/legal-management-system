@@ -4,13 +4,19 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
 import { useMutation, useQuery } from "@tanstack/react-query"
 
+import { getAllCases } from "@/api/caseAPI"
+import { createDocs } from "@/api/docsAPI"
+import { getAllClient } from "@/api/clientAPI"
+import { queryClient } from "@/main"
+import type { CasesResponse } from "@/types/caseType"
+import type { ClientResponse } from "@/types/clientType"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 import {
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
 import {
   Select,
   SelectContent,
@@ -19,12 +25,6 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-import { getAllCases } from "@/api/caseAPI"
-import { createDocs } from "@/api/docsAPI"
-import { getAllClient } from "@/api/clientAPI"
-import { queryClient } from "@/main"
-import type { CaseWithClientUser } from "@/types/caseType"
-import type { ClientUserMapping } from "@/types/clientType"
 
 
 const formSchema = z.object({
@@ -56,12 +56,12 @@ const AddDocsModal = ({
     },
   })
 
-  const { data: caseData } = useQuery<CaseWithClientUser[]>({
+  const { data: caseData } = useQuery<CasesResponse>({
     queryKey: ["cases"],
     queryFn: getAllCases,
   })
 
-  const { data: clientData } = useQuery<ClientUserMapping[]>({
+  const { data: clientData } = useQuery<ClientResponse>({
     queryKey: ["client"],
     queryFn: getAllClient,
   })
@@ -124,9 +124,9 @@ const AddDocsModal = ({
                   <SelectValue placeholder="Select Case" />
                 </SelectTrigger>
                 <SelectContent>
-                  {caseData?.map((item) => (
-                    <SelectItem key={item.case.id} value={String(item.case.id)}>
-                      {item.case.title}
+                  {caseData?.data.cases.map((item) => (
+                    <SelectItem key={item.id} value={String(item.id)}>
+                      {item.title}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -194,7 +194,7 @@ const AddDocsModal = ({
                   <SelectValue placeholder="Select Client" />
                 </SelectTrigger>
                 <SelectContent>
-                  {clientData?.map((item) => (
+                  {clientData?.data.map((item) => (
                     <SelectItem key={item.client.id} value={String(item.client.id)}>
                       {item.user.firstName} {item.user.lastName}
                     </SelectItem>

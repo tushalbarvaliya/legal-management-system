@@ -1,26 +1,26 @@
 import { MoreVertical } from "lucide-react"
 import { Link } from "react-router"
+import { toast } from "sonner"
+import { useState } from "react"
+import { useMutation } from "@tanstack/react-query"
 
+import type { CaseDocumentItem } from "@/types/docsType"
 import { Button } from "../ui/button"
 import { downloadBase64File } from "@/utils/downloadBase64File"
 import DocsDetailsModal from "./DocsDetailsModal"
 import UpdateDocsModel from "./UpdateDocsModel"
+import { Dialog } from "../ui/dialog"
+import DeleteModel from "../DeleteModel"
+import { deleteDocs } from "@/api/docsAPI"
+import { queryClient } from "@/main"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import type { DocumentResponse } from "@/types/docsType"
-import { useState } from "react"
-import { Dialog } from "../ui/dialog"
-import DeleteModel from "../DeleteModel"
-import { useMutation } from "@tanstack/react-query"
-import { deleteDocs } from "@/api/docsAPI"
-import { toast } from "sonner"
-import { queryClient } from "@/main"
 
-const DocsCard = ({ docs: items }: { docs: DocumentResponse }) => {
+const DocsCard = ({ docs: items }: { docs: CaseDocumentItem }) => {
   const [openEdit, setOpenEdit] = useState<boolean>(false)
   const [openDelete, setOpenDelete] = useState<boolean>(false)
   const [openView, setOpenView] = useState<boolean>(false)

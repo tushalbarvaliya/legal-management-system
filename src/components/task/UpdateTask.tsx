@@ -1,13 +1,31 @@
+import { useNavigate } from "react-router-dom"
+import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
+import { useMutation, useQuery } from "@tanstack/react-query"
+
+
+import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
+import { Input } from "../ui/input"
+import { Button } from "../ui/button"
+import type { CasesResponse } from "@/types/caseType"
+import { getAllCases } from "@/api/caseAPI"
+import { queryClient } from "@/main"
+import type { StaffUserMapping } from "@/types/staffType"
+import { updateTask } from "@/api/taskAPI"
+import { useAppSelector } from "@/hooks/hooks"
+import type {  TaskResponse } from "@/types/taskType"
+import { getAllStaff } from "@/api/staffAPI"
+import {
+  UpdateTaskSchema,
+  type UpdateTaskType,
+} from "@/schemas/UpdateTaskSchema"
 import {
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog"
-import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
-import { Input } from "../ui/input"
 import {
   Select,
   SelectContent,
@@ -15,22 +33,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
-import { Button } from "../ui/button"
-import type { CaseWithClientUser } from "@/types/caseType"
-import { useMutation, useQuery } from "@tanstack/react-query"
-import { getAllCases } from "@/api/caseAPI"
-import { useNavigate } from "react-router-dom"
-import { toast } from "sonner"
-import { queryClient } from "@/main"
-import {
-  UpdateTaskSchema,
-  type UpdateTaskType,
-} from "@/schemas/UpdateTaskSchema"
-import type { StaffUserMapping } from "@/types/staffType"
-import { updateTask } from "@/api/taskAPI"
-import { useAppSelector } from "@/hooks/hooks"
-import type {  TaskResponse } from "@/types/taskType"
-import { getAllStaff } from "@/api/staffAPI"
 
 const UpdateTask = ({ task }: { task: TaskResponse }) => {
   const id = useAppSelector((state) => state.auth.id)
@@ -46,7 +48,7 @@ const UpdateTask = ({ task }: { task: TaskResponse }) => {
       toast.error(`Error ${error}`)
     },
   })
-  const { data: caseData } = useQuery<CaseWithClientUser[]>({
+  const { data: caseData } = useQuery<CasesResponse>({
     queryKey: ["cases"],
     queryFn: getAllCases,
   })
@@ -168,9 +170,9 @@ const UpdateTask = ({ task }: { task: TaskResponse }) => {
 
                     <SelectContent>
                       {caseData &&
-                        caseData.map((item) => (
-                          <SelectItem value={String(item.case.id)} key={item.case.id}>
-                            {item.case.title}
+                        caseData.data.cases.map((item) => (
+                          <SelectItem value={String(item.id)} key={item.id}>
+                            {item.title}
                           </SelectItem>
                         ))}
                     </SelectContent>

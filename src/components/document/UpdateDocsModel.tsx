@@ -5,14 +5,21 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
 import { useMutation, useQuery } from "@tanstack/react-query"
 
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { getAllCases } from "@/api/caseAPI"
+import { getAllClient } from "@/api/clientAPI"
+import { updateDocs } from "@/api/docsAPI"
+import { queryClient } from "@/main"
+import type { ClientResponse } from "@/types/clientType"
+import type { CaseDocumentItem } from "@/types/docsType"
+import type { CasesResponse } from "@/types/caseType"
 import {
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
 import {
   Select,
   SelectTrigger,
@@ -21,14 +28,6 @@ import {
   SelectItem,
 } from "@/components/ui/select"
 
-import { getAllCases } from "@/api/caseAPI"
-import { getAllClient } from "@/api/clientAPI"
-import { updateDocs } from "@/api/docsAPI"
-import { queryClient } from "@/main"
-
-import type { ClientUserMapping } from "@/types/clientType"
-import type { DocumentResponse } from "@/types/docsType"
-import type { CaseWithClientUser } from "@/types/caseType"
 
 const updateDocsSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
@@ -43,19 +42,19 @@ const updateDocsSchema = z.object({
 export type FormData = z.infer<typeof updateDocsSchema>
 
 type Props = {
-  data: DocumentResponse
+  data: CaseDocumentItem
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const UpdateDocsModal = ({ data, setOpen }: Props) => {
   const [replaceFile, setReplaceFile] = useState(false)
 
-  const { data: caseData } = useQuery<CaseWithClientUser[]>({
+  const { data: caseData } = useQuery<CasesResponse>({
     queryKey: ["cases"],
     queryFn: getAllCases,
   })
 
-  const { data: clientData } = useQuery<ClientUserMapping[]>({
+  const { data: clientData } = useQuery<ClientResponse>({
     queryKey: ["client"],
     queryFn: getAllClient,
   })
@@ -90,7 +89,7 @@ const UpdateDocsModal = ({ data, setOpen }: Props) => {
       reset({
         title: data.document.title,
         description: data.document.description,
-        notes: data.document.notes,
+        notes: data.document.notes || "",
         caseId: data.document.caseId,
         clientId: data.document.clientId,
         file: undefined,
@@ -147,9 +146,9 @@ const UpdateDocsModal = ({ data, setOpen }: Props) => {
                   <SelectValue placeholder="Select Case" />
                 </SelectTrigger>
                 <SelectContent>
-                  {caseData?.map((item) => (
-                    <SelectItem key={item.case.id} value={String(item.case.id)}>
-                      {item.case.title}
+                  {caseData?.data.cases.map((item) => (
+                    <SelectItem key={item.id} value={String(item.id)}>
+                      {item.title}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -187,7 +186,7 @@ const UpdateDocsModal = ({ data, setOpen }: Props) => {
             <div>
               {!replaceFile && data.document.documentLink ? (
                 <div
-                  className="cursor-pointer rounded-lg border px-3 py-2 text-sm w-full"
+                  className="w-full cursor-pointer rounded-lg border px-3 py-2 text-sm"
                   onClick={() => setReplaceFile(true)}
                 >
                   File already uploaded — click to replace
@@ -196,7 +195,7 @@ const UpdateDocsModal = ({ data, setOpen }: Props) => {
                 <div className="flex gap-2">
                   <input
                     type="file"
-                    className="rounded-lg border px-3 py-2 w-full"
+                    className="w-full rounded-lg border px-3 py-2"
                     onChange={(e) => {
                       const file = e.target.files?.[0]
                       if (!file) return
@@ -235,7 +234,7 @@ const UpdateDocsModal = ({ data, setOpen }: Props) => {
                   <SelectValue placeholder="Select Client" />
                 </SelectTrigger>
                 <SelectContent>
-                  {clientData?.map((item) => (
+                  {clientData?.data?.map((item) => (
                     <SelectItem
                       key={item.client.id}
                       value={String(item.client.id)}

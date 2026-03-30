@@ -1,13 +1,13 @@
 import { Link, useNavigate } from "react-router-dom"
 
+import { formatDate } from "@/utils/formate"
+import type {  TaskResponse } from "@/types/taskType"
 import {
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
 
-import { formatDate } from "@/utils/formate"
-import type {  TaskResponse } from "@/types/taskType"
 
 type Props = {
   data: TaskResponse

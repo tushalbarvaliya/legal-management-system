@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 import { Search } from "lucide-react"
 
-import type { ClientUserMapping } from "@/types/clientType"
+import type { ClientResponse, ClientUserMapping } from "@/types/clientType"
 import { getAllClient } from "@/api/clientAPI"
 import ClientCardSkeleton from "@/components/client/ClientCardSkeleton"
 import ClientHeader from "@/components/client/ClientHeader"
@@ -17,12 +17,12 @@ const ClientPage = () => {
     data: clients,
     isLoading,
     isError,
-  } = useQuery<ClientUserMapping[]>({
+  } = useQuery<ClientResponse>({
     queryKey: ["client"],
     queryFn: getAllClient,
   })
   
-  const filteredClients = clients?.filter((item: ClientUserMapping) =>
+  const filteredClients = clients?.data.filter((item: ClientUserMapping) =>
     [...Object.values(item.client), ...Object.values(item.user)].some((value) =>
       String(value).toLowerCase().includes(search.toLowerCase())
     )

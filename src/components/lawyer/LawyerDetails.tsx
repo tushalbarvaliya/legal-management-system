@@ -34,13 +34,13 @@ const LawyerDetails = ({
             {lawyer.user.firstName} {lawyer.user.lastName}
           </p>
 
-          {lawyer.lawyer.isBlocked === 1 && (
+          {lawyer.lawyer.isBlocked === "\u0001" && (
             <span className="rounded-full bg-zinc-200 px-3 py-1 text-xs">
               Block
             </span>
           )}
 
-          {lawyer.lawyer.isDeleted === 1 && (
+          {lawyer.lawyer.isDeleted === "\u0001" && (
             <span className="rounded-full bg-red-100 px-3 py-1 text-xs text-red-700">
               Deleted
             </span>

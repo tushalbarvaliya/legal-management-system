@@ -1,36 +1,25 @@
-export type DocumentResponse = {
-  document: DocumentType
-  case: CaseType
-}
+import type { Case } from "./caseType"
 
-export type DocumentType = {
-  documentLink: string
-  description: string
-  title: string
-  caseId: number
-  clientId: number
-  createdAt: string
-  updatedAt: string
+export type Document = {
   fileType: string
   id: number
-  notes: string
+  notes: string | null
   userId: number
-  isDeleted: number
+  clientId: number
+  createdAt: string
+  title: string
+  documentLink: string
+  description: string
+  caseId: number
+  isDeleted: string
+  updatedAt: string
 }
 
-export type CaseType = {
-  id: number
-  type: string
-  caseStage: string
-  status: "open" | "closed"
-  clientId: number
-  isDeleted: number
-  updatedAt: string
-  description: string
-  caseNumber: number
-  title: string
-  caseCity: string
-  caseClosedDate: string
-  lawyerId: number
-  createdAt: string
+export interface CaseDocumentItem {
+  document: Document
+  case: Case
+}
+export type DocumentDataResponse = {
+  data: CaseDocumentItem[]
+  message: string
 }

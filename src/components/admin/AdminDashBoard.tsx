@@ -1,5 +1,9 @@
 import { useQuery } from "@tanstack/react-query"
+
 import { Spinner } from "../ui/spinner"
+import Card from "../Card"
+import type { InvoiceResponse } from "@/types/invoiceStatusType"
+import type { ProfileResponse } from "@/types/types"
 import {
   caseStatusChange,
   getAllUser,
@@ -7,40 +11,36 @@ import {
   getTaskCount,
   invoiceStatus,
 } from "@/api/adminAPI"
-import Card from "../Card"
-import type {
-  CasesStatusChangeResponse,
-  InvoiceResponse,
-} from "@/types/invoiceStatusType"
-import type { ProfileResponse } from "@/types/types"
 
 const AdminDashBoard = () => {
   const {
     data: users,
     isLoading,
     isError,
-  } = useQuery<ProfileResponse[]>({
+  } = useQuery<{ data: ProfileResponse[] }>({
     queryFn: getAllUser,
     queryKey: ["allUser"],
   })
 
-  const lawyers = users?.filter((item) => item.role === "lawyer")
-  const staffs = users?.filter((item) => item.role === "staff")
-  const clients = users?.filter((item) => item.role === "client")
+  const lawyers = users?.data.filter((item) => item.role === "lawyer")
+  const staffs = users?.data.filter((item) => item.role === "staff")
+  const clients = users?.data.filter((item) => item.role === "client")
 
   const { data: caseCount, isLoading: caseLoading } = useQuery<{
-    openCases: number
-    closedCases: number
-    newCasesLast30Days: number
+    data: {
+      openCases: number
+      closedCases: number
+      newCasesLast30Days: number
+    }
+    message: "success"
   }>({
     queryFn: getCaseCount,
     queryKey: ["casesCount"],
   })
 
   const { data: taskCount, isLoading: taskLoading } = useQuery<{
-    pending: number
-    overdue: number
-    completed: number
+    data: { pending: number; overdue: number; completed: number }
+    message: "success"
   }>({
     queryFn: getTaskCount,
     queryKey: ["taskCount"],
@@ -52,7 +52,10 @@ const AdminDashBoard = () => {
       queryKey: ["invoice"],
     })
   const { data: caseStatusChangeData, isLoading: caseStatusChangeLoading } =
-    useQuery<CasesStatusChangeResponse>({
+    useQuery<{
+      data: { casesStatusChangeInLast30Days: number }
+      message: "success"
+    }>({
       queryFn: caseStatusChange,
       queryKey: ["caseChange"],
     })
@@ -71,7 +74,7 @@ const AdminDashBoard = () => {
             <p className="text-sm text-red-500">Error loading users</p>
           ) : (
             <p className="text-3xl font-bold text-zinc-900">
-              {users?.length || 0}
+              {users?.data.length || 0}
             </p>
           )}
         </Card>
@@ -82,9 +85,9 @@ const AdminDashBoard = () => {
             <Spinner />
           ) : (
             <div className="space-y-2 text-sm text-zinc-700">
-              <p>Open: {caseCount?.openCases || 0}</p>
-              <p>Closed: {caseCount?.closedCases || 0}</p>
-              <p>Last 30 Days: {caseCount?.newCasesLast30Days || 0}</p>
+              <p>Open: {caseCount?.data.openCases || 0}</p>
+              <p>Closed: {caseCount?.data.closedCases || 0}</p>
+              <p>Last 30 Days: {caseCount?.data.newCasesLast30Days || 0}</p>
             </div>
           )}
         </Card>
@@ -106,7 +109,7 @@ const AdminDashBoard = () => {
             <div className="space-y-2 text-sm text-zinc-700">
               <p>
                 Total Case Status change in Last 30 Days:{" "}
-                {caseStatusChangeData?.casesStatusChangeInLast30Days || 0}
+                {caseStatusChangeData?.data.casesStatusChangeInLast30Days || 0}
               </p>
             </div>
           )}
@@ -118,9 +121,9 @@ const AdminDashBoard = () => {
             <Spinner />
           ) : (
             <div className="space-y-2 text-sm text-zinc-700">
-              <p>Completed: {taskCount?.completed || 0}</p>
-              <p>Overdue: {taskCount?.overdue || 0}</p>
-              <p>Pending: {taskCount?.pending || 0}</p>
+              <p>Completed: {taskCount?.data.completed || 0}</p>
+              <p>Overdue: {taskCount?.data.overdue || 0}</p>
+              <p>Pending: {taskCount?.data.pending || 0}</p>
             </div>
           )}
         </Card>

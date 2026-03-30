@@ -4,7 +4,7 @@ import { Plus } from "lucide-react"
 import { useLocation, useNavigate } from "react-router-dom"
 
 import { getAllTask } from "@/api/taskAPI"
-import type {  TaskResponse } from "@/types/taskType"
+import type {  TaskResponse, TaskType } from "@/types/taskType"
 import NoFound from "@/components/NoFound"
 import TaskCardSkeleton from "@/components/task/TaskCardSkeleton"
 import ErrorMessage from "@/components/ErrorMessage"
@@ -25,13 +25,13 @@ const TaskPage = () => {
     data: tasks,
     isLoading,
     isError,
-  } = useQuery<TaskResponse[]>({
+  } = useQuery<TaskType>({
     queryKey: ["tasks"],
     queryFn: getAllTask,
   })
 
   const filteredTasks = useMemo(() => {
-    return tasks?.filter((task: TaskResponse) => {
+    return tasks?.data.tasks.filter((task: TaskResponse) => {
       const title = task.title?.toLowerCase() || ""
       const description = task.description?.toLowerCase() || ""
       const matchesSearch =
@@ -45,10 +45,10 @@ const TaskPage = () => {
     })
   }, [search, priorityFilter, statusFilter, tasks])
 
-  const total = tasks?.length
-  const pending = tasks?.filter((item)=>item.status=='pending').length
-  const completed = tasks?.filter((item)=>item.status=='completed').length
-  const overdue = tasks?.filter((item)=>item.status=='in_progress').length
+  const total = tasks?.data.tasks.length
+  const pending = tasks?.data.summary.pending
+  const completed = tasks?.data.summary.completed
+  const overdue = tasks?.data.summary.overdue
 
   return (
     <Dialog

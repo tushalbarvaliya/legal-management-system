@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import { Plus, Search } from "lucide-react"
 import { useMemo, useState } from "react"
+
 import { getAllSession } from "@/api/sessionAPI"
 import ErrorMessage from "@/components/ErrorMessage"
 import NoFound from "@/components/NoFound"
@@ -9,17 +10,17 @@ import SessionCardSkeleton from "@/components/session/SessionCardSkeleton"
 import { Spinner } from "@/components/ui/spinner"
 import { Dialog } from "@/components/ui/dialog"
 import AddSession from "@/components/session/AddSession"
-import type { SessionWithCaseResponse } from "@/types/sessionType"
+import type { SessionResponse } from "@/types/sessionType"
 
 const SessionPage = () => {
   const [search, setSearch] = useState("")
   const [openAdd, setOpenAdd] = useState<boolean>(false)
 
   const {
-    data: sessions = [],
+    data: sessions,
     isLoading,
     isError,
-  } = useQuery<SessionWithCaseResponse[]>({
+  } = useQuery<SessionResponse>({
     queryKey: ["sessions"],
     queryFn: getAllSession,
   })
@@ -29,7 +30,7 @@ const SessionPage = () => {
   }
 
   const filteredSessions = useMemo(() => {
-    return sessions.filter((session) =>
+    return sessions?.data.filter((session) =>
       session.session.courtName?.toLowerCase().includes(search.toLowerCase())
     )
   }, [sessions, search])
@@ -48,7 +49,12 @@ const SessionPage = () => {
     return <ErrorMessage />
   }
   return (
-    <Dialog open={openAdd} onOpenChange={(open)=>{if(!open) setOpenAdd(false)}}>
+    <Dialog
+      open={openAdd}
+      onOpenChange={(open) => {
+        if (!open) setOpenAdd(false)
+      }}
+    >
       {openAdd && <AddSession setOpenAdd={setOpenAdd} />}
 
       <section className="shadow-soft rounded-2xl border bg-white p-4 sm:p-6">
@@ -87,15 +93,15 @@ const SessionPage = () => {
 
         {/* Count */}
         <p className="mt-4 text-sm text-zinc-500">
-          Showing {isLoading ? <Spinner /> : filteredSessions.length} sessions
+          Showing {isLoading ? <Spinner /> : filteredSessions?.length} sessions
         </p>
 
         {/* List */}
         <div className="mt-5 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {!isLoading &&
             !isError &&
-            (filteredSessions.length > 0 ? (
-              filteredSessions.map((item) => (
+            (filteredSessions && filteredSessions?.length > 0 ? (
+              filteredSessions?.map((item) => (
                 <div key={item.session.id}>
                   <SessionCard data={item} />
                 </div>

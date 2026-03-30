@@ -5,29 +5,28 @@ import { useState } from "react"
 import { useMutation } from "@tanstack/react-query"
 import { toast } from "sonner"
 
-import {
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "../ui/dialog"
-
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { postLawyer } from "@/api/lawyerAPI"
 import { queryClient } from "@/main"
 import {
-  Select,
+  AddLawyerFormSchema,
+  type AddLawyerFormSchemaType,
+} from "@/schemas/AddLawyerSchema"
+import {
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog"
+import {
+Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
-import {
-  AddLawyerFormSchema,
-  type AddLawyerFormSchemaType,
-} from "@/schemas/AddLawyerSchema"
 
 const AddLawyer = ({
   setOpenAdd,

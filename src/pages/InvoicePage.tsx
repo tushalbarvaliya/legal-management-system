@@ -1,8 +1,8 @@
 import { Plus } from "lucide-react"
+import { useState } from "react"
 
 import InvoiceList from "@/components/invoice/InvoiceList"
 import AddInvoiceModel from "@/components/invoice/AddInvoiceModel"
-import { useState } from "react"
 import { Dialog } from "@/components/ui/dialog"
 
 const InvoicePage = () => {

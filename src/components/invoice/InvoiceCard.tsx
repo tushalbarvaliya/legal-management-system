@@ -1,25 +1,26 @@
-import type { invoiceDataType } from "@/types/invoiceType"
+import { useMutation } from "@tanstack/react-query"
+import { MoreVertical } from "lucide-react"
+import { useState } from "react"
+import { toast } from "sonner"
+
+import type { Payment } from "@/types/invoiceType"
 import { formatDate } from "@/utils/formate"
+import { Button } from "../ui/button"
+import EditInvoiceModel from "./EditInvoiceModel"
+import { deleteInvoice, pay } from "@/api/invoiceAPI"
+import InvoiceDetailsModal from "./InvoiceDetailsModal"
+import { useAppSelector } from "@/hooks/hooks"
+import { Dialog } from "../ui/dialog"
+import DeleteModel from "../DeleteModel"
+import { queryClient } from "@/main"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
-import { Button } from "../ui/button"
-import { MoreVertical } from "lucide-react"
-import InvoiceDetailsModal from "./InvoiceDetailsModal"
-import EditInvoiceModel from "./EditInvoiceModel"
-import { useMutation } from "@tanstack/react-query"
-import { deleteInvoice, pay } from "@/api/invoiceAPI"
-import { useAppSelector } from "@/hooks/hooks"
-import { useState } from "react"
-import { Dialog } from "../ui/dialog"
-import DeleteModel from "../DeleteModel"
-import { toast } from "sonner"
-import { queryClient } from "@/main"
 
-const InvoiceCard = (invoice: invoiceDataType) => {
+const InvoiceCard = (invoice: Payment) => {
   const [openView, setOpenView] = useState<boolean>(false)
   const [openDelete, setOpenDelete] = useState<boolean>(false)
   const [openEdit, setOpenEdit] = useState<boolean>(false)

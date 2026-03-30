@@ -3,17 +3,21 @@ import { useLocation, useNavigate } from "react-router-dom"
 
 import { formatDate } from "@/utils/formate"
 import { Button } from "../ui/button"
+import TaskDetailsModel from "./TaskDetails"
+import type { TaskResponse } from "@/types/taskType"
+import UpdateTask from "./UpdateTask"
+import { Dialog } from "../ui/dialog"
+import DeleteTask from "./DeleteTask"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
-import TaskDetailsModel from "./TaskDetails"
-import type { TaskResponse } from "@/types/taskType"
-import UpdateTask from "./UpdateTask"
-import { Dialog } from "../ui/dialog"
-import DeleteTask from "./DeleteTask"
+import { useMutation } from "@tanstack/react-query"
+import axiosInstance from "@/api/axiosInstance"
+import { toast } from "sonner"
+import { queryClient } from "@/main"
 
 const getPriorityColor = (priority: string) => {
   if (priority == "low") {
@@ -35,6 +39,21 @@ const getStatusColor = (status: string) => {
 const TaskCard = (data: TaskResponse) => {
   const navigate = useNavigate()
   const pathname = useLocation().pathname
+
+  const { mutate } = useMutation({
+    mutationFn: async (id: number) => {
+      const response = await axiosInstance.patch(`/tasks/task/${id}/markAsDone`)
+      return response.data
+    },
+    onSuccess: () => {
+      toast.success(`Task Mark as Done`)
+      queryClient.invalidateQueries({ queryKey: ["tasks"] })
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+  })
+
   return (
     <Dialog
       open={
@@ -127,6 +146,15 @@ const TaskCard = (data: TaskResponse) => {
                   }}
                 >
                   Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="text-green-500"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    mutate(data.id)
+                  }}
+                >
+                  Mark As Done
                 </DropdownMenuItem>
 
                 <DropdownMenuItem

@@ -1,9 +1,9 @@
-import { formatDate, formatTime } from "@/utils/formate"
 import { Calendar, Clock8 } from "lucide-react"
+import { useState } from "react"
 
+import { formatDate, formatTime } from "@/utils/formate"
 import SessionDetailsModel from "./SessionDetailsModel"
 import type { SessionWithCaseResponse } from "@/types/sessionType"
-import { useState } from "react"
 import { Dialog } from "../ui/dialog"
 
 const SessionCard = ({ data }: { data: SessionWithCaseResponse }) => {
