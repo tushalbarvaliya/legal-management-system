@@ -29,7 +29,7 @@ type UpdateTaskProps = {
 const UpdateCompany = ({ closeModal, data }: UpdateTaskProps) => {
   const { mutate, isPending } = useMutation({
     mutationFn: async (formData: UpdateCompanyFormSchemaType) => {
-      const res = await axiosInstance.patch("/companies/company/1", formData)
+      const res = await axiosInstance.patch(`/companies/company/${data.id}`, formData)
       return res.data
     },
     onSuccess: () => {
@@ -42,7 +42,10 @@ const UpdateCompany = ({ closeModal, data }: UpdateTaskProps) => {
     },
   })
 
-  const form = useForm<UpdateCompanyFormSchemaType>({
+  const {
+    formState: { isDirty },
+    ...form
+  } = useForm<UpdateCompanyFormSchemaType>({
     resolver: zodResolver(UpdateCompanyFormSchema),
     mode: "onChange",
     delayError: 500,
@@ -55,7 +58,12 @@ const UpdateCompany = ({ closeModal, data }: UpdateTaskProps) => {
   })
 
   const onSubmit = (formData: UpdateCompanyFormSchemaType) => {
-    mutate(formData)
+    if (isDirty) {
+      mutate(formData)
+    } else {
+      toast.success("No Changes found")
+      closeModal(false)
+    }
   }
 
   return (

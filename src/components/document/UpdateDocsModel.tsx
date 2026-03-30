@@ -28,7 +28,6 @@ import {
   SelectItem,
 } from "@/components/ui/select"
 
-
 const updateDocsSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
   file: z.instanceof(File, { message: "File is required" }).optional(),
@@ -71,7 +70,13 @@ const UpdateDocsModal = ({ data, setOpen }: Props) => {
     },
   })
 
-  const { control, handleSubmit, setValue, reset } = useForm<FormData>({
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    reset,
+    formState: { isDirty },
+  } = useForm<FormData>({
     resolver: zodResolver(updateDocsSchema),
     defaultValues: {
       title: "",
@@ -104,7 +109,12 @@ const UpdateDocsModal = ({ data, setOpen }: Props) => {
       caseId: Number(formData.caseId),
       clientId: Number(formData.clientId),
     }
-    mutate({ data: payload, id: data.document.id })
+    if (isDirty) {
+      mutate({ data: payload, id: data.document.id })
+    } else {
+      toast.success("No Changes found")
+      setOpen(false)
+    }
   }
 
   return (

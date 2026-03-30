@@ -17,14 +17,14 @@ const AdminDashBoard = () => {
     data: users,
     isLoading,
     isError,
-  } = useQuery<{ data: ProfileResponse[] }>({
+  } = useQuery<ProfileResponse>({
     queryFn: getAllUser,
     queryKey: ["allUser"],
   })
 
-  const lawyers = users?.data.filter((item) => item.data.role === "lawyer")
-  const staffs = users?.data.filter((item) => item.data.role === "staff")
-  const clients = users?.data.filter((item) => item.data.role === "client")
+  const lawyers = users?.data?.filter((item) => item.role === "lawyer")
+  const staffs = users?.data?.filter((item) => item.role === "staff")
+  const clients = users?.data?.filter((item) => item.role === "client")
 
   const { data: caseCount, isLoading: caseLoading } = useQuery<{
     data: {
@@ -97,8 +97,8 @@ const AdminDashBoard = () => {
             <Spinner />
           ) : (
             <div className="space-y-2 text-sm text-zinc-700">
-              <p>Total Paid: {invoice?.total_paid || 0}</p>
-              <p>Total Unpaid: {invoice?.total_pending || 0}</p>
+              <p>Total Paid: {invoice?.data.total_paid || 0}</p>
+              <p>Total Unpaid: {invoice?.data.total_pending || 0}</p>
             </div>
           )}
         </Card>

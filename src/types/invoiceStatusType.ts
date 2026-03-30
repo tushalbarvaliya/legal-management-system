@@ -17,12 +17,14 @@ export type Invoice = {
 }
 
 export type InvoiceResponse = {
-  invoices: Invoice[]
-  total_paid: number
-  total_pending: number
+  data: {
+    invoices: Invoice[]
+    total_paid: number
+    total_pending: number
+  }
+  message: string
 }
 
-
 export type CasesStatusChangeResponse = {
-  casesStatusChangeInLast30Days: number;
-};
+  casesStatusChangeInLast30Days: number
+}

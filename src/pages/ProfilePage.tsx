@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { getProfile, patchProfileUpdate } from "@/api/userAPI"
-import type { ProfileResponse } from "@/types/types"
+import type { ProfileData } from "@/types/types"
 import { queryClient } from "@/main"
 import ProfileSkeleton from "@/components/profile/ProfileSkeleton"
 import ErrorMessage from "@/components/ErrorMessage"
@@ -52,7 +52,10 @@ const ProfilePage = () => {
   const [isEdit, setIsEdit] = useState(false)
   const navigate = useNavigate()
 
-  const { data, isLoading, isError, error } = useQuery<ProfileResponse>({
+  const { data, isLoading, isError, error } = useQuery<{
+    data: ProfileData
+    message: string
+  }>({
     queryKey: ["profile"],
     queryFn: getProfile,
   })
@@ -77,12 +80,12 @@ const ProfilePage = () => {
     resolver: zodResolver(profileSchema),
     mode: "onChange",
     defaultValues: {
-      firstName: data?.data.firstName ?? "",
-      lastName: data?.data.lastName ?? "",
-      address: data?.data.address ?? "",
-      phoneNumber: data?.data.phoneNumber ?? "",
-      gender: data?.data.gender?.toLowerCase() ?? "",
-      role: data?.data.role ?? "",
+      firstName: "",
+      lastName: "",
+      address: "",
+      phoneNumber: "",
+      gender: "",
+      role: "",
     },
   })
 
@@ -93,7 +96,7 @@ const ProfilePage = () => {
         lastName: data.data.lastName ?? "",
         address: data.data.address ?? "",
         phoneNumber: data.data.phoneNumber ?? "",
-        gender: data.data.gender?.toLowerCase() ?? "",
+        gender: data.data.gender ?? "",
         role: data.data.role ?? "",
       })
     }
@@ -102,6 +105,7 @@ const ProfilePage = () => {
     if (isDirty) {
       mutate(formData)
     } else {
+      toast.success("No Changes found")
       setIsEdit(false)
     }
   }

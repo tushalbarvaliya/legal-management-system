@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import { useMutation, useQuery } from "@tanstack/react-query"
 
-
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
@@ -14,7 +13,7 @@ import { queryClient } from "@/main"
 import type { StaffUserMapping } from "@/types/staffType"
 import { updateTask } from "@/api/taskAPI"
 import { useAppSelector } from "@/hooks/hooks"
-import type {  TaskResponse } from "@/types/taskType"
+import type { TaskResponse } from "@/types/taskType"
 import { getAllStaff } from "@/api/staffAPI"
 import {
   UpdateTaskSchema,
@@ -56,7 +55,10 @@ const UpdateTask = ({ task }: { task: TaskResponse }) => {
     queryKey: ["staff"],
     queryFn: getAllStaff,
   })
-  const form = useForm<UpdateTaskType>({
+  const {
+    formState: { isDirty },
+    ...form
+  } = useForm<UpdateTaskType>({
     resolver: zodResolver(UpdateTaskSchema),
     mode: "onChange",
     delayError: 500,
@@ -69,13 +71,20 @@ const UpdateTask = ({ task }: { task: TaskResponse }) => {
     },
   })
   const onSubmit = (data: UpdateTaskType) => {
-    mutate({ data: data, id: task.id })
+    if (isDirty) {
+      mutate({ data: data, id: task.id })
+    } else {
+      toast.success("No Changes Found", { duration: 700 })
+      setTimeout(() => {
+        navigate("/task")
+      }, 700)
+    }
   }
   return (
     <>
       <DialogContent className="no-scrollbar max-h-[99vh] min-w-[50vw] overflow-y-scroll">
         <DialogHeader className="my-4 text-sm">
-          <DialogTitle>Add Task</DialogTitle>
+          <DialogTitle>Update Task</DialogTitle>
         </DialogHeader>
         <form id="addLawyer" onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup className="grid sm:grid-cols-2">
@@ -206,7 +215,10 @@ const UpdateTask = ({ task }: { task: TaskResponse }) => {
 
                       {staffData && staffData?.length > 0
                         ? staffData?.map((item) => (
-                            <SelectItem value={String(item.staff.id)} key={item.staff.id}>
+                            <SelectItem
+                              value={String(item.staff.id)}
+                              key={item.staff.id}
+                            >
                               {item.user.firstName} {item.user.lastName}
                             </SelectItem>
                           ))
@@ -225,7 +237,7 @@ const UpdateTask = ({ task }: { task: TaskResponse }) => {
         <DialogFooter>
           <Field>
             <Button type="submit" form="addLawyer" disabled={isPending}>
-              {isPending ? "Adding..." : "Add Task"}
+              {isPending ? "Updating..." : "Update Task"}
             </Button>
           </Field>
         </DialogFooter>

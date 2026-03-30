@@ -56,7 +56,10 @@ const UpdateCase = ({
     },
   })
 
-  const form = useForm<UpdateCaseFormSchemaType>({
+  const {
+    formState: { isDirty },
+    ...form
+  } = useForm<UpdateCaseFormSchemaType>({
     resolver: zodResolver(UpdateCaseFormSchema),
     mode: "onChange",
     delayError: 500,
@@ -74,7 +77,12 @@ const UpdateCase = ({
   })
 
   const onSubmit = (FormData: UpdateCaseFormSchemaType) => {
-    mutate({ data: FormData, id: data.id })
+    if (isDirty) {
+      mutate({ data: FormData, id: data.id })
+    } else {
+      toast.success("NO Changes Found")
+      setOpenAdd(false)
+    }
   }
   return (
     <>

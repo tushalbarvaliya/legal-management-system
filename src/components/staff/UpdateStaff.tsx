@@ -44,7 +44,10 @@ const UpdateStaff = ({ staff }: { staff: StaffUserMapping }) => {
     },
   })
 
-  const form = useForm<UpdateStaffFormSchemaType>({
+  const {
+    formState: { isDirty },
+    ...form
+  } = useForm<UpdateStaffFormSchemaType>({
     resolver: zodResolver(updateStaffFormSchema),
     mode: "onChange",
     delayError: 500,
@@ -58,7 +61,14 @@ const UpdateStaff = ({ staff }: { staff: StaffUserMapping }) => {
   })
 
   const onSubmit = (data: UpdateStaffFormSchemaType) => {
-    mutate({ data: data, id: staff.staff.id })
+    if (isDirty) {
+      mutate({ data: data, id: staff.staff.id })
+    } else {
+      toast.success("No Changes Found", { duration: 700 })
+      setTimeout(() => {
+        navigate("/staff")
+      }, 700)
+    }
   }
   return (
     <>
@@ -130,7 +140,9 @@ const UpdateStaff = ({ staff }: { staff: StaffUserMapping }) => {
                     type="tel"
                     inputMode="numeric"
                     onChange={(e) => {
-                      const value = e.target.value.replace(/\D/g, "").slice(0, 10)
+                      const value = e.target.value
+                        .replace(/\D/g, "")
+                        .slice(0, 10)
                       field.onChange(value)
                     }}
                   />

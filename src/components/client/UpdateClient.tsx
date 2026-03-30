@@ -46,7 +46,10 @@ const UpdateClient = ({
     },
   })
 
-  const form = useForm<UpdateClientFormSchemaType>({
+  const {
+    formState: { isDirty },
+    ...form
+  } = useForm<UpdateClientFormSchemaType>({
     resolver: zodResolver(UpdateClientSchema),
     mode: "onChange",
     delayError: 500,
@@ -64,8 +67,12 @@ const UpdateClient = ({
   })
 
   const onSubmit = (data: UpdateClientFormSchemaType) => {
-    // console.log(data)
-    mutate({ data: data, id: client.client.id })
+    if (isDirty) {
+      mutate({ data: data, id: client.client.id })
+    } else {
+      toast.success("No Changes found")
+      setOpenEdit(false)
+    }
   }
   return (
     <>

@@ -42,15 +42,15 @@ const ResetPasswordPage = () => {
   })
 
   const onSubmit = (data: ResetFormData) => {
+    const reqData: putReqDataType = {
+      password: data.oldPassword,
+      new_password: data.newPassword,
+    }
     if (data.newPassword != data.confirmNewPassword) {
       toast.error("New Password and Confirm Password Should be Same.")
     } else if (data.oldPassword == data.newPassword) {
       toast.error("old Password and new Password Should not be Same.")
-    } else {
-      const reqData: putReqDataType = {
-        password: data.oldPassword,
-        new_password: data.newPassword,
-      }
+    }else{
       mutate(reqData)
     }
   }

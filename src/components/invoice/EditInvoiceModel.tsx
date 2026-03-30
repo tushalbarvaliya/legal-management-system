@@ -61,7 +61,11 @@ const EditInvoiceModel = ({
     onError: (error) => toast.error(`Error ${error?.message || error}`),
   })
 
-  const { control, handleSubmit } = useForm<EditInvoiceFormDataType>({
+  const {
+    control,
+    handleSubmit,
+    formState: { isDirty },
+  } = useForm<EditInvoiceFormDataType>({
     resolver: zodResolver(editInvoiceSchema),
     defaultValues: {
       clientId: data.clientId,
@@ -72,9 +76,14 @@ const EditInvoiceModel = ({
     mode: "onChange",
   })
 
-  const onSubmit = (formData: EditInvoiceFormDataType) =>
-    mutate({ data: formData, id: data.id })
-
+  const onSubmit = (formData: EditInvoiceFormDataType) => {
+    if (isDirty) {
+      mutate({ data: formData, id: data.id })
+    } else {
+      toast.success("No Changes found")
+      setOpen(false)
+    }
+  }
   return (
     <>
       <DialogContent className="max-w-lg">
