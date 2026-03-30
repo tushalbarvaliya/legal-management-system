@@ -15,7 +15,7 @@ export const UpdateCompanyFormSchema = z.object({
     .min(1, "Phone number is required")
     .regex(phoneNumberRegex, "Phone number must be exactly 10 digits"),
 
-  address: z
+  Address: z
     .string()
     .trim()
     .min(5, "Address must be at least 5 characters")

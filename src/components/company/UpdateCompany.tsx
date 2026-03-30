@@ -50,7 +50,7 @@ const UpdateCompany = ({ closeModal, data }: UpdateTaskProps) => {
     mode: "onChange",
     delayError: 500,
     defaultValues: {
-      address: data.Address,
+      Address: data.Address,
       email: data.email,
       name: data.name,
       phoneNumber: data.phoneNumber,
@@ -152,7 +152,7 @@ const UpdateCompany = ({ closeModal, data }: UpdateTaskProps) => {
               )}
             />
             <Controller
-              name="address"
+              name="Address"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
