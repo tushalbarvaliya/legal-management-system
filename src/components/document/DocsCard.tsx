@@ -1,9 +1,8 @@
 import { MoreVertical } from "lucide-react"
-import { Link, useLocation, useNavigate } from "react-router"
+import { Link } from "react-router"
 
 import { Button } from "../ui/button"
 import { downloadBase64File } from "@/utils/downloadBase64File"
-import DeleteDocsModel from "./DeleteDocsModel"
 import DocsDetailsModal from "./DocsDetailsModal"
 import UpdateDocsModel from "./UpdateDocsModel"
 import {
@@ -24,8 +23,7 @@ import { queryClient } from "@/main"
 const DocsCard = ({ docs: items }: { docs: DocumentResponse }) => {
   const [openEdit, setOpenEdit] = useState<boolean>(false)
   const [openDelete, setOpenDelete] = useState<boolean>(false)
-  const pathname = useLocation().pathname
-  const navigate = useNavigate()
+  const [openView, setOpenView] = useState<boolean>(false)
 
   const { mutate: DeleteMutate, isPending: DeleteIsPending } = useMutation({
     mutationFn: deleteDocs,
@@ -40,16 +38,17 @@ const DocsCard = ({ docs: items }: { docs: DocumentResponse }) => {
   })
   return (
     <Dialog
-      open={openEdit || openDelete}
+      open={openEdit || openDelete || openView}
       onOpenChange={(open) => {
         if (!open) {
           setOpenEdit(false)
           setOpenDelete(false)
+          setOpenView(false)
         }
       }}
     >
       {openEdit && <UpdateDocsModel data={items} setOpen={setOpenEdit} />}
-      {pathname === `/docs/${items.id}` && <DocsDetailsModal {...items} />}
+      {openView && <DocsDetailsModal data={items} setOpen={setOpenView}/>}
       {openDelete && (
         <DeleteModel
           title="Delete Document"
@@ -121,7 +120,7 @@ const DocsCard = ({ docs: items }: { docs: DocumentResponse }) => {
             <DropdownMenuContent align="end" className="w-40 font-medium">
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(`/docs/${items.document.id}`)
+                  setOpenView(true)
                 }}
               >
                 View
