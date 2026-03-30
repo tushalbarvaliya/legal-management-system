@@ -37,7 +37,7 @@ const formSchema = z.object({
   clientId: z.number().min(1, "Client is required"),
 })
 
-type FormData = z.infer<typeof formSchema>
+export type FormData = z.infer<typeof formSchema>
 
 const AddDocsModal = ({
   setOpenAdd,

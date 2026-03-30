@@ -15,22 +15,51 @@ import {
 import type { DocumentResponse } from "@/types/docsType"
 import { useState } from "react"
 import { Dialog } from "../ui/dialog"
+import DeleteModel from "../DeleteModel"
+import { useMutation } from "@tanstack/react-query"
+import { deleteDocs } from "@/api/docsAPI"
+import { toast } from "sonner"
+import { queryClient } from "@/main"
 
 const DocsCard = ({ docs: items }: { docs: DocumentResponse }) => {
   const [openEdit, setOpenEdit] = useState<boolean>(false)
+  const [openDelete, setOpenDelete] = useState<boolean>(false)
   const pathname = useLocation().pathname
   const navigate = useNavigate()
+
+  const { mutate: DeleteMutate, isPending: DeleteIsPending } = useMutation({
+    mutationFn: deleteDocs,
+    onSuccess: () => {
+      toast.success("Docs Delete successfully")
+      queryClient.invalidateQueries({ queryKey: ["docs"] })
+      setOpenDelete(false)
+    },
+    onError: (error) => {
+      toast.error(`Error ${error.message}`)
+    },
+  })
   return (
     <Dialog
-      open={openEdit}
+      open={openEdit || openDelete}
       onOpenChange={(open) => {
-        if (!open) setOpenEdit(false)
+        if (!open) {
+          setOpenEdit(false)
+          setOpenDelete(false)
+        }
       }}
     >
       {openEdit && <UpdateDocsModel data={items} setOpen={setOpenEdit} />}
       {pathname === `/docs/${items.id}` && <DocsDetailsModal {...items} />}
-      {pathname === `/docs/delete/${items.id}` && (
-        <DeleteDocsModel {...items} />
+      {openDelete && (
+        <DeleteModel
+          title="Delete Document"
+          subTitle="Are you sure you want to delete this docs?"
+          detailsTitle={`${items.document.title}`}
+          id={items.document.id}
+          isPending={DeleteIsPending}
+          mutate={DeleteMutate}
+          setOpenDelete={setOpenDelete}
+        />
       )}
       <div className="flex w-full rounded-xl border p-4 text-left shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-zinc-100/80">
         {/* Left Content */}
@@ -107,7 +136,7 @@ const DocsCard = ({ docs: items }: { docs: DocumentResponse }) => {
               <DropdownMenuItem
                 className="text-red-500"
                 onClick={() => {
-                  navigate(`/docs/delete/${items.document.id}`)
+                  setOpenDelete(true)
                 }}
               >
                 Delete
