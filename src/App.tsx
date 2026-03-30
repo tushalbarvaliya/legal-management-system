@@ -79,38 +79,6 @@ const App = () => {
               </ProtectedRouteByRole>
             }
           />
-          <Route
-            path="/docs/:id"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
-                <DocumentPage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
-            path="/docs/add"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
-                <DocumentPage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
-            path="/docs/edit/:id"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
-                <DocumentPage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
-            path="/docs/delete/:id"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
-                <DocumentPage />
-              </ProtectedRouteByRole>
-            }
-          />
 
           <Route
             path="/client"
@@ -156,22 +124,6 @@ const App = () => {
             path="/staff/edit/:id"
             element={
               <ProtectedRouteByRole allowedRoles={["lawyer", "admin"]}>
-                <StaffPage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
-            path="/staff/delete/:id"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
-                <StaffPage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
-            path="/staff/block/:id"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
                 <StaffPage />
               </ProtectedRouteByRole>
             }
@@ -231,38 +183,6 @@ const App = () => {
             path="/invoice"
             element={
               <ProtectedRouteByRole allowedRoles={["lawyer", "client"]}>
-                <InvoicePage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
-            path="/invoice/:id"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer", "client"]}>
-                <InvoicePage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
-            path="/invoice/add"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
-                <InvoicePage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
-            path="/invoice/edit/:id"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
-                <InvoicePage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
-            path="/invoice/delete/:id"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer"]}>
                 <InvoicePage />
               </ProtectedRouteByRole>
             }
