@@ -1,5 +1,5 @@
 import { updateInvoice } from "@/api/invoiceAPI"
-import type { invoiceDataType } from "@/data/invoiceData"
+import type { invoiceDataType } from "@/types/invoiceType"
 import { queryClient } from "@/main"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"

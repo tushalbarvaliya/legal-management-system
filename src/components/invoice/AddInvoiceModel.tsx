@@ -1,233 +1,203 @@
+import { useForm, Controller } from "react-hook-form"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { toast } from "sonner"
+import { useNavigate } from "react-router-dom"
+
+import {
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select"
+
 import { getAllCases } from "@/api/caseAPI"
 import { getAllClient } from "@/api/clientAPI"
 import { addInvoice } from "@/api/invoiceAPI"
-import type { CaseDataType } from "@/types/caseType"
-import type { ClientResponse } from "@/types/clientType"
 import { queryClient } from "@/main"
+import type { CaseWithClientUser } from "@/types/caseType"
+import type { ClientUserMapping } from "@/types/clientType"
 
-import { useMutation, useQuery } from "@tanstack/react-query"
-import { X } from "lucide-react"
-import { useForm } from "react-hook-form"
-import { useNavigate } from "react-router-dom"
-import { toast } from "sonner"
+const addInvoiceSchema = z.object({
+  clientId: z.coerce.number<number>().min(1, { message: "Client is required" }),
+  caseId: z.coerce.number<number>().min(1, { message: "Case is required" }),
+  totalAmount: z.coerce
+    .number<number>()
+    .min(0, { message: "Amount is required" }),
+  totalHours: z.coerce
+    .number<number>()
+    .min(0, { message: "Hours is required" }),
+  companyId: z.coerce.number<number>(),
+})
 
-export type AddInvoiceFormDataType = {
-  totalHours: number
-  totalAmount: number
-  clientId: number
-  caseId: number
-  companyId: number
-  status: string
-}
+export type AddInvoiceFormDataType = z.input<typeof addInvoiceSchema>
 
-const AddInvoiceModel = () => {
+const AddInvoiceModel = ({ setOpen }: { setOpen: (val: boolean) => void }) => {
   const navigate = useNavigate()
-  const { mutate, isPending } = useMutation({
-    mutationFn: addInvoice,
-    onSuccess: () => {
-      toast.success("Invoice Added Successfully")
-      queryClient.invalidateQueries({ queryKey: ["invoices"] })
-      navigate("/invoice")
-    },
-    onError: (error) => {
-      toast.error(`Error ${error}`)
-    },
-  })
 
-  const { data: caseData } = useQuery<CaseDataType[]>({
+  const { data: caseData } = useQuery<CaseWithClientUser[]>({
     queryKey: ["cases"],
     queryFn: getAllCases,
   })
-  const { data: clientData } = useQuery<ClientResponse[]>({
-    queryFn: getAllClient,
+
+  const { data: clientData } = useQuery<ClientUserMapping[]>({
     queryKey: ["client"],
-  })
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm<AddInvoiceFormDataType>({
-    mode: "onChange",
-    delayError: 500,
+    queryFn: getAllClient,
   })
 
-  setValue("companyId", 1)
-  const onSubmit = (formData: AddInvoiceFormDataType) => {
-    mutate(formData)
-  }
+  const { mutate, isPending } = useMutation({
+    mutationFn: addInvoice,
+    onSuccess: () => {
+      toast.success("Invoice added successfully")
+      queryClient.invalidateQueries({ queryKey: ["invoices"] })
+      setOpen(false)
+      navigate("/invoice")
+    },
+    onError: (error) => {
+      toast.error(`Error: ${error}`)
+    },
+  })
 
-  const inputClass =
-    "w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm outline-none transition duration-200 focus:border-zinc-400"
+  const { control, handleSubmit } = useForm<AddInvoiceFormDataType>({
+    resolver: zodResolver(addInvoiceSchema),
+    defaultValues: { companyId: 1 },
+  })
+
+  const onSubmit = (data: AddInvoiceFormDataType) => mutate(data)
 
   return (
-    <div
-      className="fixed inset-0 z-9999 flex items-center justify-center"
-      onClick={() => navigate("/invoice")}
-    >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+    <>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle>
+            Add New Invoice
+          </DialogTitle>
+        </DialogHeader>
 
-      {/* Modal */}
-      <div
-        className="relative mx-auto w-full max-h-[90vh] overflow-y-scroll max-w-xl rounded-2xl border border-zinc-200 bg-white p-5 shadow-2xl sm:p-6"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-xl font-bold text-zinc-900">Add New Invoice</h3>
-          <button
-            onClick={() => navigate("/invoice")}
-            className="rounded-lg border border-zinc-200 p-2 text-zinc-600 hover:bg-zinc-100"
-          >
-            <X />
-          </button>
-        </div>
-
-        {/* Form */}
-        <form
-          className="space-y-4 text-sm text-zinc-700"
-          onSubmit={handleSubmit(onSubmit)}
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Client */}
-          <div>
-            <label className="mb-1 block font-medium text-zinc-700">
-              Client Id
-            </label>
-            <select
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-              {...register("clientId", {
-                minLength: {
-                  value: 1,
-                  message: "caseID length should be greater than 3",
-                },
-                required: {
-                  value: true,
-                  message: "Please enter a value",
-                },
-              })}
-            >
-              <option value="">Select ...</option>
-              {clientData?.map((item) => {
-                return (
-                  <option value={item.client.id}>
-                    {item.user.firstName} {item.user.lastName}
-                  </option>
-                )
-              })}
-            </select>
-            <p className="min-h-5 text-xs text-red-600">
-              {errors.clientId?.message}
-            </p>
-          </div>
+          <Controller
+            name="clientId"
+            control={control}
+            render={({ field, fieldState }) => (
+              <div>
+                <label className="mb-1 block font-medium">Client</label>
+                <Select
+                  onValueChange={(val) => field.onChange(Number(val))}
+                  value={field.value ? String(field.value) : ""}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select Client" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {clientData?.map((item) => (
+                      <SelectItem
+                        key={item.client.id}
+                        value={String(item.client.id)}
+                      >
+                        {item.user.firstName} {item.user.lastName}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {fieldState.error && (
+                  <p className="mt-1 text-xs text-red-500">
+                    {fieldState.error.message}
+                  </p>
+                )}
+              </div>
+            )}
+          />
 
-          {/* Case ID */}
-          <div>
-            <label className="mb-1 block font-medium text-zinc-700">
-              Case ID
-            </label>
+          {/* Case */}
+          <Controller
+            name="caseId"
+            control={control}
+            render={({ field, fieldState }) => (
+              <div>
+                <label className="mb-1 block font-medium">Case</label>
+                <Select
+                  onValueChange={(val) => field.onChange(Number(val))}
+                  value={field.value ? String(field.value) : ""}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select Case" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {caseData?.map((item) => (
+                      <SelectItem
+                        key={item.case.id}
+                        value={String(item.case.id)}
+                      >
+                        {item.case.title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {fieldState.error && (
+                  <p className="mt-1 text-xs text-red-500">
+                    {fieldState.error.message}
+                  </p>
+                )}
+              </div>
+            )}
+          />
 
-            <select
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2.5 text-sm text-zinc-900 transition duration-200 outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-              {...register("caseId", {
-                minLength: {
-                  value: 1,
-                  message: "caseID length should be greater than 3",
-                },
-                required: {
-                  value: true,
-                  message: "Please enter a value",
-                },
-              })}
-            >
-              <option value="">Select ...</option>
-              {caseData?.map((item) => {
-                return <option value={item.id}>{item.title}</option>
-              })}
-            </select>
-            <p className="min-h-5 text-xs text-red-600">
-              {errors.clientId?.message}
-            </p>
-          </div>
+          {/* Total Amount */}
+          <Controller
+            name="totalAmount"
+            control={control}
+            render={({ field, fieldState }) => (
+              <div>
+                <label className="mb-1 block font-medium">Total Amount</label>
+                <Input type="number" {...field} placeholder="Enter amount" />
+                {fieldState.error && (
+                  <p className="mt-1 text-xs text-red-500">
+                    {fieldState.error.message}
+                  </p>
+                )}
+              </div>
+            )}
+          />
 
-          {/* Amount + Paid */}
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <div>
-              <label className="mb-1 block font-medium text-zinc-700">
-                Total Amount
-              </label>
-              <input
-                type="number"
-                className={inputClass}
-                {...register("totalAmount", {
-                  required: "Enter amount",
-                  min: { value: 0, message: "Invalid amount" },
-                })}
-              />
-              <p className="min-h-5 text-xs text-red-600">
-                {errors.totalAmount?.message}
-              </p>
-            </div>
+          {/* Total Hours */}
+          <Controller
+            name="totalHours"
+            control={control}
+            render={({ field, fieldState }) => (
+              <div>
+                <label className="mb-1 block font-medium">Total Hours</label>
+                <Input type="number" {...field} placeholder="Enter hours" />
+                {fieldState.error && (
+                  <p className="mt-1 text-xs text-red-500">
+                    {fieldState.error.message}
+                  </p>
+                )}
+              </div>
+            )}
+          />
 
-            <div>
-              <label className="mb-1 block font-medium text-zinc-700">
-                Total Hours
-              </label>
-              <input
-                type="number"
-                className={inputClass}
-                {...register("totalHours", {
-                  required: "Enter paid amount",
-                  min: { value: 0, message: "Invalid value" },
-                })}
-              />
-              <p className="min-h-5 text-xs text-red-600">
-                {errors.totalHours?.message}
-              </p>
-            </div>
-          </div>
-
-          {/* Status */}
-          <div>
-            <label className="mb-1 block font-medium text-zinc-700">
-              Status
-            </label>
-            <select
-              className={inputClass}
-              {...register("status", {
-                required: "Select status",
-              })}
-            >
-              <option value="">Select Status</option>
-              <option value="paid">Paid</option>
-              <option value="pending">Pending</option>
-            </select>
-            <p className="min-h-5 text-xs text-red-600">
-              {errors.status?.message}
-            </p>
-          </div>
-
-          {/* Buttons */}
-          <div className="mt-4 flex justify-end gap-2">
-            <button
-              type="button"
-              onClick={() => navigate("/invoice")}
-              className="rounded-lg border border-zinc-200 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100"
-            >
+          <DialogFooter className="flex justify-end gap-2 pt-4">
+            <Button variant="outline" onClick={() => setOpen(false)}>
               Cancel
-            </button>
-
-            <button
-              type="submit"
-              disabled={isPending}
-              className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white transition duration-200 hover:scale-[1.02] hover:bg-zinc-800"
-            >
+            </Button>
+            <Button type="submit" disabled={isPending}>
               {isPending ? "Adding..." : "Add Invoice"}
-            </button>
-          </div>
+            </Button>
+          </DialogFooter>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </>
   )
 }
 

@@ -1,5 +1,5 @@
 import { deleteInvoice } from "@/api/invoiceAPI"
-import type { invoiceDataType } from "@/data/invoiceData"
+import type { invoiceDataType } from "@/types/invoiceType"
 import { queryClient } from "@/main"
 import { useMutation } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"

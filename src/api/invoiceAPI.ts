@@ -1,4 +1,4 @@
-import { type invoiceDataType } from "@/data/invoiceData"
+import { type invoiceDataType } from "@/types/invoiceType"
 import axiosInstance from "./axiosInstance"
 import type { AddInvoiceFormDataType } from "@/components/invoice/AddInvoiceModel"
 

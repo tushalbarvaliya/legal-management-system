@@ -1,4 +1,4 @@
-import type { invoiceDataType } from "@/data/invoiceData"
+import type { invoiceDataType } from "@/types/invoiceType"
 import { formatDate } from "@/utils/formate"
 import { useLocation, useNavigate } from "react-router-dom"
 import DeleteInvoiceModel from "./DeleteInvoiceModel"

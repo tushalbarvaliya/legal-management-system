@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query"
 import ErrorMessage from "../ErrorMessage"
 import { Button } from "../ui/button"
 import { getAllInvoice } from "@/api/invoiceAPI"
-import type { invoiceDataType } from "@/data/invoiceData"
+import type { invoiceDataType } from "@/types/invoiceType"
 import NoFound from "../NoFound"
 
 const InvoiceList = () => {
