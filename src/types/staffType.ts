@@ -8,12 +8,11 @@ export interface Staff {
   caseId: number | null
   taskId: number | null
 
-  isBlocked: 0 | 1
+  isBlocked: "\u0000" | "\u0001"
 
   createdAt: string
   updatedAt: string
 }
-
 
 export interface StaffUserMapping {
   staff: Staff

@@ -163,12 +163,12 @@ const StaffCard = (staff: StaffUserMapping) => {
           {/* Status Badge */}
           <span
             className={`rounded-full px-3 py-1 text-xs font-medium whitespace-nowrap ${
-              staff.staff.isBlocked === 0
+              staff.staff.isBlocked === "\u0000"
                 ? "bg-green-100 text-green-700"
                 : "bg-red-100 text-red-700"
             }`}
           >
-            {staff.staff.isBlocked === 0 ? "Active" : "Blocked"}
+            {staff.staff.isBlocked === "\u0000" ? "Active" : "Blocked"}
           </span>
 
           {/* MENU */}
@@ -187,7 +187,7 @@ const StaffCard = (staff: StaffUserMapping) => {
               >
                 View
               </DropdownMenuItem>
-              {staff.staff.isBlocked === 0 && (
+              {staff.staff.isBlocked === "\u0000" && (
                 <DropdownMenuItem
                   onClick={() => {
                     setOpenBlock(true)
@@ -196,7 +196,7 @@ const StaffCard = (staff: StaffUserMapping) => {
                   Block
                 </DropdownMenuItem>
               )}
-              {staff.staff.isBlocked === 1 && (
+              {staff.staff.isBlocked === "\u0001" && (
                 <DropdownMenuItem
                   onClick={() => {
                     setOpenUnblock(true)
@@ -212,7 +212,7 @@ const StaffCard = (staff: StaffUserMapping) => {
               >
                 Edit
               </DropdownMenuItem>
-              {staff.staff.isBlocked == 0 && (
+              {staff.staff.isBlocked == "\u0000" && (
                 <DropdownMenuItem
                   className="text-red-500"
                   onClick={() => {
