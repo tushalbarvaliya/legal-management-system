@@ -1,5 +1,5 @@
 import { MoreVertical } from "lucide-react"
-import { useLocation, useNavigate } from "react-router-dom"
+import {  useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 import { useState } from "react"
 import { useMutation } from "@tanstack/react-query"
@@ -22,11 +22,11 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 const CasesCard = ({ data }: { data: Case }) => {
-  const pathname = useLocation().pathname
   const navigate = useNavigate()
   const role = useAppSelector((state) => state.auth.role)
   const [openDelete, setOpenDelete] = useState<boolean>(false)
   const [openEdit, setOpenEdit] = useState<boolean>(false)
+  const [openView, setOpenView] = useState<boolean>(false)
 
   const { mutate: DeleteMutate, isPending: DeleteIsPending } = useMutation({
     mutationFn: deleteCase,
@@ -42,10 +42,11 @@ const CasesCard = ({ data }: { data: Case }) => {
 
   return (
     <Dialog
-      open={openDelete || openEdit || pathname === `/cases/${data.id}`}
+      open={openDelete || openEdit || openView}
       onOpenChange={(open) => {
         setOpenDelete(false)
         setOpenEdit(false)
+        setOpenView(false)
         if (!open) {
           navigate("/cases")
         }
@@ -62,10 +63,8 @@ const CasesCard = ({ data }: { data: Case }) => {
           setOpenDelete={setOpenDelete}
         />
       )}
-      {pathname === `/cases/${data.id}` && <CaseDetailModel data={data} />}
-      {openEdit && (
-        <UpdateCase data={data} setOpenAdd={setOpenEdit} />
-      )}
+      {openView && <CaseDetailModel data={data} setOpenView={setOpenView}/>}
+      {openEdit && <UpdateCase data={data} setOpenAdd={setOpenEdit} />}
 
       {/* TASK CARD */}
       <article className="group hover:shadow-soft relative cursor-pointer rounded-xl border border-zinc-200 bg-zinc-50/40 p-4 shadow-sm transition duration-200 hover:bg-zinc-100/80">
@@ -103,7 +102,7 @@ const CasesCard = ({ data }: { data: Case }) => {
                 <span className="font-semibold text-zinc-700">
                   Client Name :
                 </span>{" "}
-                {data.clientId} 
+                {data.clientId}
               </p>
               <p>
                 <span className="font-semibold text-zinc-700">
@@ -124,7 +123,7 @@ const CasesCard = ({ data }: { data: Case }) => {
             <DropdownMenuContent align="end" className="w-40">
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(`/cases/${data.id}`)
+                  setOpenView(true)
                 }}
               >
                 View

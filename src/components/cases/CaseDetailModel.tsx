@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 
 import {
   DialogContent,
@@ -10,10 +10,10 @@ import type { Case } from "@/types/caseType"
 
 type Props = {
   data: Case
+  setOpenView: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const CaseDetailModal = ({ data }: Props) => {
-  const navigate = useNavigate()
+const CaseDetailModal = ({ data, setOpenView }: Props) => {
   return (
     <>
       <DialogContent className="max-w-xl p-5 sm:p-6 lg:min-w-200">
@@ -35,9 +35,7 @@ const CaseDetailModal = ({ data }: Props) => {
             <p className="text-xs font-semibold text-muted-foreground uppercase">
               Case Description
             </p>
-            <p className="mt-1 rounded-xl bg-muted p-3">
-              {data.description}
-            </p>
+            <p className="mt-1 rounded-xl bg-muted p-3">{data.description}</p>
           </div>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -64,7 +62,7 @@ const CaseDetailModal = ({ data }: Props) => {
         <div className="mt-5 flex justify-end">
           <button
             className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
-            onClick={() => navigate("/cases")}
+            onClick={() => setOpenView(false)}
           >
             Close
           </button>
