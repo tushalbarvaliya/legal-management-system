@@ -123,7 +123,7 @@ const AddTask = ({
                     defaultValue={field.value}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select gender" />
+                      <SelectValue placeholder="Select Priority" />
                     </SelectTrigger>
 
                     <SelectContent>
@@ -151,7 +151,7 @@ const AddTask = ({
                     value={field.value ? String(field.value) : ""}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select gender" />
+                      <SelectValue placeholder="Select Case" />
                     </SelectTrigger>
 
                     <SelectContent>
