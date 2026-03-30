@@ -54,7 +54,11 @@ const UpdateCompany = ({ closeModal, data }: UpdateTaskProps) => {
   })
 
   const onSubmit = (formData: UpdateCompanyFormSchemaType) => {
-    mutate(formData)
+    if (form.formState.isDirty) {
+      mutate(formData)
+    } else {
+      closeModal(false)
+    }
   }
 
   return (

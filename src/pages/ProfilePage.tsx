@@ -1,36 +1,53 @@
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+import { Controller, useForm } from "react-hook-form"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
-import { useForm } from "react-hook-form"
-import { Link, useNavigate } from "react-router"
+import { useNavigate, Link } from "react-router-dom"
 import { toast } from "sonner"
 import { motion } from "framer-motion"
 
-import type { UserProfileType } from "@/types/userType"
-import ErrorMessage from "@/components/ErrorMessage"
-import ProfileSkeleton from "@/components/profile/ProfileSkeleton"
-import { queryClient } from "@/main"
-import { addressRegex, nameRegex, phoneNumberRegex } from "@/utils/regex"
+import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
 import { getProfile, patchProfileUpdate } from "@/api/userAPI"
 import type { ProfileResponse } from "@/types/types"
+import { queryClient } from "@/main"
+import ProfileSkeleton from "@/components/profile/ProfileSkeleton"
+import ErrorMessage from "@/components/ErrorMessage"
+import { nameRegex, phoneNumberRegex, addressRegex } from "@/utils/regex"
 
-export type ProfileFormData = {
-  lastName: string
-  gender: string
-  firstName: string
-  phoneNumber: string
-  address: string
-  role: string
-}
-
-const getSafeProfileData = (data: UserProfileType): ProfileFormData => ({
-  firstName: data.firstName ?? "",
-  lastName: data.lastName ?? "",
-  address: data.address ?? "",
-  phoneNumber: data.phoneNumber ?? "",
-  gender: data.gender ?? "",
-  role: data.role ?? "",
+const profileSchema = z.object({
+  firstName: z
+    .string()
+    .min(2, "Min 2 characters")
+    .max(50, "Max 50 characters")
+    .regex(nameRegex, "Only letters allowed")
+    .nonempty("Cannot be empty"),
+  lastName: z
+    .string()
+    .min(2, "Min 2 characters")
+    .max(50, "Max 50 characters")
+    .regex(nameRegex, "Only letters allowed")
+    .nonempty("Cannot be empty"),
+  address: z
+    .string()
+    .min(5, "Too short")
+    .max(200, "Too long")
+    .regex(addressRegex, "Invalid address"),
+  phoneNumber: z.string().regex(phoneNumberRegex, "Invalid phone number"),
+  gender: z.string(),
+  role: z.string().optional(),
 })
+
+export type ProfileFormData = z.infer<typeof profileSchema>
 
 const ProfilePage = () => {
   const [isEdit, setIsEdit] = useState(false)
@@ -41,22 +58,6 @@ const ProfilePage = () => {
     queryFn: getProfile,
   })
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<ProfileFormData>({
-    mode: "onChange",
-    delayError: 300,
-  })
-
-  useEffect(() => {
-    if (data) {
-      reset(getSafeProfileData(data))
-    }
-  }, [data, reset])
-
   const { mutate, isPending } = useMutation({
     mutationFn: patchProfileUpdate,
     onSuccess: () => {
@@ -65,13 +66,40 @@ const ProfilePage = () => {
       setIsEdit(false)
       setTimeout(() => navigate("/"), 1500)
     },
-    onError: (error) => {
-      toast.error(error?.message || "Something went wrong")
+    onError: (error) => toast.error(error?.message || "Something went wrong"),
+  })
+
+  const { control, handleSubmit, reset, formState } = useForm<ProfileFormData>({
+    resolver: zodResolver(profileSchema),
+    mode: "onChange",
+    defaultValues: {
+      firstName: data?.firstName ?? "",
+      lastName: data?.lastName ?? "",
+      address: data?.address ?? "",
+      phoneNumber: data?.phoneNumber ?? "",
+      gender: data?.gender ?? "",
+      role: data?.role ?? "",
     },
   })
 
+  useEffect(() => {
+    if (data && !isEdit)
+      reset({
+        firstName: data?.firstName ?? "",
+        lastName: data?.lastName ?? "",
+        address: data?.address ?? "",
+        phoneNumber: data?.phoneNumber ?? "",
+        gender: data?.gender ?? "",
+        role: data?.role ?? "",
+      })
+  }, [data, reset, isEdit])
+
   const onSubmit = (formData: ProfileFormData) => {
-    mutate(formData)
+    if(formState.isDirty){
+      mutate(formData)
+    }else{
+      setIsEdit(false)
+    }
   }
 
   if (isLoading) return <ProfileSkeleton />
@@ -112,114 +140,120 @@ const ProfilePage = () => {
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {/* First Name */}
-                <div>
-                  <label className="text-sm font-medium">First Name</label>
-                  <input
-                    disabled={!isEdit}
-                    {...register("firstName", {
-                      required: "First name is required",
-                      minLength: { value: 2, message: "Min 2 characters" },
-                      maxLength: { value: 50, message: "Max 50 characters" },
-                      pattern: {
-                        value: nameRegex,
-                        message: "Only letters allowed",
-                      },
-                      validate: (v) => v.trim() !== "" || "Cannot be empty",
-                    })}
-                    className="field w-full"
-                  />
-                  <p className="error">{errors.firstName?.message}</p>
-                </div>
+                <Controller
+                  name="firstName"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <div>
+                      <label className="text-sm font-medium">First Name</label>
+                      <Input disabled={!isEdit} {...field} />
+                      {fieldState.error && (
+                        <p className="text-xs text-red-600">
+                          {fieldState.error.message}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                />
 
                 {/* Last Name */}
-                <div>
-                  <label className="text-sm font-medium">Last Name</label>
-                  <input
-                    disabled={!isEdit}
-                    {...register("lastName", {
-                      required: "Last name is required",
-                      minLength: { value: 2, message: "Min 2 characters" },
-                      maxLength: { value: 50, message: "Max 50 characters" },
-                      pattern: {
-                        value: nameRegex,
-                        message: "Only letters allowed",
-                      },
-                      validate: (v) => v.trim() !== "" || "Cannot be empty",
-                    })}
-                    className="field w-full"
-                  />
-                  <p className="error">{errors.lastName?.message}</p>
-                </div>
+                <Controller
+                  name="lastName"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <div>
+                      <label className="text-sm font-medium">Last Name</label>
+                      <Input disabled={!isEdit} {...field} />
+                      {fieldState.error && (
+                        <p className="text-xs text-red-600">
+                          {fieldState.error.message}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                />
 
                 {/* Address */}
-                <div className="sm:col-span-2">
-                  <label className="text-sm font-medium">Address</label>
-                  <input
-                    disabled={!isEdit}
-                    {...register("address", {
-                      required: "Address is required",
-                      minLength: { value: 5, message: "Too short" },
-                      maxLength: { value: 200, message: "Too long" },
-                      pattern: {
-                        value: addressRegex,
-                        message: "Invalid address",
-                      },
-                    })}
-                    className="field w-full"
-                  />
-                  <p className="error">{errors.address?.message}</p>
-                </div>
+                <Controller
+                  name="address"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <div className="sm:col-span-2">
+                      <label className="text-sm font-medium">Address</label>
+                      <Input disabled={!isEdit} {...field} />
+                      {fieldState.error && (
+                        <p className="text-xs text-red-600">
+                          {fieldState.error.message}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                />
 
                 {/* Phone */}
-                <div className="sm:col-span-2">
-                  <label className="text-sm font-medium">Phone</label>
-                  <input
-                    disabled={!isEdit}
-                    {...register("phoneNumber", {
-                      required: "Phone is required",
-                      pattern: {
-                        value: phoneNumberRegex,
-                        message: "Invalid phone number",
-                      },
-                    })}
-                    className="field w-full"
-                  />
-                  <p className="error">{errors.phoneNumber?.message}</p>
-                </div>
+                <Controller
+                  name="phoneNumber"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <div className="sm:col-span-2">
+                      <label className="text-sm font-medium">Phone</label>
+                      <Input disabled={!isEdit} {...field} />
+                      {fieldState.error && (
+                        <p className="text-xs text-red-600">
+                          {fieldState.error.message}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                />
 
                 {/* Role */}
-                <div>
-                  <label className="text-sm font-medium">Role</label>
-                  <select
-                    disabled
-                    {...register("role")}
-                    className="field w-full"
-                  >
-                    <option value="">Select</option>
-                    <option value="admin">Admin</option>
-                    <option value="lawyer">Lawyer</option>
-                    <option value="staff">Staff</option>
-                    <option value="client">Client</option>
-                  </select>
-                </div>
+                <Controller
+                  name="role"
+                  control={control}
+                  render={({ field }) => (
+                    <div>
+                      <label className="text-sm font-medium">Role</label>
+                      <Select disabled {...field}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="admin">Admin</SelectItem>
+                          <SelectItem value="lawyer">Lawyer</SelectItem>
+                          <SelectItem value="staff">Staff</SelectItem>
+                          <SelectItem value="client">Client</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+                />
 
                 {/* Gender */}
-                <div>
-                  <label className="text-sm font-medium">Gender</label>
-                  <select
-                    disabled={!isEdit}
-                    {...register("gender", {
-                      required: "Gender is required",
-                    })}
-                    className="field w-full"
-                  >
-                    <option value="">Select</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                  </select>
-                  <p className="error">{errors.gender?.message}</p>
-                </div>
+                <Controller
+                  name="gender"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <div>
+                      <label className="text-sm font-medium">Gender</label>
+                      <Select disabled={!isEdit} {...field}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="male">Male</SelectItem>
+                          <SelectItem value="female">Female</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {fieldState.error && (
+                        <p className="text-xs text-red-600">
+                          {fieldState.error.message}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                />
               </div>
 
               {/* Buttons */}
@@ -240,7 +274,6 @@ const ProfilePage = () => {
                   >
                     Cancel
                   </Button>
-
                   <Button
                     type="submit"
                     disabled={isPending}
