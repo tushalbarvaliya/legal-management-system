@@ -1,5 +1,4 @@
 import { MoreVertical } from "lucide-react"
-import { useLocation, useNavigate } from "react-router-dom"
 
 import { formatDate } from "@/utils/formate"
 import { Button } from "../ui/button"
@@ -7,7 +6,6 @@ import TaskDetailsModel from "./TaskDetails"
 import type { TaskResponse } from "@/types/taskType"
 import UpdateTask from "./UpdateTask"
 import { Dialog } from "../ui/dialog"
-import DeleteTask from "./DeleteTask"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +16,9 @@ import { useMutation } from "@tanstack/react-query"
 import axiosInstance from "@/api/axiosInstance"
 import { toast } from "sonner"
 import { queryClient } from "@/main"
+import { useState } from "react"
+import DeleteModel from "../DeleteModel"
+import { deleteTask } from "@/api/taskAPI"
 
 const getPriorityColor = (priority: string) => {
   if (priority == "low") {
@@ -37,8 +38,9 @@ const getStatusColor = (status: string) => {
   }
 }
 const TaskCard = (data: TaskResponse) => {
-  const navigate = useNavigate()
-  const pathname = useLocation().pathname
+  const [openDelete, setOpenDelete] = useState<boolean>(false)
+  const [openEdit, setOpenEdit] = useState<boolean>(false)
+  const [openView, setOpenView] = useState<boolean>(false)
 
   const { mutate } = useMutation({
     mutationFn: async (id: number) => {
@@ -53,21 +55,42 @@ const TaskCard = (data: TaskResponse) => {
       toast.error(error.message)
     },
   })
-
+  const { mutate: DeleteMutate, isPending: DeleteIsPending } = useMutation({
+    mutationFn: deleteTask,
+    onSuccess: () => {
+      toast.success("Task Deleted")
+      queryClient.invalidateQueries({ queryKey: ["tasks"] })
+      setOpenDelete(false)
+    },
+    onError: (error) => {
+      toast.error(`Error ${error}`)
+    },
+  })
   return (
     <Dialog
-      open={
-        pathname === `/task/edit/${data.id}` ||
-        pathname === `/task/delete/${data.id}` ||
-        pathname === `/task/${data.id}`
-      }
+      open={openDelete || openEdit || openView}
       onOpenChange={(open) => {
-        if (!open) navigate("/task")
+        if (!open) {
+          setOpenDelete(false)
+          setOpenEdit(false)
+          setOpenView(false)
+        }
       }}
     >
-      {pathname === `/task/${data.id}` && <TaskDetailsModel data={data} />}
-      {pathname === `/task/edit/${data.id}` && <UpdateTask task={data} />}
-      {pathname === `/task/delete/${data.id}` && <DeleteTask task={data} />}
+      {openView && <TaskDetailsModel data={data} setOpenView={setOpenView} />}
+      {openEdit && <UpdateTask task={data} setOpenEdit={setOpenEdit} />}
+
+      {openDelete && (
+        <DeleteModel
+          title="Delete Task"
+          subTitle="Are you sure you want to delete this task?"
+          detailsTitle={`${data.title}`}
+          id={data.id}
+          isPending={DeleteIsPending}
+          mutate={DeleteMutate}
+          setOpenDelete={setOpenDelete}
+        />
+      )}
       <article className="group hover:shadow-soft relative cursor-pointer rounded-xl border border-zinc-200 bg-zinc-50/40 p-4 shadow-sm transition duration-200 hover:bg-zinc-100/80">
         <div className="flex items-start gap-3">
           <div className="min-w-0 flex-1">
@@ -134,7 +157,7 @@ const TaskCard = (data: TaskResponse) => {
                 <DropdownMenuItem
                   onClick={(e) => {
                     e.stopPropagation()
-                    navigate(`/task/${data.id}`)
+                    setOpenView(true)
                   }}
                 >
                   View
@@ -142,7 +165,7 @@ const TaskCard = (data: TaskResponse) => {
                 <DropdownMenuItem
                   onClick={(e) => {
                     e.stopPropagation()
-                    navigate(`/task/edit/${data.id}`)
+                    setOpenEdit(true)
                   }}
                 >
                   Edit
@@ -161,7 +184,7 @@ const TaskCard = (data: TaskResponse) => {
                   className="text-rose-500"
                   onClick={(e) => {
                     e.stopPropagation()
-                    navigate(`/task/delete/${data.id}`)
+                    setOpenDelete(true)
                   }}
                 >
                   Delete

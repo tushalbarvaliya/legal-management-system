@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
@@ -33,15 +32,21 @@ import {
   SelectValue,
 } from "../ui/select"
 
-const UpdateTask = ({ task }: { task: TaskResponse }) => {
+const UpdateTask = ({
+  task,
+  setOpenEdit,
+}: {
+  task: TaskResponse
+  setOpenEdit: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
   const id = useAppSelector((state) => state.auth.id)
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const { mutate, isPending } = useMutation({
     mutationFn: updateTask,
     onSuccess: () => {
       toast.success("Task Update Successfully")
       queryClient.invalidateQueries({ queryKey: ["tasks"] })
-      navigate("/task")
+      setOpenEdit(false)
     },
     onError: (error) => {
       toast.error(`Error ${error}`)
@@ -75,9 +80,7 @@ const UpdateTask = ({ task }: { task: TaskResponse }) => {
       mutate({ data: data, id: task.id })
     } else {
       toast.success("No Changes Found", { duration: 700 })
-      setTimeout(() => {
-        navigate("/task")
-      }, 700)
+      setOpenEdit(false)
     }
   }
   return (

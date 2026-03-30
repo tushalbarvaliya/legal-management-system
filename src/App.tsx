@@ -114,38 +114,6 @@ const App = () => {
               </ProtectedRouteByRole>
             }
           />
-          <Route
-            path="/task/:id"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
-                <TaskPage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
-            path="/task/add"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
-                <TaskPage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
-            path="/task/edit/:id"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
-                <TaskPage />
-              </ProtectedRouteByRole>
-            }
-          />
-          <Route
-            path="/task/delete/:id"
-            element={
-              <ProtectedRouteByRole allowedRoles={["lawyer", "staff"]}>
-                <TaskPage />
-              </ProtectedRouteByRole>
-            }
-          />
 
           <Route
             path="/invoice"

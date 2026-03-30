@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import { useMemo, useState } from "react"
 import { Plus } from "lucide-react"
-import { useLocation, useNavigate } from "react-router-dom"
 
 import { getAllTask } from "@/api/taskAPI"
 import type { TaskResponse, TaskType } from "@/types/taskType"
@@ -23,8 +22,7 @@ import {
 import { Input } from "@/components/ui/input"
 
 const TaskPage = () => {
-  const navigate = useNavigate()
-  const pathname = useLocation().pathname
+  const[openAdd,setOpenAdd]=useState<boolean>(false)
 
   const [search, setSearch] = useState("")
   const [priorityFilter, setPriorityFilter] = useState("all")
@@ -66,12 +64,12 @@ const TaskPage = () => {
 
   return (
     <Dialog
-      open={pathname === "/task/add"}
+      open={openAdd}
       onOpenChange={(open) => {
-        if (!open) navigate("/task")
+        if (!open) setOpenAdd(false)
       }}
     >
-      {pathname === "/task/add" && <AddTask />}
+      {openAdd && <AddTask setOpenAdd={setOpenAdd}/>}
       <section className="shadow-soft rounded-2xl border border-zinc-200 bg-white p-4 sm:p-6">
         {/* header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -151,7 +149,7 @@ const TaskPage = () => {
 
         {/* Add Button */}
         <button
-          onClick={() => navigate("/task/add")}
+          onClick={() => setOpenAdd(true)}
           className="fixed right-6 bottom-6 flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white"
         >
           <Plus />

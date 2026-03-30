@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 
 import { formatDate } from "@/utils/formate"
 import type {  TaskResponse } from "@/types/taskType"
@@ -11,13 +11,13 @@ import {
 
 type Props = {
   data: TaskResponse
+  setOpenView: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const TaskDetails = ({ data }: Props) => {
-  const navigate = useNavigate()
+const TaskDetails = ({ data ,setOpenView}: Props) => {
 
   const handleClose = () => {
-    navigate("/task")
+    setOpenView(true)
   }
 
   return (
