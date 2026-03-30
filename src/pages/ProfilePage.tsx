@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router"
 import { toast } from "sonner"
 import { motion } from "framer-motion"
 
-import type { UserProfileType } from "@/data/userData"
+import type { UserProfileType } from "@/types/userType"
 import ErrorMessage from "@/components/ErrorMessage"
 import ProfileSkeleton from "@/components/profile/ProfileSkeleton"
 import { queryClient } from "@/main"
