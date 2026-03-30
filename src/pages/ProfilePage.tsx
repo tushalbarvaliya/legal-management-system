@@ -81,23 +81,23 @@ const ProfilePage = () => {
       lastName: data?.data.lastName ?? "",
       address: data?.data.address ?? "",
       phoneNumber: data?.data.phoneNumber ?? "",
-      gender: data?.data.gender ?? "",
+      gender: data?.data.gender?.toLowerCase() ?? "",
       role: data?.data.role ?? "",
     },
   })
 
   useEffect(() => {
-    if (data && !isEdit)
+    if (data) {
       reset({
-        firstName: data?.data.firstName ?? "",
-        lastName: data?.data.lastName ?? "",
-        address: data?.data.address ?? "",
-        phoneNumber: data?.data.phoneNumber ?? "",
-        gender: data?.data.gender ?? "",
-        role: data?.data.role ?? "",
+        firstName: data.data.firstName ?? "",
+        lastName: data.data.lastName ?? "",
+        address: data.data.address ?? "",
+        phoneNumber: data.data.phoneNumber ?? "",
+        gender: data.data.gender?.toLowerCase() ?? "",
+        role: data.data.role ?? "",
       })
+    }
   }, [data, reset, isEdit])
-
   const onSubmit = (formData: ProfileFormData) => {
     if (isDirty) {
       mutate(formData)
@@ -244,6 +244,7 @@ const ProfilePage = () => {
                         disabled={!isEdit}
                         value={field.value}
                         onValueChange={field.onChange}
+                        key={field.value}
                       >
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select Gender" />
