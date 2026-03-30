@@ -3,19 +3,19 @@ import { useQuery } from "@tanstack/react-query"
 import { Search } from "lucide-react"
 
 import { getAllDocs } from "@/api/docsAPI"
-import type { docsDataType } from "@/data/docsData"
 import ErrorMessage from "@/components/ErrorMessage"
 import DocsCardSkeleton from "@/components/document/DocsCardSkeleton"
 import NoFound from "@/components/NoFound"
 import DocsHeader from "@/components/document/DocsHeader"
 import DocsCard from "@/components/document/DocsCard"
+import type { DocumentResponse } from "@/types/docsType"
 
 const DocsPage = () => {
   const [search, setSearch] = useState("")
   const [fileType, setFileType] = useState("all")
   const [caseId, setCaseId] = useState("all")
 
-  const { data, isLoading, isError } = useQuery<docsDataType[]>({
+  const { data, isLoading, isError } = useQuery<DocumentResponse[]>({
     queryKey: ["docs"],
     queryFn: getAllDocs,
   })
@@ -24,27 +24,33 @@ const DocsPage = () => {
 
   const filteredDocs = useMemo(() => {
     return documents.filter((doc) => {
-      const title = doc.title?.toLowerCase() || ""
-      const description = doc.description?.toLowerCase() || ""
+      const title = doc.document.title?.toLowerCase() || ""
+      const description = doc.document.description?.toLowerCase() || ""
       const searchValue = search.toLowerCase()
 
       const matchesSearch =
         title.includes(searchValue) || description.includes(searchValue)
 
-      const matchesFileType = fileType === "all" || doc.fileType === fileType
+      const matchesFileType =
+        fileType === "all" || doc.document.fileType === fileType
 
-      const matchesCase = caseId === "all" || String(doc.caseId) === caseId
+      const matchesCase =
+        caseId === "all" || String(doc.document.caseId) === caseId
 
       return matchesSearch && matchesFileType && matchesCase
     })
   }, [search, fileType, caseId, documents])
 
   const fileTypes = useMemo(() => {
-    return [...new Set(documents.map((item) => item.fileType).filter(Boolean))]
+    return [
+      ...new Set(
+        documents.map((item) => item.document).filter(Boolean)
+      ),
+    ]
   }, [documents])
 
   const caseIds = useMemo(() => {
-    return [...new Set(documents.map((item) => item.caseId).filter(Boolean))]
+    return [...new Set(documents.map((item) => item.case).filter(Boolean))]
   }, [documents])
 
   return (
@@ -62,7 +68,6 @@ const DocsPage = () => {
               Choose a document card to load related documents.
             </p>
           </div>
-
         </div>
 
         {/* Filters */}
@@ -89,8 +94,8 @@ const DocsPage = () => {
           >
             <option value="all">All Types</option>
             {fileTypes.map((type) => (
-              <option key={type} value={type}>
-                {type}
+              <option key={type.id} value={type.fileType}>
+                {type.fileType}
               </option>
             ))}
           </select>
@@ -104,8 +109,8 @@ const DocsPage = () => {
           >
             <option value="all">All Cases</option>
             {caseIds.map((id) => (
-              <option key={id} value={String(id)}>
-                {id}
+              <option key={id.id} value={String(id.id)}>
+                {id.title}
               </option>
             ))}
           </select>
@@ -126,7 +131,9 @@ const DocsPage = () => {
           {!isLoading && !isError && (
             <>
               {filteredDocs.length > 0 ? (
-                filteredDocs.map((item) => <DocsCard {...item} key={item.id} />)
+                filteredDocs.map((item) => (
+                  <DocsCard docs={item} key={item.document.id} />
+                ))
               ) : (
                 <NoFound title="Documents" />
               )}

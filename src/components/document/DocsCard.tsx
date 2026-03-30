@@ -13,8 +13,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import type { DocumentResponse } from "@/types/docsType"
 
-const DocsCard = (items: docsDataType) => {
+const DocsCard = ({ docs: items }: { docs: DocumentResponse }) => {
   const pathname = useLocation().pathname
   const navigate = useNavigate()
   return (
@@ -32,15 +33,15 @@ const DocsCard = (items: docsDataType) => {
           <div className="flex items-start gap-3">
             {/* Title + Tooltip */}
             <div className="group relative w-fit">
-              <Link to={items.documentLink}>
+              <Link to={items.document.documentLink}>
                 <h2 className="cursor-pointer truncate text-sm font-semibold text-zinc-900">
-                  {items.title}
+                  {items.document.title}
                 </h2>
               </Link>
 
               {/* Tooltip */}
               <div className="absolute top-full left-0 z-10 mt-2 hidden w-64 translate-y-1 rounded-lg bg-zinc-900/95 p-3 text-xs text-zinc-100 opacity-0 shadow-lg transition-all duration-200 group-hover:block group-hover:translate-y-0 group-hover:opacity-100">
-                {items.description}
+                {items.document.description}
               </div>
             </div>
           </div>
@@ -50,13 +51,25 @@ const DocsCard = (items: docsDataType) => {
             <p>
               File:{" "}
               <span className="ml-1 inline-flex rounded-full bg-blue-100 px-2 py-0.5 font-medium capitalize">
-                {items.fileType}
+                {items.document.fileType}
               </span>
             </p>
             <p>
-              Case ID:{" "}
+              Case Number:{" "}
               <span className="ml-1 inline-flex rounded-full bg-blue-100 px-2 py-0.5 font-medium capitalize">
-                {items.caseId}
+                {items.case.caseNumber}
+              </span>
+            </p>
+            <p>
+              Case Stage:{" "}
+              <span className="ml-1 inline-flex rounded-full bg-blue-100 px-2 py-0.5 font-medium capitalize">
+                {items.case.caseStage}
+              </span>
+            </p>
+            <p>
+              Case :{" "}
+              <span className="ml-1 inline-flex rounded-full bg-blue-100 px-2 py-0.5 font-medium capitalize">
+                {items.case.title}
               </span>
             </p>
           </div>
@@ -74,14 +87,14 @@ const DocsCard = (items: docsDataType) => {
             <DropdownMenuContent align="end" className="w-40 font-medium">
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(`/docs/${items.id}`)
+                  navigate(`/docs/${items.document.id}`)
                 }}
               >
                 View
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(`/docs/edit/${items.id}`)
+                  navigate(`/docs/edit/${items.document.id}`)
                 }}
               >
                 Edit
@@ -89,7 +102,7 @@ const DocsCard = (items: docsDataType) => {
               <DropdownMenuItem
                 className="text-red-500"
                 onClick={() => {
-                  navigate(`/docs/delete/${items.id}`)
+                  navigate(`/docs/delete/${items.document.id}`)
                 }}
               >
                 Delete
@@ -97,9 +110,9 @@ const DocsCard = (items: docsDataType) => {
               <DropdownMenuItem
                 onClick={() =>
                   downloadBase64File(
-                    items.documentLink,
+                    items.document.documentLink,
                     "invoice",
-                    items.fileType
+                    items.document.fileType
                   )
                 }
               >
