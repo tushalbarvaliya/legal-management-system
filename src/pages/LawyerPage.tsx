@@ -11,6 +11,7 @@ import NoFound from "@/components/NoFound"
 import { Dialog } from "@/components/ui/dialog"
 import AddLawyer from "@/components/lawyer/AddLawyer"
 import { Helmet } from "react-helmet-async"
+import { Virtuoso } from "react-virtuoso"
 
 const LawyerPage = () => {
   const [openAdd, setOpenAdd] = useState<boolean>(false)
@@ -112,11 +113,15 @@ const LawyerPage = () => {
           )}
 
           {/* Data */}
-          {!isLoading &&
-            !isError &&
-            filteredLawyers.map((item) => (
-              <LawyerCard key={item.lawyer.id} {...item} />
-            ))}
+          {!isLoading && !isError && filteredLawyers.length > 0 && (
+            <Virtuoso
+              style={{ height: "300px" }}
+              data={filteredLawyers}
+              itemContent={(_, item) => (
+                <LawyerCard key={item.lawyer.id} {...item} />
+              )}
+            />
+          )}
         </div>
       </div>
     </Dialog>
