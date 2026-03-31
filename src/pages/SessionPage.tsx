@@ -36,29 +36,6 @@ const SessionPage = () => {
     )
   }, [sessions, search])
 
-  if (isLoading) {
-    return (
-      <>
-        <Helmet>
-          <title>Session Management</title>
-        </Helmet>
-        <SessionCardSkeleton />
-        <SessionCardSkeleton />
-        <SessionCardSkeleton />
-      </>
-    )
-  }
-
-  if (isError) {
-    return (
-      <>
-        <Helmet>
-          <title>Session Management</title>
-        </Helmet>
-        <ErrorMessage />
-      </>
-    )
-  }
   return (
     <Dialog
       open={openAdd}
@@ -92,6 +69,7 @@ const SessionPage = () => {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full flex-1 rounded-xl border px-4 py-2 text-sm"
+                disabled={isError||isLoading}
               />
 
               <button
@@ -111,6 +89,18 @@ const SessionPage = () => {
 
         {/* List */}
         <div className="mt-5 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {isError && (
+            <div className="col-span-full">
+              <ErrorMessage />
+            </div>
+          )}
+          {isLoading && (
+            <>
+              <SessionCardSkeleton />
+              <SessionCardSkeleton />
+              <SessionCardSkeleton />
+            </>
+          )}
           {!isLoading &&
             !isError &&
             (filteredSessions && filteredSessions?.length > 0 ? (
