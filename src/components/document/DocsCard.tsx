@@ -1,5 +1,4 @@
 import { MoreVertical } from "lucide-react"
-import { Link } from "react-router"
 import { toast } from "sonner"
 import { useState } from "react"
 import { useMutation } from "@tanstack/react-query"
@@ -19,6 +18,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 
 const DocsCard = ({ docs: items }: { docs: CaseDocumentItem }) => {
   const [openEdit, setOpenEdit] = useState<boolean>(false)
@@ -65,21 +65,18 @@ const DocsCard = ({ docs: items }: { docs: CaseDocumentItem }) => {
         <div className="flex-1">
           <div className="flex items-start gap-3">
             {/* Title + Tooltip */}
-            <div className="group relative w-fit">
-              <Link to={items.document.documentLink}>
+            <Tooltip>
+              <TooltipTrigger asChild>
                 <h2 className="cursor-pointer truncate text-sm font-semibold text-zinc-900">
                   {items.document.title}
                 </h2>
-              </Link>
-
-              {/* Tooltip */}
-              <div className="absolute top-full left-0 z-10 mt-2 hidden w-64 translate-y-1 rounded-lg bg-zinc-900/95 p-3 text-xs text-zinc-100 opacity-0 shadow-lg transition-all duration-200 group-hover:block group-hover:translate-y-0 group-hover:opacity-100">
-                {items.document.description}
-              </div>
-            </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{items.document.description}</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
 
-          {/* Meta Info */}
           <div className="mt-2 mr-40 flex flex-wrap justify-between gap-2 text-[10px] text-zinc-600">
             <p className="">
               Case Number:{" "}

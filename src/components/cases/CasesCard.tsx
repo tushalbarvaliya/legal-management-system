@@ -1,5 +1,5 @@
 import { MoreVertical } from "lucide-react"
-import {  useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 import { useState } from "react"
 import { useMutation } from "@tanstack/react-query"
@@ -20,6 +20,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu"
+import ToolTip from "../ToolTip"
 
 const CasesCard = ({ data }: { data: Case }) => {
   const navigate = useNavigate()
@@ -63,7 +64,7 @@ const CasesCard = ({ data }: { data: Case }) => {
           setOpenDelete={setOpenDelete}
         />
       )}
-      {openView && <CaseDetailModel data={data} setOpenView={setOpenView}/>}
+      {openView && <CaseDetailModel data={data} setOpenView={setOpenView} />}
       {openEdit && <UpdateCase data={data} setOpenAdd={setOpenEdit} />}
 
       {/* TASK CARD */}
@@ -71,16 +72,7 @@ const CasesCard = ({ data }: { data: Case }) => {
         <div className="flex items-start gap-3">
           <div className="min-w-0 flex-1">
             {/* TITLE */}
-            <div className="group/title relative inline-flex max-w-full items-center">
-              <h2 className="truncate text-sm font-semibold text-zinc-900 transition duration-200 group-hover:text-zinc-950">
-                {data.title}
-              </h2>
-
-              {/* TOOLTIP */}
-              <div className="pointer-events-none absolute top-full left-0 z-10 mt-2 hidden w-70 max-w-[70vw] rounded-lg bg-zinc-900/95 p-3 text-xs leading-relaxed text-zinc-100 opacity-0 shadow-lg backdrop-blur-sm transition duration-200 group-hover/title:block group-hover/title:opacity-100">
-                {data.description}
-              </div>
-            </div>
+            <ToolTip description={data.description} title={data.title} />
 
             {/* INFO GRID */}
             <div className="mt-3 grid grid-cols-1 gap-2 text-xs text-zinc-600 sm:grid-cols-2 lg:grid-cols-4">
