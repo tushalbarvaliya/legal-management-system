@@ -35,7 +35,7 @@ const ClientCard = ({ client }: { client: ClientUserMapping }) => {
     mutationFn: putBlockClient,
     onSuccess: () => {
       toast.success("Block Lawyer Successfully", { duration: 1500 })
-      queryClient.invalidateQueries({ queryKey: ["client"] })
+      queryClient.invalidateQueries({})
       setOpenBlock(false)
     },
     onError: (error) => {

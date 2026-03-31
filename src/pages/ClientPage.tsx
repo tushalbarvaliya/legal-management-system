@@ -35,7 +35,7 @@ const ClientPage = () => {
         <title>Client Management</title>
       </Helmet>
       <ClientHeader />
-      <section className="shadow-soft mt-2 rounded-2xl border border-zinc-200 bg-white p-4 sm:p-6">
+      <section className="shadow-soft mt-2 rounded-2xl border-zinc-200 bg-white p-4 sm:p-6">
         <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-lg font-semibold tracking-tight text-zinc-900">
             Client List
@@ -61,11 +61,11 @@ const ClientPage = () => {
         <div id="clientList" className="space-y-3">
           {/* map for client list */}
           {isError && <ErrorMessage />}
-          {!isLoading &&
-            !isError &&
-            filteredClients?.map((item: ClientUserMapping) => {
-              return <ClientCard key={item.client.id} client={item} />
-            })}
+            {!isLoading &&
+              !isError &&
+              filteredClients?.map((item: ClientUserMapping) => {
+                return <ClientCard key={item.client.id} client={item} />
+              })}
           {isLoading && (
             <>
               <ClientCardSkeleton />

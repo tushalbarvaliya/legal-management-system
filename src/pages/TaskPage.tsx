@@ -103,7 +103,7 @@ const TaskPage = () => {
               onValueChange={(value) => setPriorityFilter(value)}
               disabled={isLoading || isError}
             >
-              <SelectTrigger className="w-45">
+              <SelectTrigger className="w-full md:w-40">
                 <SelectValue placeholder="Select Priority" />
               </SelectTrigger>
 
@@ -121,7 +121,7 @@ const TaskPage = () => {
               onValueChange={(value) => setStatusFilter(value)}
               disabled={isLoading || isError}
             >
-              <SelectTrigger className="w-45">
+              <SelectTrigger className="w-full md:w-40">
                 <SelectValue placeholder="Select Status" />
               </SelectTrigger>
 

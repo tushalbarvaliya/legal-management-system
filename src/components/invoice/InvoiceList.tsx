@@ -65,14 +65,14 @@ const InvoiceList = () => {
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 w-full">
           {/* Status */}
           <Select
             value={status || "all"}
             onValueChange={(value) => setStatus(value === "all" ? "" : value)}
             disabled={isLoading || isError}
           >
-            <SelectTrigger className="w-50">
+            <SelectTrigger className="w-full md:w-45">
               <SelectValue placeholder="All Statuses" />
             </SelectTrigger>
 
@@ -90,7 +90,7 @@ const InvoiceList = () => {
             onValueChange={(value) => setClient(value)}
             disabled={isLoading || isError}
           >
-            <SelectTrigger className="w-50">
+            <SelectTrigger className="w-full md:w-50">
               <SelectValue placeholder="All Clients" />
             </SelectTrigger>
 
@@ -108,7 +108,7 @@ const InvoiceList = () => {
           <Button
             onClick={clearFilters}
             disabled={isLoading || isError}
-            className="p-4"
+            className="p-4 w-full sm:w-fit"
           >
             Clear
           </Button>

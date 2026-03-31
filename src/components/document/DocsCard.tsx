@@ -80,28 +80,22 @@ const DocsCard = ({ docs: items }: { docs: CaseDocumentItem }) => {
           </div>
 
           {/* Meta Info */}
-          <div className="mt-2 mr-40 flex justify-between text-[10px] text-zinc-600">
-            <p>
-              File:{" "}
-              <span className="ml-1 inline-flex rounded-full bg-blue-100 px-2 py-0.5 font-medium capitalize">
-                {items.document.fileType}
-              </span>
-            </p>
-            <p>
+          <div className="mt-2 mr-40 flex flex-wrap gap-2 justify-between text-[10px] text-zinc-600">
+            <p className="w-full">
               Case Number:{" "}
-              <span className="ml-1 inline-flex rounded-full bg-blue-100 px-2 py-0.5 font-medium capitalize">
+              <span className=" rounded-full bg-blue-100 px-2 py-0.5 font-medium capitalize">
                 {items.case.caseNumber}
               </span>
             </p>
             <p>
               Case Stage:{" "}
-              <span className="ml-1 inline-flex rounded-full bg-blue-100 px-2 py-0.5 font-medium capitalize">
+              <span className=" rounded-full bg-blue-100 px-2 py-0.5 font-medium capitalize">
                 {items.case.caseStage}
               </span>
             </p>
-            <p>
+            <p className="w-full">
               Case :{" "}
-              <span className="ml-1 inline-flex rounded-full bg-blue-100 px-2 py-0.5 font-medium capitalize">
+              <span className="rounded-full bg-blue-100 px-2 py-0.5 font-medium capitalize">
                 {items.case.title}
               </span>
             </p>

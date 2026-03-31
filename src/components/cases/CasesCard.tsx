@@ -32,7 +32,7 @@ const CasesCard = ({ data }: { data: Case }) => {
     mutationFn: deleteCase,
     onSuccess: () => {
       toast.success("Delete Successfully")
-      queryClient.invalidateQueries({ queryKey: ["cases"] })
+      queryClient.invalidateQueries({})
       setOpenDelete(false)
     },
     onError: (error) => {

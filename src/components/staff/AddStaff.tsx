@@ -1,7 +1,6 @@
 import { Controller, useForm } from "react-hook-form"
 import { Eye, EyeOff } from "lucide-react" 
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
 import { useMutation } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -27,18 +26,15 @@ Select,
 } from "../ui/select"
 
 
-const AddStaff = () => {
+const AddStaff = ({setOpenAdd}:{setOpenAdd: React.Dispatch<React.SetStateAction<boolean>>}) => {
   const [passwordShow, setPasswordShow] = useState<boolean>(false)
   const [confirmPasswordShow, setConfirmPasswordShow] = useState<boolean>(false)
-  const navigate = useNavigate()
   const { mutate, isPending } = useMutation({
     mutationFn: postStaff,
     onSuccess: () => {
       toast.success("User Become Lawyer", { duration: 1500 })
       queryClient.invalidateQueries({ queryKey: ["staff"] })
-      setTimeout(() => {
-        navigate("/staff")
-      }, 1510)
+      setOpenAdd(false)
     },
     onError: (error) => {
       toast.error(`Error ${error.message}`)

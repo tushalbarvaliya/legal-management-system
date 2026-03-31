@@ -18,10 +18,10 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Helmet } from "react-helmet-async"
+import { Button } from "@/components/ui/button"
 
 const DocsPage = () => {
   const [search, setSearch] = useState("")
-  const [fileType, setFileType] = useState("all")
   const [caseId, setCaseId] = useState("all")
 
   const { data, isLoading, isError } = useQuery<DocumentDataResponse>({
@@ -30,7 +30,10 @@ const DocsPage = () => {
   })
 
   const documents = useMemo(() => data?.data ?? [], [data])
-
+  const handelClear = () => {
+    setSearch("")
+    setCaseId("all")
+  }
   const filteredDocs = useMemo(() => {
     return documents.filter((doc) => {
       const title = doc.document.title?.toLowerCase() || ""
@@ -40,19 +43,12 @@ const DocsPage = () => {
       const matchesSearch =
         title.includes(searchValue) || description.includes(searchValue)
 
-      const matchesFileType =
-        fileType === "all" || doc.document.fileType === fileType
-
       const matchesCase =
         caseId === "all" || String(doc.document.caseId) === caseId
 
-      return matchesSearch && matchesFileType && matchesCase
+      return matchesSearch && matchesCase
     })
-  }, [search, fileType, caseId, documents])
-
-  const fileTypes = useMemo(() => {
-    return [...new Set(documents.map((item) => item.document).filter(Boolean))]
-  }, [documents])
+  }, [search, caseId, documents])
 
   const caseIds = useMemo(() => {
     return [...new Set(documents.map((item) => item.case).filter(Boolean))]
@@ -92,30 +88,10 @@ const DocsPage = () => {
             />
           </div>
 
-          {/* File Type */}
-          <Select
-            value={fileType || "all"}
-            onValueChange={(value) => setFileType(value === "all" ? "" : value)}
-            disabled={isLoading || isError}
-          >
-            <SelectTrigger className="w-50">
-              <SelectValue placeholder="All Types" />
-            </SelectTrigger>
-
-            <SelectContent>
-              <SelectItem value="all">All Types</SelectItem>
-              {fileTypes.map((type) => (
-                <SelectItem key={type.id} value={type.fileType}>
-                  {type.fileType}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
           {/* Case */}
           <Select
             value={caseId || "all"}
-            onValueChange={(value) => setCaseId(value === "all" ? "" : value)}
+            onValueChange={(value) => setCaseId(value === "all" ? "all" : value)}
             disabled={isLoading || isError}
           >
             <SelectTrigger className="w-55">
@@ -124,7 +100,6 @@ const DocsPage = () => {
 
             <SelectContent>
               <SelectItem value="all">All Cases</SelectItem>
-
               {caseIds.map((item) => (
                 <SelectItem key={item.id} value={String(item.id)}>
                   {item.title}
@@ -132,6 +107,7 @@ const DocsPage = () => {
               ))}
             </SelectContent>
           </Select>
+          <Button onClick={handelClear}>Clear</Button>
         </div>
 
         {/* List */}

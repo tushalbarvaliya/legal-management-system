@@ -84,24 +84,23 @@ const SessionPage = () => {
           </div>
 
           {/* Search */}
-          <div className="flex gap-3">
-            <div className="relative">
-              <Search className="absolute top-1/3 left-3 h-4 w-4 -translate-y-1/2" />
+          <div>
+            <div className="flex w-full gap-3">
               <input
                 type="search"
                 placeholder="Search by court name..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="rounded-xl border py-2 pr-3 pl-9 text-sm"
+                className="w-full flex-1 rounded-xl border px-4 py-2 text-sm"
               />
-            </div>
 
-            <button
-              onClick={handleClear}
-              className="h-fit rounded-lg bg-black px-4 py-2 font-mono font-semibold text-white"
-            >
-              Clear
-            </button>
+              <button
+                onClick={handleClear}
+                className="h-fit rounded-lg bg-black px-4 py-2 font-mono font-semibold text-white"
+              >
+                Clear
+              </button>
+            </div>
           </div>
         </div>
 

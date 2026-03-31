@@ -101,17 +101,19 @@ const CasesPage = () => {
             </>
           )}
           {isError && <ErrorMessage />}
-          {!isLoading &&
-            !isError &&
-            (filteredCases && filteredCases?.length > 0 ? (
-              filteredCases.map((item: Case) => (
-                <div key={item.id}>
-                  <CasesCard data={item} />
-                </div>
-              ))
-            ) : (
-              <NoFound title="Case" />
-            ))}
+          <div className="h-100  overflow-auto">
+            {!isLoading &&
+              !isError &&
+              (filteredCases && filteredCases?.length > 0 ? (
+                filteredCases.map((item: Case) => (
+                  <div key={item.id}>
+                    <CasesCard data={item} />
+                  </div>
+                ))
+              ) : (
+                <NoFound title="Case" />
+              ))}
+          </div>
         </div>
       </section>
     </Dialog>

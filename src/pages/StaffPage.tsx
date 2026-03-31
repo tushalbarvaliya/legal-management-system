@@ -65,7 +65,7 @@ const StaffPage = () => {
         if (!open) setOpenAdd(false)
       }}
     >
-      {openAdd && <AddStaff />}
+      {openAdd && <AddStaff setOpenAdd={setOpenAdd}/>}
 
       {/* Add Button */}
       <button
