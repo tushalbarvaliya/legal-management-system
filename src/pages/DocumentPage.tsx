@@ -77,7 +77,6 @@ const DocsPage = () => {
         <div className="mb-3 flex flex-wrap gap-4">
           {/* Search */}
           <div className="relative flex-1">
-            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <Input
               type="search"
               placeholder="Search documents By title and description..."
@@ -91,7 +90,9 @@ const DocsPage = () => {
           {/* Case */}
           <Select
             value={caseId || "all"}
-            onValueChange={(value) => setCaseId(value === "all" ? "all" : value)}
+            onValueChange={(value) =>
+              setCaseId(value === "all" ? "all" : value)
+            }
             disabled={isLoading || isError}
           >
             <SelectTrigger className="w-55">
