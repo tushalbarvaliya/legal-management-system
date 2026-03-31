@@ -99,7 +99,7 @@ const StaffPage = () => {
                 <NoFound title="Staff" />
               ) : (
                 <Virtuoso
-                  style={{ height: 325, border: "2px solid red" }}
+                  style={{ height: 325 }}
                   data={filteredStaff}
                   overscan={200}
                   itemContent={(_, staff) => {

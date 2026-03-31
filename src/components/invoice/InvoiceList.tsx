@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
+import { VirtuosoGrid } from "react-virtuoso"
 
 import InvoiceCard from "./InvoiceCard"
 import InvoiceCardSkeleton from "./InvoiceCardSkeleton"
@@ -65,7 +66,7 @@ const InvoiceList = () => {
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap items-center gap-2 w-full">
+        <div className="flex w-fit flex-wrap items-center gap-2">
           {/* Status */}
           <Select
             value={status || "all"}
@@ -108,7 +109,7 @@ const InvoiceList = () => {
           <Button
             onClick={clearFilters}
             disabled={isLoading || isError}
-            className="p-4 w-full sm:w-fit"
+            className="w-full p-4 sm:w-fit"
           >
             Clear
           </Button>
@@ -116,7 +117,8 @@ const InvoiceList = () => {
       </div>
 
       {/* List */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      {/* Loading */}
+      <div className="mt-4">
         {/* Loading */}
         {isLoading &&
           Array.from({ length: 6 }).map((_, i) => (
@@ -125,23 +127,37 @@ const InvoiceList = () => {
 
         {/* Error */}
         {isError && (
-          <div className="col-span-full text-center text-zinc-500">
+          <div className="text-center text-zinc-500">
             <ErrorMessage />
           </div>
         )}
 
         {/* Data */}
-        {!isLoading &&
-          !isError &&
-          (filteredInvoices!.length > 0 ? (
-            filteredInvoices?.map((item) => (
-              <InvoiceCard {...item} key={item.id} />
-            ))
-          ) : (
-            <div className="col-span-full">
+        {!isLoading && !isError && (
+          <>
+            {filteredInvoices.length > 0 ? (
+              <VirtuosoGrid
+                style={{ height: 400 }}
+                data={filteredInvoices}
+                overscan={200}
+                components={{
+                  List: (props) => (
+                    <div
+                      {...props}
+                      className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3"
+                    />
+                  ),
+                  Item: ({ children, ...props }) => (
+                    <div {...props}>{children}</div>
+                  ),
+                }}
+                itemContent={(_, item) => <InvoiceCard {...item} />}
+              />
+            ) : (
               <NoFound title="Invoice" />
-            </div>
-          ))}
+            )}
+          </>
+        )}
       </div>
     </div>
   )
