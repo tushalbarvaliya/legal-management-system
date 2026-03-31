@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
+import { Virtuoso } from "react-virtuoso"
 
 import { getAllDocs } from "@/api/docsAPI"
 import ErrorMessage from "@/components/ErrorMessage"
@@ -66,9 +67,6 @@ const DocsPage = () => {
             <h2 className="text-lg font-semibold text-zinc-900">
               Select Documents
             </h2>
-            <p className="mt-1 text-sm text-zinc-600">
-              Choose a document card to load related documents.
-            </p>
           </div>
         </div>
 
@@ -125,9 +123,15 @@ const DocsPage = () => {
           {!isLoading && !isError && (
             <>
               {filteredDocs.length > 0 ? (
-                filteredDocs.map((item) => (
-                  <DocsCard docs={item} key={item.document.id} />
-                ))
+                <Virtuoso
+                  style={{ height: 300 }}
+                  className="no-scrollbar"
+                  data={filteredDocs}
+                  overscan={200}
+                  itemContent={(_, item) => (
+                    <DocsCard docs={item} key={item.document.id} />
+                  )}
+                />
               ) : (
                 <NoFound title="Documents" />
               )}

@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import { Plus } from "lucide-react"
 import { useMemo, useState } from "react"
+import { VirtuosoGrid } from "react-virtuoso"
 
 import { getAllSession } from "@/api/sessionAPI"
 import ErrorMessage from "@/components/ErrorMessage"
@@ -31,8 +32,10 @@ const SessionPage = () => {
   }
 
   const filteredSessions = useMemo(() => {
-    return sessions?.data.filter((session) =>
-      session.session.courtName?.toLowerCase().includes(search.toLowerCase())
+    return (
+      sessions?.data.filter((session) =>
+        session.session.courtName?.toLowerCase().includes(search.toLowerCase())
+      ) || []
     )
   }, [sessions, search])
 
@@ -69,7 +72,7 @@ const SessionPage = () => {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full flex-1 rounded-xl border px-4 py-2 text-sm"
-                disabled={isError||isLoading}
+                disabled={isError || isLoading}
               />
 
               <button
@@ -83,38 +86,50 @@ const SessionPage = () => {
         </div>
 
         {/* Count */}
-        <p className="mt-4 text-sm text-zinc-500">
+        <p className="my-4 text-sm text-zinc-500">
           Showing {isLoading ? <Spinner /> : filteredSessions?.length} sessions
         </p>
 
         {/* List */}
-        <div className="mt-5 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {isError && (
+        {isError && (
+          <div className="col-span-full">
+            <ErrorMessage />
+          </div>
+        )}
+        {isLoading && (
+          <>
+            <SessionCardSkeleton />
+            <SessionCardSkeleton />
+            <SessionCardSkeleton />
+          </>
+        )}
+        {!isLoading &&
+          !isError &&
+          (filteredSessions && filteredSessions?.length > 0 ? (
+            <VirtuosoGrid
+              style={{ height: 425}}
+              data={filteredSessions}
+              overscan={200}
+              components={{
+                List: (props) => (
+                  <div
+                    {...props}
+                    className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
+                  />
+                ),
+                Item: ({ children, ...props }) => (
+                  <div {...props}>{children}</div>
+                ),
+              }}
+              itemContent={(_, item) => (
+                <SessionCard data={item} key={item.session.id} />
+              )}
+            />
+          ) : (
             <div className="col-span-full">
-              <ErrorMessage />
+              <NoFound title="Session" />
             </div>
-          )}
-          {isLoading && (
-            <>
-              <SessionCardSkeleton />
-              <SessionCardSkeleton />
-              <SessionCardSkeleton />
-            </>
-          )}
-          {!isLoading &&
-            !isError &&
-            (filteredSessions && filteredSessions?.length > 0 ? (
-              filteredSessions?.map((item) => (
-                <div key={item.session.id}>
-                  <SessionCard data={item} />
-                </div>
-              ))
-            ) : (
-              <div className="col-span-full">
-                <NoFound title="Session" />
-              </div>
-            ))}
-        </div>
+          ))}
 
         {/* Add Button */}
         <button
