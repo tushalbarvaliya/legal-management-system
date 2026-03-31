@@ -10,7 +10,6 @@ import { getAllStaff } from "@/api/staffAPI"
 import NoFound from "@/components/NoFound"
 import AddStaff from "@/components/staff/AddStaff"
 import { Dialog } from "@/components/ui/dialog"
-import { Helmet } from "react-helmet-async"
 
 const StaffPage = () => {
   const [openAdd, setOpenAdd] = useState<boolean>(false)
@@ -43,21 +42,6 @@ const StaffPage = () => {
     })
   }, [StaffData, search])
 
-  if (isError) return <ErrorMessage />
-
-  if (isLoading) {
-    return (
-      <>
-        <Helmet>
-          <title>Staff Management</title>
-        </Helmet>
-        <StaffCardSkeleton />
-        <StaffCardSkeleton />
-        <StaffCardSkeleton />
-      </>
-    )
-  }
-
   return (
     <Dialog
       open={openAdd}
@@ -65,7 +49,7 @@ const StaffPage = () => {
         if (!open) setOpenAdd(false)
       }}
     >
-      {openAdd && <AddStaff setOpenAdd={setOpenAdd}/>}
+      {openAdd && <AddStaff setOpenAdd={setOpenAdd} />}
 
       {/* Add Button */}
       <button
@@ -98,8 +82,17 @@ const StaffPage = () => {
 
         {/* List */}
         <div className="space-y-3">
-          {filteredStaff.length === 0 && <NoFound title="Staff" />}
-
+          {!isError && !isLoading && filteredStaff.length === 0 && (
+            <NoFound title="Staff" />
+          )}
+          {isError && <ErrorMessage />}
+          {isLoading && (
+            <>
+              <StaffCardSkeleton />
+              <StaffCardSkeleton />
+              <StaffCardSkeleton />
+            </>
+          )}
           {filteredStaff.map((staff) => {
             if (!staff?.staff) return null
             return <StaffCard {...staff} key={staff.staff.id} />
