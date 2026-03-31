@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import { useMemo, useState } from "react"
 import { Plus } from "lucide-react"
+import { Virtuoso } from "react-virtuoso"
 
 import { getAllTask } from "@/api/taskAPI"
 import type { TaskResponse, TaskType } from "@/types/taskType"
@@ -171,12 +172,15 @@ const TaskPage = () => {
           {!isLoading &&
             !isError &&
             filteredTasks &&
+            filteredTasks &&
             (filteredTasks.length > 0 ? (
-              filteredTasks?.map((item) => (
-                <div key={item.id}>
-                  <TaskCard {...item} />
-                </div>
-              ))
+              <Virtuoso
+                style={{ height: 420 }}
+                className="no-scrollbar"
+                data={filteredTasks}
+                overscan={200}
+                itemContent={(_, item) => <TaskCard {...item} key={item.id} />}
+              />
             ) : (
               <NoFound title="Task" />
             ))}

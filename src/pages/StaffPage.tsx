@@ -1,6 +1,7 @@
 import { Plus, Search } from "lucide-react"
 import { useQuery } from "@tanstack/react-query"
 import { useMemo, useState } from "react"
+import { Virtuoso } from "react-virtuoso"
 
 import type { StaffUserMapping } from "@/types/staffType"
 import ErrorMessage from "@/components/ErrorMessage"
@@ -81,11 +82,9 @@ const StaffPage = () => {
         </div>
 
         {/* List */}
-        <div className="space-y-3">
-          {!isError && !isLoading && filteredStaff.length === 0 && (
-            <NoFound title="Staff" />
-          )}
+        <div className="mt-4">
           {isError && <ErrorMessage />}
+
           {isLoading && (
             <>
               <StaffCardSkeleton />
@@ -93,10 +92,28 @@ const StaffPage = () => {
               <StaffCardSkeleton />
             </>
           )}
-          {filteredStaff.map((staff) => {
-            if (!staff?.staff) return null
-            return <StaffCard {...staff} key={staff.staff.id} />
-          })}
+
+          {!isLoading && !isError && (
+            <>
+              {filteredStaff.length === 0 ? (
+                <NoFound title="Staff" />
+              ) : (
+                <Virtuoso
+                  style={{ height: 325, border: "2px solid red" }}
+                  data={filteredStaff}
+                  overscan={200}
+                  itemContent={(_, staff) => {
+                    if (!staff?.staff) return null
+                    return (
+                      <div className="mb-3">
+                        <StaffCard {...staff} />
+                      </div>
+                    )
+                  }}
+                />
+              )}
+            </>
+          )}
         </div>
       </div>
     </Dialog>
