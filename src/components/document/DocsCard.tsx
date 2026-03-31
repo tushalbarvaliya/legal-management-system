@@ -48,7 +48,7 @@ const DocsCard = ({ docs: items }: { docs: CaseDocumentItem }) => {
       }}
     >
       {openEdit && <UpdateDocsModel data={items} setOpen={setOpenEdit} />}
-      {openView && <DocsDetailsModal data={items} setOpen={setOpenView}/>}
+      {openView && <DocsDetailsModal data={items} setOpen={setOpenView} />}
       {openDelete && (
         <DeleteModel
           title="Delete Document"
@@ -80,20 +80,20 @@ const DocsCard = ({ docs: items }: { docs: CaseDocumentItem }) => {
           </div>
 
           {/* Meta Info */}
-          <div className="mt-2 mr-40 flex flex-wrap gap-2 justify-between text-[10px] text-zinc-600">
-            <p className="w-full">
+          <div className="mt-2 mr-40 flex flex-wrap justify-between gap-2 text-[10px] text-zinc-600">
+            <p className="">
               Case Number:{" "}
-              <span className=" rounded-full bg-blue-100 px-2 py-0.5 font-medium capitalize">
+              <span className="rounded-full bg-blue-100 px-2 py-0.5 font-medium capitalize">
                 {items.case.caseNumber}
               </span>
             </p>
             <p>
               Case Stage:{" "}
-              <span className=" rounded-full bg-blue-100 px-2 py-0.5 font-medium capitalize">
+              <span className="rounded-full bg-blue-100 px-2 py-0.5 font-medium capitalize">
                 {items.case.caseStage}
               </span>
             </p>
-            <p className="w-full">
+            <p className="">
               Case :{" "}
               <span className="rounded-full bg-blue-100 px-2 py-0.5 font-medium capitalize">
                 {items.case.title}

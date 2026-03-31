@@ -81,7 +81,7 @@ const DocsPage = () => {
               placeholder="Search documents By title and description..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-xl border border-zinc-200 py-2.5 pr-3 pl-9 text-sm"
+              className="w-full min-w-50 rounded-xl border border-zinc-200 py-2.5 pr-3 pl-9 text-sm"
               disabled={isLoading || isError}
             />
           </div>
