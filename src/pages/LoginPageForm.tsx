@@ -1,8 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, Navigate, useNavigate } from "react-router-dom"
 import { toast, Toaster } from "sonner"
 import { motion } from "framer-motion"
 import * as z from "zod"
@@ -44,11 +44,6 @@ type FormType = z.infer<typeof formSchema>
 const LoginPageForm = () => {
   const token = useAppSelector((state) => state.auth.token)
   const navigate = useNavigate()
-  useEffect(() => {
-    if (token) {
-      navigate("/")
-    }
-  }, [navigate, token])
 
   const [passwordShow, setPasswordShow] = useState<boolean>(false)
   const dispatch = useAppDispatch()
@@ -68,9 +63,7 @@ const LoginPageForm = () => {
       const token = { token: data.access_token }
       toast.success("Success fully login", { duration: 1000 })
       dispatch(setAuth(token))
-      setTimeout(() => {
-        navigate("/")
-      }, 1010)
+      navigate("/")
     },
     onError: (error) => {
       toast.error(
@@ -78,6 +71,9 @@ const LoginPageForm = () => {
       )
     },
   })
+  if (token) {
+    return <Navigate to="/" replace />
+  }
   const onSubmit = (data: FormType) => {
     mutate(data)
   }
@@ -85,6 +81,11 @@ const LoginPageForm = () => {
     <>
       <Helmet>
         <title>Arcade Demo | Login</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+        <meta
+          name="description"
+          content="if you forgot you password! don't worry here you can change your password"
+        />
       </Helmet>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -130,7 +131,7 @@ const LoginPageForm = () => {
                         id="email"
                         aria-invalid={fieldState.invalid}
                         placeholder="Please Enter Your Email"
-                        autoComplete="off"
+                        autoComplete="email"
                       />
                       {fieldState.invalid && (
                         <FieldError
@@ -154,7 +155,7 @@ const LoginPageForm = () => {
                           id="password"
                           aria-invalid={fieldState.invalid}
                           placeholder="Please Enter your Password"
-                          autoComplete="off"
+                          autoComplete="current-password"
                           type={passwordShow ? "text" : "password"}
                         />
                         <Button
@@ -162,6 +163,7 @@ const LoginPageForm = () => {
                           variant={"ghost"}
                           className="text-zinc-500 hover:cursor-pointer hover:text-zinc-700"
                           onClick={() => setPasswordShow((prev) => !prev)}
+                          aria-label="Password-show-button"
                         >
                           {passwordShow ? <EyeOff /> : <Eye />}
                         </Button>

@@ -1,24 +1,25 @@
 import { useQuery } from "@tanstack/react-query"
 
 import { getAllTask } from "@/api/taskAPI"
-import type { TaskDataType } from "@/types/taskType"
 import ErrorMessage from "../ErrorMessage"
 import LawyerBoardSkeleton from "../lawyer/LawyerBoardSkeleton"
+import type { TaskType } from "@/types/taskType"
 
 const StaffDashboard = () => {
   const {
-    data: tasks = [],
+    data: tasks,
     isLoading,
     isError,
-  } = useQuery<TaskDataType[]>({
+  } = useQuery<TaskType>({
     queryKey: ["tasks"],
     queryFn: getAllTask,
   })
 
   // stats
-  const totalTasks = tasks.length
-  const completed = tasks.filter((t) => t.status === "completed").length
-  const inProgress = tasks.filter((t) => t.status === "inProgress").length
+  const totalTasks = tasks?.data.tasks.length
+  const completed = tasks?.data.summary.completed
+  const pending = tasks?.data.summary.pending
+  const overdue = tasks?.data.summary.overdue
 
   return (
     <div className="space-y-6 mt-4">
@@ -59,9 +60,15 @@ const StaffDashboard = () => {
 
           {/* In Progress */}
           <div className="rounded-2xl border bg-white p-5 shadow-sm border-black">
-            <p className="text-sm text-zinc-500">In Progress</p>
+            <p className="text-sm text-zinc-500">Pending</p>
             <h2 className="mt-2 text-2xl font-bold text-amber-500">
-              {inProgress}
+              {pending}
+            </h2>
+          </div>
+          <div className="rounded-2xl border bg-white p-5 shadow-sm border-black">
+            <p className="text-sm text-zinc-500">Over due</p>
+            <h2 className="mt-2 text-2xl font-bold text-amber-500">
+              {overdue}
             </h2>
           </div>
         </div>

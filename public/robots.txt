@@ -1,0 +1,13 @@
+# Allow all search engines to crawl main pages
+User-agent: *
+Disallow: /admin/
+Disallow: /login/
+Disallow: /api/
+Disallow: /dashboard/
+Allow: /
+
+# Do not block JS, CSS, or images needed for rendering
+# This ensures Lighthouse metrics (FCP/LCP) are accurate
+
+# Sitemap location (replace with your real URL)
+Sitemap: https://www.example.com/sitemap.xml
