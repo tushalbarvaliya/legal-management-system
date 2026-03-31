@@ -28,9 +28,6 @@ const ClientHeader = () => {
               Add, edit, and manage your clients with quick actions from a
               single list.
             </p>
-            <p className="mt-3 inline-flex items-center rounded-full border border-zinc-200 bg-white/80 px-3 py-1 text-xs font-medium text-zinc-600">
-              Smart search, quick actions, and detailed client profiles
-            </p>
           </div>
           {role == "lawyer" && (
             <Button

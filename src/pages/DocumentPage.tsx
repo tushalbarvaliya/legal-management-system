@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
-import { Search } from "lucide-react"
 
 import { getAllDocs } from "@/api/docsAPI"
 import ErrorMessage from "@/components/ErrorMessage"

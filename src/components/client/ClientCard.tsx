@@ -125,7 +125,7 @@ const ClientCard = ({ client }: { client: ClientUserMapping }) => {
       )}
 
       <article
-        className={`group hover:shadow-soft relative rounded-xl border border-zinc-200 bg-zinc-50/40 p-4 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-zinc-100/80 sm:p-5`}
+        className={`group hover:shadow-soft relative rounded-xl border border-zinc-200 bg-zinc-50/40 p-4 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-zinc-100/80 sm:p-5 my-2`}
       >
         <div className={`flex flex-row justify-between gap-8 sm:items-start`}>
           <div className="flex min-w-0 gap-3">

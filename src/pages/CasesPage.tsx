@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { Plus, Search } from "lucide-react"
+import { Virtuoso } from "react-virtuoso"
 
 import { useAppSelector } from "@/hooks/hooks"
 import { getAllCases } from "@/api/caseAPI"
@@ -101,18 +102,26 @@ const CasesPage = () => {
             </>
           )}
           {isError && <ErrorMessage />}
-          <div className="h-100  overflow-auto">
+          <div className="no-scrollbar h-100 overflow-auto">
             {!isLoading &&
-              !isError &&
-              (filteredCases && filteredCases?.length > 0 ? (
-                filteredCases.map((item: Case) => (
-                  <div key={item.id}>
-                    <CasesCard data={item} />
-                  </div>
-                ))
-              ) : (
-                <NoFound title="Case" />
-              ))}
+            !isError &&
+            filteredCases &&
+            filteredCases.length > 0 ? (
+              <Virtuoso
+                style={{
+                  height: "100%",
+                }}
+                className="no-scrollbar"
+                totalCount={filteredCases.length}
+                data={filteredCases}
+                overscan={200}
+                itemContent={(_index, item) => (
+                  <CasesCard key={item.id} data={item} />
+                )}
+              />
+            ) : (
+              !isLoading && !isError && <NoFound title="Case" />
+            )}
           </div>
         </div>
       </section>
