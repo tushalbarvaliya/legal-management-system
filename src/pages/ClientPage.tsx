@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 import { Search } from "lucide-react"
+import { Virtuoso } from "react-virtuoso"
 
 import type { ClientResponse, ClientUserMapping } from "@/types/clientType"
 import { getAllClient } from "@/api/clientAPI"
@@ -63,9 +64,17 @@ const ClientPage = () => {
           {isError && <ErrorMessage />}
             {!isLoading &&
               !isError &&
-              filteredClients?.map((item: ClientUserMapping) => {
-                return <ClientCard key={item.client.id} client={item} />
-              })}
+              filteredClients &&
+              filteredClients?.length > 0 && (
+                <Virtuoso
+                  style={{ height: 250 }} 
+                  totalCount={filteredClients.length}
+                  itemContent={(index) => {
+                    const client = filteredClients[index]
+                    return <ClientCard client={client} key={client.client.id} />
+                  }}
+                />
+              )}
           {isLoading && (
             <>
               <ClientCardSkeleton />

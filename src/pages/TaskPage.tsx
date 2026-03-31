@@ -78,12 +78,9 @@ const TaskPage = () => {
         {/* header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-zinc-900 sm:text-3xl">
+            <h1 className="text-xl font-bold text-zinc-900 sm:text-3xl">
               Task Management
             </h1>
-            <p className="mt-1 text-sm text-zinc-600">
-              Track deadlines, update priorities, and manage work in one place.
-            </p>
           </div>
 
           <div className="flex w-full flex-col gap-3 sm:flex-row md:w-auto">

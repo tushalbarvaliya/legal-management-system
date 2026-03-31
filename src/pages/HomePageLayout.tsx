@@ -18,7 +18,7 @@ const HomeLayout = () => {
               <Sidebar />
             </div>
           )}
-          <main className="sm:mr-2 max-h-[85vh] flex-1 overflow-hidden overflow-y-scroll bg-transparent rounded-xl">
+          <main className="sm:mr-2 max-h-[85vh] flex-1 overflow-hidden  bg-transparent rounded-xl">
             <Outlet />
           </main>
         </div>

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { Plus, Search } from "lucide-react"
+import { Plus } from "lucide-react"
 import { useMemo, useState } from "react"
 
 import { getAllSession } from "@/api/sessionAPI"
