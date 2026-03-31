@@ -22,6 +22,7 @@ import { queryClient } from "@/main"
 import ProfileSkeleton from "@/components/profile/ProfileSkeleton"
 import ErrorMessage from "@/components/ErrorMessage"
 import { nameRegex, phoneNumberRegex, addressRegex } from "@/utils/regex"
+import { Helmet } from "react-helmet-async"
 
 const profileSchema = z.object({
   firstName: z
@@ -110,11 +111,22 @@ const ProfilePage = () => {
     }
   }
 
-  if (isLoading) return <ProfileSkeleton />
+  if (isLoading)
+    return (
+      <>
+        <Helmet>
+          <title>Profile</title>
+        </Helmet>
+        <ProfileSkeleton />
+      </>
+    )
   if (isError) return <ErrorMessage message={error.message} />
 
   return (
     <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
+      <Helmet>
+        <title>Profile</title>
+      </Helmet>
       {data && (
         <main className="flex items-center justify-center p-3 sm:p-6">
           <section className="w-full max-w-4xl rounded-2xl border bg-white p-4 shadow-sm sm:p-8">

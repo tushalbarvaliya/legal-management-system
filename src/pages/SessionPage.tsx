@@ -11,6 +11,7 @@ import { Spinner } from "@/components/ui/spinner"
 import { Dialog } from "@/components/ui/dialog"
 import AddSession from "@/components/session/AddSession"
 import type { SessionResponse } from "@/types/sessionType"
+import { Helmet } from "react-helmet-async"
 
 const SessionPage = () => {
   const [search, setSearch] = useState("")
@@ -38,6 +39,9 @@ const SessionPage = () => {
   if (isLoading) {
     return (
       <>
+        <Helmet>
+          <title>Session Management</title>
+        </Helmet>
         <SessionCardSkeleton />
         <SessionCardSkeleton />
         <SessionCardSkeleton />
@@ -46,7 +50,14 @@ const SessionPage = () => {
   }
 
   if (isError) {
-    return <ErrorMessage />
+    return (
+      <>
+        <Helmet>
+          <title>Session Management</title>
+        </Helmet>
+        <ErrorMessage />
+      </>
+    )
   }
   return (
     <Dialog
@@ -55,6 +66,9 @@ const SessionPage = () => {
         if (!open) setOpenAdd(false)
       }}
     >
+      <Helmet>
+        <title>Session Management</title>
+      </Helmet>
       {openAdd && <AddSession setOpenAdd={setOpenAdd} />}
 
       <section className="shadow-soft rounded-2xl border bg-white p-4 sm:p-6">

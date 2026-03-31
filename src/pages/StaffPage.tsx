@@ -10,9 +10,10 @@ import { getAllStaff } from "@/api/staffAPI"
 import NoFound from "@/components/NoFound"
 import AddStaff from "@/components/staff/AddStaff"
 import { Dialog } from "@/components/ui/dialog"
+import { Helmet } from "react-helmet-async"
 
 const StaffPage = () => {
-  const [openAdd,setOpenAdd]=useState<boolean>(false)
+  const [openAdd, setOpenAdd] = useState<boolean>(false)
   const [search, setSearch] = useState("")
 
   const {
@@ -24,7 +25,6 @@ const StaffPage = () => {
     queryFn: getAllStaff,
   })
 
-  
   const filteredStaff = useMemo(() => {
     if (!StaffData) return []
 
@@ -48,6 +48,9 @@ const StaffPage = () => {
   if (isLoading) {
     return (
       <>
+        <Helmet>
+          <title>Staff Management</title>
+        </Helmet>
         <StaffCardSkeleton />
         <StaffCardSkeleton />
         <StaffCardSkeleton />
@@ -56,7 +59,12 @@ const StaffPage = () => {
   }
 
   return (
-    <Dialog open={openAdd} onOpenChange={(open)=>{if(!open) setOpenAdd(false)}}>
+    <Dialog
+      open={openAdd}
+      onOpenChange={(open) => {
+        if (!open) setOpenAdd(false)
+      }}
+    >
       {openAdd && <AddStaff />}
 
       {/* Add Button */}

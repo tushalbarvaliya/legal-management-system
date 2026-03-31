@@ -20,9 +20,10 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
+import { Helmet } from "react-helmet-async"
 
 const TaskPage = () => {
-  const[openAdd,setOpenAdd]=useState<boolean>(false)
+  const [openAdd, setOpenAdd] = useState<boolean>(false)
 
   const [search, setSearch] = useState("")
   const [priorityFilter, setPriorityFilter] = useState("all")
@@ -69,7 +70,10 @@ const TaskPage = () => {
         if (!open) setOpenAdd(false)
       }}
     >
-      {openAdd && <AddTask setOpenAdd={setOpenAdd}/>}
+      <Helmet>
+        <title>Task Management</title>
+      </Helmet>
+      {openAdd && <AddTask setOpenAdd={setOpenAdd} />}
       <section className="shadow-soft rounded-2xl border border-zinc-200 bg-white p-4 sm:p-6">
         {/* header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">

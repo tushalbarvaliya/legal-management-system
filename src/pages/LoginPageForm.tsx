@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button"
 import { emailRegex, passwordRegex } from "@/utils/regex"
 import { login } from "@/api/authAPI"
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks"
+import { Helmet } from "react-helmet-async"
 
 const formSchema = z.object({
   email: z
@@ -82,6 +83,9 @@ const LoginPageForm = () => {
   }
   return (
     <>
+      <Helmet>
+        <title>Arcade Demo | Login</title>
+      </Helmet>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

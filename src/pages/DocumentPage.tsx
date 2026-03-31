@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Helmet } from "react-helmet-async"
 
 const DocsPage = () => {
   const [search, setSearch] = useState("")
@@ -59,8 +60,10 @@ const DocsPage = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Document Management</title>
+      </Helmet>
       <DocsHeader />
-
       <div className="shadow-soft mt-4 rounded-2xl border border-zinc-200 bg-white p-4 sm:p-6">
         {/* Header */}
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">

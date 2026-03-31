@@ -9,6 +9,7 @@ import ClientHeader from "@/components/client/ClientHeader"
 import ErrorMessage from "@/components/ErrorMessage"
 import NoFound from "@/components/NoFound"
 import ClientCard from "@/components/client/ClientCard"
+import { Helmet } from "react-helmet-async"
 
 const ClientPage = () => {
   const [search, setSearch] = useState("")
@@ -21,7 +22,7 @@ const ClientPage = () => {
     queryKey: ["client"],
     queryFn: getAllClient,
   })
-  
+
   const filteredClients = clients?.data.filter((item: ClientUserMapping) =>
     [...Object.values(item.client), ...Object.values(item.user)].some((value) =>
       String(value).toLowerCase().includes(search.toLowerCase())
@@ -30,6 +31,9 @@ const ClientPage = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Client Management</title>
+      </Helmet>
       <ClientHeader />
       <section className="shadow-soft mt-2 rounded-2xl border border-zinc-200 bg-white p-4 sm:p-6">
         <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">

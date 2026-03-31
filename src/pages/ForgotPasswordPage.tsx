@@ -19,6 +19,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { useAppSelector } from "@/hooks/hooks"
+import { Helmet } from "react-helmet-async"
 
 const formSchema = z.object({
   email: z
@@ -93,6 +94,9 @@ const ForgotPasswordPage = () => {
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.5 }}
     >
+      <Helmet>
+        <title>Arcade Demo | Forgot Password</title>
+      </Helmet>
       <Toaster position="bottom-right" richColors />
       <main className="flex h-fit justify-center p-4 sm:p-6">
         <section className="w-full max-w-md rounded-xl border border-black bg-white p-6 shadow-sm sm:p-8">

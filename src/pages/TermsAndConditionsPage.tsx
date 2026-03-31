@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
+import { Helmet } from 'react-helmet-async';
 
 import type { PolicyType } from "@/types/types"
 import { termsAndConditionsList } from "@/utils/policyConstant"
@@ -7,6 +8,9 @@ import { termsAndConditionsList } from "@/utils/policyConstant"
 const TermsAndConditionsPage = () => {
   return (
     <motion.div className="space-y-2" initial={{y:20,opacity:0}} animate={{y:0,opacity:1}} exit={{opacity:0,y:-20}}>
+      <Helmet>
+        <title>Terms and Conditions</title>
+      </Helmet>
       <section className="shadow-soft  rounded-2xl border border-zinc-200 bg-white p-5 sm:p-6">
         <h1 className="text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl">
           Terms and Conditions

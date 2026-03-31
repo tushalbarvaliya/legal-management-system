@@ -3,6 +3,7 @@ import { motion } from "framer-motion"
 
 import { privacyPolicyPage } from "@/utils/policyConstant"
 import type { PolicyType } from "@/types/types"
+import { Helmet } from "react-helmet-async"
 
 const PrivacyPolicyPage = () => {
   return (
@@ -12,6 +13,9 @@ const PrivacyPolicyPage = () => {
       animate={{ y: 0, opacity: 1 }}
       exit={{ opacity: 0, y: -20 }}
     >
+      <Helmet>
+        <title>Privacy Policy</title>
+      </Helmet>
       <section className="shadow-soft rounded-2xl border border-zinc-200 bg-white p-5 sm:p-6">
         <h1 className="text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl">
           Privacy Policy

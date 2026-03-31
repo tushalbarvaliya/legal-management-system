@@ -12,7 +12,6 @@ import ProfilePage from "./pages/ProfilePage"
 import ResetPasswordPage from "./pages/ResetPasswordPage"
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage"
 import TermsAndConditionsPage from "./pages/TermsAndConditionsPage"
-import SignUpPage from "./pages/SignUpPage"
 import ForgotPasswordPage from "./pages/ForgotPasswordPage"
 import { AnimatePresence } from "framer-motion"
 import LogoutPage from "./pages/LogoutPage"
@@ -33,7 +32,7 @@ const App = () => {
             path=""
             element={
               <ProtectedRouteByRole
-                allowedRoles={["admin", "lawyer", "staff", "client", "null"]}
+                allowedRoles={["admin", "lawyer", "staff", "client",]}
               >
                 <HomePageContent />
               </ProtectedRouteByRole>
@@ -134,7 +133,6 @@ const App = () => {
         </Route>
 
         <Route path="/login" element={<LoginPageForm />} />
-        <Route path="/signup" element={<SignUpPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/logout" element={<LogoutPage />} />
         <Route path="*" element={<Error />} />

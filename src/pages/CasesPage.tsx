@@ -11,6 +11,7 @@ import NoFound from "@/components/NoFound"
 import type { Case, CasesResponse } from "@/types/caseType"
 import { Dialog } from "@/components/ui/dialog"
 import AddCase from "@/components/cases/AddCase"
+import { Helmet } from "react-helmet-async"
 
 const CasesPage = () => {
   const role = useAppSelector((state) => state.auth.role)
@@ -43,6 +44,9 @@ const CasesPage = () => {
         if (!open) setOpenAdd(false)
       }}
     >
+      <Helmet>
+        <title>Case Management</title>
+      </Helmet>
       {openAdd && <AddCase setOpenAdd={setOpenAdd} />}
       {/* ADD TASK BUTTON */}
       {role == "lawyer" && (

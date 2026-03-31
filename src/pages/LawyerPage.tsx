@@ -10,6 +10,7 @@ import LawyerCard from "@/components/lawyer/LawyerCard"
 import NoFound from "@/components/NoFound"
 import { Dialog } from "@/components/ui/dialog"
 import AddLawyer from "@/components/lawyer/AddLawyer"
+import { Helmet } from "react-helmet-async"
 
 const LawyerPage = () => {
   const [openAdd, setOpenAdd] = useState<boolean>(false)
@@ -50,6 +51,9 @@ const LawyerPage = () => {
         if (!open) setOpenAdd(false)
       }}
     >
+      <Helmet>
+        <title>Lawyer Management</title>
+      </Helmet>
       {openAdd && <AddLawyer setOpenAdd={setOpenAdd} />}
 
       {/* Add Button */}
