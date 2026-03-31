@@ -41,22 +41,22 @@ const ClientPage = () => {
           <h2 className="text-lg font-semibold tracking-tight text-zinc-900">
             Client List
           </h2>
-        </div>
-        <div className="mb-4">
-          <label htmlFor="clientSearchInput" className="sr-only">
-            Search clients
-          </label>
-          <div className="relative">
-            <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-zinc-500" />
-            <input
-              type="search"
-              placeholder="Search..."
-              className="w-full rounded-xl border border-zinc-200 bg-white py-2.5 pr-3 pl-9 text-sm text-zinc-900 transition duration-200 outline-none placeholder:text-zinc-400 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100"
-              onChange={(e) => {
-                setSearch(e.target.value)
-              }}
-              disabled={isError || isLoading}
-            />
+          <div className="mb-4 flex">
+            <label htmlFor="clientSearchInput" className="sr-only">
+              Search clients
+            </label>
+            <div className="relative">
+              <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+              <input
+                type="search"
+                placeholder="Search..."
+                className="w-full rounded-xl border border-zinc-200 bg-white py-2.5 pr-3 pl-9 text-sm text-zinc-900 transition duration-200 outline-none placeholder:text-zinc-400 focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100"
+                onChange={(e) => {
+                  setSearch(e.target.value)
+                }}
+                disabled={isError || isLoading}
+              />
+            </div>
           </div>
         </div>
         <div id="clientList" className="h-73">
