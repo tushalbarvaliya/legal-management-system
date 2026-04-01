@@ -1,4 +1,3 @@
-import { useMutation } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { MoreVertical } from "lucide-react"
 import { useState } from "react"
@@ -9,8 +8,6 @@ import type { StaffUserMapping } from "@/types/staffType"
 import UpdateStaff from "./UpdateStaff"
 import { Dialog } from "../ui/dialog"
 import StaffDetailsDialog from "./StaffDetailsModel"
-import { blockStaff, deleteStaff, patchUnblockStaff } from "@/api/staffAPI"
-import { queryClient } from "@/main"
 import DeleteModel from "../DeleteModel"
 import BlockModel from "../BlockModel"
 import UnblockModel from "../UnblockModel"
@@ -20,6 +17,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
+import {
+  useBlockStaffMutation,
+  useDeleteStaffMutation,
+  useUnblockStaffMutation,
+} from "@/store/services/staffAPI"
 
 const StaffCard = (staff: StaffUserMapping) => {
   const [openDelete, setOpenDelete] = useState<boolean>(false)
@@ -28,41 +30,39 @@ const StaffCard = (staff: StaffUserMapping) => {
   const [openEdit, setOpenEdit] = useState<boolean>(false)
   const [openView, setOpenView] = useState<boolean>(false)
 
-  const { mutate: DeleteMutate, isPending: DeleteIsPending } = useMutation({
-    mutationFn: deleteStaff,
-    onSuccess: () => {
+  const [deleteStaff, { isLoading: DeleteIsPending }] = useDeleteStaffMutation()
+  const DeleteMutate = async (_: number) => {
+    try {
+      await deleteStaff(staff.staff.id).unwrap()
       toast.success("Delete Lawyer Successfully", { duration: 1500 })
-      queryClient.invalidateQueries({ queryKey: ["staff"] })
       setOpenDelete(false)
-    },
-    onError: (error) => {
-      toast.error(`Error ${error.message}`)
-    },
-  })
+    } catch {
+      toast.error(`Something is not Right`)
+    }
+  }
 
-  const { mutate: BlockMutate, isPending: BlockIsPending } = useMutation({
-    mutationFn: blockStaff,
-    onSuccess: () => {
+  const [blockStaff, { isLoading: BlockIsPending }] = useBlockStaffMutation()
+  const BlockMutate = async (_: number) => {
+    try {
+      await blockStaff(staff.staff.id).unwrap()
       toast.success("Block Staff Successfully", { duration: 1500 })
-      queryClient.invalidateQueries({ queryKey: ["staff"] })
       setOpenBlock(false)
-    },
-    onError: (error) => {
-      toast.error(`Error ${error.message}`)
-    },
-  })
+    } catch {
+      toast.error(`Something is not Right`)
+    }
+  }
 
-  const { mutate: UnblockMutate, isPending: UnblockIsPending } = useMutation({
-    mutationFn: patchUnblockStaff,
-    onSuccess: () => {
-      setOpenUnblock(false)
+  const [unblockStaff, { isLoading: UnblockIsPending }] =
+    useUnblockStaffMutation()
+  const UnblockMutate = async (_: number) => {
+    try {
+      await unblockStaff(staff.staff.id).unwrap()
       toast.success("Unblock Staff Successfully", { duration: 1500 })
-      queryClient.invalidateQueries({ queryKey: ["staff"] })
-    },
-    onError: (error) => {
-      toast.error(`Error ${error.message}`)
-    },
-  })
+      setOpenUnblock(false)
+    } catch {
+      toast.error(`Something is not Right`)
+    }
+  }
 
   return (
     <Dialog

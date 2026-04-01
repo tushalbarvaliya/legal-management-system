@@ -1,29 +1,19 @@
 import { Plus, Search } from "lucide-react"
-import { useQuery } from "@tanstack/react-query"
 import { useMemo, useState } from "react"
 import { Virtuoso } from "react-virtuoso"
 
-import type { StaffUserMapping } from "@/types/staffType"
 import ErrorMessage from "@/components/ErrorMessage"
 import StaffCard from "@/components/staff/StaffCard"
 import StaffCardSkeleton from "@/components/staff/StaffCardSkeleton"
-import { getAllStaff } from "@/api/staffAPI"
 import NoFound from "@/components/NoFound"
 import AddStaff from "@/components/staff/AddStaff"
 import { Dialog } from "@/components/ui/dialog"
+import { useGetStaffQuery } from "@/store/services/staffAPI"
 
 const StaffPage = () => {
   const [openAdd, setOpenAdd] = useState<boolean>(false)
   const [search, setSearch] = useState("")
-
-  const {
-    data: StaffData,
-    isLoading,
-    isError,
-  } = useQuery<StaffUserMapping[]>({
-    queryKey: ["staff"],
-    queryFn: getAllStaff,
-  })
+  const { data: StaffData, isLoading, isError } = useGetStaffQuery()
 
   const filteredStaff = useMemo(() => {
     if (!StaffData) return []

@@ -1,14 +1,11 @@
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation } from "@tanstack/react-query"
 import { toast } from "sonner"
 
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
-import { queryClient } from "@/main"
 import type { StaffUserMapping } from "@/types/staffType"
-import { patchStaff } from "@/api/staffAPI"
 import {
   updateStaffFormSchema,
   type UpdateStaffFormSchemaType,
@@ -26,6 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
+import { useUpdateStaffMutation } from "@/store/services/staffAPI"
 
 const UpdateStaff = ({
   staff,
@@ -34,17 +32,7 @@ const UpdateStaff = ({
   staff: StaffUserMapping
   setOpenEdit: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
-  const { mutate, isPending } = useMutation({
-    mutationFn: patchStaff,
-    onSuccess: () => {
-      toast.success("Update Staff ", { duration: 1500 })
-      queryClient.invalidateQueries({ queryKey: ["staff"] })
-      setOpenEdit(false)
-    },
-    onError: (error) => {
-      toast.error(`Error ${error.message}`)
-    },
-  })
+  const [updateStaff, { isLoading: isPending }] = useUpdateStaffMutation()
 
   const {
     formState: { isDirty },
@@ -62,9 +50,15 @@ const UpdateStaff = ({
     },
   })
 
-  const onSubmit = (data: UpdateStaffFormSchemaType) => {
+  const onSubmit = async(data: UpdateStaffFormSchemaType) => {
     if (isDirty) {
-      mutate({ data: data, id: staff.staff.id })
+      try {
+        await updateStaff({ data: data, id: staff.staff.id }).unwrap()
+        toast.success("Update Staff ", { duration: 1500 })
+        setOpenEdit(false)
+      } catch {
+        toast.error(`Something is not right`)
+      }
     } else {
       toast.success("No Changes Found", { duration: 700 })
       setOpenEdit(false)

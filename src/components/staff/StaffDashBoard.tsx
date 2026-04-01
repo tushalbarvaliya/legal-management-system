@@ -1,20 +1,15 @@
-import { useQuery } from "@tanstack/react-query"
-
-import { getAllTask } from "@/api/taskAPI"
 import ErrorMessage from "../ErrorMessage"
 import LawyerBoardSkeleton from "../lawyer/LawyerBoardSkeleton"
-import type { TaskType } from "@/types/taskType"
+import { useGetTaskQuery } from "@/store/services/taskAPI"
 
 const StaffDashboard = () => {
+
+
   const {
     data: tasks,
     isLoading,
     isError,
-  } = useQuery<TaskType>({
-    queryKey: ["tasks"],
-    queryFn: getAllTask,
-  })
-
+  } = useGetTaskQuery()
   // stats
   const totalTasks = tasks?.data.tasks.length
   const completed = tasks?.data.summary.completed
@@ -22,7 +17,7 @@ const StaffDashboard = () => {
   const overdue = tasks?.data.summary.overdue
 
   return (
-    <div className="space-y-6 mt-4">
+    <div className="mt-4 space-y-6">
       {/* Header */}
 
       {/* Loading */}
@@ -43,7 +38,7 @@ const StaffDashboard = () => {
       {!isLoading && !isError && (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {/* Total Tasks */}
-          <div className="rounded-2xl border bg-white p-5 shadow-sm border-black">
+          <div className="rounded-2xl border border-black bg-white p-5 shadow-sm">
             <p className="text-sm text-zinc-500">Total Tasks</p>
             <h2 className="mt-2 text-2xl font-bold text-zinc-900">
               {totalTasks}
@@ -51,7 +46,7 @@ const StaffDashboard = () => {
           </div>
 
           {/* Completed */}
-          <div className="rounded-2xl border bg-white p-5 shadow-sm border-black">
+          <div className="rounded-2xl border border-black bg-white p-5 shadow-sm">
             <p className="text-sm text-zinc-500">Completed</p>
             <h2 className="mt-2 text-2xl font-bold text-emerald-600">
               {completed}
@@ -59,13 +54,13 @@ const StaffDashboard = () => {
           </div>
 
           {/* In Progress */}
-          <div className="rounded-2xl border bg-white p-5 shadow-sm border-black">
+          <div className="rounded-2xl border border-black bg-white p-5 shadow-sm">
             <p className="text-sm text-zinc-500">Pending</p>
             <h2 className="mt-2 text-2xl font-bold text-amber-500">
               {pending}
             </h2>
           </div>
-          <div className="rounded-2xl border bg-white p-5 shadow-sm border-black">
+          <div className="rounded-2xl border border-black bg-white p-5 shadow-sm">
             <p className="text-sm text-zinc-500">Over due</p>
             <h2 className="mt-2 text-2xl font-bold text-amber-500">
               {overdue}

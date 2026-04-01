@@ -1,16 +1,16 @@
 import { Controller, useForm } from "react-hook-form"
-import { Eye, EyeOff } from "lucide-react" 
+import { Eye, EyeOff } from "lucide-react"
 import { useState } from "react"
-import { useMutation } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
-import { queryClient } from "@/main"
-import { AddStaffFormSchema, type AddStaffFormSchemaType } from "@/schemas/AddStaffSchema"
-import { postStaff } from "@/api/staffAPI"
+import {
+  AddStaffFormSchema,
+  type AddStaffFormSchemaType,
+} from "@/schemas/AddStaffSchema"
 import {
   DialogContent,
   DialogFooter,
@@ -18,28 +18,22 @@ import {
   DialogTitle,
 } from "../ui/dialog"
 import {
-Select,
+  Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
+import { useAddStaffMutation } from "@/store/services/staffAPI"
 
-
-const AddStaff = ({setOpenAdd}:{setOpenAdd: React.Dispatch<React.SetStateAction<boolean>>}) => {
+const AddStaff = ({
+  setOpenAdd,
+}: {
+  setOpenAdd: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
   const [passwordShow, setPasswordShow] = useState<boolean>(false)
   const [confirmPasswordShow, setConfirmPasswordShow] = useState<boolean>(false)
-  const { mutate, isPending } = useMutation({
-    mutationFn: postStaff,
-    onSuccess: () => {
-      toast.success("User Become Lawyer", { duration: 1500 })
-      queryClient.invalidateQueries({ queryKey: ["staff"] })
-      setOpenAdd(false)
-    },
-    onError: (error) => {
-      toast.error(`Error ${error.message}`)
-    },
-  })
+  const [addStaff, { isLoading: isPending }] = useAddStaffMutation()
 
   const form = useForm<AddStaffFormSchemaType>({
     resolver: zodResolver(AddStaffFormSchema),
@@ -47,13 +41,18 @@ const AddStaff = ({setOpenAdd}:{setOpenAdd: React.Dispatch<React.SetStateAction<
     delayError: 500,
   })
 
-  const onSubmit = (data: AddStaffFormSchemaType) => {
-    const { confirmPassword: _, ...dataMutate } = data
-    mutate(dataMutate)
+  const onSubmit = async(data: AddStaffFormSchemaType) => {
+    try {
+      await addStaff({ data }).unwrap()
+      toast.success("Staff Added", { duration: 1500 })
+      setOpenAdd(false)
+    } catch {
+      toast.error(`Something is not right`)
+    }
   }
   return (
     <>
-      <DialogContent className="no-scrollbar max-h-[99vh] lg:min-w-[50vw] overflow-y-scroll ">
+      <DialogContent className="no-scrollbar max-h-[99vh] overflow-y-scroll lg:min-w-[50vw]">
         <DialogHeader className="my-4 text-sm">
           <DialogTitle>Add Staff</DialogTitle>
         </DialogHeader>
@@ -234,7 +233,9 @@ const AddStaff = ({setOpenAdd}:{setOpenAdd: React.Dispatch<React.SetStateAction<
                     type="tel"
                     inputMode="numeric"
                     onChange={(e) => {
-                      const value = e.target.value.replace(/\D/g, "").slice(0, 10)
+                      const value = e.target.value
+                        .replace(/\D/g, "")
+                        .slice(0, 10)
                       field.onChange(value)
                     }}
                   />
