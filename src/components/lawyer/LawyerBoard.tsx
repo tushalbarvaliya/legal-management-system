@@ -1,30 +1,20 @@
-import { useQuery } from "@tanstack/react-query"
-
-import { getAllCases } from "@/api/caseAPI"
-import { getAllTask } from "@/api/taskAPI"
 import ErrorMessage from "../ErrorMessage"
 import LawyerBoardSkeleton from "./LawyerBoardSkeleton"
-import type { TaskType } from "@/types/taskType"
-import type { CasesResponse } from "@/types/caseType"
+import { useGetCaseQuery } from "@/store/services/caseAPI"
+import { useGetTaskQuery } from "@/store/services/taskAPI"
 
 const LawyerBoard = () => {
   const {
     data: tasks,
     isLoading: taskLoading,
     isError: taskError,
-  } = useQuery<TaskType>({
-    queryKey: ["tasks"],
-    queryFn: getAllTask,
-  })
+  } = useGetTaskQuery()
 
   const {
     data: cases,
     isLoading: caseLoading,
     isError: caseError,
-  } = useQuery<CasesResponse>({
-    queryKey: ["cases"],
-    queryFn: getAllCases,
-  })
+  } = useGetCaseQuery()
 
   // stats
   const totalTasks = tasks?.data.tasks.length || 0

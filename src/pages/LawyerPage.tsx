@@ -57,6 +57,7 @@ const LawyerPage = () => {
         onClick={() => {
           setOpenAdd(true)
         }}
+        disabled={isError||isLoading}
       >
         <Plus />
       </button>

@@ -12,12 +12,14 @@ import { Dialog } from "../ui/dialog"
 import UpdateLawyer from "./UpdateLawyer"
 import { useState } from "react"
 import BlockModel from "../BlockModel"
-import { useMutation } from "@tanstack/react-query"
-import { blockLawyer, deleteLawyer, patchUnblockLawyer } from "@/api/lawyerAPI"
 import { toast } from "sonner"
-import { queryClient } from "@/main"
 import UnblockModel from "../UnblockModel"
 import DeleteModel from "../DeleteModel"
+import {
+  useBlockLawyerMutation,
+  useDeleteLawyerMutation,
+  useUnblockLawyerMutation,
+} from "@/store/services/lawyerAPI"
 
 const LawyerCard = (lawyer: LawyerDataType) => {
   const [openDetails, setOpenDetails] = useState<boolean>(false)
@@ -26,41 +28,42 @@ const LawyerCard = (lawyer: LawyerDataType) => {
   const [openBlock, setOpenBlock] = useState<boolean>(false)
   const [openDelete, setOpenDelete] = useState<boolean>(false)
 
-  const { mutate: mutateBlock, isPending: isPendingBlock } = useMutation({
-    mutationFn: blockLawyer,
-    onSuccess: () => {
+  const [blockLawyer, { isLoading: isPendingBlock }] = useBlockLawyerMutation()
+  const mutateBlock = async (_: number) => {
+    try {
+      await blockLawyer(lawyer.lawyer.id).unwrap()
       toast.success("Block Lawyer Successfully", { duration: 1500 })
-      queryClient.invalidateQueries({ queryKey: ["lawyer"] })
       setOpenBlock(false)
-    },
-    onError: (error) => {
-      toast.error(`Error ${error.message}`)
-    },
-  })
+    } catch {
+      toast.error(`Block Failed`)
+    }
+  }
 
-  const { mutate: mutateUnblock, isPending: isPendingUnblock } = useMutation({
-    mutationFn: patchUnblockLawyer,
-    onSuccess: () => {
+  const [unblockLawyer, { isLoading: isPendingUnblock }] =
+    useUnblockLawyerMutation()
+  const mutateUnblock = async (_: number) => {
+    try {
+      await unblockLawyer(lawyer.lawyer.id).unwrap()
       toast.success("Unblock Lawyer Successfully", { duration: 1500 })
-      queryClient.invalidateQueries({ queryKey: ["lawyer"] })
       setOpenUnblock(false)
-    },
-    onError: (error) => {
-      toast.error(`Error ${error.message}`)
-    },
-  })
+    } catch {
+      toast.error(`Unblock Failed`)
+    }
+  }
 
-  const { mutate: deleteMutate, isPending: deleteIsPending } = useMutation({
-    mutationFn: deleteLawyer,
-    onSuccess: () => {
+  
+
+  const [deleteLawyer, { isLoading: deleteIsPending }] =
+    useDeleteLawyerMutation()
+  const deleteMutate = async (_: number) => {
+    try {
+      await deleteLawyer(lawyer.lawyer.id).unwrap()
       toast.success("Delete Lawyer Successfully", { duration: 1500 })
-      queryClient.invalidateQueries({ queryKey: ["lawyer"] })
       setOpenDelete(false)
-    },
-    onError: (error) => {
-      toast.error(`Error ${error.message}`)
-    },
-  })
+    } catch {
+      toast.error(`Delete Failed`)
+    }
+  }
 
   return (
     <Dialog

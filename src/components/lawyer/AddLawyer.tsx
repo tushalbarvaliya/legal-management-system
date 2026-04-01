@@ -2,14 +2,11 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import { Eye, EyeOff } from "lucide-react"
 import { useState } from "react"
-import { useMutation } from "@tanstack/react-query"
 import { toast } from "sonner"
 
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
-import { postLawyer } from "@/api/lawyerAPI"
-import { queryClient } from "@/main"
 import {
   AddLawyerFormSchema,
   type AddLawyerFormSchemaType,
@@ -21,12 +18,13 @@ import {
   DialogTitle,
 } from "../ui/dialog"
 import {
-Select,
+  Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
+import { useAddLawyerMutation } from "@/store/services/lawyerAPI"
 
 const AddLawyer = ({
   setOpenAdd,
@@ -35,17 +33,7 @@ const AddLawyer = ({
 }) => {
   const [passwordShow, setPasswordShow] = useState<boolean>(false)
   const [confirmPasswordShow, setConfirmPasswordShow] = useState<boolean>(false)
-  const { mutate, isPending } = useMutation({
-    mutationFn: postLawyer,
-    onSuccess: () => {
-      toast.success("User Become Lawyer", { duration: 1500 })
-      queryClient.invalidateQueries({ queryKey: ["lawyer"] })
-      setOpenAdd(false)
-    },
-    onError: (error) => {
-      toast.error(`Error ${error.message}`)
-    },
-  })
+  const [addLawyer, { isLoading: isPending }] = useAddLawyerMutation()
 
   const form = useForm<AddLawyerFormSchemaType>({
     resolver: zodResolver(AddLawyerFormSchema),
@@ -53,9 +41,16 @@ const AddLawyer = ({
     delayError: 500,
   })
 
-  const onSubmit = (data: AddLawyerFormSchemaType) => {
-    const { confirmPassword: _, ...dataMutate } = data
-    mutate(dataMutate)
+  const onSubmit = async (data: AddLawyerFormSchemaType) => {
+    if (data.confirmPassword === data.password) {
+      try {
+        await addLawyer({ data: data }).unwrap()
+        toast.success("User Become Lawyer", { duration: 1500 })
+        setOpenAdd(false)
+      } catch {
+        toast.error(`Something is Not Right`)
+      }
+    }
   }
   return (
     <>

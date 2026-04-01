@@ -1,12 +1,9 @@
 import { Controller, useForm } from "react-hook-form"
-import { useMutation } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
-import { queryClient } from "@/main"
-import { patchLawyer } from "@/api/lawyerAPI"
 import type { LawyerDataType } from "@/types/lawyerType"
 import {
   UpdateLawyerFormSchema,
@@ -26,6 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
+import { useUpdateLawyerMutation } from "@/store/services/lawyerAPI"
 
 const UpdateLawyer = ({
   lawyer,
@@ -34,17 +32,7 @@ const UpdateLawyer = ({
   lawyer: LawyerDataType
   setOpenUpdate: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
-  const { mutate, isPending } = useMutation({
-    mutationFn: patchLawyer,
-    onSuccess: () => {
-      toast.success("User Become Lawyer", { duration: 1500 })
-      queryClient.invalidateQueries({ queryKey: ["lawyer"] })
-      setOpenUpdate(false)
-    },
-    onError: (error) => {
-      toast.error(`Error ${error.message}`)
-    },
-  })
+  const [updateLawyer, { isLoading: isPending }] = useUpdateLawyerMutation()
 
   const {
     formState: { isDirty },
@@ -63,9 +51,15 @@ const UpdateLawyer = ({
     },
   })
 
-  const onSubmit = (data: UpdateLawyerFormSchemaType) => {
+  const onSubmit = async(data: UpdateLawyerFormSchemaType) => {
     if (isDirty) {
-      mutate({ data: data, id: lawyer.lawyer.id })
+      try {
+        await updateLawyer({ data: data, id: lawyer.lawyer.id }).unwrap()
+        toast.success("User Become Lawyer", { duration: 1500 })
+        setOpenUpdate(false)
+      } catch {
+        toast.error(`Something is Not Right`)
+      }
     } else {
       toast.success("No changes Found")
       setOpenUpdate(false)
