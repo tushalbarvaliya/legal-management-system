@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
-import type { UpdateCompanyFormSchemaType } from "@/schemas/UpdateCompanySchema"
 import type { RootState } from "../store"
+import type { UpdateCompanyFormSchemaType } from "@/schemas/UpdateCompanySchema"
 import type { CompanyData } from "@/types/companyType"
 
 type CompanyResponse = {

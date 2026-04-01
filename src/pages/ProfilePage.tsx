@@ -1,9 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
 import { Controller, useForm } from "react-hook-form"
-import { useMutation, useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
-import { useNavigate, Link } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { toast } from "sonner"
 import { motion } from "framer-motion"
 
@@ -16,62 +14,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { getProfile, patchProfileUpdate } from "@/api/userAPI"
-import type { ProfileData } from "@/types/types"
-import { queryClient } from "@/main"
 import ProfileSkeleton from "@/components/profile/ProfileSkeleton"
 import ErrorMessage from "@/components/ErrorMessage"
-import { nameRegex, phoneNumberRegex, addressRegex } from "@/utils/regex"
 import { Helmet } from "react-helmet-async"
-
-const profileSchema = z.object({
-  firstName: z
-    .string()
-    .min(2, "Min 2 characters")
-    .max(50, "Max 50 characters")
-    .regex(nameRegex, "Only letters allowed")
-    .nonempty("Cannot be empty"),
-  lastName: z
-    .string()
-    .min(2, "Min 2 characters")
-    .max(50, "Max 50 characters")
-    .regex(nameRegex, "Only letters allowed")
-    .nonempty("Cannot be empty"),
-  address: z
-    .string()
-    .min(5, "Too short")
-    .max(200, "Too long")
-    .regex(addressRegex, "Invalid address"),
-  phoneNumber: z.string().regex(phoneNumberRegex, "Invalid phone number"),
-  gender: z.string(),
-  role: z.string().optional(),
-})
-
-export type ProfileFormData = z.infer<typeof profileSchema>
+import {
+  useGetProfileQuery,
+  useUpdateProfileMutation,
+} from "@/store/services/profileAPI"
+import {
+  profileSchema,
+  type ProfileFormData,
+} from "@/schemas/EditProfileSchema"
 
 const ProfilePage = () => {
+  const { data, isLoading, isError } = useGetProfileQuery()
+  const [updateProfile, { isLoading: isPending }] = useUpdateProfileMutation()
   const [isEdit, setIsEdit] = useState(false)
-  const navigate = useNavigate()
-
-  const { data, isLoading, isError, error } = useQuery<{
-    data: ProfileData
-    message: string
-  }>({
-    queryKey: ["profile"],
-    queryFn: getProfile,
-  })
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: patchProfileUpdate,
-    onSuccess: () => {
-      toast.success("Profile Updated Successfully", { duration: 1500 })
-      queryClient.invalidateQueries({ queryKey: ["profile"] })
-      setIsEdit(false)
-      setTimeout(() => navigate("/"), 1500)
-    },
-    onError: (error) => toast.error(error?.message || "Something went wrong"),
-  })
-
   const {
     control,
     handleSubmit,
@@ -102,9 +60,15 @@ const ProfilePage = () => {
       })
     }
   }, [data, reset, isEdit])
-  const onSubmit = (formData: ProfileFormData) => {
+  const onSubmit = async (formData: ProfileFormData) => {
     if (isDirty) {
-      mutate(formData)
+      try {
+        updateProfile({ data: formData }).unwrap()
+        toast.success("Profile Updated Successfully")
+        setIsEdit(false)
+      } catch {
+        toast.error("Something went wrong")
+      }
     } else {
       toast.success("No Changes found")
       setIsEdit(false)
@@ -120,7 +84,7 @@ const ProfilePage = () => {
         <ProfileSkeleton />
       </>
     )
-  if (isError) return <ErrorMessage message={error.message} />
+  if (isError) return <ErrorMessage message={"Something Is not Right"} />
 
   return (
     <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>

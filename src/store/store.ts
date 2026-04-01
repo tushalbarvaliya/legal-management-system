@@ -6,12 +6,14 @@ import authReducer from "./slice/authSlice"
 import { companyAPI } from "./services/companyAPI"
 import { lawyerAPI } from "./services/lawyerAPI"
 import { adminAPI } from "./services/adminAPI"
+import { profileAPI } from "./services/profileAPI"
 
 const rootReducer = combineReducers({
   auth: authReducer,
   [companyAPI.reducerPath]: companyAPI.reducer,
   [lawyerAPI.reducerPath]: lawyerAPI.reducer,
   [adminAPI.reducerPath]: adminAPI.reducer,
+  [profileAPI.reducerPath]: profileAPI.reducer,
 })
 
 const persistConfig = {
@@ -30,7 +32,8 @@ export const store = configureStore({
     })
       .concat(companyAPI.middleware)
       .concat(lawyerAPI.middleware)
-      .concat(adminAPI.middleware),
+      .concat(adminAPI.middleware)
+      .concat(profileAPI.middleware),
 })
 
 export const persistor = persistStore(store)
