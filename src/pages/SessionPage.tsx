@@ -1,9 +1,7 @@
-import { useQuery } from "@tanstack/react-query"
 import { Plus } from "lucide-react"
 import { useMemo, useState } from "react"
 import { VirtuosoGrid } from "react-virtuoso"
 
-import { getAllSession } from "@/api/sessionAPI"
 import ErrorMessage from "@/components/ErrorMessage"
 import NoFound from "@/components/NoFound"
 import SessionCard from "@/components/session/SessionCard"
@@ -11,21 +9,14 @@ import SessionCardSkeleton from "@/components/session/SessionCardSkeleton"
 import { Spinner } from "@/components/ui/spinner"
 import { Dialog } from "@/components/ui/dialog"
 import AddSession from "@/components/session/AddSession"
-import type { SessionResponse } from "@/types/sessionType"
 import { Helmet } from "react-helmet-async"
+import { useGetSessionQuery } from "@/store/services/sessionAPI"
 
 const SessionPage = () => {
   const [search, setSearch] = useState("")
   const [openAdd, setOpenAdd] = useState<boolean>(false)
 
-  const {
-    data: sessions,
-    isLoading,
-    isError,
-  } = useQuery<SessionResponse>({
-    queryKey: ["sessions"],
-    queryFn: getAllSession,
-  })
+  const { data: sessions, isLoading, isError } = useGetSessionQuery()
 
   const handleClear = () => {
     setSearch("")
@@ -107,7 +98,7 @@ const SessionPage = () => {
           !isError &&
           (filteredSessions && filteredSessions?.length > 0 ? (
             <VirtuosoGrid
-              style={{ height: 425}}
+              style={{ height: 425 }}
               data={filteredSessions}
               overscan={200}
               components={{

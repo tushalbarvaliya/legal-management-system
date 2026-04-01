@@ -1,17 +1,10 @@
-import { useMutation, useQuery } from "@tanstack/react-query"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod"
 
-import { getAllCases } from "@/api/caseAPI"
-import { getAllClient } from "@/api/clientAPI"
-import type { CasesResponse } from "@/types/caseType"
-import type { ClientResponse } from "@/types/clientType"
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
-import { addSession } from "@/api/sessionAPI"
-import { queryClient } from "@/main"
 import {
   AddSessionFormSchema,
   type AddSessionFormSchemaType,
@@ -33,32 +26,20 @@ import { format, isValid, parse } from "date-fns"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { CalendarIcon } from "lucide-react"
 import { Calendar } from "../ui/calendar"
+import { useAddSessionMutation } from "@/store/services/sessionAPI"
+import { useGetCaseQuery } from "@/store/services/caseAPI"
+import { useGetClientQuery } from "@/store/services/clientAPI"
 
 const AddSession = ({
   setOpenAdd,
 }: {
   setOpenAdd: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
-  const { data: clients } = useQuery<ClientResponse>({
-    queryKey: ["client"],
-    queryFn: getAllClient,
-  })
-  const { data: cases } = useQuery<CasesResponse>({
-    queryKey: ["cases"],
-    queryFn: getAllCases,
-  })
+  const { data: cases } = useGetCaseQuery()
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: addSession,
-    onSuccess: () => {
-      toast.success("Session Add", { duration: 1500 })
-      queryClient.invalidateQueries({ queryKey: ["sessions"] })
-      setOpenAdd(false)
-    },
-    onError: (error) => {
-      toast.error(`Error ${error}`)
-    },
-  })
+  const { data: clients } = useGetClientQuery()
+
+  const [addSession, { isLoading: isPending }] = useAddSessionMutation()
 
   const form = useForm<AddSessionFormSchemaType>({
     resolver: zodResolver(AddSessionFormSchema),
@@ -66,8 +47,14 @@ const AddSession = ({
     delayError: 500,
   })
 
-  const onSubmit = (data: AddSessionFormSchemaType) => {
-    mutate(data)
+  const onSubmit = async (data: AddSessionFormSchemaType) => {
+    try {
+      await addSession({ data }).unwrap()
+      toast.success("Session Add", { duration: 1500 })
+      setOpenAdd(false)
+    } catch {
+      toast.error(`Something iw not right`)
+    }
   }
 
   return (
@@ -164,25 +151,6 @@ const AddSession = ({
                 </Field>
               )}
             />
-            {/* <Controller
-              name="sessionDate"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field className="space-y-2">
-                  <FieldLabel>Session Date</FieldLabel>
-
-                  <Input
-                    type="date"
-                    value={field.value ?? ""}
-                    onChange={(e) => field.onChange(e.target.value || null)}
-                  />
-
-                  {fieldState.error && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            /> */}
             <Controller
               name="sessionDate"
               control={form.control}
