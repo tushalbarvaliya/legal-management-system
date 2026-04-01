@@ -1,14 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
-import { useMutation, useQuery } from "@tanstack/react-query"
 
 import { AddTaskSchema, type AddTaskType } from "@/schemas/AddTaskSchema"
 import { Button } from "../ui/button"
-import { addTask } from "@/api/taskAPI"
-import { getAllCases } from "@/api/caseAPI"
-import { queryClient } from "@/main"
-import type { CasesResponse } from "@/types/caseType"
 import { Input } from "../ui/input"
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
 import {
@@ -28,34 +23,31 @@ import { format, isValid, parse } from "date-fns"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { CalendarIcon } from "lucide-react"
 import { Calendar } from "../ui/calendar"
+import { useAddTaskMutation } from "@/store/services/taskAPI"
+import { useGetCaseQuery } from "@/store/services/caseAPI"
 
 const AddTask = ({
   setOpenAdd,
 }: {
   setOpenAdd: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
-  const { mutate, isPending } = useMutation({
-    mutationFn: addTask,
-    onSuccess: () => {
-      toast.success("Task Add Successfully")
-      queryClient.invalidateQueries({ queryKey: ["tasks"] })
-      setOpenAdd(false)
-    },
-    onError: (error) => {
-      toast.error(`Error ${error}`)
-    },
-  })
-  const { data: caseData } = useQuery<CasesResponse>({
-    queryKey: ["cases"],
-    queryFn: getAllCases,
-  })
+  const [addTask, { isLoading: isPending }] = useAddTaskMutation()
+
+  const { data: caseData } = useGetCaseQuery()
+
   const form = useForm<AddTaskType>({
     resolver: zodResolver(AddTaskSchema),
     mode: "onChange",
     delayError: 500,
   })
-  const onSubmit = (data: AddTaskType) => {
-    mutate(data)
+  const onSubmit = async (data: AddTaskType) => {
+    try {
+      await addTask({ data }).unwrap()
+      toast.success("Task Add Successfully")
+      setOpenAdd(false)
+    } catch {
+      toast.error(`Something Went Wrong`)
+    }
   }
   return (
     <>

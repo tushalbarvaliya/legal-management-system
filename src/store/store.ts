@@ -7,6 +7,12 @@ import { companyAPI } from "./services/companyAPI"
 import { lawyerAPI } from "./services/lawyerAPI"
 import { adminAPI } from "./services/adminAPI"
 import { profileAPI } from "./services/profileAPI"
+import { sessionAPI } from "./services/sessionAPI"
+import { clientAPI } from "./services/clientAPI"
+import { caseAPI } from "./services/caseAPI"
+import { taskAPI } from "./services/taskAPI"
+import { staffAPI } from "./services/staffAPI"
+import { invoiceAPI } from "./services/invoiceAPI"
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -14,6 +20,12 @@ const rootReducer = combineReducers({
   [lawyerAPI.reducerPath]: lawyerAPI.reducer,
   [adminAPI.reducerPath]: adminAPI.reducer,
   [profileAPI.reducerPath]: profileAPI.reducer,
+  [sessionAPI.reducerPath]: sessionAPI.reducer,
+  [caseAPI.reducerPath]: caseAPI.reducer,
+  [taskAPI.reducerPath]: taskAPI.reducer,
+  [staffAPI.reducerPath]: staffAPI.reducer,
+  [invoiceAPI.reducerPath]: invoiceAPI.reducer,
+  [clientAPI.reducerPath]: clientAPI.reducer,
 })
 
 const persistConfig = {
@@ -33,7 +45,13 @@ export const store = configureStore({
       .concat(companyAPI.middleware)
       .concat(lawyerAPI.middleware)
       .concat(adminAPI.middleware)
-      .concat(profileAPI.middleware),
+      .concat(profileAPI.middleware)
+      .concat(invoiceAPI.middleware)
+      .concat(caseAPI.middleware)
+      .concat(clientAPI.middleware)
+      .concat(taskAPI.middleware)
+      .concat(staffAPI.middleware)
+      .concat(sessionAPI.middleware),
 })
 
 export const persistor = persistStore(store)

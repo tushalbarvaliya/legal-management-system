@@ -1,10 +1,8 @@
-import { useQuery } from "@tanstack/react-query"
 import { useMemo, useState } from "react"
 import { Plus } from "lucide-react"
 import { Virtuoso } from "react-virtuoso"
 
-import { getAllTask } from "@/api/taskAPI"
-import type { TaskResponse, TaskType } from "@/types/taskType"
+import type { TaskResponse } from "@/types/taskType"
 import NoFound from "@/components/NoFound"
 import TaskCardSkeleton from "@/components/task/TaskCardSkeleton"
 import ErrorMessage from "@/components/ErrorMessage"
@@ -22,6 +20,7 @@ import {
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Helmet } from "react-helmet-async"
+import { useGetTaskQuery } from "@/store/services/taskAPI"
 
 const TaskPage = () => {
   const [openAdd, setOpenAdd] = useState<boolean>(false)
@@ -35,14 +34,8 @@ const TaskPage = () => {
     setPriorityFilter("all")
     setStatusFilter("all")
   }
-  const {
-    data: tasks,
-    isLoading,
-    isError,
-  } = useQuery<TaskType>({
-    queryKey: ["tasks"],
-    queryFn: getAllTask,
-  })
+
+  const { data: tasks, isLoading, isError } = useGetTaskQuery()
 
   const filteredTasks = useMemo(() => {
     return tasks?.data.tasks.filter((task: TaskResponse) => {
@@ -65,16 +58,18 @@ const TaskPage = () => {
   const overdue = tasks?.data.summary.overdue
 
   return (
-    <Dialog
-      open={openAdd}
-      onOpenChange={(open) => {
-        if (!open) setOpenAdd(false)
-      }}
-    >
+    <>
       <Helmet>
         <title>Task Management</title>
       </Helmet>
-      {openAdd && <AddTask setOpenAdd={setOpenAdd} />}
+      <Dialog
+        open={openAdd}
+        onOpenChange={() => {
+          setOpenAdd(false)
+        }}
+      >
+        {openAdd && <AddTask setOpenAdd={setOpenAdd} />}
+      </Dialog>
       <section className="shadow-soft rounded-2xl border border-zinc-200 bg-white p-4 sm:p-6">
         {/* header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -150,12 +145,12 @@ const TaskPage = () => {
         </div>
 
         {/* Add Button */}
-        <button
+        <Button
           onClick={() => setOpenAdd(true)}
-          className="fixed right-6 bottom-6 flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white"
+          className="fixed right-6 bottom-6 z-99 flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white"
         >
           <Plus />
-        </button>
+        </Button>
 
         {/* Task List */}
         <div className="mt-5 space-y-3">
@@ -186,7 +181,7 @@ const TaskPage = () => {
             ))}
         </div>
       </section>
-    </Dialog>
+    </>
   )
 }
 

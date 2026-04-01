@@ -11,14 +11,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
-import { useMutation } from "@tanstack/react-query"
-import axiosInstance from "@/api/axiosInstance"
 import { toast } from "sonner"
-import { queryClient } from "@/main"
 import { useState } from "react"
 import DeleteModel from "../DeleteModel"
-import { deleteTask } from "@/api/taskAPI"
 import ToolTip from "../ToolTip"
+import {
+  useDeleteTaskMutation,
+  useMarksAsDoneMutation,
+} from "@/store/services/taskAPI"
 
 const getPriorityColor = (priority: string) => {
   if (priority == "low") {
@@ -42,30 +42,26 @@ const TaskCard = (data: TaskResponse) => {
   const [openEdit, setOpenEdit] = useState<boolean>(false)
   const [openView, setOpenView] = useState<boolean>(false)
 
-  const { mutate } = useMutation({
-    mutationFn: async (id: number) => {
-      const response = await axiosInstance.patch(`/tasks/task/${id}/markAsDone`)
-      return response.data
-    },
-    onSuccess: () => {
+  const [MarkAsDone] = useMarksAsDoneMutation()
+  const handelMakeAsDone = async () => {
+    try {
+      await MarkAsDone({ id: data.id }).unwrap()
       toast.success(`Task Mark as Done`)
-      queryClient.invalidateQueries({ queryKey: ["tasks"] })
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    },
-  })
-  const { mutate: DeleteMutate, isPending: DeleteIsPending } = useMutation({
-    mutationFn: deleteTask,
-    onSuccess: () => {
+    } catch {
+      toast.error("Something is not Right")
+    }
+  }
+
+  const [deleteTask, { isLoading: DeleteIsPending }] = useDeleteTaskMutation()
+  const handelDelete = async () => {
+    try {
+      await deleteTask(data.id).unwrap()
       toast.success("Task Deleted")
-      queryClient.invalidateQueries({ queryKey: ["tasks"] })
       setOpenDelete(false)
-    },
-    onError: (error) => {
-      toast.error(`Error ${error}`)
-    },
-  })
+    } catch {
+      toast.error(`Failed to delete`)
+    }
+  }
   return (
     <Dialog
       open={openDelete || openEdit || openView}
@@ -87,7 +83,7 @@ const TaskCard = (data: TaskResponse) => {
           detailsTitle={`${data.title}`}
           id={data.id}
           isPending={DeleteIsPending}
-          mutate={DeleteMutate}
+          mutate={handelDelete}
           setOpenDelete={setOpenDelete}
         />
       )}
@@ -95,7 +91,7 @@ const TaskCard = (data: TaskResponse) => {
         <div className="flex items-start gap-3">
           <div className="min-w-0 flex-1">
             {/* TITLE */}
-            <ToolTip title={data.title} description={data.description}/>
+            <ToolTip title={data.title} description={data.description} />
 
             {/* INFO GRID */}
             <div className="mt-3 grid grid-cols-1 gap-2 text-xs text-zinc-600 sm:grid-cols-2 lg:grid-cols-5">
@@ -165,7 +161,7 @@ const TaskCard = (data: TaskResponse) => {
                   className="text-green-500"
                   onClick={(e) => {
                     e.stopPropagation()
-                    mutate(data.id)
+                    handelMakeAsDone()
                   }}
                 >
                   Mark As Done

@@ -1,19 +1,12 @@
 import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
-import { useMutation, useQuery } from "@tanstack/react-query"
 
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
-import type { CasesResponse } from "@/types/caseType"
-import { getAllCases } from "@/api/caseAPI"
-import { queryClient } from "@/main"
-import type { StaffUserMapping } from "@/types/staffType"
-import { updateTask } from "@/api/taskAPI"
 import { useAppSelector } from "@/hooks/hooks"
 import type { TaskResponse } from "@/types/taskType"
-import { getAllStaff } from "@/api/staffAPI"
 import {
   UpdateTaskSchema,
   type UpdateTaskType,
@@ -31,6 +24,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
+import { useUpdateTaskMutation } from "@/store/services/taskAPI"
+import { useGetCaseQuery } from "@/store/services/caseAPI"
+import { useGetStaffQuery } from "@/store/services/staffAPI"
 
 const UpdateTask = ({
   task,
@@ -40,26 +36,12 @@ const UpdateTask = ({
   setOpenEdit: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
   const id = useAppSelector((state) => state.auth.id)
-  // const navigate = useNavigate()
-  const { mutate, isPending } = useMutation({
-    mutationFn: updateTask,
-    onSuccess: () => {
-      toast.success("Task Update Successfully")
-      queryClient.invalidateQueries({ queryKey: ["tasks"] })
-      setOpenEdit(false)
-    },
-    onError: (error) => {
-      toast.error(`Error ${error}`)
-    },
-  })
-  const { data: caseData } = useQuery<CasesResponse>({
-    queryKey: ["cases"],
-    queryFn: getAllCases,
-  })
-  const { data: staffData } = useQuery<StaffUserMapping[]>({
-    queryKey: ["staff"],
-    queryFn: getAllStaff,
-  })
+  const [updateTask, { isLoading: isPending }] = useUpdateTaskMutation()
+
+  const { data: staffData } = useGetStaffQuery()
+
+  const { data: caseData } = useGetCaseQuery()
+
   const {
     formState: { isDirty },
     ...form
@@ -75,9 +57,15 @@ const UpdateTask = ({
       assignedTo: task.assignedTo,
     },
   })
-  const onSubmit = (data: UpdateTaskType) => {
+  const onSubmit = async (data: UpdateTaskType) => {
     if (isDirty) {
-      mutate({ data: data, id: task.id })
+      try {
+        await updateTask({ data: data, id: task.id }).unwrap()
+        toast.success("Task Update Successfully")
+        setOpenEdit(false)
+      } catch {
+        toast.error(`Something is Not right`)
+      }
     } else {
       toast.success("No Changes Found", { duration: 700 })
       setOpenEdit(false)
