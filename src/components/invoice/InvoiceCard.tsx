@@ -7,35 +7,38 @@ import type { Payment } from "@/types/invoiceType"
 import { formatDate } from "@/utils/formate"
 import { Button } from "../ui/button"
 import EditInvoiceModel from "./EditInvoiceModel"
-import { deleteInvoice, pay } from "@/api/invoiceAPI"
+import { pay } from "@/api/invoiceAPI"
 import InvoiceDetailsModal from "./InvoiceDetailsModal"
 import { useAppSelector } from "@/hooks/hooks"
 import { Dialog } from "../ui/dialog"
 import DeleteModel from "../DeleteModel"
-import { queryClient } from "@/main"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
+import { useDeleteInvoiceMutation } from "@/store/services/invoiceAPI"
 
 const InvoiceCard = (invoice: Payment) => {
   const [openView, setOpenView] = useState<boolean>(false)
   const [openDelete, setOpenDelete] = useState<boolean>(false)
   const [openEdit, setOpenEdit] = useState<boolean>(false)
   const role = useAppSelector((state) => state.auth.role)
-  const { mutate: DeleteMutate, isPending: DeleteIsPending } = useMutation({
-    mutationFn: deleteInvoice,
-    onSuccess: () => {
+
+  const [deleteInvoice, { isLoading: DeleteIsPending }] =
+    useDeleteInvoiceMutation()
+    
+  const handelDeleteModel = async(_: number) => {
+    try {
+      await deleteInvoice(invoice.id).unwrap()
       toast.success("Invoice Deleted")
-      queryClient.invalidateQueries({ queryKey: ["invoices"] })
       setOpenDelete(false)
-    },
-    onError: (error) => {
-      toast.error(`Error ${error}`)
-    },
-  })
+    } catch {
+      toast.error(`Something is not right`)
+    }
+  }
+
   const { mutate } = useMutation({
     mutationFn: pay,
     onSuccess: (data) => {
@@ -61,7 +64,7 @@ const InvoiceCard = (invoice: Payment) => {
           detailsTitle={`${invoice.totalAmount}`}
           id={invoice.id}
           isPending={DeleteIsPending}
-          mutate={DeleteMutate}
+          mutate={handelDeleteModel}
           setOpenDelete={setOpenDelete}
         />
       )}
@@ -113,7 +116,7 @@ const InvoiceCard = (invoice: Payment) => {
                     </DropdownMenuItem>
                   </>
                 )}
-                {role === "client" && invoice.status!='paid' && (
+                {role === "client" && invoice.status != "paid" && (
                   <DropdownMenuItem
                     className="text-green-500"
                     onClick={() => {

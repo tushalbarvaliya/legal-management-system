@@ -1,13 +1,10 @@
 import { useMemo, useState } from "react"
-import { useQuery } from "@tanstack/react-query"
 import { VirtuosoGrid } from "react-virtuoso"
 
 import InvoiceCard from "./InvoiceCard"
 import InvoiceCardSkeleton from "./InvoiceCardSkeleton"
 import ErrorMessage from "../ErrorMessage"
 import { Button } from "../ui/button"
-import { getAllInvoice } from "@/api/invoiceAPI"
-import type { invoiceDataType } from "@/types/invoiceType"
 import NoFound from "../NoFound"
 import {
   Select,
@@ -16,16 +13,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
+import { useGetInvoiceQuery } from "@/store/services/invoiceAPI"
 
 const InvoiceList = () => {
-  const {
-    data: invoices,
-    isLoading,
-    isError,
-  } = useQuery<invoiceDataType | undefined>({
-    queryKey: ["invoices"],
-    queryFn: getAllInvoice,
-  })
+  const {data:invoices,isLoading,isError}=useGetInvoiceQuery()
 
   const [status, setStatus] = useState("")
   const [client, setClient] = useState("")

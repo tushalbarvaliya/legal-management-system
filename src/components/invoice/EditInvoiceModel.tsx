@@ -1,23 +1,19 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Controller, useForm } from "react-hook-form"
-import { useMutation, useQuery } from "@tanstack/react-query"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
-import { getAllCases } from "@/api/caseAPI"
-import { getAllClient } from "@/api/clientAPI"
-import { updateInvoice } from "@/api/invoiceAPI"
 import type { Payment } from "@/types/invoiceType"
-import type { CasesResponse } from "@/types/caseType"
-import type { ClientResponse } from "@/types/clientType"
-import { queryClient } from "@/main"
 import {
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"
+import { useUpdateInvoiceMutation } from "@/store/services/invoiceAPI"
+import { useGetCaseQuery } from "@/store/services/caseAPI"
+import { useGetClientQuery } from "@/store/services/clientAPI"
 
 const editInvoiceSchema = z.object({
   clientId: z.coerce
@@ -41,25 +37,11 @@ const EditInvoiceModel = ({
   data: Payment
   setOpen: (val: boolean) => void
 }) => {
-  const { data: caseData } = useQuery<CasesResponse>({
-    queryKey: ["cases"],
-    queryFn: getAllCases,
-  })
+  const { data: caseData } = useGetCaseQuery()
 
-  const { data: clientData } = useQuery<ClientResponse>({
-    queryKey: ["client"],
-    queryFn: getAllClient,
-  })
+  const { data: clientData } = useGetClientQuery()
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: updateInvoice,
-    onSuccess: () => {
-      toast.success("Invoice Updated Successfully")
-      queryClient.invalidateQueries({ queryKey: ["invoices"] })
-      setOpen(false)
-    },
-    onError: (error) => toast.error(`Error ${error?.message || error}`),
-  })
+  const [updateInvoice, { isLoading: isPending }] = useUpdateInvoiceMutation()
 
   const {
     control,
@@ -76,9 +58,15 @@ const EditInvoiceModel = ({
     mode: "onChange",
   })
 
-  const onSubmit = (formData: EditInvoiceFormDataType) => {
+  const onSubmit = async (formData: EditInvoiceFormDataType) => {
     if (isDirty) {
-      mutate({ data: formData, id: data.id })
+      try {
+        await updateInvoice({ data: formData, id: data.id }).unwrap()
+        toast.success("Invoice Updated Successfully")
+        setOpen(false)
+      } catch {
+        toast.error(`Something is not right`)
+      }
     } else {
       toast.success("No Changes found")
       setOpen(false)

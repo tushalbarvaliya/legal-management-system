@@ -1,18 +1,10 @@
 import { useForm, Controller } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation, useQuery } from "@tanstack/react-query"
 import { toast } from "sonner"
-import { useNavigate } from "react-router-dom"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { getAllCases } from "@/api/caseAPI"
-import { getAllClient } from "@/api/clientAPI"
-import { addInvoice } from "@/api/invoiceAPI"
-import { queryClient } from "@/main"
-import type { CasesResponse } from "@/types/caseType"
-import type { ClientResponse } from "@/types/clientType"
 import {
   DialogContent,
   DialogHeader,
@@ -26,6 +18,9 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select"
+import { useAddInvoiceMutation } from "@/store/services/invoiceAPI"
+import { useGetCaseQuery } from "@/store/services/caseAPI"
+import { useGetClientQuery } from "@/store/services/clientAPI"
 
 const addInvoiceSchema = z.object({
   clientId: z.coerce.number<number>().min(1, { message: "Client is required" }),
@@ -42,37 +37,26 @@ const addInvoiceSchema = z.object({
 export type AddInvoiceFormDataType = z.input<typeof addInvoiceSchema>
 
 const AddInvoiceModel = ({ setOpen }: { setOpen: (val: boolean) => void }) => {
-  const navigate = useNavigate()
+  const { data: caseData } = useGetCaseQuery()
 
-  const { data: caseData } = useQuery<CasesResponse>({
-    queryKey: ["cases"],
-    queryFn: getAllCases,
-  })
+  const { data: clientData } = useGetClientQuery()
 
-  const { data: clientData } = useQuery<ClientResponse>({
-    queryKey: ["client"],
-    queryFn: getAllClient,
-  })
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: addInvoice,
-    onSuccess: () => {
-      toast.success("Invoice added successfully")
-      queryClient.invalidateQueries({ queryKey: ["invoices"] })
-      setOpen(false)
-      navigate("/invoice")
-    },
-    onError: (error) => {
-      toast.error(`Error: ${error}`)
-    },
-  })
+  const [addInvoice, { isLoading: isPending }] = useAddInvoiceMutation()
 
   const { control, handleSubmit } = useForm<AddInvoiceFormDataType>({
     resolver: zodResolver(addInvoiceSchema),
     defaultValues: { companyId: 1 },
   })
 
-  const onSubmit = (data: AddInvoiceFormDataType) => mutate(data)
+  const onSubmit = async (data: AddInvoiceFormDataType) => {
+    try {
+      await addInvoice({ data }).unwrap()
+      toast.success("Invoice added successfully")
+      setOpen(false)
+    } catch {
+      toast.error(`Something is not right`)
+    }
+  }
 
   return (
     <>
