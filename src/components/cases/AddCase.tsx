@@ -1,16 +1,10 @@
 import { toast } from "sonner"
-import axios from "axios"
 import { Controller, useForm } from "react-hook-form"
 
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
 import { Input } from "../ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "../ui/button"
-import type { ClientResponse } from "@/types/clientType"
-import { getAllClient } from "@/api/clientAPI"
-import { useMutation, useQuery } from "@tanstack/react-query"
-import { postCase } from "@/api/caseAPI"
-import { queryClient } from "@/main"
 import {
   AddCaseFormSchema,
   type AddCaseFormSchemaType,
@@ -32,33 +26,16 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { format, isValid, parse } from "date-fns"
 import { CalendarIcon } from "lucide-react"
 import { Calendar } from "../ui/calendar"
+import { useAddCaseMutation } from "@/store/services/caseAPI"
+import { useGetClientQuery } from "@/store/services/clientAPI"
 
 const AddCase = ({
   setOpenAdd,
 }: {
   setOpenAdd: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
-  const { data: clients } = useQuery<ClientResponse>({
-    queryKey: ["client"],
-    queryFn: getAllClient,
-  })
-  const { mutate, isPending } = useMutation({
-    mutationFn: postCase,
-    onSuccess: () => {
-      toast.success("Case Add Successfully", { duration: 1500 })
-      queryClient.invalidateQueries({ queryKey: ["cases"] })
-      setOpenAdd(false)
-    },
-    onError: (error: unknown) => {
-      if (axios.isAxiosError(error)) {
-        toast.error(
-          error.response?.data?.detail?.error || "Something went wrong"
-        )
-      } else {
-        toast.error("Something went wrong")
-      }
-    },
-  })
+  const { data: clients } = useGetClientQuery()
+  const [addCase, { isLoading: isPending }] = useAddCaseMutation()
 
   const form = useForm<AddCaseFormSchemaType>({
     resolver: zodResolver(AddCaseFormSchema),
@@ -66,8 +43,14 @@ const AddCase = ({
     delayError: 500,
   })
 
-  const onSubmit = (data: AddCaseFormSchemaType) => {
-    mutate(data)
+  const onSubmit = async (data: AddCaseFormSchemaType) => {
+    try {
+      await addCase({ data }).unwrap()
+      toast.success("Case Add Successfully", { duration: 1500 })
+      setOpenAdd(false)
+    } catch {
+      toast.error("Something went wrong")
+    }
   }
   return (
     <>

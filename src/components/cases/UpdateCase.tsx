@@ -1,15 +1,10 @@
 import { Controller, useForm } from "react-hook-form"
-import { useMutation, useQuery } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
-import type { ClientResponse } from "@/types/clientType"
-import { getAllClient } from "@/api/clientAPI"
-import { patchCase } from "@/api/caseAPI"
-import { queryClient } from "@/main"
 import type { Case } from "@/types/caseType"
 import {
   UpdateCaseFormSchema,
@@ -32,6 +27,8 @@ import { format, isValid, parse } from "date-fns"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { CalendarIcon } from "lucide-react"
 import { Calendar } from "../ui/calendar"
+import { useUpdateCaseMutation } from "@/store/services/caseAPI"
+import { useGetClientQuery } from "@/store/services/clientAPI"
 
 const UpdateCase = ({
   data,
@@ -40,21 +37,8 @@ const UpdateCase = ({
   data: Case
   setOpenAdd: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
-  const { data: clients } = useQuery<ClientResponse>({
-    queryKey: ["client"],
-    queryFn: getAllClient,
-  })
-  const { mutate, isPending } = useMutation({
-    mutationFn: patchCase,
-    onSuccess: () => {
-      toast.success("Case Updated Successfully")
-      queryClient.invalidateQueries({ queryKey: ["cases"] })
-      setOpenAdd(false)
-    },
-    onError: (error) => {
-      toast.error(`Error ${error}`)
-    },
-  })
+  const { data: clients } = useGetClientQuery()
+  const [updateCase, { isLoading: isPending }] = useUpdateCaseMutation()
 
   const {
     formState: { isDirty },
@@ -76,9 +60,15 @@ const UpdateCase = ({
     },
   })
 
-  const onSubmit = (FormData: UpdateCaseFormSchemaType) => {
+  const onSubmit = async(FormData: UpdateCaseFormSchemaType) => {
     if (isDirty) {
-      mutate({ data: FormData, id: data.id })
+      try {
+        await updateCase({ data: FormData, id: data.id }).unwrap()
+        toast.success("Case Updated Successfully")
+        setOpenAdd(false)
+      } catch {
+        toast.error(`something went wrong`)
+      }
     } else {
       toast.success("NO Changes Found")
       setOpenAdd(false)

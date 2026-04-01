@@ -1,32 +1,24 @@
 import { useMemo, useState } from "react"
-import { useQuery } from "@tanstack/react-query"
 import { Plus, Search } from "lucide-react"
 import { Virtuoso } from "react-virtuoso"
 
 import { useAppSelector } from "@/hooks/hooks"
-import { getAllCases } from "@/api/caseAPI"
 import ErrorMessage from "@/components/ErrorMessage"
 import CasesCardSkeleton from "@/components/cases/CasesCardSkeleton"
 import CasesCard from "@/components/cases/CasesCard"
 import NoFound from "@/components/NoFound"
-import type { Case, CasesResponse } from "@/types/caseType"
+import type { Case } from "@/types/caseType"
 import { Dialog } from "@/components/ui/dialog"
 import AddCase from "@/components/cases/AddCase"
 import { Helmet } from "react-helmet-async"
+import { useGetCaseQuery } from "@/store/services/caseAPI"
 
 const CasesPage = () => {
   const role = useAppSelector((state) => state.auth.role)
   const [openAdd, setOpenAdd] = useState<boolean>(false)
   const [search, setSearch] = useState("")
 
-  const {
-    data: cases,
-    isLoading,
-    isError,
-  } = useQuery<CasesResponse>({
-    queryKey: ["cases"],
-    queryFn: getAllCases,
-  })
+  const { data: cases, isLoading, isError } = useGetCaseQuery()
 
   const filteredCases: Case[] | undefined = useMemo(() => {
     return cases?.data.cases.filter((item: Case) => {
@@ -107,9 +99,7 @@ const CasesPage = () => {
           filteredCases &&
           filteredCases.length > 0 ? (
             <Virtuoso
-              style={{
-                height: "100%",
-              }}
+              style={{ height: 425 }}
               className="no-scrollbar"
               totalCount={filteredCases.length}
               data={filteredCases}

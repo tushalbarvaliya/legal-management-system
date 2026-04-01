@@ -2,7 +2,6 @@ import { MoreVertical } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 import { useState } from "react"
-import { useMutation } from "@tanstack/react-query"
 
 import { Button } from "@/components/ui/button"
 import { useAppSelector } from "@/hooks/hooks"
@@ -11,8 +10,6 @@ import type { Case } from "@/types/caseType"
 import CaseDetailModel from "./CaseDetailModel"
 import { Dialog } from "../ui/dialog"
 import DeleteModel from "../DeleteModel"
-import { deleteCase } from "@/api/caseAPI"
-import { queryClient } from "@/main"
 import UpdateCase from "./UpdateCase"
 import {
   DropdownMenu,
@@ -21,6 +18,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu"
 import ToolTip from "../ToolTip"
+import { useDeleteCaseMutation } from "@/store/services/caseAPI"
 
 const CasesCard = ({ data }: { data: Case }) => {
   const navigate = useNavigate()
@@ -29,17 +27,17 @@ const CasesCard = ({ data }: { data: Case }) => {
   const [openEdit, setOpenEdit] = useState<boolean>(false)
   const [openView, setOpenView] = useState<boolean>(false)
 
-  const { mutate: DeleteMutate, isPending: DeleteIsPending } = useMutation({
-    mutationFn: deleteCase,
-    onSuccess: () => {
+  const [deleteCase, { isLoading: DeleteIsPending }] = useDeleteCaseMutation()
+
+  const handelDelete = async (_: number) => {
+    try {
+      await deleteCase(data.id).unwrap()
       toast.success("Delete Successfully")
-      queryClient.invalidateQueries({})
       setOpenDelete(false)
-    },
-    onError: (error) => {
-      toast.error(`Error ${error}`)
-    },
-  })
+    } catch {
+      toast.error(`Deletion Failed`)
+    }
+  }
 
   return (
     <Dialog
@@ -60,7 +58,7 @@ const CasesCard = ({ data }: { data: Case }) => {
           detailsTitle={`${data.title}`}
           id={data.id}
           isPending={DeleteIsPending}
-          mutate={DeleteMutate}
+          mutate={handelDelete}
           setOpenDelete={setOpenDelete}
         />
       )}
