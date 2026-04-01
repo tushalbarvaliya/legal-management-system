@@ -1,12 +1,13 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit"
-
 import { persistStore, persistReducer } from "redux-persist"
 
 import storage from "redux-persist/lib/storage"
 import authReducer from "./slice/authSlice"
+import { companyAPI } from "./services/companyAPI"
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  [companyAPI.reducerPath]: companyAPI.reducer,
 })
 
 const persistConfig = {
@@ -22,7 +23,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
-    }),
+    }).concat(companyAPI.middleware),
 })
 
 export const persistor = persistStore(store)

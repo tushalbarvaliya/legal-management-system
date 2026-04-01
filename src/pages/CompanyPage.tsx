@@ -1,25 +1,17 @@
-import { useQuery } from "@tanstack/react-query"
 import { Mail, Phone, Calendar, MapPin, Hospital } from "lucide-react"
 import { useState } from "react"
 
-import { company } from "@/api/adminAPI"
 import { Button } from "@/components/ui/button"
 import Error from "@/components/ErrorPage"
 import CompanyPageSkeleton from "@/components/company/CompanyPageSkeleton"
 import { formatDate } from "@/utils/formate"
-import type { CompanyData } from "@/types/companyType"
 import { Dialog } from "@/components/ui/dialog"
 import UpdateCompany from "@/components/company/UpdateCompany"
+import { useGetCompanyDataQuery } from "@/store/services/companyAPI"
 
 const CompanyPage = () => {
   const [updateCompanyModel, setUpdateCompanyModel] = useState(false)
-  const { data, isLoading, isError } = useQuery<{
-    data: { company: CompanyData[] }
-    message: string
-  }>({
-    queryKey: ["company"],
-    queryFn: company,
-  })
+  const { data, isLoading, isError } = useGetCompanyDataQuery()
 
   const companyData = data?.data.company?.[0]
 

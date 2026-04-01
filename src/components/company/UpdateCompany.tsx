@@ -1,13 +1,10 @@
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation } from "@tanstack/react-query"
 
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
-import axiosInstance from "@/api/axiosInstance"
-import { queryClient } from "@/main"
 import type { CompanyData } from "@/types/companyType"
 import {
   UpdateCompanyFormSchema,
@@ -20,6 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog"
+import { useUpdateCompanyMutation } from "@/store/services/companyAPI"
 
 type UpdateTaskProps = {
   closeModal: React.Dispatch<React.SetStateAction<boolean>>
@@ -27,20 +25,7 @@ type UpdateTaskProps = {
 }
 
 const UpdateCompany = ({ closeModal, data }: UpdateTaskProps) => {
-  const { mutate, isPending } = useMutation({
-    mutationFn: async (formData: UpdateCompanyFormSchemaType) => {
-      const res = await axiosInstance.patch(`/companies/company/${data.id}`, formData)
-      return res.data
-    },
-    onSuccess: () => {
-      toast.success("Updated Successfully", { duration: 1500 })
-      queryClient.invalidateQueries({ queryKey: ["company"] })
-      closeModal(false)
-    },
-    onError: () => {
-      toast.error("Something went wrong")
-    },
-  })
+  const [updateCompany, { isLoading }] = useUpdateCompanyMutation()
 
   const {
     formState: { isDirty },
@@ -57,9 +42,19 @@ const UpdateCompany = ({ closeModal, data }: UpdateTaskProps) => {
     },
   })
 
-  const onSubmit = (formData: UpdateCompanyFormSchemaType) => {
+  const onSubmit = async (formData: UpdateCompanyFormSchemaType) => {
     if (isDirty) {
-      mutate(formData)
+      try {
+        await updateCompany({
+          id: data.id,
+          data: formData,
+        }).unwrap()
+
+        toast.success("Updated Successfully", { duration: 1500 })
+        closeModal(false)
+      } catch {
+        toast.error("Something went wrong")
+      }
     } else {
       toast.success("No Changes found")
       closeModal(false)
@@ -179,8 +174,8 @@ const UpdateCompany = ({ closeModal, data }: UpdateTaskProps) => {
       </DialogDescription>
       <DialogFooter>
         <Field>
-          <Button type="submit" form="updateCompanyForm" disabled={isPending}>
-            {isPending ? "Updating..." : "Update"}
+          <Button type="submit" form="updateCompanyForm" disabled={isLoading}>
+            {isLoading ? "Updating..." : "Update"}
           </Button>
         </Field>
       </DialogFooter>
