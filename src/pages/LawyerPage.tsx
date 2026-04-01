@@ -1,9 +1,5 @@
 import { useState, useMemo } from "react"
 import { Plus, Search } from "lucide-react"
-import { useQuery } from "@tanstack/react-query"
-
-import type { LawyerDataType } from "@/types/lawyerType"
-import { getLawyer } from "@/api/lawyerAPI"
 import ErrorMessage from "@/components/ErrorMessage"
 import LawyerCardSkeleton from "@/components/lawyer/LawyerCardSkeleton"
 import LawyerCard from "@/components/lawyer/LawyerCard"
@@ -12,19 +8,13 @@ import { Dialog } from "@/components/ui/dialog"
 import AddLawyer from "@/components/lawyer/AddLawyer"
 import { Helmet } from "react-helmet-async"
 import { Virtuoso } from "react-virtuoso"
+import { useGetLawyerQuery } from "@/store/services/lawyerAPI"
 
 const LawyerPage = () => {
   const [openAdd, setOpenAdd] = useState<boolean>(false)
   const [searchTerm, setSearchTerm] = useState("")
 
-  const {
-    data: lawyerData,
-    isLoading,
-    isError,
-  } = useQuery<{ data: LawyerDataType[] }>({
-    queryKey: ["lawyer"],
-    queryFn: getLawyer,
-  })
+  const { isError, isLoading, data: lawyerData } = useGetLawyerQuery()
 
   const filteredLawyers = useMemo(() => {
     if (!lawyerData) return []
@@ -46,16 +36,20 @@ const LawyerPage = () => {
   }, [lawyerData, searchTerm])
 
   return (
-    <Dialog
-      open={openAdd}
-      onOpenChange={(open) => {
-        if (!open) setOpenAdd(false)
-      }}
-    >
+    <>
       <Helmet>
         <title>Lawyer Management</title>
       </Helmet>
-      {openAdd && <AddLawyer setOpenAdd={setOpenAdd} />}
+      {openAdd && (
+        <Dialog
+          open={openAdd}
+          onOpenChange={(open) => {
+            if (!open) setOpenAdd(false)
+          }}
+        >
+          <AddLawyer setOpenAdd={setOpenAdd} />
+        </Dialog>
+      )}
 
       {/* Add Button */}
       <button
@@ -124,7 +118,7 @@ const LawyerPage = () => {
           )}
         </div>
       </div>
-    </Dialog>
+    </>
   )
 }
 

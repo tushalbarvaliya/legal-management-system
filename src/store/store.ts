@@ -4,10 +4,12 @@ import { persistStore, persistReducer } from "redux-persist"
 import storage from "redux-persist/lib/storage"
 import authReducer from "./slice/authSlice"
 import { companyAPI } from "./services/companyAPI"
+import { lawyerAPI } from "./services/lawyerAPI"
 
 const rootReducer = combineReducers({
   auth: authReducer,
   [companyAPI.reducerPath]: companyAPI.reducer,
+  [lawyerAPI.reducerPath]: lawyerAPI.reducer,
 })
 
 const persistConfig = {
@@ -23,7 +25,9 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
-    }).concat(companyAPI.middleware),
+    })
+      .concat(companyAPI.middleware)
+      .concat(lawyerAPI.middleware),
 })
 
 export const persistor = persistStore(store)

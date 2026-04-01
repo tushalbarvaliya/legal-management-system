@@ -1,10 +1,6 @@
 import axiosInstance from "./axiosInstance"
 import type { UpdateLawyerFormSchemaType } from "@/schemas/UpdateLawyerSchema"
 
-export const getLawyer = async () => {
-  const response = await axiosInstance.get("/lawyers/")
-  return response.data
-}
 
 type AddDataMutate = {
   email: string
