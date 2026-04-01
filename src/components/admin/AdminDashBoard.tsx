@@ -3,24 +3,16 @@ import { useQuery } from "@tanstack/react-query"
 import { Spinner } from "../ui/spinner"
 import Card from "../Card"
 import type { InvoiceResponse } from "@/types/invoiceStatusType"
-import type { ProfileResponse } from "@/types/types"
 import {
   caseStatusChange,
-  getAllUser,
   getCaseCount,
   getTaskCount,
   invoiceStatus,
 } from "@/api/adminAPI"
+import { useGetUserQuery } from "@/store/services/adminAPI"
 
 const AdminDashBoard = () => {
-  const {
-    data: users,
-    isLoading,
-    isError,
-  } = useQuery<ProfileResponse>({
-    queryFn: getAllUser,
-    queryKey: ["allUser"],
-  })
+  const { data: users, isLoading, isError } = useGetUserQuery()
 
   const lawyers = users?.data?.filter((item) => item.role === "lawyer")
   const staffs = users?.data?.filter((item) => item.role === "staff")
