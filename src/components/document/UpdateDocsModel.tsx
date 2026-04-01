@@ -3,17 +3,13 @@ import { useForm, Controller } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { getAllCases } from "@/api/caseAPI"
-import { getAllClient } from "@/api/clientAPI"
 import { updateDocs } from "@/api/docsAPI"
 import { queryClient } from "@/main"
-import type { ClientResponse } from "@/types/clientType"
 import type { CaseDocumentItem } from "@/types/docsType"
-import type { CasesResponse } from "@/types/caseType"
 import {
   DialogContent,
   DialogHeader,
@@ -27,6 +23,8 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select"
+import { useGetCaseQuery } from "@/store/services/caseAPI"
+import { useGetClientQuery } from "@/store/services/clientAPI"
 
 const updateDocsSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
@@ -48,15 +46,9 @@ type Props = {
 const UpdateDocsModal = ({ data, setOpen }: Props) => {
   const [replaceFile, setReplaceFile] = useState(false)
 
-  const { data: caseData } = useQuery<CasesResponse>({
-    queryKey: ["cases"],
-    queryFn: getAllCases,
-  })
+  const { data: caseData } = useGetCaseQuery()
 
-  const { data: clientData } = useQuery<ClientResponse>({
-    queryKey: ["client"],
-    queryFn: getAllClient,
-  })
+  const { data: clientData } = useGetClientQuery()
 
   const { mutate, isPending } = useMutation({
     mutationFn: updateDocs,

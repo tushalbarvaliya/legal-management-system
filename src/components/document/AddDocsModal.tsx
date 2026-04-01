@@ -2,14 +2,10 @@ import { useForm, Controller } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 
-import { getAllCases } from "@/api/caseAPI"
 import { createDocs } from "@/api/docsAPI"
-import { getAllClient } from "@/api/clientAPI"
 import { queryClient } from "@/main"
-import type { CasesResponse } from "@/types/caseType"
-import type { ClientResponse } from "@/types/clientType"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import {
@@ -24,8 +20,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-
-
+import { useGetCaseQuery } from "@/store/services/caseAPI"
+import { useGetClientQuery } from "@/store/services/clientAPI"
 
 const formSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
@@ -33,7 +29,7 @@ const formSchema = z.object({
   fileType: z.string().min(1, "File type is required"),
   description: z.string().min(3, "Description must be at least 3 characters"),
   notes: z.string().optional(),
-  caseId: z.number().min(1, "Case is required"), 
+  caseId: z.number().min(1, "Case is required"),
   clientId: z.number().min(1, "Client is required"),
 })
 
@@ -56,15 +52,9 @@ const AddDocsModal = ({
     },
   })
 
-  const { data: caseData } = useQuery<CasesResponse>({
-    queryKey: ["cases"],
-    queryFn: getAllCases,
-  })
+  const { data: caseData } = useGetCaseQuery()
 
-  const { data: clientData } = useQuery<ClientResponse>({
-    queryKey: ["client"],
-    queryFn: getAllClient,
-  })
+  const { data: clientData } = useGetClientQuery()
 
   const {
     control,
@@ -101,7 +91,7 @@ const AddDocsModal = ({
           name="title"
           render={({ field }) => (
             <>
-              <Input placeholder="Title" {...field} className="w-full"/>
+              <Input placeholder="Title" {...field} className="w-full" />
               {errors.title && (
                 <p className="text-sm text-red-500">{errors.title.message}</p>
               )}
@@ -118,7 +108,6 @@ const AddDocsModal = ({
               <Select
                 onValueChange={(val) => field.onChange(Number(val))}
                 value={field.value ? String(field.value) : ""}
-                
               >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select Case" />
@@ -146,7 +135,9 @@ const AddDocsModal = ({
             <>
               <Input placeholder="Description" {...field} />
               {errors.description && (
-                <p className="text-sm text-red-500">{errors.description.message}</p>
+                <p className="text-sm text-red-500">
+                  {errors.description.message}
+                </p>
               )}
             </>
           )}
@@ -195,14 +186,19 @@ const AddDocsModal = ({
                 </SelectTrigger>
                 <SelectContent>
                   {clientData?.data.map((item) => (
-                    <SelectItem key={item.client.id} value={String(item.client.id)}>
+                    <SelectItem
+                      key={item.client.id}
+                      value={String(item.client.id)}
+                    >
                       {item.user.firstName} {item.user.lastName}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
               {errors.clientId && (
-                <p className="text-sm text-red-500">{errors.clientId.message}</p>
+                <p className="text-sm text-red-500">
+                  {errors.clientId.message}
+                </p>
               )}
             </>
           )}
