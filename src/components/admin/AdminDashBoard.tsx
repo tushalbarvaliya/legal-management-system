@@ -10,7 +10,7 @@ import {
 } from "@/store/services/adminAPI"
 
 const AdminDashBoard = () => {
-  const { data: users, isLoading, isError } = useGetUserQuery()
+  const { data: users, isLoading } = useGetUserQuery()
   const { data: taskCount, isLoading: taskLoading } = useGetTaskCountQuery()
   const { data: caseCount, isLoading: caseLoading } = useGetCaseCountQuery()
   const { data: caseStatusChangeData, isLoading: caseStatusChangeLoading } =
@@ -32,8 +32,6 @@ const AdminDashBoard = () => {
         <Card title="Total Users" icon="/client.svg">
           {isLoading ? (
             <Spinner />
-          ) : isError ? (
-            <p className="text-sm text-red-500">Error loading users</p>
           ) : (
             <p className="text-3xl font-bold text-zinc-900">
               {users?.data.length || 0}
