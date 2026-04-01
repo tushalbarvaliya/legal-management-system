@@ -1,14 +1,11 @@
 import { Controller, useForm } from "react-hook-form"
-import { useMutation } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { zodResolver } from "@hookform/resolvers/zod"
 
 import { Input } from "../ui/input"
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
 import { Button } from "../ui/button"
-import { queryClient } from "@/main"
 import type { ClientUserMapping } from "@/types/clientType"
-import { patchClient } from "@/api/clientAPI"
 import {
   UpdateClientSchema,
   type UpdateClientFormSchemaType,
@@ -26,6 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
+import { useUpdateClientMutation } from "@/store/services/clientAPI"
 
 const UpdateClient = ({
   client,
@@ -34,17 +32,7 @@ const UpdateClient = ({
   client: ClientUserMapping
   setOpenEdit: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
-  const { mutate, isPending } = useMutation({
-    mutationFn: patchClient,
-    onSuccess: () => {
-      toast.success("Client Update Done.", { duration: 1500 })
-      queryClient.invalidateQueries({ queryKey: ["client"] })
-      setOpenEdit(false)
-    },
-    onError: (error) => {
-      toast.error(`Error ${error.message}`)
-    },
-  })
+  const [updateClient, { isLoading: isPending }] = useUpdateClientMutation()
 
   const {
     formState: { isDirty },
@@ -66,9 +54,15 @@ const UpdateClient = ({
     },
   })
 
-  const onSubmit = (data: UpdateClientFormSchemaType) => {
+  const onSubmit = async(data: UpdateClientFormSchemaType) => {
     if (isDirty) {
-      mutate({ data: data, id: client.client.id })
+      try {
+        await updateClient({ data: data, id: client.client.id }).unwrap()
+        toast.success("Client Update Done.", { duration: 1500 })
+        setOpenEdit(false)
+      } catch {
+        toast.error(`Something is not right`)
+      }
     } else {
       toast.success("No Changes found")
       setOpenEdit(false)

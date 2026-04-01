@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { useMutation } from "@tanstack/react-query"
 import { MoreVertical } from "lucide-react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { toast } from "sonner"
@@ -11,8 +10,6 @@ import { Button } from "@/components/ui/button"
 import UpdateClient from "./UpdateClient"
 import { Dialog } from "../ui/dialog"
 import BlockModel from "../BlockModel"
-import { deleteClient, putBlockClient, putUnblockClient } from "@/api/clientAPI"
-import { queryClient } from "@/main"
 import UnblockModel from "../UnblockModel"
 import DeleteModel from "../DeleteModel"
 import {
@@ -21,6 +18,11 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu"
+import {
+  useBlockClientMutation,
+  useDeleteClientMutation,
+  useUnblockClientMutation,
+} from "@/store/services/clientAPI"
 
 const ClientCard = ({ client }: { client: ClientUserMapping }) => {
   const role = useAppSelector((state) => state.auth.role)
@@ -31,41 +33,41 @@ const ClientCard = ({ client }: { client: ClientUserMapping }) => {
   const [openDelete, setOpenDelete] = useState<boolean>(false)
   const [openEdit, setOpenEdit] = useState<boolean>(false)
 
-  const { mutate: BlockMutate, isPending: BlockIsPending } = useMutation({
-    mutationFn: putBlockClient,
-    onSuccess: () => {
-      toast.success("Block Lawyer Successfully", { duration: 1500 })
-      queryClient.invalidateQueries({})
-      setOpenBlock(false)
-    },
-    onError: (error) => {
-      toast.error(`Error ${error.message}`)
-    },
-  })
+  const [deleteClient, { isLoading: DeleteIsPending }] =
+    useDeleteClientMutation()
+  const [blockClient, { isLoading: BlockIsPending }] = useBlockClientMutation()
+  const [unblockClient, { isLoading: UnblockIsPending }] =
+    useUnblockClientMutation()
 
-  const { mutate: UnblockMutate, isPending: UnblockIsPending } = useMutation({
-    mutationFn: putUnblockClient,
-    onSuccess: () => {
+  const handelUnblock = async (_: number) => {
+    try {
+      await unblockClient(client.client.id).unwrap()
       toast.success("Unblock Lawyer Successfully", { duration: 1500 })
-      queryClient.invalidateQueries({ queryKey: ["client"] })
       setOpenUnblock(false)
-    },
-    onError: (error) => {
-      toast.error(`Error ${error.message}`)
-    },
-  })
+    } catch {
+      toast.error(`Something is Not Right`)
+    }
+  }
 
-  const { mutate: DeleteMutate, isPending: DeleteIsPending } = useMutation({
-    mutationFn: deleteClient,
-    onSuccess: () => {
+  const handelBlock = async (_: number) => {
+    try {
+      await blockClient(client.client.id).unwrap()
+      toast.success("Block Lawyer Successfully")
+      setOpenBlock(false)
+    } catch {
+      toast.error(`Something is Not Right`)
+    }
+  }
+
+  const handelDelete = async (_: number) => {
+    try {
+      await deleteClient(client.client.id).unwrap()
       toast.success(`Client is Delete`)
-      queryClient.invalidateQueries({ queryKey: ["client"] })
-      navigate("/client")
-    },
-    onError: (error) => {
-      toast.error(`Error ${error}`)
-    },
-  })
+      setOpenDelete(false)
+    } catch {
+      toast.error(`Something is Not right`)
+    }
+  }
 
   return (
     <Dialog
@@ -96,7 +98,7 @@ const ClientCard = ({ client }: { client: ClientUserMapping }) => {
           detailsTitle={`${client.user.firstName}  ${client.user.lastName}`}
           id={client.client.id}
           isPending={DeleteIsPending}
-          mutate={DeleteMutate}
+          mutate={handelDelete}
           setOpenDelete={setOpenDelete}
         />
       )}
@@ -107,7 +109,7 @@ const ClientCard = ({ client }: { client: ClientUserMapping }) => {
           detailsTitle={`${client.user.firstName}  ${client.user.lastName}`}
           id={client.client.id}
           isPending={BlockIsPending}
-          mutate={BlockMutate}
+          mutate={handelBlock}
           onClosed={setOpenBlock}
         />
       )}
@@ -119,13 +121,13 @@ const ClientCard = ({ client }: { client: ClientUserMapping }) => {
           detailsTitle={`${client.user.firstName}  ${client.user.lastName}`}
           id={client.client.id}
           isPending={UnblockIsPending}
-          mutate={UnblockMutate}
+          mutate={handelUnblock}
           setOpenUnblock={setOpenUnblock}
         />
       )}
 
       <article
-        className={`group hover:shadow-soft relative rounded-xl border border-zinc-200 bg-zinc-50/40 p-4 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-zinc-100/80 sm:p-5 my-2`}
+        className={`group hover:shadow-soft relative my-2 rounded-xl border border-zinc-200 bg-zinc-50/40 p-4 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-zinc-100/80 sm:p-5`}
       >
         <div className={`flex flex-row justify-between gap-8 sm:items-start`}>
           <div className="flex min-w-0 gap-3">
@@ -138,7 +140,7 @@ const ClientCard = ({ client }: { client: ClientUserMapping }) => {
                 <h3 className="text-base font-semibold text-zinc-900">
                   {client.user.firstName} {client.user.lastName}
                 </h3>
-                {client.client.isBlocked == '\u0001' && (
+                {client.client.isBlocked == "\u0001" && (
                   <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-black">
                     {client.client.isBlocked ? "Block" : ""}
                   </span>
@@ -164,7 +166,7 @@ const ClientCard = ({ client }: { client: ClientUserMapping }) => {
           </div>
           {/* menu */}
 
-          <DropdownMenu >
+          <DropdownMenu>
             <DropdownMenuTrigger asChild className="lg:mr-10">
               <Button variant="ghost" size="icon">
                 <MoreVertical className="h-4 w-4 text-black" />

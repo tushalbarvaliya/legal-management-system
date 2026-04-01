@@ -1,29 +1,20 @@
-import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 import { Search } from "lucide-react"
 import { Virtuoso } from "react-virtuoso"
 
-import type { ClientResponse, ClientUserMapping } from "@/types/clientType"
-import { getAllClient } from "@/api/clientAPI"
+import type {  ClientUserMapping } from "@/types/clientType"
 import ClientCardSkeleton from "@/components/client/ClientCardSkeleton"
 import ClientHeader from "@/components/client/ClientHeader"
 import ErrorMessage from "@/components/ErrorMessage"
 import NoFound from "@/components/NoFound"
 import ClientCard from "@/components/client/ClientCard"
 import { Helmet } from "react-helmet-async"
+import { useGetClientQuery } from "@/store/services/clientAPI"
 
 const ClientPage = () => {
   const [search, setSearch] = useState("")
 
-  const {
-    data: clients,
-    isLoading,
-    isError,
-  } = useQuery<ClientResponse>({
-    queryKey: ["client"],
-    queryFn: getAllClient,
-  })
-
+  const { data: clients, isLoading, isError } = useGetClientQuery()
   const filteredClients = clients?.data.filter((item: ClientUserMapping) =>
     [...Object.values(item.client), ...Object.values(item.user)].some((value) =>
       String(value).toLowerCase().includes(search.toLowerCase())
@@ -66,7 +57,7 @@ const ClientPage = () => {
           filteredClients &&
           filteredClients?.length > 0 && (
             <Virtuoso
-              style={{ height: "100%" }}
+              style={{ height: 315 }}
               data={filteredClients}
               overscan={200}
               className="no-scrollbar"

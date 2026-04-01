@@ -7,9 +7,6 @@ import { toast } from "sonner"
 import { Input } from "../ui/input"
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
 import { Button } from "../ui/button"
-import { useMutation } from "@tanstack/react-query"
-import { queryClient } from "@/main"
-import { postClient } from "@/api/clientAPI"
 import {
   AddClientFormSchema,
   type AddClientFormSchemaType,
@@ -27,7 +24,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog"
-
+import { useAddClientMutation } from "@/store/services/clientAPI"
 
 const AddClient = ({
   setOpenAdd,
@@ -36,17 +33,7 @@ const AddClient = ({
 }) => {
   const [passwordShow, setPasswordShow] = useState<boolean>(false)
   const [confirmPasswordShow, setConfirmPasswordShow] = useState<boolean>(false)
-  const { mutate, isPending } = useMutation({
-    mutationFn: postClient,
-    onSuccess: () => {
-      toast.success("User Become Lawyer", { duration: 1500 })
-      queryClient.invalidateQueries({ queryKey: ["client"] })
-      setOpenAdd(false)
-    },
-    onError: (error) => {
-      toast.error(`Error ${error.message}`)
-    },
-  })
+  const [addClient, { isLoading: isPending }] = useAddClientMutation()
 
   const form = useForm<AddClientFormSchemaType>({
     resolver: zodResolver(AddClientFormSchema),
@@ -54,9 +41,14 @@ const AddClient = ({
     delayError: 500,
   })
 
-  const onSubmit = (data: AddClientFormSchemaType) => {
-    const { confirmPassword: _, ...dataMutate } = data
-    mutate(dataMutate)
+  const onSubmit = async(data: AddClientFormSchemaType) => {
+    try {
+      await addClient({ data }).unwrap()
+      toast.success("User Become Lawyer", { duration: 1500 })
+      setOpenAdd(false)
+    } catch {
+      toast.error(`Something is not right`)
+    }
   }
   return (
     <>
