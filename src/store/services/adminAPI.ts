@@ -5,7 +5,16 @@ import type { ProfileResponse } from "@/types/types"
 
 type TaskCountResponse = {
   data: { pending: number; overdue: number; completed: number }
-  message: "success"
+  message: string
+}
+
+type CaseCountResponse = {
+  data: {
+    openCases: number
+    closedCases: number
+    newCasesLast30Days: number
+  }
+  message: string
 }
 
 export const adminAPI = createApi({
@@ -21,7 +30,7 @@ export const adminAPI = createApi({
       return headers
     },
   }),
-  tagTypes: ["users", "taskCount"],
+  tagTypes: ["users", "taskCount", "caseCount"],
   endpoints: (build) => ({
     getUser: build.query<ProfileResponse, void>({
       query: () => "/users/",
@@ -32,7 +41,11 @@ export const adminAPI = createApi({
       query: () => "/admins/dashboard/task_counts",
       providesTags: ["taskCount"],
     }),
+    getCaseCount: build.query<CaseCountResponse, void>({
+      query: () => "/admins/dashboard/case_counts",
+      providesTags: ["caseCount"],
+    }),
   }),
 })
 
-export const { useGetUserQuery, useGetTaskCountQuery } = adminAPI
+export const { useGetUserQuery, useGetTaskCountQuery ,useGetCaseCountQuery} = adminAPI

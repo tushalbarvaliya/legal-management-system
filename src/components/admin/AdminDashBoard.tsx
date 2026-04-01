@@ -5,10 +5,10 @@ import Card from "../Card"
 import type { InvoiceResponse } from "@/types/invoiceStatusType"
 import {
   caseStatusChange,
-  getCaseCount,
   invoiceStatus,
 } from "@/api/adminAPI"
 import {
+  useGetCaseCountQuery,
   useGetTaskCountQuery,
   useGetUserQuery,
 } from "@/store/services/adminAPI"
@@ -16,22 +16,14 @@ import {
 const AdminDashBoard = () => {
   const { data: users, isLoading, isError } = useGetUserQuery()
   const { data: taskCount, isLoading: taskLoading } = useGetTaskCountQuery()
-
+  const {data: caseCount, isLoading: caseLoading}=useGetCaseCountQuery()
+  
   const lawyers = users?.data?.filter((item) => item.role === "lawyer")
   const staffs = users?.data?.filter((item) => item.role === "staff")
   const clients = users?.data?.filter((item) => item.role === "client")
 
-  const { data: caseCount, isLoading: caseLoading } = useQuery<{
-    data: {
-      openCases: number
-      closedCases: number
-      newCasesLast30Days: number
-    }
-    message: "success"
-  }>({
-    queryFn: getCaseCount,
-    queryKey: ["casesCount"],
-  })
+
+
 
   const { data: invoice, isLoading: invoiceLoading } =
     useQuery<InvoiceResponse>({
