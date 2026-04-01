@@ -59,33 +59,31 @@ const ClientPage = () => {
             </div>
           </div>
         </div>
-        <div id="clientList" className="h-73">
-          {/* map for client list */}
-          {isError && <ErrorMessage />}
-          {!isLoading &&
-            !isError &&
-            filteredClients &&
-            filteredClients?.length > 0 && (
-              <Virtuoso
-                style={{ height: "100%" }}
-                data={filteredClients}
-                overscan={200}
-                className="no-scrollbar"
-                itemContent={(_index, client) => (
-                  <ClientCard client={client} key={client.client.id} />
-                )}
-              />
-            )}
-          {isLoading && (
-            <>
-              <ClientCardSkeleton />
-              <ClientCardSkeleton />
-              <ClientCardSkeleton />
-              <ClientCardSkeleton />
-            </>
+        {/* map for client list */}
+        {isError && <ErrorMessage />}
+        {!isLoading &&
+          !isError &&
+          filteredClients &&
+          filteredClients?.length > 0 && (
+            <Virtuoso
+              style={{ height: "100%" }}
+              data={filteredClients}
+              overscan={200}
+              className="no-scrollbar"
+              itemContent={(_index, client) => (
+                <ClientCard client={client} key={client.client.id} />
+              )}
+            />
           )}
-          {filteredClients?.length == 0 && <NoFound title="client" />}
-        </div>
+        {isLoading && (
+          <>
+            <ClientCardSkeleton />
+            <ClientCardSkeleton />
+            <ClientCardSkeleton />
+            <ClientCardSkeleton />
+          </>
+        )}
+        {filteredClients?.length == 0 && <NoFound title="client" />}
       </section>
     </>
   )

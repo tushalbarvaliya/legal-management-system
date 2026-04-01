@@ -102,27 +102,25 @@ const CasesPage = () => {
             </>
           )}
           {isError && <ErrorMessage />}
-          <div className="no-scrollbar h-100 overflow-auto">
-            {!isLoading &&
-            !isError &&
-            filteredCases &&
-            filteredCases.length > 0 ? (
-              <Virtuoso
-                style={{
-                  height: "100%",
-                }}
-                className="no-scrollbar"
-                totalCount={filteredCases.length}
-                data={filteredCases}
-                overscan={200}
-                itemContent={(_index, item) => (
-                  <CasesCard key={item.id} data={item} />
-                )}
-              />
-            ) : (
-              !isLoading && !isError && <NoFound title="Case" />
-            )}
-          </div>
+          {!isLoading &&
+          !isError &&
+          filteredCases &&
+          filteredCases.length > 0 ? (
+            <Virtuoso
+              style={{
+                height: "100%",
+              }}
+              className="no-scrollbar"
+              totalCount={filteredCases.length}
+              data={filteredCases}
+              overscan={200}
+              itemContent={(_index, item) => (
+                <CasesCard key={item.id} data={item} />
+              )}
+            />
+          ) : (
+            !isLoading && !isError && <NoFound title="Case" />
+          )}
         </div>
       </section>
     </Dialog>
