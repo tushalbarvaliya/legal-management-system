@@ -1,14 +1,10 @@
-import { useQuery } from "@tanstack/react-query"
-
 import { Spinner } from "../ui/spinner"
 import Card from "../Card"
-import type { InvoiceResponse } from "@/types/invoiceStatusType"
-import {
-  caseStatusChange,
-  invoiceStatus,
-} from "@/api/adminAPI"
+
 import {
   useGetCaseCountQuery,
+  useGetCaseStatusQuery,
+  useGetInvoiceStatusQuery,
   useGetTaskCountQuery,
   useGetUserQuery,
 } from "@/store/services/adminAPI"
@@ -16,29 +12,15 @@ import {
 const AdminDashBoard = () => {
   const { data: users, isLoading, isError } = useGetUserQuery()
   const { data: taskCount, isLoading: taskLoading } = useGetTaskCountQuery()
-  const {data: caseCount, isLoading: caseLoading}=useGetCaseCountQuery()
-  
+  const { data: caseCount, isLoading: caseLoading } = useGetCaseCountQuery()
+  const { data: caseStatusChangeData, isLoading: caseStatusChangeLoading } =
+    useGetCaseStatusQuery()
+  const { data: invoice, isLoading: invoiceLoading } =
+    useGetInvoiceStatusQuery()
+
   const lawyers = users?.data?.filter((item) => item.role === "lawyer")
   const staffs = users?.data?.filter((item) => item.role === "staff")
   const clients = users?.data?.filter((item) => item.role === "client")
-
-
-
-
-  const { data: invoice, isLoading: invoiceLoading } =
-    useQuery<InvoiceResponse>({
-      queryFn: invoiceStatus,
-      queryKey: ["invoice"],
-    })
-
-  const { data: caseStatusChangeData, isLoading: caseStatusChangeLoading } =
-    useQuery<{
-      data: { casesStatusChangeInLast30Days: number }
-      message: "success"
-    }>({
-      queryFn: caseStatusChange,
-      queryKey: ["caseChange"],
-    })
 
   return (
     <div className="my-4 space-y-6">
