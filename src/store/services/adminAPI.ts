@@ -3,6 +3,11 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import type { RootState } from "../store"
 import type { ProfileResponse } from "@/types/types"
 
+type TaskCountResponse = {
+  data: { pending: number; overdue: number; completed: number }
+  message: "success"
+}
+
 export const adminAPI = createApi({
   reducerPath: "admin",
   baseQuery: fetchBaseQuery({
@@ -16,13 +21,18 @@ export const adminAPI = createApi({
       return headers
     },
   }),
-  tagTypes:['users','taskCOunt'],
+  tagTypes: ["users", "taskCount"],
   endpoints: (build) => ({
-    getUser:build.query<ProfileResponse,void>({
-      query:()=>"/users/",
-      providesTags:['users']
+    getUser: build.query<ProfileResponse, void>({
+      query: () => "/users/",
+      providesTags: ["users"],
+    }),
+
+    getTaskCount: build.query<TaskCountResponse, void>({
+      query: () => "/admins/dashboard/task_counts",
+      providesTags: ["taskCount"],
     }),
   }),
 })
 
-export const {useGetUserQuery} = adminAPI
+export const { useGetUserQuery, useGetTaskCountQuery } = adminAPI

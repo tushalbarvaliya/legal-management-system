@@ -6,13 +6,16 @@ import type { InvoiceResponse } from "@/types/invoiceStatusType"
 import {
   caseStatusChange,
   getCaseCount,
-  getTaskCount,
   invoiceStatus,
 } from "@/api/adminAPI"
-import { useGetUserQuery } from "@/store/services/adminAPI"
+import {
+  useGetTaskCountQuery,
+  useGetUserQuery,
+} from "@/store/services/adminAPI"
 
 const AdminDashBoard = () => {
   const { data: users, isLoading, isError } = useGetUserQuery()
+  const { data: taskCount, isLoading: taskLoading } = useGetTaskCountQuery()
 
   const lawyers = users?.data?.filter((item) => item.role === "lawyer")
   const staffs = users?.data?.filter((item) => item.role === "staff")
@@ -30,19 +33,12 @@ const AdminDashBoard = () => {
     queryKey: ["casesCount"],
   })
 
-  const { data: taskCount, isLoading: taskLoading } = useQuery<{
-    data: { pending: number; overdue: number; completed: number }
-    message: "success"
-  }>({
-    queryFn: getTaskCount,
-    queryKey: ["taskCount"],
-  })
-
   const { data: invoice, isLoading: invoiceLoading } =
     useQuery<InvoiceResponse>({
       queryFn: invoiceStatus,
       queryKey: ["invoice"],
     })
+
   const { data: caseStatusChangeData, isLoading: caseStatusChangeLoading } =
     useQuery<{
       data: { casesStatusChangeInLast30Days: number }
