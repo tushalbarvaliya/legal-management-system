@@ -50,7 +50,7 @@ const StaffPage = () => {
         <Plus />
       </button>
 
-      <div className="shadow-soft mt-4 space-y-4 rounded-2xl border bg-white p-4 sm:p-6">
+      <div className="shadow-soft h-[90vh] space-y-4 rounded-2xl border bg-white p-4 sm:p-6">
         {/* Header */}
         <section className="rounded-2xl border bg-stone-800 p-5 text-white">
           <h1 className="text-2xl font-bold">Staff Management</h1>
@@ -72,7 +72,7 @@ const StaffPage = () => {
         </div>
 
         {/* List */}
-        <div className="mt-4">
+        <div className="mt-4 sm:h-[75%] h-[70%]">
           {isError && <ErrorMessage />}
 
           {isLoading && (
@@ -89,7 +89,7 @@ const StaffPage = () => {
                 <NoFound title="Staff" />
               ) : (
                 <Virtuoso
-                  style={{ height: 325 }}
+                  style={{ height: '100%' }}
                   data={filteredStaff}
                   overscan={200}
                   itemContent={(_, staff) => {
