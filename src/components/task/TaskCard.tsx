@@ -14,11 +14,11 @@ import {
 import { toast } from "sonner"
 import { useState } from "react"
 import DeleteModel from "../DeleteModel"
-import ToolTip from "../ToolTip"
 import {
   useDeleteTaskMutation,
   useMarksAsDoneMutation,
 } from "@/store/services/taskAPI"
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 
 const getPriorityColor = (priority: string) => {
   if (priority == "low") {
@@ -63,35 +63,45 @@ const TaskCard = (data: TaskResponse) => {
     }
   }
   return (
-    <Dialog
-      open={openDelete || openEdit || openView}
-      onOpenChange={(open) => {
-        if (!open) {
-          setOpenDelete(false)
-          setOpenEdit(false)
-          setOpenView(false)
-        }
-      }}
-    >
-      {openView && <TaskDetailsModel data={data} setOpenView={setOpenView} />}
-      {openEdit && <UpdateTask task={data} setOpenEdit={setOpenEdit} />}
+    <>
+      {openView && (
+        <Dialog open={openView} onOpenChange={() => setOpenView(false)}>
+          <TaskDetailsModel data={data} setOpenView={setOpenView} />
+        </Dialog>
+      )}
+      {openEdit && (
+        <Dialog open={openEdit} onOpenChange={() => setOpenEdit(false)}>
+          <UpdateTask task={data} setOpenEdit={setOpenEdit} />
+        </Dialog>
+      )}
 
       {openDelete && (
-        <DeleteModel
-          title="Delete Task"
-          subTitle="Are you sure you want to delete this task?"
-          detailsTitle={`${data.title}`}
-          id={data.id}
-          isPending={DeleteIsPending}
-          mutate={handelDelete}
-          setOpenDelete={setOpenDelete}
-        />
+        <Dialog open={openDelete} onOpenChange={() => setOpenDelete(false)}>
+          <DeleteModel
+            title="Delete Task"
+            subTitle="Are you sure you want to delete this task?"
+            detailsTitle={`${data.title}`}
+            id={data.id}
+            isPending={DeleteIsPending}
+            mutate={handelDelete}
+            setOpenDelete={setOpenDelete}
+          />
+        </Dialog>
       )}
       <article className="group hover:shadow-soft relative cursor-pointer rounded-xl border border-zinc-200 bg-zinc-50/40 p-4 shadow-sm transition duration-200 hover:bg-zinc-100/80">
         <div className="flex items-start gap-3">
           <div className="min-w-0 flex-1">
             {/* TITLE */}
-            <ToolTip title={data.title} description={data.description} />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="cursor-pointer truncate text-sm font-semibold text-zinc-900">
+                  {data.title}
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{data.description}</p>
+              </TooltipContent>
+            </Tooltip>
 
             {/* INFO GRID */}
             <div className="mt-3 grid grid-cols-1 gap-2 text-xs text-zinc-600 sm:grid-cols-2 lg:grid-cols-5">
@@ -181,7 +191,7 @@ const TaskCard = (data: TaskResponse) => {
           </div>
         </div>
       </article>
-    </Dialog>
+    </>
   )
 }
 

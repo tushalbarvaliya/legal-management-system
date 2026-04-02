@@ -1,5 +1,4 @@
 import { MoreVertical } from "lucide-react"
-import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 import { useState } from "react"
 
@@ -17,11 +16,10 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu"
-import ToolTip from "../ToolTip"
 import { useDeleteCaseMutation } from "@/store/services/caseAPI"
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 
 const CasesCard = ({ data }: { data: Case }) => {
-  const navigate = useNavigate()
   const role = useAppSelector((state) => state.auth.role)
   const [openDelete, setOpenDelete] = useState<boolean>(false)
   const [openEdit, setOpenEdit] = useState<boolean>(false)
@@ -40,37 +38,45 @@ const CasesCard = ({ data }: { data: Case }) => {
   }
 
   return (
-    <Dialog
-      open={openDelete || openEdit || openView}
-      onOpenChange={(open) => {
-        setOpenDelete(false)
-        setOpenEdit(false)
-        setOpenView(false)
-        if (!open) {
-          navigate("/cases")
-        }
-      }}
-    >
+    <>
       {openDelete && (
-        <DeleteModel
-          title="Delete Case"
-          subTitle="Are you sure you want to delete this case?"
-          detailsTitle={`${data.title}`}
-          id={data.id}
-          isPending={DeleteIsPending}
-          mutate={handelDelete}
-          setOpenDelete={setOpenDelete}
-        />
+        <Dialog open={openDelete} onOpenChange={() => setOpenDelete(false)}>
+          <DeleteModel
+            title="Delete Case"
+            subTitle="Are you sure you want to delete this case?"
+            detailsTitle={`${data.title}`}
+            id={data.id}
+            isPending={DeleteIsPending}
+            mutate={handelDelete}
+            setOpenDelete={setOpenDelete}
+          />
+        </Dialog>
       )}
-      {openView && <CaseDetailModel data={data} setOpenView={setOpenView} />}
-      {openEdit && <UpdateCase data={data} setOpenAdd={setOpenEdit} />}
+      {openView && (
+        <Dialog open={openView} onOpenChange={() => setOpenView(false)}>
+          <CaseDetailModel data={data} setOpenView={setOpenView} />
+        </Dialog>
+      )}
+      {openEdit && (
+        <Dialog open={openEdit} onOpenChange={() => setOpenEdit(false)}>
+          <UpdateCase data={data} setOpenAdd={setOpenEdit} />
+        </Dialog>
+      )}
 
       {/* TASK CARD */}
       <article className="group hover:shadow-soft relative cursor-pointer rounded-xl border border-zinc-200 bg-zinc-50/40 p-4 shadow-sm transition duration-200 hover:bg-zinc-100/80">
         <div className="flex items-start gap-3">
           <div className="min-w-0 flex-1">
-            {/* TITLE */}
-            <ToolTip description={data.description} title={data.title} />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="cursor-pointer truncate text-sm font-semibold text-zinc-900">
+                  {data.title}
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{data.description}</p>
+              </TooltipContent>
+            </Tooltip>
 
             {/* INFO GRID */}
             <div className="mt-3 grid grid-cols-1 gap-2 text-xs text-zinc-600 sm:grid-cols-2 lg:grid-cols-4">
@@ -141,7 +147,7 @@ const CasesCard = ({ data }: { data: Case }) => {
           </DropdownMenu>
         </div>
       </article>
-    </Dialog>
+    </>
   )
 }
 
