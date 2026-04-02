@@ -57,12 +57,12 @@ const LawyerPage = () => {
         onClick={() => {
           setOpenAdd(true)
         }}
-        disabled={isError||isLoading}
+        disabled={isError || isLoading}
       >
         <Plus />
       </button>
 
-      <div className="shadow-soft mt-4 space-y-4 rounded-2xl border border-zinc-200 bg-white p-4 sm:p-6">
+      <div className="shadow-soft mt-4 h-[90vh] space-y-4 rounded-2xl border border-zinc-200 bg-white p-4 sm:p-6">
         {/* Header */}
         <section className="shadow-soft rounded-2xl border border-stone-200 bg-stone-800 p-5 text-white sm:p-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
@@ -89,7 +89,7 @@ const LawyerPage = () => {
           </div>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-3 sm:h-[55vh] h-[55vh]">
           {/* Error */}
           {!isLoading && isError && <ErrorMessage />}
 
@@ -110,7 +110,7 @@ const LawyerPage = () => {
           {/* Data */}
           {!isLoading && !isError && filteredLawyers.length > 0 && (
             <Virtuoso
-              style={{ height: "300px" }}
+              style={{ height: "100%",border:'2px solid red' }}
               data={filteredLawyers}
               itemContent={(_, item) => (
                 <LawyerCard key={item.lawyer.id} {...item} />

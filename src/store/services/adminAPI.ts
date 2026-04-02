@@ -68,7 +68,6 @@ export const adminAPI = createApi({
       query: () => "/users/",
       providesTags: ["users"],
     }),
-
     getTaskCount: build.query<TaskCountResponse, void>({
       query: () => "/admins/dashboard/task_counts",
       providesTags: ["taskCount"],

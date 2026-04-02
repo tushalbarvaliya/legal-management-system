@@ -10,7 +10,7 @@ import { Helmet } from "react-helmet-async"
 const HomePageContent = () => {
   const role = useSelector((state: RootState) => state.auth.role)
   return (
-    <div className="h-full overflow-y-scroll no-scrollbar -my-2.5">
+    <div className="h-[90vh] overflow-y-scroll no-scrollbar -my-2.5">
       <Helmet>
         <title>Dash Board</title>
       </Helmet>
