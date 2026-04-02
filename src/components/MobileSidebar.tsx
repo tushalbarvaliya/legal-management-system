@@ -1,7 +1,8 @@
-import { useAppSelector } from "@/hooks/hooks"
-import { menuList, navItems } from "@/utils/navigationList"
 import { X } from "lucide-react"
 import { Link, useLocation } from "react-router-dom"
+
+import { useAppSelector } from "@/hooks/hooks"
+import { menuList, navItems } from "@/utils/navigationList"
 
 type SidebarProps = {
   setMenubarOpen: React.Dispatch<React.SetStateAction<boolean>>

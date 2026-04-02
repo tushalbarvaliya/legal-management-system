@@ -1,45 +1,82 @@
 import { MoreVertical } from "lucide-react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { toast } from "sonner"
+import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { useAppSelector } from "@/hooks/hooks"
 import { formatDate } from "@/utils/formate"
-import type { caseDataType } from "@/data/caseData"
-import DeleteCaseModel from "./DeleteCaseModel"
+import type { Case } from "@/types/caseType"
 import CaseDetailModel from "./CaseDetailModel"
-import EditCaseModel from "./EditCaseModel"
+import { Dialog } from "../ui/dialog"
+import DeleteModel from "../DeleteModel"
+import UpdateCase from "./UpdateCase"
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu"
+import { useDeleteCaseMutation } from "@/store/services/caseAPI"
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip"
 
-const CasesCard = (data: caseDataType) => {
-  const pathname = useLocation().pathname
-  const navigate = useNavigate()
+const CasesCard = ({ data }: { data: Case }) => {
   const role = useAppSelector((state) => state.auth.role)
+  const [openDelete, setOpenDelete] = useState<boolean>(false)
+  const [openEdit, setOpenEdit] = useState<boolean>(false)
+  const [openView, setOpenView] = useState<boolean>(false)
+
+  const [deleteCase, { isLoading: DeleteIsPending }] = useDeleteCaseMutation()
+
+  const handelDelete = async (_: number) => {
+    try {
+      await deleteCase(data.id).unwrap()
+      toast.success("Delete Successfully")
+      setOpenDelete(false)
+    } catch {
+      toast.error(`Deletion Failed`)
+    }
+  }
+
   return (
     <>
-      {pathname === `/cases/delete/${data.id}` && <DeleteCaseModel {...data} />}
-      {pathname === `/cases/${data.id}` && <CaseDetailModel {...data} />}
-      {pathname === `/cases/edit/${data.id}` && <EditCaseModel {...data} />}
+      {openDelete && (
+        <Dialog open={openDelete} onOpenChange={() => setOpenDelete(false)}>
+          <DeleteModel
+            title="Delete Case"
+            subTitle="Are you sure you want to delete this case?"
+            detailsTitle={`${data.title}`}
+            id={data.id}
+            isPending={DeleteIsPending}
+            mutate={handelDelete}
+            setOpenDelete={setOpenDelete}
+          />
+        </Dialog>
+      )}
+      {openView && (
+        <Dialog open={openView} onOpenChange={() => setOpenView(false)}>
+          <CaseDetailModel data={data} setOpenView={setOpenView} />
+        </Dialog>
+      )}
+      {openEdit && (
+        <Dialog open={openEdit} onOpenChange={() => setOpenEdit(false)}>
+          <UpdateCase data={data} setOpenAdd={setOpenEdit} />
+        </Dialog>
+      )}
 
       {/* TASK CARD */}
       <article className="group hover:shadow-soft relative cursor-pointer rounded-xl border border-zinc-200 bg-zinc-50/40 p-4 shadow-sm transition duration-200 hover:bg-zinc-100/80">
         <div className="flex items-start gap-3">
           <div className="min-w-0 flex-1">
-            {/* TITLE */}
-            <div className="group/title relative inline-flex max-w-full items-center">
-              <h2 className="truncate text-sm font-semibold text-zinc-900 transition duration-200 group-hover:text-zinc-950">
-                {data.id}{" "}{data.title}
-              </h2>
-
-              {/* TOOLTIP */}
-              <div className="pointer-events-none absolute top-full left-0 z-10 mt-2 hidden w-70 max-w-[70vw] rounded-lg bg-zinc-900/95 p-3 text-xs leading-relaxed text-zinc-100 opacity-0 shadow-lg backdrop-blur-sm transition duration-200 group-hover/title:block group-hover/title:opacity-100">
-                {data.description}
-              </div>
-            </div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="cursor-pointer truncate text-sm font-semibold text-zinc-900">
+                  {data.title}
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{data.description}</p>
+              </TooltipContent>
+            </Tooltip>
 
             {/* INFO GRID */}
             <div className="mt-3 grid grid-cols-1 gap-2 text-xs text-zinc-600 sm:grid-cols-2 lg:grid-cols-4">
@@ -82,14 +119,14 @@ const CasesCard = (data: caseDataType) => {
             <DropdownMenuContent align="end" className="w-40">
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(`/cases/${data.id}`)
+                  setOpenView(true)
                 }}
               >
                 View
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  navigate(`/cases/edit/${data.id}`)
+                  setOpenEdit(true)
                 }}
               >
                 Edit
@@ -99,7 +136,7 @@ const CasesCard = (data: caseDataType) => {
                   <DropdownMenuItem
                     className="text-red-500"
                     onClick={() => {
-                      navigate(`/cases/delete/${data.id}`)
+                      setOpenDelete(true)
                     }}
                   >
                     Delete

@@ -1,25 +1,44 @@
-import type { invoiceDataType } from "@/data/invoiceData"
+import { useMutation } from "@tanstack/react-query"
+import { MoreVertical } from "lucide-react"
+import { useState } from "react"
+import { toast } from "sonner"
+
+import type { Payment } from "@/types/invoiceType"
 import { formatDate } from "@/utils/formate"
-import { useLocation, useNavigate } from "react-router-dom"
-import DeleteInvoiceModel from "./DeleteInvoiceModel"
+import { Button } from "../ui/button"
+import EditInvoiceModel from "./EditInvoiceModel"
+import { pay } from "@/api/invoiceAPI"
+import InvoiceDetailsModal from "./InvoiceDetailsModal"
+import { useAppSelector } from "@/hooks/hooks"
+import { Dialog } from "../ui/dialog"
+import DeleteModel from "../DeleteModel"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
-import { Button } from "../ui/button"
-import { MoreVertical } from "lucide-react"
-import InvoiceDetailsModal from "./InvoiceDetailsModal"
-import EditInvoiceModel from "./EditInvoiceModel"
-import { useMutation } from "@tanstack/react-query"
-import { pay } from "@/api/invoiceAPI"
-import { useAppSelector } from "@/hooks/hooks"
+import { useDeleteInvoiceMutation } from "@/store/services/invoiceAPI"
 
-const InvoiceCard = (invoice: invoiceDataType) => {
-  const pathname = useLocation().pathname
-  const navigate = useNavigate()
+const InvoiceCard = (invoice: Payment) => {
+  const [openView, setOpenView] = useState<boolean>(false)
+  const [openDelete, setOpenDelete] = useState<boolean>(false)
+  const [openEdit, setOpenEdit] = useState<boolean>(false)
   const role = useAppSelector((state) => state.auth.role)
+
+  const [deleteInvoice, { isLoading: DeleteIsPending }] =
+    useDeleteInvoiceMutation()
+    
+  const handelDeleteModel = async(_: number) => {
+    try {
+      await deleteInvoice(invoice.id).unwrap()
+      toast.success("Invoice Deleted")
+      setOpenDelete(false)
+    } catch {
+      toast.error(`Something is not right`)
+    }
+  }
+
   const { mutate } = useMutation({
     mutationFn: pay,
     onSuccess: (data) => {
@@ -27,15 +46,30 @@ const InvoiceCard = (invoice: invoiceDataType) => {
     },
   })
   return (
-    <>
-      {pathname === `/invoice/edit/${invoice.id}` && (
-        <EditInvoiceModel {...invoice} />
+    <Dialog
+      open={openView || openDelete || openEdit}
+      onOpenChange={(open) => {
+        if (!open) {
+          setOpenView(false)
+          setOpenEdit(false)
+          setOpenDelete(false)
+        }
+      }}
+    >
+      {openEdit && <EditInvoiceModel data={invoice} setOpen={setOpenEdit} />}
+      {openDelete && (
+        <DeleteModel
+          title="Delete Invoice"
+          subTitle="Are you sure you want to delete This invoice?"
+          detailsTitle={`${invoice.totalAmount}`}
+          id={invoice.id}
+          isPending={DeleteIsPending}
+          mutate={handelDeleteModel}
+          setOpenDelete={setOpenDelete}
+        />
       )}
-      {pathname === `/invoice/delete/${invoice.id}` && (
-        <DeleteInvoiceModel {...invoice} />
-      )}
-      {pathname === `/invoice/${invoice.id}` && (
-        <InvoiceDetailsModal {...invoice} />
+      {openView && (
+        <InvoiceDetailsModal data={invoice} setOpenView={setOpenView} />
       )}
       <div className="shadow-soft rounded-2xl border border-zinc-200 bg-white p-5 transition duration-200 hover:-translate-y-0.5 hover:border-zinc-300">
         <div className="flex items-start justify-between">
@@ -58,16 +92,16 @@ const InvoiceCard = (invoice: invoiceDataType) => {
               <DropdownMenuContent align="end" className="w-40">
                 <DropdownMenuItem
                   onClick={() => {
-                    navigate(`/invoice/${invoice.id}`)
+                    setOpenView(true)
                   }}
                 >
                   View
                 </DropdownMenuItem>
-                {role === "lawyer" && (
+                {role === "lawyer" && invoice.paymentStatus == "pending" && (
                   <>
                     <DropdownMenuItem
                       onClick={() => {
-                        navigate(`/invoice/edit/${invoice.id}`)
+                        setOpenEdit(true)
                       }}
                     >
                       Edit
@@ -75,18 +109,18 @@ const InvoiceCard = (invoice: invoiceDataType) => {
                     <DropdownMenuItem
                       className="text-red-500"
                       onClick={() => {
-                        navigate(`/invoice/delete/${invoice.id}`)
+                        setOpenDelete(true)
                       }}
                     >
                       Delete
                     </DropdownMenuItem>
                   </>
                 )}
-                {role === "client" && (
+                {role === "client" && invoice.status != "paid" && (
                   <DropdownMenuItem
                     className="text-green-500"
                     onClick={() => {
-                      mutate(invoice)
+                      mutate(invoice.id)
                     }}
                   >
                     Pay
@@ -110,7 +144,7 @@ const InvoiceCard = (invoice: invoiceDataType) => {
 
           <div>
             <p className="text-xs text-zinc-400 uppercase">Status</p>
-            <span className="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+            <span className="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold">
               {invoice.status}
             </span>
           </div>
@@ -123,7 +157,7 @@ const InvoiceCard = (invoice: invoiceDataType) => {
           </div>
         </div>
       </div>
-    </>
+    </Dialog>
   )
 }
 

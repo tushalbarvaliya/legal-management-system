@@ -1,22 +1,22 @@
 import { useMemo, useState } from "react"
+import { VirtuosoGrid } from "react-virtuoso"
+
 import InvoiceCard from "./InvoiceCard"
 import InvoiceCardSkeleton from "./InvoiceCardSkeleton"
-import { useQuery } from "@tanstack/react-query"
 import ErrorMessage from "../ErrorMessage"
 import { Button } from "../ui/button"
-import { getAllInvoice } from "@/api/invoiceAPI"
-import type { invoiceDataType } from "@/data/invoiceData"
 import NoFound from "../NoFound"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select"
+import { useGetInvoiceQuery } from "@/store/services/invoiceAPI"
 
 const InvoiceList = () => {
-  const {
-    data: invoices,
-    isLoading,
-    isError,
-  } = useQuery<invoiceDataType[] | undefined>({
-    queryKey: ["invoices"],
-    queryFn: getAllInvoice,
-  })
+  const {data:invoices,isLoading,isError}=useGetInvoiceQuery()
 
   const [status, setStatus] = useState("")
   const [client, setClient] = useState("")
@@ -28,13 +28,13 @@ const InvoiceList = () => {
 
   const clientOptions = useMemo(() => {
     if (!invoices) return []
-    return [...new Set(invoices.map((i) => i.clientId))]
+    return [...new Set(invoices.data.map((i) => i.clientId))]
   }, [invoices])
 
   const filteredInvoices = useMemo(() => {
     if (!invoices) return []
 
-    return invoices.filter((invoice) => {
+    return invoices.data.filter((invoice) => {
       const matchesStatus =
         !status || invoice.status?.toLowerCase() === status.toLowerCase()
 
@@ -57,45 +57,59 @@ const InvoiceList = () => {
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex w-fit flex-wrap items-center gap-2">
           {/* Status */}
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-400"
+          <Select
+            value={status || "all"}
+            onValueChange={(value) => setStatus(value === "all" ? "" : value)}
             disabled={isLoading || isError}
           >
-            <option value="">All Statuses</option>
-            <option value="Paid">Paid</option>
-            <option value="Pending">Pending</option>
-            <option value="Overdue">Overdue</option>
-          </select>
+            <SelectTrigger className="w-full md:w-45">
+              <SelectValue placeholder="All Statuses" />
+            </SelectTrigger>
+
+            <SelectContent>
+              <SelectItem value="all">All Statuses</SelectItem>
+              <SelectItem value="Paid">Paid</SelectItem>
+              <SelectItem value="Pending">Pending</SelectItem>
+              <SelectItem value="Overdue">Overdue</SelectItem>
+            </SelectContent>
+          </Select>
 
           {/* Client */}
-          <select
+          <Select
             value={client}
-            onChange={(e) => setClient(e.target.value)}
-            className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-400"
+            onValueChange={(value) => setClient(value)}
             disabled={isLoading || isError}
           >
-            <option value="">All Clients</option>
-            {clientOptions.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger className="w-full md:w-50">
+              <SelectValue placeholder="All Clients" />
+            </SelectTrigger>
+
+            <SelectContent>
+              {clientOptions.map((c) => (
+                <SelectItem key={c} value={String(c)}>
+                  {c}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
           {/* Date */}
 
-          <Button onClick={clearFilters} disabled={isLoading || isError} className="p-4">
+          <Button
+            onClick={clearFilters}
+            disabled={isLoading || isError}
+            className="w-full p-4 sm:w-fit"
+          >
             Clear
           </Button>
         </div>
       </div>
 
       {/* List */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      {/* Loading */}
+      <div className="mt-4">
         {/* Loading */}
         {isLoading &&
           Array.from({ length: 6 }).map((_, i) => (
@@ -104,23 +118,37 @@ const InvoiceList = () => {
 
         {/* Error */}
         {isError && (
-          <div className="col-span-full text-center text-zinc-500">
+          <div className="text-center text-zinc-500">
             <ErrorMessage />
           </div>
         )}
 
         {/* Data */}
-        {!isLoading &&
-          !isError &&
-          (filteredInvoices!.length > 0 ? (
-            filteredInvoices?.map((item) => (
-              <InvoiceCard {...item} key={item.id} />
-            ))
-          ) : (
-            <div className="col-span-full">
+        {!isLoading && !isError && (
+          <>
+            {filteredInvoices.length > 0 ? (
+              <VirtuosoGrid
+                style={{ height: 400 }}
+                data={filteredInvoices}
+                overscan={200}
+                components={{
+                  List: (props) => (
+                    <div
+                      {...props}
+                      className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3"
+                    />
+                  ),
+                  Item: ({ children, ...props }) => (
+                    <div {...props}>{children}</div>
+                  ),
+                }}
+                itemContent={(_, item) => <InvoiceCard {...item} />}
+              />
+            ) : (
               <NoFound title="Invoice" />
-            </div>
-          ))}
+            )}
+          </>
+        )}
       </div>
     </div>
   )

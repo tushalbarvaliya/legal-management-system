@@ -8,6 +8,7 @@ import { toast } from "sonner"
 
 import { putResetPassword, type putReqDataType } from "@/api/userAPI"
 import { passwordRegex } from "@/utils/regex"
+import { Helmet } from "react-helmet-async"
 
 type ResetFormData = {
   oldPassword: string
@@ -42,15 +43,15 @@ const ResetPasswordPage = () => {
   })
 
   const onSubmit = (data: ResetFormData) => {
+    const reqData: putReqDataType = {
+      password: data.oldPassword,
+      new_password: data.newPassword,
+    }
     if (data.newPassword != data.confirmNewPassword) {
       toast.error("New Password and Confirm Password Should be Same.")
     } else if (data.oldPassword == data.newPassword) {
       toast.error("old Password and new Password Should not be Same.")
     } else {
-      const reqData: putReqDataType = {
-        password: data.oldPassword,
-        new_password: data.newPassword,
-      }
       mutate(reqData)
     }
   }
@@ -60,6 +61,9 @@ const ResetPasswordPage = () => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
     >
+      <Helmet>
+        <title>Arcade Demo | Reset Password</title>
+      </Helmet>
       <main className="flex h-fit justify-center">
         <section className="w-full max-w-md rounded-xl border-2 border-black bg-white p-6 shadow-sm sm:p-8">
           <header className="my-2 flex items-center justify-between">

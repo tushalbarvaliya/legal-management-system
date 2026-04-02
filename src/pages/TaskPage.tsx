@@ -1,111 +1,130 @@
-import { useQuery } from "@tanstack/react-query"
 import { useMemo, useState } from "react"
 import { Plus } from "lucide-react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { Virtuoso } from "react-virtuoso"
 
-import { getAllTask } from "@/api/taskAPI"
-import type { taskDataType } from "@/data/taskData"
+import type { TaskResponse } from "@/types/taskType"
 import NoFound from "@/components/NoFound"
 import TaskCardSkeleton from "@/components/task/TaskCardSkeleton"
 import ErrorMessage from "@/components/ErrorMessage"
 import { Spinner } from "@/components/ui/spinner"
 import TaskCard from "@/components/task/TaskCard"
-import AddTaskModel from "@/components/task/AddTaskModel"
-
-
+import AddTask from "@/components/task/AddTask"
+import { Dialog } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Input } from "@/components/ui/input"
+import { Helmet } from "react-helmet-async"
+import { useGetTaskQuery } from "@/store/services/taskAPI"
 
 const TaskPage = () => {
-  const navigate = useNavigate()
-  const pathname = useLocation().pathname
+  const [openAdd, setOpenAdd] = useState<boolean>(false)
 
   const [search, setSearch] = useState("")
   const [priorityFilter, setPriorityFilter] = useState("all")
   const [statusFilter, setStatusFilter] = useState("all")
 
-  const {
-    data: tasks = [],
-    isLoading,
-    isError,
-  } = useQuery<taskDataType[]>({
-    queryKey: ["tasks"],
-    queryFn: getAllTask,
-  })
+  const clearSearch = () => {
+    setSearch("")
+    setPriorityFilter("all")
+    setStatusFilter("all")
+  }
+
+  const { data: tasks, isLoading, isError } = useGetTaskQuery()
 
   const filteredTasks = useMemo(() => {
-    return tasks.filter((task: taskDataType) => {
+    return tasks?.data.tasks.filter((task: TaskResponse) => {
       const title = task.title?.toLowerCase() || ""
       const description = task.description?.toLowerCase() || ""
-
       const matchesSearch =
         title.includes(search.toLowerCase()) ||
         description.includes(search.toLowerCase())
-
       const matchesPriority =
         priorityFilter === "all" || task.priority === priorityFilter
-
       const matchesStatus =
         statusFilter === "all" || task.status === statusFilter
-
       return matchesSearch && matchesPriority && matchesStatus
     })
   }, [search, priorityFilter, statusFilter, tasks])
 
-  const total = filteredTasks.length
-  const completed = filteredTasks.filter((t) => t.status === "completed").length
-  const inProgress = filteredTasks.filter(
-    (t) => t.status === "inProgress"
-  ).length
+  const total = tasks?.data.tasks.length
+  const pending = tasks?.data.summary.pending
+  const completed = tasks?.data.summary.completed
+  const overdue = tasks?.data.summary.overdue
 
   return (
     <>
-      {pathname === "/task/add" && <AddTaskModel />}
+      <Helmet>
+        <title>Task Management</title>
+      </Helmet>
+      <Dialog
+        open={openAdd}
+        onOpenChange={() => {
+          setOpenAdd(false)
+        }}
+      >
+        {openAdd && <AddTask setOpenAdd={setOpenAdd} />}
+      </Dialog>
       <section className="shadow-soft rounded-2xl border border-zinc-200 bg-white p-4 sm:p-6">
         {/* header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-zinc-900 sm:text-3xl">
+            <h1 className="text-xl font-bold text-zinc-900 sm:text-3xl">
               Task Management
             </h1>
-            <p className="mt-1 text-sm text-zinc-600">
-              Track deadlines, update priorities, and manage work in one place.
-            </p>
           </div>
 
           <div className="flex w-full flex-col gap-3 sm:flex-row md:w-auto">
             {/* Search */}
-            <input
+            <Input
               type="search"
               placeholder="Search by title or description"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm"
               disabled={isLoading || isError}
+              className="w-full"
             />
 
             {/* Priority */}
-            <select
+            <Select
               value={priorityFilter}
-              onChange={(e) => setPriorityFilter(e.target.value)}
-              className="rounded-xl border border-zinc-200 px-3 py-2.5 text-sm"
+              onValueChange={(value) => setPriorityFilter(value)}
               disabled={isLoading || isError}
             >
-              <option value="all">All Priorities</option>
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
-            </select>
+              <SelectTrigger className="w-full md:w-40">
+                <SelectValue placeholder="Select Priority" />
+              </SelectTrigger>
+
+              <SelectContent>
+                <SelectItem value="all">All Priorities</SelectItem>
+                <SelectItem value="low">Low</SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="high">High</SelectItem>
+              </SelectContent>
+            </Select>
 
             {/* Status */}
-            <select
+            <Select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="rounded-xl border border-zinc-200 px-3 py-2.5 text-sm"
+              onValueChange={(value) => setStatusFilter(value)}
               disabled={isLoading || isError}
             >
-              <option value="all">All Statuses</option>
-              <option value="inProgress">In Progress</option>
-              <option value="completed">Completed</option>
-            </select>
+              <SelectTrigger className="w-full md:w-40">
+                <SelectValue placeholder="Select Status" />
+              </SelectTrigger>
+
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                <SelectItem value="inProgress">In Progress</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button onClick={() => clearSearch()}>Clear</Button>
           </div>
         </div>
 
@@ -118,17 +137,20 @@ const TaskPage = () => {
             Completed: {isLoading ? <Spinner /> : completed}
           </p>
           <p className="flex gap-2 rounded-full bg-amber-100 px-2 text-amber-800">
-            In Process: {isLoading ? <Spinner /> : inProgress}
+            Pending: {isLoading ? <Spinner /> : pending}
+          </p>
+          <p className="flex gap-2 rounded-full bg-red-100 px-2 text-red-800">
+            Over Due: {isLoading ? <Spinner /> : overdue}
           </p>
         </div>
 
         {/* Add Button */}
-        <button
-          onClick={() => navigate("/task/add")}
-          className="fixed right-6 bottom-6 flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white"
+        <Button
+          onClick={() => setOpenAdd(true)}
+          className="fixed right-6 bottom-6 z-99 flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white"
         >
           <Plus />
-        </button>
+        </Button>
 
         {/* Task List */}
         <div className="mt-5 space-y-3">
@@ -144,12 +166,16 @@ const TaskPage = () => {
 
           {!isLoading &&
             !isError &&
+            filteredTasks &&
+            filteredTasks &&
             (filteredTasks.length > 0 ? (
-              filteredTasks.map((item) => (
-                <div key={item.id}>
-                  <TaskCard {...item} />
-                </div>
-              ))
+              <Virtuoso
+                style={{ height: 420 }}
+                className="no-scrollbar"
+                data={filteredTasks}
+                overscan={200}
+                itemContent={(_, item) => <TaskCard {...item} key={item.id} />}
+              />
             ) : (
               <NoFound title="Task" />
             ))}

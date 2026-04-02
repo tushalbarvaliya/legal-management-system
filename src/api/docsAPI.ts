@@ -1,13 +1,13 @@
-import { type docsDataType } from "@/data/docsData"
 import axiosInstance from "./axiosInstance"
-import type { AddDocsFormData } from "@/components/document/AddDocsModal"
+import type { FormData as FormDataAddFormData } from "@/components/document/AddDocsModal"
+import type { FormData } from "@/components/document/UpdateDocsModel"
 
 export const getAllDocs = async () => {
   const response = await axiosInstance.get("/documents/")
   return response.data
 }
 
-export const createDocs = async (data: AddDocsFormData) => {
+export const createDocs = async (data: FormDataAddFormData) => {
   const response = await axiosInstance.post("/documents/document", data, {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -16,9 +16,15 @@ export const createDocs = async (data: AddDocsFormData) => {
   return response.data
 }
 
-export const updateDocs = async (data: docsDataType) => {
+export const updateDocs = async ({
+  data,
+  id,
+}: {
+  data: FormData
+  id: number
+}) => {
   const response = await axiosInstance.patch(
-    `/documents/document/${data.id}`,
+    `/documents/document/${id}`,
     data,
     {
       headers: {
@@ -29,7 +35,7 @@ export const updateDocs = async (data: docsDataType) => {
   return response.data
 }
 
-export const deleteDocs = async (data: docsDataType) => {
-  const response = await axiosInstance.delete(`/documents/document/${data.id}`)
+export const deleteDocs = async (id: number) => {
+  const response = await axiosInstance.delete(`/documents/document/${id}`)
   return response.data
 }

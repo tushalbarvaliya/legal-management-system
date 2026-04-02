@@ -1,36 +1,27 @@
 import { useState, useMemo } from "react"
 import { Plus, Search } from "lucide-react"
-import { useQuery } from "@tanstack/react-query"
-
-import type { LawyerDataType } from "@/data/lawyerData"
-import { getLawyer } from "@/api/lawyerAPI"
 import ErrorMessage from "@/components/ErrorMessage"
 import LawyerCardSkeleton from "@/components/lawyer/LawyerCardSkeleton"
 import LawyerCard from "@/components/lawyer/LawyerCard"
 import NoFound from "@/components/NoFound"
-import { useLocation, useNavigate } from "react-router-dom"
-import AddLawyerModel from "@/components/lawyer/AddLawyerModel"
+import { Dialog } from "@/components/ui/dialog"
+import AddLawyer from "@/components/lawyer/AddLawyer"
+import { Helmet } from "react-helmet-async"
+import { Virtuoso } from "react-virtuoso"
+import { useGetLawyerQuery } from "@/store/services/lawyerAPI"
 
 const LawyerPage = () => {
-  const navigate = useNavigate()
-  const pathname = useLocation().pathname
+  const [openAdd, setOpenAdd] = useState<boolean>(false)
   const [searchTerm, setSearchTerm] = useState("")
 
-  const {
-    data: lawyerData,
-    isLoading,
-    isError,
-  } = useQuery<LawyerDataType[]>({
-    queryKey: ["lawyer"],
-    queryFn: getLawyer,
-  })
+  const { isError, isLoading, data: lawyerData } = useGetLawyerQuery()
 
   const filteredLawyers = useMemo(() => {
     if (!lawyerData) return []
 
     const term = searchTerm.toLowerCase()
 
-    return lawyerData.filter((item) => {
+    return lawyerData.data.filter((item) => {
       const { user, lawyer } = item
 
       return (
@@ -46,13 +37,27 @@ const LawyerPage = () => {
 
   return (
     <>
-      {pathname == "/lawyer/add" && <AddLawyerModel />}
+      <Helmet>
+        <title>Lawyer Management</title>
+      </Helmet>
+      {openAdd && (
+        <Dialog
+          open={openAdd}
+          onOpenChange={(open) => {
+            if (!open) setOpenAdd(false)
+          }}
+        >
+          <AddLawyer setOpenAdd={setOpenAdd} />
+        </Dialog>
+      )}
+
       {/* Add Button */}
       <button
         className="fixed right-6 bottom-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-xl hover:scale-105"
         onClick={() => {
-          navigate("/lawyer/add")
+          setOpenAdd(true)
         }}
+        disabled={isError||isLoading}
       >
         <Plus />
       </button>
@@ -103,11 +108,15 @@ const LawyerPage = () => {
           )}
 
           {/* Data */}
-          {!isLoading &&
-            !isError &&
-            filteredLawyers.map((item) => (
-              <LawyerCard key={item.lawyer.id} {...item} />
-            ))}
+          {!isLoading && !isError && filteredLawyers.length > 0 && (
+            <Virtuoso
+              style={{ height: "300px" }}
+              data={filteredLawyers}
+              itemContent={(_, item) => (
+                <LawyerCard key={item.lawyer.id} {...item} />
+              )}
+            />
+          )}
         </div>
       </div>
     </>

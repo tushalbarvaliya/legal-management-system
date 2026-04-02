@@ -1,5 +1,4 @@
-import { useEffect } from "react"
-import { useNavigate } from "react-router"
+import { Navigate } from "react-router-dom"
 import { useAppSelector } from "@/hooks/hooks"
 
 interface ProtectedRouteProps {
@@ -11,20 +10,14 @@ const ProtectedRouteByRole = ({
   allowedRoles,
   children,
 }: ProtectedRouteProps) => {
-  const navigate = useNavigate()
-  let role = useAppSelector((state) => state.auth.role)
-  const token = useAppSelector((state) => state.auth.token)
-  if (role == "") {
-    role = "client"
+  const { role, token } = useAppSelector((state) => state.auth)
+
+  if (!token) {
+    return <Navigate to="/login" replace />
   }
-  useEffect(() => {
-    if (!role || !allowedRoles.includes(role)) {
-      navigate("/")
-    }
-  }, [role, allowedRoles, navigate, token])
 
   if (!role || !allowedRoles.includes(role)) {
-    return null
+    return <Navigate to="/" replace />
   }
 
   return <>{children}</>

@@ -1,36 +1,28 @@
-import { useQuery } from "@tanstack/react-query"
-
-import { getAllCases } from "@/api/caseAPI"
-import { getAllTask } from "@/api/taskAPI"
-import type { caseDataType } from "@/data/caseData"
-import type { taskDataType } from "@/data/taskData"
 import ErrorMessage from "../ErrorMessage"
 import LawyerBoardSkeleton from "./LawyerBoardSkeleton"
+import { useGetCaseQuery } from "@/store/services/caseAPI"
+import { useGetTaskQuery } from "@/store/services/taskAPI"
 
 const LawyerBoard = () => {
   const {
-    data: tasks = [],
+    data: tasks,
     isLoading: taskLoading,
     isError: taskError,
-  } = useQuery<taskDataType[]>({
-    queryKey: ["tasks"],
-    queryFn: getAllTask,
-  })
+  } = useGetTaskQuery()
 
   const {
-    data: cases = [],
+    data: cases,
     isLoading: caseLoading,
     isError: caseError,
-  } = useQuery<caseDataType[]>({
-    queryKey: ["cases"],
-    queryFn: getAllCases,
-  })
+  } = useGetCaseQuery()
 
   // stats
-  const totalTasks = tasks.length
-  const completed = tasks.filter((t) => t.status === "completed").length
-  const inProgress = tasks.filter((t) => t.status === "inProgress").length
-  const totalCases = cases.length
+  const totalTasks = tasks?.data.tasks.length || 0
+  const completed =
+    tasks?.data.tasks.filter((t) => t.status === "completed").length || 0
+  const inProgress =
+    tasks?.data.tasks.filter((t) => t.status === "in_progress").length || 0
+  const totalCases = cases?.data.cases.length || 0
 
   const isLoading = taskLoading || caseLoading
   const isError = taskError || caseError

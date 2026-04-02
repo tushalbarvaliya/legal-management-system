@@ -1,56 +1,46 @@
-import { useQuery } from "@tanstack/react-query"
-import { Plus, Search } from "lucide-react"
+import { Plus } from "lucide-react"
 import { useMemo, useState } from "react"
-import { Link, useLocation } from "react-router-dom"
+import { VirtuosoGrid } from "react-virtuoso"
 
-import type { sessionDataType } from "@/data/sessionData"
-import { getAllSession } from "@/api/sessionAPI"
 import ErrorMessage from "@/components/ErrorMessage"
 import NoFound from "@/components/NoFound"
-import AddSessionModel from "@/components/session/AddSessionModel"
 import SessionCard from "@/components/session/SessionCard"
 import SessionCardSkeleton from "@/components/session/SessionCardSkeleton"
 import { Spinner } from "@/components/ui/spinner"
+import { Dialog } from "@/components/ui/dialog"
+import AddSession from "@/components/session/AddSession"
+import { Helmet } from "react-helmet-async"
+import { useGetSessionQuery } from "@/store/services/sessionAPI"
 
 const SessionPage = () => {
-  const pathname = useLocation().pathname
   const [search, setSearch] = useState("")
+  const [openAdd, setOpenAdd] = useState<boolean>(false)
 
-  const {
-    data: sessions = [],
-    isLoading,
-    isError,
-  } = useQuery<sessionDataType[]>({
-    queryKey: ["sessions"],
-    queryFn: getAllSession,
-  })
+  const { data: sessions, isLoading, isError } = useGetSessionQuery()
 
   const handleClear = () => {
     setSearch("")
   }
 
   const filteredSessions = useMemo(() => {
-    return sessions.filter((session) =>
-      session.courtName?.toLowerCase().includes(search.toLowerCase())
+    return (
+      sessions?.data.filter((session) =>
+        session.session.courtName?.toLowerCase().includes(search.toLowerCase())
+      ) || []
     )
   }, [sessions, search])
 
-  if (isLoading) {
-    return (
-      <>
-        <SessionCardSkeleton />
-        <SessionCardSkeleton />
-        <SessionCardSkeleton />
-      </>
-    )
-  }
-  
-  if (isError) {
-    return <ErrorMessage />
-  }
   return (
-    <>
-      {pathname === "/session/add" && <AddSessionModel />}
+    <Dialog
+      open={openAdd}
+      onOpenChange={(open) => {
+        if (!open) setOpenAdd(false)
+      }}
+    >
+      <Helmet>
+        <title>Session Management</title>
+      </Helmet>
+      {openAdd && <AddSession setOpenAdd={setOpenAdd} />}
 
       <section className="shadow-soft rounded-2xl border bg-white p-4 sm:p-6">
         {/* Header */}
@@ -65,57 +55,84 @@ const SessionPage = () => {
           </div>
 
           {/* Search */}
-          <div className="flex gap-3">
-            <div className="relative">
-              <Search className="absolute top-1/3 left-3 h-4 w-4 -translate-y-1/2" />
+          <div>
+            <div className="flex w-full gap-3">
               <input
                 type="search"
                 placeholder="Search by court name..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="rounded-xl border py-2 pr-3 pl-9 text-sm"
+                className="w-full flex-1 rounded-xl border px-4 py-2 text-sm"
+                disabled={isError || isLoading}
               />
-            </div>
 
-            <button
-              onClick={handleClear}
-              className="h-fit rounded-lg bg-black px-4 py-2 font-mono font-semibold text-white"
-            >
-              Clear
-            </button>
+              <button
+                onClick={handleClear}
+                className="h-fit rounded-lg bg-black px-4 py-2 font-mono font-semibold text-white"
+              >
+                Clear
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Count */}
-        <p className="mt-4 text-sm text-zinc-500">
-          Showing {isLoading ? <Spinner /> : filteredSessions.length} sessions
+        <p className="my-4 text-sm text-zinc-500">
+          Showing {isLoading ? <Spinner /> : filteredSessions?.length} sessions
         </p>
 
         {/* List */}
-        <div className="mt-5 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {!isLoading &&
-            !isError &&
-            (filteredSessions.length > 0 ? (
-              filteredSessions.map((item) => (
-                <div key={item.id}>
-                  <SessionCard {...item} />
-                </div>
-              ))
-            ) : (
-              <div className="col-span-full">
-                <NoFound title="Session" />
-              </div>
-            ))}
-        </div>
+        {isError && (
+          <div className="col-span-full">
+            <ErrorMessage />
+          </div>
+        )}
+        {isLoading && (
+          <>
+            <SessionCardSkeleton />
+            <SessionCardSkeleton />
+            <SessionCardSkeleton />
+          </>
+        )}
+        {!isLoading &&
+          !isError &&
+          (filteredSessions && filteredSessions?.length > 0 ? (
+            <VirtuosoGrid
+              style={{ height: 425 }}
+              data={filteredSessions}
+              overscan={200}
+              components={{
+                List: (props) => (
+                  <div
+                    {...props}
+                    className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
+                  />
+                ),
+                Item: ({ children, ...props }) => (
+                  <div {...props}>{children}</div>
+                ),
+              }}
+              itemContent={(_, item) => (
+                <SessionCard data={item} key={item.session.id} />
+              )}
+            />
+          ) : (
+            <div className="col-span-full">
+              <NoFound title="Session" />
+            </div>
+          ))}
 
         {/* Add Button */}
-        <Link to="/session/add">
-          <button className="fixed right-6 bottom-6 flex h-14 w-14 items-center justify-center rounded-full bg-black text-white">
-            <Plus />
-          </button>
-        </Link>
+        <button
+          className="fixed right-6 bottom-6 flex h-14 w-14 items-center justify-center rounded-full bg-black text-white"
+          onClick={() => {
+            setOpenAdd(true)
+          }}
+        >
+          <Plus />
+        </button>
       </section>
-    </>
+    </Dialog>
   )
 }
 

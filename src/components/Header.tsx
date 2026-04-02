@@ -1,10 +1,10 @@
 import { Link, useLocation } from "react-router"
 import { motion } from "framer-motion"
+import { TextAlignJustify } from "lucide-react"
+import { useState } from "react"
 
 import { navItems } from "@/utils/navigationList"
-import { TextAlignJustify } from "lucide-react"
 import MobileSidebar from "./MobileSidebar"
-import { useState } from "react"
 
 const Header = () => {
   const pathname = useLocation().pathname

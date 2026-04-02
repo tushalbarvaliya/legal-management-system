@@ -1,34 +1,27 @@
 import { useMemo, useState } from "react"
-import { useQuery } from "@tanstack/react-query"
 import { Plus, Search } from "lucide-react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { Virtuoso } from "react-virtuoso"
 
-import type { caseDataType } from "@/data/caseData"
 import { useAppSelector } from "@/hooks/hooks"
-import { getAllCases } from "@/api/caseAPI"
 import ErrorMessage from "@/components/ErrorMessage"
-import AddCaseModel from "@/components/cases/AddCaseModel"
 import CasesCardSkeleton from "@/components/cases/CasesCardSkeleton"
 import CasesCard from "@/components/cases/CasesCard"
 import NoFound from "@/components/NoFound"
+import type { Case } from "@/types/caseType"
+import { Dialog } from "@/components/ui/dialog"
+import AddCase from "@/components/cases/AddCase"
+import { Helmet } from "react-helmet-async"
+import { useGetCaseQuery } from "@/store/services/caseAPI"
 
 const CasesPage = () => {
   const role = useAppSelector((state) => state.auth.role)
-  const navigate = useNavigate()
-  const pathname = useLocation().pathname
+  const [openAdd, setOpenAdd] = useState<boolean>(false)
   const [search, setSearch] = useState("")
 
-  const {
-    data: cases,
-    isLoading,
-    isError,
-  } = useQuery<caseDataType[]>({
-    queryKey: ["cases"],
-    queryFn: getAllCases,
-  })
+  const { data: cases, isLoading, isError } = useGetCaseQuery()
 
-  const filteredCases: caseDataType[] | undefined = useMemo(() => {
-    return cases?.filter((item: caseDataType) => {
+  const filteredCases: Case[] | undefined = useMemo(() => {
+    return cases?.data.cases.filter((item: Case) => {
       const matchesSearch =
         item.title.toLowerCase().includes(search.toLowerCase()) ||
         item.description.toLowerCase().includes(search.toLowerCase())
@@ -38,14 +31,22 @@ const CasesPage = () => {
   }, [search, cases])
 
   return (
-    <>
-      {pathname == "/cases/add" && <AddCaseModel />}
+    <Dialog
+      open={openAdd}
+      onOpenChange={(open) => {
+        if (!open) setOpenAdd(false)
+      }}
+    >
+      <Helmet>
+        <title>Case Management</title>
+      </Helmet>
+      {openAdd && <AddCase setOpenAdd={setOpenAdd} />}
       {/* ADD TASK BUTTON */}
       {role == "lawyer" && (
         <button
           className="fixed right-6 bottom-6 z-20 inline-flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-xl transition duration-300 hover:scale-105 hover:bg-zinc-800 focus:ring-2 focus:ring-zinc-400 focus:ring-offset-2 focus:outline-none lg:right-8 lg:bottom-8 dark:bg-white"
           onClick={() => {
-            navigate("/cases/add")
+            setOpenAdd(true)
           }}
         >
           <Plus className="dark:stroke-black" />
@@ -94,19 +95,25 @@ const CasesPage = () => {
           )}
           {isError && <ErrorMessage />}
           {!isLoading &&
-            !isError &&
-            (filteredCases && filteredCases?.length > 0 ? (
-              filteredCases.map((item: caseDataType) => (
-                <div key={item.id}>
-                  <CasesCard {...item} />
-                </div>
-              ))
-            ) : (
-              <NoFound title="Case" />
-            ))}
+          !isError &&
+          filteredCases &&
+          filteredCases.length > 0 ? (
+            <Virtuoso
+              style={{ height: 425 }}
+              className="no-scrollbar"
+              totalCount={filteredCases.length}
+              data={filteredCases}
+              overscan={200}
+              itemContent={(_index, item) => (
+                <CasesCard key={item.id} data={item} />
+              )}
+            />
+          ) : (
+            !isLoading && !isError && <NoFound title="Case" />
+          )}
         </div>
       </section>
-    </>
+    </Dialog>
   )
 }
 

@@ -1,44 +1,61 @@
-import { X } from "lucide-react"
 import { useEffect, useState } from "react"
-import { useForm } from "react-hook-form"
-import { useNavigate } from "react-router-dom"
+import { useForm, Controller } from "react-hook-form"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { toast } from "sonner"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 
-import { getAllCases } from "@/api/caseAPI"
-import { getAllClient } from "@/api/clientAPI"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 import { updateDocs } from "@/api/docsAPI"
-
-import type { caseDataType } from "@/data/caseData"
-import type { ClientDataType } from "@/data/clientData"
-import type { docsDataType } from "@/data/docsData"
-
 import { queryClient } from "@/main"
+import type { CaseDocumentItem } from "@/types/docsType"
+import {
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog"
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select"
+import { useGetCaseQuery } from "@/store/services/caseAPI"
+import { useGetClientQuery } from "@/store/services/clientAPI"
+
+const updateDocsSchema = z.object({
+  title: z.string().min(3, "Title must be at least 3 characters"),
+  file: z.instanceof(File, { message: "File is required" }).optional(),
+  fileType: z.string().min(1, "File type is required").optional(),
+  description: z.string().min(3, "Description must be at least 3 characters"),
+  notes: z.string().optional(),
+  caseId: z.number().min(1, "Case is required"),
+  clientId: z.number().min(1, "Client is required"),
+})
+
+export type FormData = z.infer<typeof updateDocsSchema>
 
 type Props = {
-  data: docsDataType
+  data: CaseDocumentItem
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const UpdateDocsModel = ({ data }: Props) => {
-  const navigate = useNavigate()
+const UpdateDocsModal = ({ data, setOpen }: Props) => {
   const [replaceFile, setReplaceFile] = useState(false)
 
-  const { data: caseData } = useQuery<caseDataType[]>({
-    queryKey: ["cases"],
-    queryFn: getAllCases,
-  })
+  const { data: caseData } = useGetCaseQuery()
 
-  const { data: clientData } = useQuery<ClientDataType[]>({
-    queryKey: ["client"],
-    queryFn: getAllClient,
-  })
+  const { data: clientData } = useGetClientQuery()
 
   const { mutate, isPending } = useMutation({
     mutationFn: updateDocs,
     onSuccess: () => {
-      toast.success("Docs updated successfully")
+      toast.success("Document updated successfully")
       queryClient.invalidateQueries({ queryKey: ["docs"] })
-      navigate("/docs")
+      setOpen(false)
     },
     onError: (error) => {
       toast.error(`Error: ${error?.message || "Something went wrong"}`)
@@ -46,195 +63,220 @@ const UpdateDocsModel = ({ data }: Props) => {
   })
 
   const {
-    register,
+    control,
     handleSubmit,
-    reset,
     setValue,
-    formState: { errors },
-  } = useForm<docsDataType>()
+    reset,
+    formState: { isDirty },
+  } = useForm<FormData>({
+    resolver: zodResolver(updateDocsSchema),
+    defaultValues: {
+      title: "",
+      file: undefined,
+      fileType: "",
+      description: "",
+      notes: "",
+      caseId: 0,
+      clientId: 0,
+    },
+  })
 
   useEffect(() => {
     if (data) {
       reset({
-        ...data,
-        caseId: data.caseId,
-        clientId: data.clientId,
+        title: data.document.title,
+        description: data.document.description,
+        notes: data.document.notes || "",
+        caseId: data.document.caseId,
+        clientId: data.document.clientId,
+        file: undefined,
+        fileType: data.document.fileType,
       })
     }
   }, [data, reset])
 
-  // Submit
-  const onSubmit = (formData: docsDataType) => {
-    mutate({
+  const onSubmit = (formData: FormData) => {
+    const payload = {
       ...formData,
       caseId: Number(formData.caseId),
       clientId: Number(formData.clientId),
-    })
+    }
+    if (isDirty) {
+      mutate({ data: payload, id: data.document.id })
+    } else {
+      toast.success("No Changes found")
+      setOpen(false)
+    }
   }
 
   return (
-    <div className="fixed inset-0 z-70">
-      <div className="absolute inset-0 bg-zinc-900/45"></div>
-
-      <div className="relative mx-auto flex  w-full items-center justify-center p-4 sm:p-6">
-        <div className="shadow-soft w-full max-w-3xl  rounded-2xl border border-zinc-200 bg-white">
-          {/* Header */}
-          <div className="flex items-center justify-between border-b px-5 py-4">
-            <h3 className="text-lg font-semibold">Edit Document</h3>
-            <button
-              className="rounded-lg border p-2 hover:bg-zinc-100"
-              onClick={() => navigate("/docs")}
-            >
-              <X />
-            </button>
-          </div>
-
-          {/* Form */}
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="max-h-[85vh] space-y-4 overflow-y-auto px-5 py-4"
-          >
-            {/* Title + Case */}
-            <div className="grid gap-4 sm:grid-cols-2">
-              {/* Title */}
-              <label className="space-y-1 text-sm">
-                <span className="font-medium">
-                  Title <span className="text-red-500">*</span>
-                </span>
-                <input
-                  type="text"
-                  className="w-full rounded-lg border px-3 py-2"
-                  {...register("title", { required: "Title is required" })}
-                />
-                <p className="text-xs text-red-500">{errors.title?.message}</p>
-              </label>
-
-              {/* Case */}
-              <label className="space-y-1 text-sm">
-                <span className="font-medium">
-                  Case <span className="text-red-500">*</span>
-                </span>
-                <select
-                  {...register("caseId", {
-                    required: "Please select case",
-                  })}
-                  className="w-full rounded-lg border px-3 py-2"
-                >
-                  <option value="">Select...</option>
-                  {caseData?.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.title}
-                    </option>
-                  ))}
-                </select>
-                <p className="text-xs text-red-500">{errors.caseId?.message}</p>
-              </label>
-            </div>
-
-            {/* Description */}
-            <label className="space-y-1 text-sm">
-              <span className="font-medium">
-                Description <span className="text-red-500">*</span>
-              </span>
-              <textarea
-                rows={3}
-                className="w-full rounded-lg border px-3 py-2"
-                {...register("description", {
-                  required: "Description is required",
-                })}
-              />
-              <p className="text-xs text-red-500">
-                {errors.description?.message}
-              </p>
-            </label>
-
-            {/* File Upload */}
-            {!replaceFile ? (
-              <div
-                className="cursor-pointer rounded-lg border px-3 py-2 text-sm"
-                onClick={() => setReplaceFile(true)}
-              >
-                File already uploaded — click to replace
-              </div>
-            ) : (
-              <div className="grid gap-4 sm:grid-cols-2">
-                <input
-                  type="file"
-                  className="w-full rounded-lg border px-3 py-2"
-                  onChange={async (e) => {
-                    const file = e.target.files?.[0]
-                    if (!file) return
-
-                    setValue("file", file, {
-                      shouldValidate: true,
-                    })
-                    setValue("fileType", file.type, {
-                      shouldValidate: true,
-                    })
-                  }}
-                />
-
-                <input
-                  type="text"
-                  disabled
-                  className="w-full rounded-lg border px-3 py-2"
-                  {...register("fileType")}
-                />
-              </div>
-            )}
-
-            {/* Client */}
-            <label className="space-y-1 text-sm">
-              <span className="font-medium">
-                Client <span className="text-red-500">*</span>
-              </span>
-              <select
-                {...register("clientId", {
-                  required: "Please select client",
-                })}
-                className="w-full rounded-lg border px-3 py-2"
-              >
-                <option value="">Select...</option>
-                {clientData?.map((item) => (
-                  <option key={item.client.id} value={String(item.client.id)}>
-                    {item.user.firstName} {item.user.firstName}
-                  </option>
-                ))}
-              </select>
-              <p className="text-xs text-red-500">{errors.clientId?.message}</p>
-            </label>
-
-            {/* Notes */}
-            <textarea
-              rows={3}
-              className="w-full rounded-lg border px-3 py-2"
-              placeholder="Notes..."
-              {...register("notes")}
-            />
-
-            {/* Buttons */}
-            <div className="flex justify-end gap-2 border-t pt-4">
-              <button
-                type="button"
-                onClick={() => navigate("/docs")}
-                className="rounded-lg border px-4 py-2"
-              >
-                Cancel
-              </button>
-
-              <button
-                type="submit"
-                disabled={isPending}
-                className="rounded-lg bg-black px-4 py-2 text-white"
-              >
-                {isPending ? "Updating..." : "Update Document"}
-              </button>
-            </div>
-          </form>
+    <DialogContent className="max-w-2xl">
+      <DialogHeader>
+        <div className="flex items-center justify-between">
+          <DialogTitle>Edit Document</DialogTitle>
         </div>
-      </div>
-    </div>
+      </DialogHeader>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        {/* Title */}
+        <Controller
+          name="title"
+          control={control}
+          render={({ field, fieldState }) => (
+            <div>
+              <Input placeholder="Title" {...field} />
+              {fieldState.error && (
+                <p className="text-sm text-red-500">
+                  {fieldState.error.message}
+                </p>
+              )}
+            </div>
+          )}
+        />
+
+        {/* Case Select */}
+        <Controller
+          name="caseId"
+          control={control}
+          render={({ field, fieldState }) => (
+            <div>
+              <Select
+                onValueChange={(val) => field.onChange(Number(val))}
+                value={field.value ? String(field.value) : ""}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select Case" />
+                </SelectTrigger>
+                <SelectContent>
+                  {caseData?.data.cases.map((item) => (
+                    <SelectItem key={item.id} value={String(item.id)}>
+                      {item.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {fieldState.error && (
+                <p className="text-sm text-red-500">
+                  {fieldState.error.message}
+                </p>
+              )}
+            </div>
+          )}
+        />
+
+        {/* Description */}
+        <Controller
+          name="description"
+          control={control}
+          render={({ field, fieldState }) => (
+            <div>
+              <Input placeholder="Description" {...field} />
+              {fieldState.error && (
+                <p className="text-sm text-red-500">
+                  {fieldState.error.message}
+                </p>
+              )}
+            </div>
+          )}
+        />
+
+        {/* File Upload */}
+        <Controller
+          name="file"
+          control={control}
+          render={({ field, fieldState }) => (
+            <div>
+              {!replaceFile && data.document.documentLink ? (
+                <div
+                  className="w-full cursor-pointer rounded-lg border px-3 py-2 text-sm"
+                  onClick={() => setReplaceFile(true)}
+                >
+                  File already uploaded — click to replace
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <input
+                    type="file"
+                    className="w-full rounded-lg border px-3 py-2"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]
+                      if (!file) return
+                      setValue("file", file, { shouldValidate: true })
+                      setValue("fileType", file.type, { shouldValidate: true })
+                    }}
+                  />
+                  <Input
+                    placeholder="File Type"
+                    className="hidden"
+                    disabled
+                    value={field.value ? (field.value as File).type : ""}
+                  />
+                </div>
+              )}
+              {fieldState.error && (
+                <p className="text-sm text-red-500">
+                  {fieldState.error.message}
+                </p>
+              )}
+            </div>
+          )}
+        />
+
+        {/* Client Select */}
+        <Controller
+          name="clientId"
+          control={control}
+          render={({ field, fieldState }) => (
+            <div>
+              <Select
+                onValueChange={(val) => field.onChange(Number(val))}
+                value={field.value ? String(field.value) : ""}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select Client" />
+                </SelectTrigger>
+                <SelectContent>
+                  {clientData?.data?.map((item) => (
+                    <SelectItem
+                      key={item.client.id}
+                      value={String(item.client.id)}
+                    >
+                      {item.user.firstName} {item.user.lastName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {fieldState.error && (
+                <p className="text-sm text-red-500">
+                  {fieldState.error.message}
+                </p>
+              )}
+            </div>
+          )}
+        />
+
+        {/* Notes */}
+        <Controller
+          name="notes"
+          control={control}
+          render={({ field }) => <Input placeholder="Notes" {...field} />}
+        />
+
+        <DialogFooter className="flex justify-end gap-2">
+          <Button
+            variant="outline"
+            type="button"
+            onClick={() => setOpen(false)}
+          >
+            Cancel
+          </Button>
+          <Button type="submit" disabled={isPending}>
+            {isPending ? "Updating..." : "Update Document"}
+          </Button>
+        </DialogFooter>
+      </form>
+    </DialogContent>
   )
 }
 
-export default UpdateDocsModel
+export default UpdateDocsModal

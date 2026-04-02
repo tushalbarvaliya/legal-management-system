@@ -1,32 +1,20 @@
 import { Plus, Search } from "lucide-react"
-import { useQuery } from "@tanstack/react-query"
-import { useLocation, useNavigate } from "react-router-dom"
 import { useMemo, useState } from "react"
+import { Virtuoso } from "react-virtuoso"
 
-import type { StaffUserMapping } from "@/data/satffData"
 import ErrorMessage from "@/components/ErrorMessage"
 import StaffCard from "@/components/staff/StaffCard"
 import StaffCardSkeleton from "@/components/staff/StaffCardSkeleton"
-import { getAllStaff } from "@/api/staffAPI"
-import AddStaffModel from "@/components/staff/AddStaffModel"
 import NoFound from "@/components/NoFound"
+import AddStaff from "@/components/staff/AddStaff"
+import { Dialog } from "@/components/ui/dialog"
+import { useGetStaffQuery } from "@/store/services/staffAPI"
 
 const StaffPage = () => {
-  const navigate = useNavigate()
-  const pathname = useLocation().pathname
-
+  const [openAdd, setOpenAdd] = useState<boolean>(false)
   const [search, setSearch] = useState("")
+  const { data: StaffData, isLoading, isError } = useGetStaffQuery()
 
-  const {
-    data: StaffData,
-    isLoading,
-    isError,
-  } = useQuery<StaffUserMapping[]>({
-    queryKey: ["staff"],
-    queryFn: getAllStaff,
-  })
-
-  
   const filteredStaff = useMemo(() => {
     if (!StaffData) return []
 
@@ -45,26 +33,19 @@ const StaffPage = () => {
     })
   }, [StaffData, search])
 
-  if (isError) return <ErrorMessage />
-
-  if (isLoading) {
-    return (
-      <>
-        <StaffCardSkeleton />
-        <StaffCardSkeleton />
-        <StaffCardSkeleton />
-      </>
-    )
-  }
-
   return (
-    <>
-      {pathname === "/staff/add" && <AddStaffModel />}
+    <Dialog
+      open={openAdd}
+      onOpenChange={(open) => {
+        if (!open) setOpenAdd(false)
+      }}
+    >
+      {openAdd && <AddStaff setOpenAdd={setOpenAdd} />}
 
       {/* Add Button */}
       <button
         className="fixed right-6 bottom-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-xl hover:scale-105"
-        onClick={() => navigate("/staff/add")}
+        onClick={() => setOpenAdd(true)}
       >
         <Plus />
       </button>
@@ -91,16 +72,41 @@ const StaffPage = () => {
         </div>
 
         {/* List */}
-        <div className="space-y-3">
-          {filteredStaff.length === 0 && <NoFound title="Staff" />}
+        <div className="mt-4">
+          {isError && <ErrorMessage />}
 
-          {filteredStaff.map((staff) => {
-            if (!staff?.staff) return null
-            return <StaffCard {...staff} key={staff.staff.id} />
-          })}
+          {isLoading && (
+            <>
+              <StaffCardSkeleton />
+              <StaffCardSkeleton />
+              <StaffCardSkeleton />
+            </>
+          )}
+
+          {!isLoading && !isError && (
+            <>
+              {filteredStaff.length === 0 ? (
+                <NoFound title="Staff" />
+              ) : (
+                <Virtuoso
+                  style={{ height: 325 }}
+                  data={filteredStaff}
+                  overscan={200}
+                  itemContent={(_, staff) => {
+                    if (!staff?.staff) return null
+                    return (
+                      <div className="mb-3">
+                        <StaffCard {...staff} />
+                      </div>
+                    )
+                  }}
+                />
+              )}
+            </>
+          )}
         </div>
       </div>
-    </>
+    </Dialog>
   )
 }
 

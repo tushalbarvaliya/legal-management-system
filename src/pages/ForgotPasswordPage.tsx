@@ -1,34 +1,69 @@
 import { useMutation } from "@tanstack/react-query"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Eye, EyeOff } from "lucide-react"
-import { useState } from "react"
-import { useForm } from "react-hook-form"
+import { useEffect, useState } from "react"
+import { Controller, useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom"
 import { toast, Toaster } from "sonner"
 import { motion } from "framer-motion"
+import * as z from "zod"
 
 import { forgetPasswordAPI } from "@/api/authAPI"
 import { Button } from "@/components/ui/button"
 import { emailRegex, passwordRegex } from "@/utils/regex"
+import { Input } from "@/components/ui/input"
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field"
+import { useAppSelector } from "@/hooks/hooks"
+import { Helmet } from "react-helmet-async"
 
-type ForgotPasswordFormData = {
-  email: string
-  confirmPassword: string
-  password: string
-}
+const formSchema = z.object({
+  email: z
+    .string()
+    .regex(
+      emailRegex,
+      "Please enter a valid email address (e.g., user@example.com)."
+    )
+    .min(1, "Please Enter a Value"),
+  password: z
+    .string()
+    .regex(
+      passwordRegex,
+      "Password must be at least 8 characters and include uppercase, lowercase, number, and special character."
+    ),
+  confirmPassword: z
+    .string()
+    .regex(
+      passwordRegex,
+      "Password must be at least 8 characters and include uppercase, lowercase, number, and special character."
+    ),
+})
+
+type FormType = z.infer<typeof formSchema>
 
 const ForgotPasswordPage = () => {
+  const navigate = useNavigate()
+  const token = useAppSelector((state) => state.auth.token)
+  useEffect(() => {
+    if (token) {
+      navigate("/")
+    }
+  }, [navigate, token])
   const [passwordShow, setPasswordShow] = useState(false)
   const [confirmPasswordShow, setConfirmPasswordShow] = useState(false)
 
-  const navigate = useNavigate()
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ForgotPasswordFormData>({
+  const form = useForm<FormType>({
+    resolver: zodResolver(formSchema),
     mode: "onChange",
     delayError: 500,
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   })
 
   const { mutate, isPending } = useMutation({
@@ -40,11 +75,11 @@ const ForgotPasswordPage = () => {
       }, 2000)
     },
     onError: (error) => {
-      toast.error(error.message)
+      toast.error(`Error : ${error.message || "Something is not right"}`)
     },
   })
 
-  const onSubmit = (data: ForgotPasswordFormData) => {
+  const onSubmit = (data: FormType) => {
     if (data.password != data.confirmPassword) {
       toast.error("New Password and Confirm Password Should be Same.")
     } else {
@@ -59,6 +94,9 @@ const ForgotPasswordPage = () => {
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.5 }}
     >
+      <Helmet>
+        <title>Arcade Demo | Forgot Password</title>
+      </Helmet>
       <Toaster position="bottom-right" richColors />
       <main className="flex h-fit justify-center p-4 sm:p-6">
         <section className="w-full max-w-md rounded-xl border border-black bg-white p-6 shadow-sm sm:p-8">
@@ -78,127 +116,102 @@ const ForgotPasswordPage = () => {
           </header>
 
           {/* main form */}
-          <form className="space-y-2" onSubmit={handleSubmit(onSubmit)}>
-            {/* Email input */}
-            <div className="flex flex-col gap-2 sm:col-span-2">
-              <label
-                htmlFor="email"
-                className="text-sm font-medium text-zinc-800"
-              >
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                autoComplete="off"
-                className="block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 transition outline-none placeholder:text-zinc-400 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                {...register("email", {
-                  required: {
-                    value: true,
-                    message: "Please Enter a value",
-                  },
-                  pattern: {
-                    value: emailRegex,
-                    message:
-                      "Please enter a valid email address (e.g., user@example.com).",
-                  },
-                })}
+          <form
+            className="space-y-2"
+            onSubmit={form.handleSubmit(onSubmit)}
+            id="forgotForm"
+          >
+            <FieldGroup>
+              {/* Email */}
+              <Controller
+                name="email"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="email">Email</FieldLabel>
+                    <Input
+                      {...field}
+                      id="form-rhf-demo-title"
+                      aria-invalid={fieldState.invalid}
+                      placeholder="Please Enter Your Email"
+                      autoComplete="off"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="text-xs"
+                      />
+                    )}
+                  </Field>
+                )}
               />
-
-              <p className="min-h-5 text-xs text-red-600">
-                {errors.email?.message}
-              </p>
-            </div>
-
-            {/* Password input */}
-            <div className="flex flex-col gap-2">
-              <label
-                htmlFor="password"
-                className="text-sm font-medium text-zinc-800"
-              >
-                Password
-              </label>
-
-              <div className="relative">
-                <input
-                  id="password"
-                  type={passwordShow ? "text" : "password"}
-                  autoComplete="off"
-                  placeholder="Enter your password"
-                  className="block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 pr-10 text-sm text-zinc-900 transition outline-none placeholder:text-zinc-400 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                  {...register("password", {
-                    required: {
-                      value: true,
-                      message: "Please Enter a value",
-                    },
-                    pattern: {
-                      value: passwordRegex,
-                      message:
-                        "Password must be at least 8 characters and include uppercase, lowercase, number, and special character.",
-                    },
-                  })}
-                />
-
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 mx-2 place-items-center border-0 text-zinc-500 hover:bg-transparent hover:text-zinc-700"
-                  onClick={() => setPasswordShow((prev) => !prev)}
-                >
-                  {passwordShow ? <EyeOff /> : <Eye />}
-                </button>
-              </div>
-
-              <p className="min-h-5 text-xs text-red-600">
-                {errors.password?.message}
-              </p>
-            </div>
-
-            {/* confirm password input */}
-            <div className="flex flex-col gap-2">
-              <label
-                htmlFor="confirmPassword"
-                className="text-sm font-medium text-zinc-800"
-              >
-                Confirm Password
-              </label>
-
-              <div className="relative">
-                <input
-                  id="confirmPassword"
-                  type={confirmPasswordShow ? "text" : "password"}
-                  autoComplete="off"
-                  placeholder="Enter your password"
-                  className="block w-full rounded-md border border-zinc-300 bg-white px-3 py-2 pr-10 text-sm text-zinc-900 transition outline-none placeholder:text-zinc-400 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
-                  {...register("confirmPassword", {
-                    required: {
-                      value: true,
-                      message: "Please Enter a value",
-                    },
-                    pattern: {
-                      value: passwordRegex,
-                      message:
-                        "Password must be at least 8 characters and include uppercase, lowercase, number, and special character.",
-                    },
-                  })}
-                />
-
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 mx-2 place-items-center text-zinc-500 hover:text-zinc-700"
-                  onClick={() => setConfirmPasswordShow((prev) => !prev)}
-                >
-                  {confirmPasswordShow ? <EyeOff /> : <Eye />}
-                </button>
-              </div>
-
-              {errors.confirmPassword && (
-                <p className="min-h-5 text-xs text-red-600">
-                  {errors.confirmPassword?.message}
-                </p>
-              )}
-            </div>
-
+              <Controller
+                name="password"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="password">Password</FieldLabel>
+                    <div className="flex">
+                      <Input
+                        {...field}
+                        id="password"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Please Enter your Password"
+                        autoComplete="off"
+                        type={passwordShow ? "text" : "password"}
+                      />
+                      <Button
+                        type="button"
+                        variant={"ghost"}
+                        className="text-zinc-500 hover:cursor-pointer hover:text-zinc-700"
+                        onClick={() => setPasswordShow((prev) => !prev)}
+                      >
+                        {passwordShow ? <EyeOff /> : <Eye />}
+                      </Button>
+                    </div>
+                    {fieldState.invalid && (
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="text-xs"
+                      />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="confirmPassword"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="confirmPassword">Password</FieldLabel>
+                    <div className="flex">
+                      <Input
+                        {...field}
+                        id="confirmPassword"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Please Enter your Password"
+                        autoComplete="off"
+                        type={confirmPasswordShow ? "text" : "password"}
+                      />
+                      <Button
+                        type="button"
+                        variant={"ghost"}
+                        className="text-zinc-500 hover:cursor-pointer hover:text-zinc-700"
+                        onClick={() => setConfirmPasswordShow((prev) => !prev)}
+                      >
+                        {confirmPasswordShow ? <EyeOff /> : <Eye />}
+                      </Button>
+                    </div>
+                    {fieldState.invalid && (
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="text-xs"
+                      />
+                    )}
+                  </Field>
+                )}
+              />
+            </FieldGroup>
             {/* back to login button */}
             <div className="my-4 flex justify-end">
               <Link
@@ -210,13 +223,25 @@ const ForgotPasswordPage = () => {
             </div>
 
             {/* submit Button */}
-            <Button
-              type="submit"
-              disabled={isPending}
-              className="text-md w-full bg-black p-6 text-white"
-            >
-              {isPending ? "New Password Set..." : "Set New Password"}
-            </Button>
+            <Field orientation="vertical">
+              <Button
+                type="button"
+                disabled={isPending}
+                variant={"outline"}
+                onClick={() => form.reset()}
+                className="hover:cursor-pointer"
+              >
+                Reset
+              </Button>
+              <Button
+                type="submit"
+                disabled={isPending}
+                form="forgotForm"
+                className="hover:cursor-pointer"
+              >
+                {isPending ? "New Password Set..." : "Set New Password"}
+              </Button>
+            </Field>
           </form>
         </section>
       </main>

@@ -1,0 +1,330 @@
+import { Controller, useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { zodResolver } from "@hookform/resolvers/zod"
+
+import { Input } from "../ui/input"
+import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field"
+import { Button } from "../ui/button"
+import type { ClientUserMapping } from "@/types/clientType"
+import {
+  UpdateClientSchema,
+  type UpdateClientFormSchemaType,
+} from "@/schemas/UpdateClientSchema"
+import {
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select"
+import { useUpdateClientMutation } from "@/store/services/clientAPI"
+
+const UpdateClient = ({
+  client,
+  setOpenEdit,
+}: {
+  client: ClientUserMapping
+  setOpenEdit: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
+  const [updateClient, { isLoading: isPending }] = useUpdateClientMutation()
+
+  const {
+    formState: { isDirty },
+    ...form
+  } = useForm<UpdateClientFormSchemaType>({
+    resolver: zodResolver(UpdateClientSchema),
+    mode: "onChange",
+    delayError: 500,
+    defaultValues: {
+      address: client.user.address,
+      firstName: client.user.firstName,
+      lastName: client.user.lastName,
+      phoneNumber: client.user.phoneNumber,
+      gender: client.user.gender || "",
+      crNumber: client.client.crNumber,
+      vatNumber: client.client.vatNumber,
+      vatPercentage: client.client.vatPercentage,
+      occupation: client.client.occupation,
+    },
+  })
+
+  const onSubmit = async(data: UpdateClientFormSchemaType) => {
+    if (isDirty) {
+      try {
+        await updateClient({ data: data, id: client.client.id }).unwrap()
+        toast.success("Client Update Done.", { duration: 1500 })
+        setOpenEdit(false)
+      } catch {
+        toast.error(`Something is not right`)
+      }
+    } else {
+      toast.success("No Changes found")
+      setOpenEdit(false)
+    }
+  }
+  return (
+    <>
+      <DialogContent className="no-scrollbar max-h-[99vh] min-w-[50vw] overflow-y-scroll">
+        <DialogHeader className="my-4 text-sm">
+          <DialogTitle>Add Lawyer</DialogTitle>
+        </DialogHeader>
+        <form id="addLawyer" onSubmit={form.handleSubmit(onSubmit)}>
+          <FieldGroup className="grid sm:grid-cols-2">
+            <Controller
+              name="firstName"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="firstName">First Name</FieldLabel>
+                  <Input
+                    {...field}
+                    id="firstName"
+                    placeholder="Enter Your First Name"
+                    autoComplete="off"
+                    className="w-full"
+                  />
+
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-xs"
+                    />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              name="lastName"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="lastName">Last Name</FieldLabel>
+                  <Input
+                    {...field}
+                    id="lastName"
+                    placeholder="Enter Your Last Name"
+                    autoComplete="off"
+                    className="w-full"
+                  />
+
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-xs"
+                    />
+                  )}
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="phoneNumber"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="phoneNumber">Phone Number</FieldLabel>
+                  <Input
+                    {...field}
+                    id="phoneNumber"
+                    placeholder="1234567890"
+                    autoComplete="off"
+                    className="w-full"
+                    type="tel"
+                    inputMode="numeric"
+                    onChange={(e) => {
+                      const value = e.target.value
+                        .replace(/\D/g, "")
+                        .slice(0, 10)
+                      field.onChange(value)
+                    }}
+                  />
+
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-xs"
+                    />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              name="address"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="address">Address</FieldLabel>
+                  <Input
+                    {...field}
+                    id="address"
+                    placeholder="Enter an address"
+                    autoComplete="off"
+                    className="w-full"
+                  />
+
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-xs"
+                    />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              name="occupation"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="Occupation">Occupation</FieldLabel>
+                  <Input
+                    {...field}
+                    id="Occupation"
+                    placeholder="Occupation"
+                    autoComplete="off"
+                    className="w-full"
+                  />
+
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-xs"
+                    />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              name="gender"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field className="space-y-2">
+                  <FieldLabel>Gender</FieldLabel>
+
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select gender" />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      <SelectItem value="male">Male</SelectItem>
+                      <SelectItem value="female">Female</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  {fieldState.error && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              name="crNumber"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="crNumber">Cr Number</FieldLabel>
+                  <Input
+                    {...field}
+                    id="crNumber"
+                    type="number"
+                    placeholder="Enter an Cr Number"
+                    autoComplete="off"
+                    className="w-full"
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, "")
+                      field.onChange(value)
+                    }}
+                  />
+
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-xs"
+                    />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              name="vatNumber"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="vatNumber">Vat Number</FieldLabel>
+                  <Input
+                    {...field}
+                    id="vatNumber"
+                    type="number"
+                    placeholder="Enter an Vat Number"
+                    autoComplete="off"
+                    className="w-full"
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, "")
+                      field.onChange(value)
+                    }}
+                  />
+
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-xs"
+                    />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              name="vatPercentage"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="vatPercentage">
+                    Vat Percentage
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="vatPercentage"
+                    type="number"
+                    placeholder="Enter an Vat Percentage"
+                    autoComplete="off"
+                    className="w-full"
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, "")
+                      field.onChange(value)
+                    }}
+                  />
+
+                  {fieldState.error && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-xs"
+                    />
+                  )}
+                </Field>
+              )}
+            />
+          </FieldGroup>
+        </form>
+        <DialogFooter>
+          <Field>
+            <Button type="submit" form="addLawyer" disabled={isPending}>
+              {isPending ? "Updating..." : "Update Client"}
+            </Button>
+          </Field>
+        </DialogFooter>
+      </DialogContent>
+    </>
+  )
+}
+
+export default UpdateClient
