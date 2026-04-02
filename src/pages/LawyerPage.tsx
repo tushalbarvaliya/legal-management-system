@@ -110,7 +110,7 @@ const LawyerPage = () => {
           {/* Data */}
           {!isLoading && !isError && filteredLawyers.length > 0 && (
             <Virtuoso
-              style={{ height: "100%",border:'2px solid red' }}
+              style={{ height: "100%" }}
               data={filteredLawyers}
               itemContent={(_, item) => (
                 <LawyerCard key={item.lawyer.id} {...item} />
