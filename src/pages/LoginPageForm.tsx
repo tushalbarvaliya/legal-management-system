@@ -65,10 +65,8 @@ const LoginPageForm = () => {
       dispatch(setAuth(token))
       navigate("/")
     },
-    onError: (error) => {
-      toast.error(
-        `Something is not right Error : ${error.message || "Something is not Right"}`
-      )
+    onError: () => {
+      toast.error("Invalid user name and Password")
     },
   })
   if (token) {
