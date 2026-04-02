@@ -16,7 +16,7 @@ type Props = {
 const CaseDetailModal = ({ data, setOpenView }: Props) => {
   return (
     <>
-      <DialogContent className="max-w-xl p-5 sm:p-6 lg:min-w-200">
+      <DialogContent className="max-w-xl p-5 sm:p-6 lg:min-w-200 max-h-full overflow-y-scroll">
         {/* Header */}
         <DialogHeader className="flex flex-row items-start justify-between">
           <div>

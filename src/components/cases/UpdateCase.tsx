@@ -76,7 +76,7 @@ const UpdateCase = ({
   }
   return (
     <>
-      <DialogContent className="no-scrollbar max-h-[99vh] overflow-y-scroll lg:min-w-[50vw]">
+      <DialogContent className="no-scrollbar max-h-full overflow-y-scroll lg:min-w-200">
         <DialogHeader className="my-4 text-sm">
           <DialogTitle>Edit Case</DialogTitle>
         </DialogHeader>
