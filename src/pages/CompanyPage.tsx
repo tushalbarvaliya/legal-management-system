@@ -37,7 +37,7 @@ const CompanyPage = () => {
           />
         </Dialog>
       )}
-      <section className="p-4 md:p-6 h-full space-y-2 overflow-y-scroll no-scrollbar">
+      <section className="p-4 md:p-6 h-[80vh] space-y-2 overflow-y-scroll no-scrollbar">
         <div className="mx-auto max-w-4xl space-y-6">
           {/* Header Card */}
           <div className="flex flex-col sm:flex-row items-center gap-4 rounded-2xl border border-black bg-white p-6 shadow-sm">
