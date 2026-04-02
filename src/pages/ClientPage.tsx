@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Search } from "lucide-react"
 import { Virtuoso } from "react-virtuoso"
 
-import type {  ClientUserMapping } from "@/types/clientType"
+import type { ClientUserMapping } from "@/types/clientType"
 import ClientCardSkeleton from "@/components/client/ClientCardSkeleton"
 import ClientHeader from "@/components/client/ClientHeader"
 import ErrorMessage from "@/components/ErrorMessage"
@@ -26,9 +26,9 @@ const ClientPage = () => {
       <Helmet>
         <title>Client Management</title>
       </Helmet>
-      <ClientHeader />
-      <section className="shadow-soft mt-2 rounded-2xl border-zinc-200 bg-white p-4 sm:p-6">
-        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <section className="shadow-soft mt-2 h-[90vh] rounded-2xl border-zinc-200 bg-white">
+        <ClientHeader />
+        <div className="mx-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between ">
           <h2 className="text-lg font-semibold tracking-tight text-zinc-900">
             Client List
           </h2>
@@ -51,30 +51,32 @@ const ClientPage = () => {
           </div>
         </div>
         {/* map for client list */}
-        {isError && <ErrorMessage />}
-        {!isLoading &&
-          !isError &&
-          filteredClients &&
-          filteredClients?.length > 0 && (
-            <Virtuoso
-              style={{ height: 315 }}
-              data={filteredClients}
-              overscan={200}
-              className="no-scrollbar"
-              itemContent={(_index, client) => (
-                <ClientCard client={client} key={client.client.id} />
-              )}
-            />
+        <div className="sm:h-[75%] h-[70%] ">
+          {isError && <ErrorMessage />}
+          {!isLoading &&
+            !isError &&
+            filteredClients &&
+            filteredClients?.length > 0 && (
+              <Virtuoso
+                style={{ height: '100%'}}
+                data={filteredClients}
+                overscan={200}
+                className="no-scrollbar"
+                itemContent={(_index, client) => (
+                  <ClientCard client={client} key={client.client.id} />
+                )}
+              />
+            )}
+          {isLoading && (
+            <>
+              <ClientCardSkeleton />
+              <ClientCardSkeleton />
+              <ClientCardSkeleton />
+              <ClientCardSkeleton />
+            </>
           )}
-        {isLoading && (
-          <>
-            <ClientCardSkeleton />
-            <ClientCardSkeleton />
-            <ClientCardSkeleton />
-            <ClientCardSkeleton />
-          </>
-        )}
-        {filteredClients?.length == 0 && <NoFound title="client" />}
+          {filteredClients?.length == 0 && <NoFound title="client" />}
+        </div>
       </section>
     </>
   )

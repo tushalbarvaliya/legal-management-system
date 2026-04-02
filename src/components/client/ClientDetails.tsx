@@ -21,7 +21,7 @@ const ClientDetails = ({ data }: Props) => {
   }
 
   return (
-    <DialogContent className="lg:min-w-200">
+    <DialogContent className="lg:min-w-200 max-h-screen overflow-auto">
       {/* Header */}
       <DialogHeader className="border-b px-5 py-4 sm:px-6">
         <div className="flex items-center justify-between">
