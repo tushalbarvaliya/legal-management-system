@@ -31,16 +31,15 @@ const CasesPage = () => {
   }, [search, cases])
 
   return (
-    <Dialog
-      open={openAdd}
-      onOpenChange={(open) => {
-        if (!open) setOpenAdd(false)
-      }}
-    >
+    <>
       <Helmet>
         <title>Case Management</title>
       </Helmet>
-      {openAdd && <AddCase setOpenAdd={setOpenAdd} />}
+      {openAdd && (
+        <Dialog open={openAdd} onOpenChange={() => setOpenAdd(false)}>
+          <AddCase setOpenAdd={setOpenAdd} />
+        </Dialog>
+      )}
       {/* ADD TASK BUTTON */}
       {role == "lawyer" && (
         <button
@@ -53,16 +52,13 @@ const CasesPage = () => {
         </button>
       )}
 
-      <section className="shadow-soft rounded-2xl border border-zinc-200 bg-white p-4 sm:p-6">
+      <section className="shadow-soft rounded-2xl border border-zinc-200 bg-white p-4 sm:p-6 h-[90vh]">
         {/* Header */}
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between ">
           <div>
-            <h1 className="text-2xl font-bold text-zinc-900 sm:text-3xl">
+            <h1 className="text-xl font-bold text-zinc-900 sm:text-3xl">
               Cases Management
             </h1>
-            {/* <p className="mt-1 text-sm text-zinc-600">
-              Track deadlines, update priorities, and manage work in one place.
-            </p> */}
           </div>
 
           {/* Search + Filter */}
@@ -75,17 +71,16 @@ const CasesPage = () => {
                 placeholder="Search by title and description"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full rounded-xl border border-zinc-200 py-2.5 pr-3 pl-9 text-sm outline-none focus:border-zinc-400"
+                className="w-full rounded-xl border border-zinc-200 py-2 pr-3 pl-9 text-sm outline-none focus:border-zinc-400"
                 disabled={isLoading || isError}
               />
             </label>
 
-            {/* Priority Filter */}
           </div>
         </div>
 
         {/* List */}
-        <div className="mt-5 space-y-3">
+        <div className="mt-5 space-y-3 h-full">
           {isLoading && (
             <>
               <CasesCardSkeleton />
@@ -93,14 +88,14 @@ const CasesPage = () => {
               <CasesCardSkeleton />
             </>
           )}
-          <div className="h-[66dvh]">
+          <div className="sm:h-[94%] h-[80%]">
             {isError && <ErrorMessage />}
             {!isLoading &&
             !isError &&
             filteredCases &&
             filteredCases.length > 0 ? (
               <Virtuoso
-                style={{ height: '100%' }}
+                style={{ height: "100%" }}
                 className="no-scrollbar"
                 totalCount={filteredCases.length}
                 data={filteredCases}
@@ -115,7 +110,7 @@ const CasesPage = () => {
           </div>
         </div>
       </section>
-    </Dialog>
+    </>
   )
 }
 

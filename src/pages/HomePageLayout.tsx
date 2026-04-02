@@ -9,15 +9,15 @@ const HomeLayout = () => {
     <>
       <Toaster position="bottom-right" richColors />
       <div className="h-screen w-full overflow-hidden">
-        <Header />
-        <div className="mt-4 flex h-[80vh] w-full items-center gap-2">
-          <div className="mx-2 hidden rounded-xl border border-black bg-white p-4 lg:block">
+        <div className="h-16.7 overflow-hidden">
+          <Header />
+        </div>
+        <div className="flex h-[90dvh] w-full items-start gap-2">
+          <div className="mx-2 my-auto hidden rounded-xl border border-black bg-white p-4 lg:block">
             <Sidebar />
           </div>
-          <main className="max-h-[85vh] flex-1 overflow-hidden rounded-xl bg-transparent mx-2 mt-2">
-            <div className="mt-4 h-[84vh]">
-              <Outlet />
-            </div>
+          <main className="lg:mx-2 mt-2 max-h-[90vh] flex-1 overflow-hidden rounded-xl border-2 border-red-500 bg-transparent">
+            <Outlet />
           </main>
         </div>
       </div>

@@ -8,7 +8,7 @@ import { Helmet } from "react-helmet-async"
 const PrivacyPolicyPage = () => {
   return (
     <motion.div
-      className="space-y-2 h-full overflow-y-scroll no-scrollbar"
+      className="space-y-2 h-full overflow-y-scroll no-scrollbar max-h-[90vh]"
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       exit={{ opacity: 0, y: -20 }}
