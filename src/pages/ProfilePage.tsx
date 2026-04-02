@@ -90,13 +90,13 @@ const ProfilePage = () => {
     <motion.div
       initial={{ y: 10, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="no-scrollbar h-full space-y-2 overflow-y-scroll"
+      className="no-scrollbar h-full  overflow-y-scroll max-h-[90vh]"
     >
       <Helmet>
         <title>Profile</title>
       </Helmet>
       {data && (
-        <main className="flex items-center justify-center p-3 sm:p-6">
+        <main className="flex items-center justify-center ">
           <section className="w-full max-w-4xl rounded-2xl border bg-white p-4 shadow-sm sm:p-8">
             {/* Header */}
             <header className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
