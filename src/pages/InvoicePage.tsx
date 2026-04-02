@@ -29,9 +29,7 @@ const InvoicePage = () => {
       >
         <Plus />
       </button>
-      <div className="space-y-4">
-        <InvoiceList />
-      </div>
+      <InvoiceList />
     </Dialog>
   )
 }

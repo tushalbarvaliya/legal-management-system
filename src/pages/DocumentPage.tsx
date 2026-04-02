@@ -58,12 +58,13 @@ const DocsPage = () => {
     <>
       <Helmet>
         <title>Document Management</title>
+        <meta name="description" content="In this page you can store the document and" />
       </Helmet>
       <div className="shadow-soft h-[90vh] rounded-2xl border border-zinc-200 bg-white">
         <DocsHeader />
         {/* Header */}
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-          <div className="mx-2">
+          <div className="mx-4">
             <h2 className="text-lg font-semibold text-zinc-900">
               Select Documents
             </h2>

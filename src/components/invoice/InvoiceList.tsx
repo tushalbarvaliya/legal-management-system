@@ -16,7 +16,7 @@ import {
 import { useGetInvoiceQuery } from "@/store/services/invoiceAPI"
 
 const InvoiceList = () => {
-  const {data:invoices,isLoading,isError}=useGetInvoiceQuery()
+  const { data: invoices, isLoading, isError } = useGetInvoiceQuery()
 
   const [status, setStatus] = useState("")
   const [client, setClient] = useState("")
@@ -46,7 +46,7 @@ const InvoiceList = () => {
   }, [invoices, status, client])
 
   return (
-    <div className="space-y-4 rounded-xl border border-zinc-200 bg-white/80 p-4">
+    <div className="h-[85vh] space-y-4 rounded-xl border border-zinc-200 bg-white/80 p-4">
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
@@ -109,7 +109,7 @@ const InvoiceList = () => {
 
       {/* List */}
       {/* Loading */}
-      <div className="mt-4">
+      <div className="mt-4 h-[65%] sm:h-[85%]">
         {/* Loading */}
         {isLoading &&
           Array.from({ length: 6 }).map((_, i) => (
@@ -128,9 +128,9 @@ const InvoiceList = () => {
           <>
             {filteredInvoices.length > 0 ? (
               <VirtuosoGrid
-                style={{ height: 400 }}
+                style={{ height: "100%" }}
                 data={filteredInvoices}
-                overscan={200}
+                overscan={100}
                 components={{
                   List: (props) => (
                     <div

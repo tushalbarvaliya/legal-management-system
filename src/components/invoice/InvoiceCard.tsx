@@ -7,7 +7,6 @@ import type { Payment } from "@/types/invoiceType"
 import { formatDate } from "@/utils/formate"
 import { Button } from "../ui/button"
 import EditInvoiceModel from "./EditInvoiceModel"
-import { pay } from "@/api/invoiceAPI"
 import InvoiceDetailsModal from "./InvoiceDetailsModal"
 import { useAppSelector } from "@/hooks/hooks"
 import { Dialog } from "../ui/dialog"
@@ -19,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
 import { useDeleteInvoiceMutation } from "@/store/services/invoiceAPI"
+import { pay } from "@/api/invoiceAPI"
 
 const InvoiceCard = (invoice: Payment) => {
   const [openView, setOpenView] = useState<boolean>(false)
@@ -28,8 +28,8 @@ const InvoiceCard = (invoice: Payment) => {
 
   const [deleteInvoice, { isLoading: DeleteIsPending }] =
     useDeleteInvoiceMutation()
-    
-  const handelDeleteModel = async(_: number) => {
+
+  const handelDeleteModel = async (_: number) => {
     try {
       await deleteInvoice(invoice.id).unwrap()
       toast.success("Invoice Deleted")
@@ -41,7 +41,7 @@ const InvoiceCard = (invoice: Payment) => {
 
   const { mutate } = useMutation({
     mutationFn: pay,
-    onSuccess: (data) => {
+    onSuccess: (data: { checkout_url: string }) => {
       window.location.href = data.checkout_url
     },
   })
