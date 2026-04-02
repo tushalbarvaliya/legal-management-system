@@ -42,7 +42,7 @@ const SessionPage = () => {
       </Helmet>
       {openAdd && <AddSession setOpenAdd={setOpenAdd} />}
 
-      <section className="shadow-soft rounded-2xl border bg-white p-4 sm:p-6">
+      <section className="shadow-soft h-[90vh] rounded-2xl border bg-white p-4 sm:p-6">
         {/* Header */}
         <div className="flex flex-col gap-4 md:flex-row md:justify-between">
           <div>
@@ -82,46 +82,47 @@ const SessionPage = () => {
         </p>
 
         {/* List */}
-        {isError && (
-          <div className="col-span-full">
-            <ErrorMessage />
-          </div>
-        )}
-        {isLoading && (
-          <>
-            <SessionCardSkeleton />
-            <SessionCardSkeleton />
-            <SessionCardSkeleton />
-          </>
-        )}
-        {!isLoading &&
-          !isError &&
-          (filteredSessions && filteredSessions?.length > 0 ? (
-            <VirtuosoGrid
-              style={{ height: 425 }}
-              data={filteredSessions}
-              overscan={200}
-              components={{
-                List: (props) => (
-                  <div
-                    {...props}
-                    className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
-                  />
-                ),
-                Item: ({ children, ...props }) => (
-                  <div {...props}>{children}</div>
-                ),
-              }}
-              itemContent={(_, item) => (
-                <SessionCard data={item} key={item.session.id} />
-              )}
-            />
-          ) : (
+        <div className="h-[70%] sm:h-[80%]">
+          {isError && (
             <div className="col-span-full">
-              <NoFound title="Session" />
+              <ErrorMessage />
             </div>
-          ))}
-
+          )}
+          {isLoading && (
+            <>
+              <SessionCardSkeleton />
+              <SessionCardSkeleton />
+              <SessionCardSkeleton />
+            </>
+          )}
+          {!isLoading &&
+            !isError &&
+            (filteredSessions && filteredSessions?.length > 0 ? (
+              <VirtuosoGrid
+                style={{ height: "100%" }}
+                data={filteredSessions}
+                overscan={200}
+                components={{
+                  List: (props) => (
+                    <div
+                      {...props}
+                      className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
+                    />
+                  ),
+                  Item: ({ children, ...props }) => (
+                    <div {...props}>{children}</div>
+                  ),
+                }}
+                itemContent={(_, item) => (
+                  <SessionCard data={item} key={item.session.id} />
+                )}
+              />
+            ) : (
+              <div className="col-span-full">
+                <NoFound title="Session" />
+              </div>
+            ))}
+        </div>
         {/* Add Button */}
         <button
           className="fixed right-6 bottom-6 flex h-14 w-14 items-center justify-center rounded-full bg-black text-white"
