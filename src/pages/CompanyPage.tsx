@@ -37,12 +37,12 @@ const CompanyPage = () => {
           />
         </Dialog>
       )}
-      <section className="p-4 md:p-6">
+      <section className="p-4 md:p-6 h-full space-y-2 overflow-y-scroll no-scrollbar">
         <div className="mx-auto max-w-4xl space-y-6">
           {/* Header Card */}
-          <div className="flex items-center gap-4 rounded-2xl border border-black bg-white p-6 shadow-sm">
+          <div className="flex flex-col sm:flex-row items-center gap-4 rounded-2xl border border-black bg-white p-6 shadow-sm">
             {/* left side  header */}
-            <div className="flex flex-1 items-center gap-4">
+            <div className="flex flex-1 items-center gap-4" >
               <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600">
                 <Hospital />
               </div>

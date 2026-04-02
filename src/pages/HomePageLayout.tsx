@@ -14,7 +14,7 @@ const HomeLayout = () => {
           <div className="mx-2 hidden rounded-xl border border-black bg-white p-4 lg:block">
             <Sidebar />
           </div>
-          <main className="max-h-[85vh] flex-1 overflow-hidden rounded-xl bg-transparent sm:mr-2">
+          <main className="max-h-[85vh] flex-1 overflow-hidden rounded-xl bg-transparent mx-2 mt-2">
             <div className="mt-4 h-[84vh]">
               <Outlet />
             </div>

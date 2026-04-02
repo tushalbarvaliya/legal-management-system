@@ -87,7 +87,11 @@ const ProfilePage = () => {
   if (isError) return <ErrorMessage message={"Something Is not Right"} />
 
   return (
-    <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
+    <motion.div
+      initial={{ y: 10, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      className="no-scrollbar h-full space-y-2 overflow-y-scroll"
+    >
       <Helmet>
         <title>Profile</title>
       </Helmet>

@@ -8,7 +8,7 @@ import { termsAndConditionsList } from "@/utils/policyConstant"
 const TermsAndConditionsPage = () => {
   return (
     <motion.div
-      className="h-full space-y-2 overflow-y-scroll"
+      className="h-full space-y-2 overflow-y-scroll no-scrollbar"
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       exit={{ opacity: 0, y: -20 }}
