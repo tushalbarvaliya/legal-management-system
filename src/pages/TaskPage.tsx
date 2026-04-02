@@ -70,7 +70,7 @@ const TaskPage = () => {
       >
         {openAdd && <AddTask setOpenAdd={setOpenAdd} />}
       </Dialog>
-      <section className="shadow-soft rounded-2xl border border-zinc-200 bg-white p-4 sm:p-6">
+      <section className="shadow-soft rounded-2xl border border-zinc-200 bg-white p-4 sm:p-6 h-[90vh]">
         {/* header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
@@ -153,7 +153,7 @@ const TaskPage = () => {
         </Button>
 
         {/* Task List */}
-        <div className="mt-5 space-y-3">
+        <div className="mt-5 space-y-3 sm:h-[85%] h-[50%]">
           {isLoading && (
             <>
               <TaskCardSkeleton />
@@ -170,7 +170,7 @@ const TaskPage = () => {
             filteredTasks &&
             (filteredTasks.length > 0 ? (
               <Virtuoso
-                style={{ height: 420 }}
+                style={{ height: '100%' }}
                 className="no-scrollbar"
                 data={filteredTasks}
                 overscan={200}
