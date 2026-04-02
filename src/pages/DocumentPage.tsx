@@ -59,11 +59,11 @@ const DocsPage = () => {
       <Helmet>
         <title>Document Management</title>
       </Helmet>
-      <DocsHeader />
-      <div className="shadow-soft mt-4 rounded-2xl border border-zinc-200 bg-white p-4 sm:p-6">
+      <div className="shadow-soft h-[90vh] rounded-2xl border border-zinc-200 bg-white">
+        <DocsHeader />
         {/* Header */}
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-          <div>
+          <div className="mx-2">
             <h2 className="text-lg font-semibold text-zinc-900">
               Select Documents
             </h2>
@@ -71,7 +71,7 @@ const DocsPage = () => {
         </div>
 
         {/* Filters */}
-        <div className="mb-3 flex flex-wrap gap-4">
+        <div className="mx-2 mb-3 flex flex-wrap gap-4">
           {/* Search */}
           <div className="relative flex-1">
             <Input
@@ -109,7 +109,7 @@ const DocsPage = () => {
         </div>
 
         {/* List */}
-        <div className="flex w-full flex-col gap-4">
+        <div className="flex h-[60%] w-full flex-col gap-4 sm:h-[70%]">
           {isLoading && (
             <>
               <DocsCardSkeleton />
@@ -124,7 +124,7 @@ const DocsPage = () => {
             <>
               {filteredDocs.length > 0 ? (
                 <Virtuoso
-                  style={{ height: 300 }}
+                  style={{ height: "100%" }}
                   className="no-scrollbar"
                   data={filteredDocs}
                   overscan={200}

@@ -20,10 +20,6 @@ const DocsHeader = () => {
             <h1 className="text-2xl font-bold tracking-tight text-zinc-900 sm:text-3xl">
               Document Management
             </h1>
-            <p className="mt-2 text-sm text-zinc-600 sm:text-base">
-              Select a client to review case documents. Create, edit, and remove
-              records with quick actions.
-            </p>
           </div>
           <button
             className="fixed right-6 bottom-6 z-20 inline-flex h-14 w-14 items-center justify-center rounded-full bg-zinc-900 text-white shadow-xl transition duration-300 hover:scale-105 hover:bg-zinc-800 focus:ring-2 focus:ring-zinc-400 focus:ring-offset-2 focus:outline-none lg:right-8 lg:bottom-8"
