@@ -60,9 +60,9 @@ const CasesPage = () => {
             <h1 className="text-2xl font-bold text-zinc-900 sm:text-3xl">
               Cases Management
             </h1>
-            <p className="mt-1 text-sm text-zinc-600">
+            {/* <p className="mt-1 text-sm text-zinc-600">
               Track deadlines, update priorities, and manage work in one place.
-            </p>
+            </p> */}
           </div>
 
           {/* Search + Filter */}
@@ -93,24 +93,26 @@ const CasesPage = () => {
               <CasesCardSkeleton />
             </>
           )}
-          {isError && <ErrorMessage />}
-          {!isLoading &&
-          !isError &&
-          filteredCases &&
-          filteredCases.length > 0 ? (
-            <Virtuoso
-              style={{ height: 425 }}
-              className="no-scrollbar"
-              totalCount={filteredCases.length}
-              data={filteredCases}
-              overscan={200}
-              itemContent={(_index, item) => (
-                <CasesCard key={item.id} data={item} />
-              )}
-            />
-          ) : (
-            !isLoading && !isError && <NoFound title="Case" />
-          )}
+          <div className="h-[66dvh]">
+            {isError && <ErrorMessage />}
+            {!isLoading &&
+            !isError &&
+            filteredCases &&
+            filteredCases.length > 0 ? (
+              <Virtuoso
+                style={{ height: '100%' }}
+                className="no-scrollbar"
+                totalCount={filteredCases.length}
+                data={filteredCases}
+                overscan={200}
+                itemContent={(_index, item) => (
+                  <CasesCard key={item.id} data={item} />
+                )}
+              />
+            ) : (
+              !isLoading && !isError && <NoFound title="Case" />
+            )}
+          </div>
         </div>
       </section>
     </Dialog>
